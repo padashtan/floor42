@@ -1,0 +1,1 @@
+text|We keep small tickets and change how the shell is approved.\nCONCLUSION: Small tickets went through review at once\nCONCLUSION: Waiting for approvals cost the most time\nLESSON: developer: List every file you changed in the report\nLESSON: all: Say what you could not verify

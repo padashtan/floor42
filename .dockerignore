@@ -1,0 +1,11 @@
+.git
+**/target
+**/node_modules
+floor42-web/dist
+.floor42
+spikes
+.idea
+.vscode
+*.db
+docs/media
+floor42-web/dist-demo

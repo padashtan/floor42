@@ -1,0 +1,45 @@
+name: Online demo
+
+# Builds the UI in replay mode (ADR-0031) and publishes it to GitHub Pages. Nothing runs on a server: the page replays
+# floor42-web/demo/tape.json. Publishes only from a public repository with Pages set to "GitHub Actions".
+on:
+  push:
+    branches: [main]
+    paths: ['floor42-web/**', '.github/workflows/demo.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+      - name: Build the replay UI
+        working-directory: floor42-web
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+        run: |
+          npm ci
+          npm run build:demo
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: floor42-web/dist-demo
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

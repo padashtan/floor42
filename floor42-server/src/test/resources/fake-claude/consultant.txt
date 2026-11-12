@@ -1,0 +1,2 @@
+tool|toolu_a1|Read|{"file_path":"README.md"}|1	# Fake project
+text|No: a static token cannot be rotated; README.md shows no rotation. Advice: ask for rotation.

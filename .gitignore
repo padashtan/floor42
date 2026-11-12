@@ -1,0 +1,51 @@
+# Java / Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Web
+node_modules/
+floor42-web/dist/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local runtime data (company database, agent worktrees, transcripts) and anything secret
+.floor42/
+.floor42-bench/
+*.db
+*.db-journal
+*.token
+*.pem
+*.key
+.env
+.env.*
+!.env.demo
+*.log
+*.bundle
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Build output and caches
+__pycache__/
+floor42-web/dist-demo/
+.vitest/
+e2e-results/
+
+# Agent worktrees and local experiments
+.claude/worktrees/
+spikes/
+
+# Key stores and private keys
+*.p12
+*.pfx
+*.jks
+id_rsa*
+
+# Sonar scanner
+.scannerwork/
+.cifuzz-corpus/

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PMD ruleset: the PMD 7 quickstart set, minus the rules that clash with the project's style (docs/quality.md
+     says why). Report only, nothing fails the build. -->
+<ruleset name="floor42" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>Floor42 PMD rules</description>
+    <rule ref="rulesets/java/quickstart.xml">
+        <!-- Guard clauses and one-line branches without braces are the code base's style (palantir-java-format keeps them). -->
+        <exclude name="ControlStatementBraces"/>
+        <!-- A volatile field holding an immutable snapshot is the project's idiom for lock-free reads. -->
+        <exclude name="AvoidUsingVolatile"/>
+        <!-- The logger is JBoss/JUL style with lazy arguments: a guard adds nothing. -->
+        <exclude name="GuardLogStatement"/>
+        <!-- Both are configured below. -->
+        <exclude name="EmptyCatchBlock"/>
+        <exclude name="AvoidCatchingThrowable"/>
+    </rule>
+    <!-- CatchGateTest requires a "// Handled: <reason>" comment in every catch that neither rethrows nor is non-empty,
+         so a commented empty block is the project's explained swallow, not a forgotten one. -->
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
+        <properties>
+            <property name="allowCommentedBlocks" value="true"/>
+        </properties>
+    </rule>
+    <!-- MethodHandle.invokeExact and the other foreign-function calls declare "throws Throwable", so the call sites of
+         the native bindings must catch it (each wraps it in an IOException or answers "unknown"); the idempotency
+         table catches it at its task boundary and passes it to the waiting twin. -->
+    <rule ref="category/java/errorprone.xml/AvoidCatchingThrowable">
+        <properties>
+            <property name="violationSuppressXPath"
+                      value="./ancestor::ClassDeclaration[@SimpleName=('PosixPty','WindowsPty','WindowsSocketOwners','ProcessHardening','IdempotentCreations')]"/>
+        </properties>
+    </rule>
+</ruleset>

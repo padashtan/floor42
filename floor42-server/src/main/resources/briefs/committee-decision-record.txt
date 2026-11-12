@@ -1,0 +1,4 @@
+
+Write the committee's decision record for the director, with these sections: recommended
+solution, alternatives studied, reasons for the choice, trade-offs, risks accepted, risks
+refused, assumptions, unresolved disagreements, verifications needed, acceptance criteria.

@@ -1,0 +1,22 @@
+# OSV-Scanner exceptions (tools/quality/static-run.sh osv, docs/security-scanning.md). One block per advisory, a reason
+# and an expiry: when the date passes the finding fails the scan again. Dependabot and the Keycloak bump come first.
+
+[[IgnoredVulns]]
+id = "GHSA-xxph-c9ww-hj94"
+ignoreUntil = 2027-02-09T00:00:00Z
+reason = "Guava 32.1.2-jre (deserialization of CompactHashMap, needs untrusted Java deserialization). Transitive of the provided-scope Keycloak 26.8.1 or of Testcontainers (test scope) in iam/keycloak-extensions: not packaged in the extension jar, which only holds our classes. The Keycloak server image brings its own copy; fixed by the next Keycloak bump (iam/keycloak/Dockerfile and the pom), checked by this scan."
+
+[[IgnoredVulns]]
+id = "GHSA-735f-pc8j-v9w8"
+ignoreUntil = 2027-02-09T00:00:00Z
+reason = "protobuf-java 3.25.1 (denial of service on crafted input). Transitive of the provided-scope Keycloak 26.8.1 or of Testcontainers (test scope) in iam/keycloak-extensions: not packaged in the extension jar, which only holds our classes. The Keycloak server image brings its own copy; fixed by the next Keycloak bump (iam/keycloak/Dockerfile and the pom), checked by this scan."
+
+[[IgnoredVulns]]
+id = "GHSA-mfg7-5gfp-c4w3"
+ignoreUntil = 2027-02-09T00:00:00Z
+reason = "netty-codec-dns 4.1.135.Final (memory leak on malformed DNS names). Transitive of the provided-scope Keycloak 26.8.1 or of Testcontainers (test scope) in iam/keycloak-extensions: not packaged in the extension jar, which only holds our classes. The Keycloak server image brings its own copy; fixed by the next Keycloak bump (iam/keycloak/Dockerfile and the pom), checked by this scan."
+
+[[IgnoredVulns]]
+id = "GHSA-ccrj-gw8r-854m"
+ignoreUntil = 2027-02-09T00:00:00Z
+reason = "opentelemetry-api 1.62.0 (quadratic CPU in W3C tracestate parsing). Transitive of the provided-scope Keycloak 26.8.1 or of Testcontainers (test scope) in iam/keycloak-extensions: not packaged in the extension jar, which only holds our classes. The Keycloak server image brings its own copy; fixed by the next Keycloak bump (iam/keycloak/Dockerfile and the pom), checked by this scan."

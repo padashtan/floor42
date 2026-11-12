@@ -1,0 +1,144 @@
+{
+  "checked": "2026-10-31",
+  "note": "Curated by hand. Each entry was checked on the date above against its repository: the official marketplace from its clone on the director's machine (.claude-plugin/marketplace.json and each plugin's LICENSE), anthropics/skills from its README and .claude-plugin/marketplace.json on GitHub. Floor42 never installs anything: the director copies the command into their own Claude Code.",
+  "marketplaces": [
+    {
+      "name": "claude-plugins-official",
+      "source": { "source": "github", "repo": "anthropics/claude-plugins-official" }
+    },
+    {
+      "name": "anthropic-agent-skills",
+      "source": { "source": "github", "repo": "anthropics/skills" }
+    }
+  ],
+  "entries": [
+    {
+      "id": "anthropic-document-skills",
+      "kind": "skill",
+      "name": "document-skills (anthropics/skills)",
+      "source": "https://github.com/anthropics/skills",
+      "brings": {
+        "en": "Anthropic's skills to read and write Word, Excel, PowerPoint and PDF files.",
+        "fr": "Les skills d'Anthropic pour lire et écrire des fichiers Word, Excel, PowerPoint et PDF."
+      },
+      "risks": {
+        "en": "The skills come with scripts that the agent runs through the shell: each command still asks you under Floor42's table.",
+        "fr": "Les skills viennent avec des scripts que l'agent lance par le shell : chaque commande vous est encore demandée selon la table de Floor42."
+      },
+      "install": ["/plugin marketplace add anthropics/skills", "/plugin install document-skills@anthropic-agent-skills"],
+      "license": "Source-available, not open source (docx, pdf, pptx, xlsx), per the repository's README"
+    },
+    {
+      "id": "anthropic-example-skills",
+      "kind": "skill",
+      "name": "example-skills (anthropics/skills)",
+      "source": "https://github.com/anthropics/skills",
+      "brings": {
+        "en": "Anthropic's example skills: skill creation, MCP server building, web testing, artifacts, design themes.",
+        "fr": "Les skills d'exemple d'Anthropic : création de skills, construction de serveurs MCP, tests web, artefacts, thèmes graphiques."
+      },
+      "risks": {
+        "en": "A skill's text reaches the agent as instructions; read it before installing.",
+        "fr": "Le texte d'une skill arrive à l'agent comme des instructions : lisez-le avant d'installer."
+      },
+      "install": ["/plugin marketplace add anthropics/skills", "/plugin install example-skills@anthropic-agent-skills"],
+      "license": "Apache-2.0 for many skills, per the repository's README (check each skill's own LICENSE)"
+    },
+    {
+      "id": "pr-review-toolkit",
+      "kind": "plugin",
+      "name": "pr-review-toolkit",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit",
+      "brings": {
+        "en": "Review agents for comments, tests, error handling, type design, code quality and simplification.",
+        "fr": "Des agents de revue pour les commentaires, les tests, la gestion d'erreurs, la conception des types, la qualité et la simplification."
+      },
+      "risks": {
+        "en": "Each review agent spends tokens of the same plan.",
+        "fr": "Chaque agent de revue dépense des tokens du même forfait."
+      },
+      "install": ["/plugin install pr-review-toolkit@claude-plugins-official"],
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "security-guidance",
+      "kind": "plugin",
+      "name": "security-guidance",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+      "brings": {
+        "en": "Security warnings on edits, a review of the diff at the end of a turn, a commit reviewer.",
+        "fr": "Des avertissements de sécurité sur les modifications, une revue du diff en fin de tour, un relecteur de commits."
+      },
+      "risks": {
+        "en": "It works through hooks, which run commands on your machine in your own sessions.",
+        "fr": "Il fonctionne par des hooks, qui lancent des commandes sur votre machine dans vos propres sessions."
+      },
+      "install": ["/plugin install security-guidance@claude-plugins-official"],
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "skill-creator",
+      "kind": "plugin",
+      "name": "skill-creator",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator",
+      "brings": {
+        "en": "Create a skill, improve one, and measure how well it performs.",
+        "fr": "Créer une skill, en améliorer une, et mesurer ce qu'elle donne."
+      },
+      "risks": {
+        "en": "Measuring a skill runs sessions, which spend the plan.",
+        "fr": "Mesurer une skill lance des sessions, qui dépensent le forfait."
+      },
+      "install": ["/plugin install skill-creator@claude-plugins-official"],
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "feature-dev",
+      "kind": "agent",
+      "name": "feature-dev (code-explorer, code-architect, code-reviewer)",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev",
+      "brings": {
+        "en": "Three agents: explore a codebase, design a feature's architecture, review the result.",
+        "fr": "Trois agents : explorer une base de code, concevoir l'architecture d'une fonctionnalité, relire le résultat."
+      },
+      "risks": {
+        "en": "Their tool lists include web access (WebFetch, WebSearch).",
+        "fr": "Leurs listes d'outils incluent l'accès au web (WebFetch, WebSearch)."
+      },
+      "install": ["/plugin install feature-dev@claude-plugins-official"],
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "playwright",
+      "kind": "mcp",
+      "name": "playwright (Microsoft's MCP server)",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright",
+      "brings": {
+        "en": "Drive a browser: open pages, click, fill forms, take screenshots.",
+        "fr": "Piloter un navigateur : ouvrir des pages, cliquer, remplir des formulaires, faire des captures."
+      },
+      "risks": {
+        "en": "It starts `npx @playwright/mcp@latest`: an unpinned package from npm, downloaded and run at each start, with a browser on the network.",
+        "fr": "Il lance `npx @playwright/mcp@latest` : un paquet npm non épinglé, téléchargé et lancé à chaque démarrage, avec un navigateur sur le réseau."
+      },
+      "install": ["/plugin install playwright@claude-plugins-official"],
+      "license": "Not stated in the marketplace entry: check github.com/microsoft/playwright-mcp"
+    },
+    {
+      "id": "context7",
+      "kind": "mcp",
+      "name": "context7 (Upstash)",
+      "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/context7",
+      "brings": {
+        "en": "Up-to-date library documentation, looked up while working.",
+        "fr": "La documentation à jour des bibliothèques, consultée en travaillant."
+      },
+      "risks": {
+        "en": "A hosted server (mcp.context7.com): your queries leave the machine.",
+        "fr": "Un serveur hébergé (mcp.context7.com) : vos requêtes quittent la machine."
+      },
+      "install": ["/plugin install context7@claude-plugins-official"],
+      "license": "Not stated in the marketplace entry"
+    }
+  ]
+}

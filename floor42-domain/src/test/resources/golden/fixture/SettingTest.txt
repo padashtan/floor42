@@ -1,0 +1,865 @@
+=== aMissionsDefaultCapIsAnAmountInRangeOrNone
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=MISSION_BUDGET_USD, value="5.0")
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=MISSION_BUDGET_USD, value="none")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {MISSION_BUDGET_USD="none"}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 5
+witnesses = {}
+workspaces = []
+# queries
+version = 5
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional["none"]
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== aSessionCapIsAnAmountInRange
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=SESSION_BUDGET_USD, value="2.5")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {SESSION_BUDGET_USD="2.5"}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 4
+witnesses = {}
+workspaces = []
+# queries
+version = 4
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional["2.5"]
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== onlyAcceptableValuesAndOnlyTheDirector
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 3
+witnesses = {}
+workspaces = []
+# queries
+version = 3
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== onlyOfficeRecordsAMerge
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 3
+witnesses = {}
+workspaces = []
+# queries
+version = 3
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDefaultPermissionTableKeepsTheDirectorsLinesAndGoesBack
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null DefaultPermissionSet(tool="Bash", category=EXECUTE, decision=DENY)
+command 5
+  #4 2026-10-20T09:00:06Z SIMULATED DIRECTOR:director mission=- auth=null cause=null DefaultPermissionSet(tool="Bash", category=EXECUTE, decision=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 5
+witnesses = {}
+workspaces = []
+# queries
+version = 5
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDirectorChangesASettingAndCanGoBackToTheDefault
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=AGENT_LANGUAGE, value="fr")
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=PLAN_LIMIT_THRESHOLD, value="0.95")
+command 6
+  #5 2026-10-20T09:00:07Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=AGENT_LANGUAGE, value=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {PLAN_LIMIT_THRESHOLD="0.95"}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 6
+witnesses = {}
+workspaces = []
+# queries
+version = 6
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional["0.95"]
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theThemeIsOneOfFourDecades
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null SettingChanged(setting=OFFICE_THEME, value="2020s")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {OFFICE_THEME="2020s"}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 4
+witnesses = {}
+workspaces = []
+# queries
+version = 4
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional["2020s"]
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live

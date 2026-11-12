@@ -1,0 +1,287 @@
+name: Assurance chain
+
+# The whole quality and security chain in the order of the assurance graph (README "Quality and security assurance",
+# docs/quality.md): build; then static, dependencies and secrets in parallel; then tests, mutation and fuzzing; then the
+# dynamic scan and the protocol conformance run, each against a daemon started on the runner; then a summary.
+# By hand and weekly, not on every push: the chain takes well over an hour. Every layer reuses an existing workflow
+# (workflow_call) or the script that `make` calls, so a laptop run and this run are the same commands.
+# CodeQL and Scorecard only work on a public repository: they run when the "public-repository" input is true and the repository is padashtan/floor42; otherwise the job is skipped and the summary says skipped.
+# Schemathesis is not here: it is pending (docs/quality.md).
+on:
+  workflow_dispatch:
+    inputs:
+      public-repository:
+        description: Also run CodeQL and Scorecard (they need a public repository)
+        type: boolean
+        default: false
+  schedule:
+    - cron: '41 3 * * 0'
+
+permissions:
+  contents: read
+
+jobs:
+  # 1. Build: the daemon and its UI, once; the packaged app travels to the layers that run it.
+  build:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Package the daemon and its UI
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: quarkus-app
+          path: floor42-server/target/quarkus-app
+          retention-days: 7
+
+  # 2. Static analysis. PMD, CPD, SpotBugs with FindSecBugs, ESLint and JaCoCo are the `quality` job of the nightly
+  # workflow, called in layer 3 with the tests, the mutation run and the fuzzing, which share its Maven run.
+  semgrep:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Exit 1 means findings (reported in the SARIF file); any other failure is a real error.
+      - name: Semgrep
+        run: sh tools/quality/semgrep-run.sh || [ $? -eq 1 ]
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: semgrep-sarif
+          path: target/semgrep.sarif
+          retention-days: 30
+
+  codeql:
+    needs: build
+    if: ${{ inputs.public-repository && github.repository == 'padashtan/floor42' }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/codeql.yml
+
+  # 2. Dependencies and secrets: OSV-Scanner, gitleaks and Bearer (static-scan.yml), then Trivy.
+  static-scan:
+    needs: build
+    uses: ./.github/workflows/static-scan.yml
+
+  trivy:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      # target/bom.json (the CycloneDX SBOM) is written by the package phase.
+      - name: Package (for the SBOM)
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      # TRIVY_EXIT=1: HIGH or CRITICAL not in .trivyignore fails the job, as in a release.
+      - name: Trivy fs, sbom, config and image
+        env:
+          TRIVY_EXIT: '1'
+        run: sh tools/quality/trivy-run.sh all
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: trivy-reports
+          path: target/trivy
+          retention-days: 30
+
+  # 2. Supply chain of the repository itself: the workflows, the Dockerfiles and (public repository) Scorecard.
+  actionlint:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: actionlint
+        run: sh tools/quality/actionlint-run.sh
+
+  hadolint:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: hadolint
+        run: sh tools/quality/hadolint-run.sh
+
+  scorecard:
+    needs: build
+    if: ${{ inputs.public-repository && github.repository == 'padashtan/floor42' }}
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
+    uses: ./.github/workflows/scorecard.yml
+
+  # 3. Tests, mutation and fuzzing. The nightly workflow runs the slow tests, the browser journeys (Playwright, Chrome
+  # on the runner), the quality profile reports, PIT and Jazzer. The fast gate (format, every test) is the job below.
+  verify:
+    needs: [semgrep, static-scan, trivy, actionlint, hadolint]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Web unit tests
+        run: npm test
+        working-directory: floor42-web
+
+      # Same sandbox set-up as ci.yml, so the sandbox tests run instead of skipping.
+      - name: Allow user namespaces and install pasta (sandbox tests)
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          sudo apt-get update
+          sudo apt-get install -y passt
+          unshare -Urm true
+
+      - name: Format and every test
+        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+  verify-windows:
+    needs: [semgrep, static-scan, trivy, actionlint, hadolint]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Web unit tests
+        run: npm test
+        working-directory: floor42-web
+
+      - name: Format and every test
+        run: ./mvnw.cmd -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+  nightly-layers:
+    needs: [semgrep, static-scan, trivy, actionlint, hadolint]
+    uses: ./.github/workflows/nightly.yml
+
+  # 4. Dynamic scan and conformance, each against a daemon the job starts on the runner.
+  zap:
+    needs: [verify, verify-windows, nightly-layers]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Take the packaged app
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: quarkus-app
+          path: floor42-server/target/quarkus-app
+
+      # The baseline, then the API scan from the OpenAPI document, signed in. Active (attack payloads) against this
+      # throwaway daemon, which holds no real data. The rules and the pinned image are in the script.
+      - name: ZAP baseline and API scan against a test daemon
+        env:
+          ZAP_API_ACTIVE: '1'
+        run: sh tools/quality/zap-scan.sh
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: zap-report
+          path: target/zap
+          retention-days: 30
+
+  oidc-conformance:
+    needs: [verify, verify-windows, nightly-layers]
+    uses: ./.github/workflows/oidc-conformance.yml
+
+  # 5. One page with the result of every layer. It runs whatever the outcome, and fails when a layer failed.
+  summary:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    needs: [build, semgrep, codeql, static-scan, trivy, actionlint, hadolint, scorecard, verify, verify-windows, nightly-layers, zap, oidc-conformance]
+    if: ${{ (always()) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Result of each layer
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          {
+            echo '## Assurance chain'
+            echo
+            echo '| Job | Result |'
+            echo '|---|---|'
+            echo "$NEEDS" | jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"'
+            echo
+            echo "$NEEDS" | jq -r 'to_entries[] | select(.value.result == "skipped") | "- \(.key): skipped, nothing was verified by this layer"'
+          } >> "$GITHUB_STEP_SUMMARY"
+          # skipped is fine (CodeQL and Scorecard on a private repository); failed and cancelled are not.
+          if echo "$NEEDS" | jq -e '[.[].result] | any(. == "failure" or . == "cancelled")' >/dev/null; then
+            echo 'At least one layer failed.' >&2
+            exit 1
+          fi

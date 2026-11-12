@@ -1,0 +1,682 @@
+=== aReviewSessionIsNotContinued
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Add a gateway", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Validate token audience", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketSubmittedForReview(ticket="T-1", deliverable="report")
+command 12
+  #12 2026-10-20T09:00:12Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="M-1:r1", mission="M-1", ticket="T-1", agent="darius", model="claude-haiku-5-5", runtimeVersion=null, capUsd=null)
+command 13
+  #13 2026-10-20T09:00:13Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="M-1:r1", failed=true, outcome="failed", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:13Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {"T-1"=ReviewRounds(submissions=1, reviewedIn=[])}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"M-1:r1"=AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:r1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-haiku-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:12Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable="report", dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_REVIEW, title="Validate token audience"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 14
+witnesses = {}
+workspaces = []
+# queries
+version = 14
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = ASSIGNED
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable="report", dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_REVIEW, title="Validate token audience"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:r1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-haiku-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:12Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:13Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable="report", dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_REVIEW, title="Validate token audience"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session M-1:r1 = Optional[AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:r1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-haiku-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:12Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession M-1:r1 = "claude-haiku-5-5"
+continuationRequested M-1:r1 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk claude-haiku-5-5 = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== onlyTheDirectorMarksAProjectAndOnlyOneAMissionWorkedOn
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Add a gateway", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:04Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 5
+witnesses = {}
+workspaces = []
+# queries
+version = 5
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+tickets M-1 = []
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:04Z]
+checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: PLANNING -> COMPLETED is not allowed
+checkPullRequest M-1 = "ok"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDirectorAsksToContinueTheLatestEndedSessionOfTheWorkInProgress
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Add a gateway", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Validate token audience", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="M-1:s1", mission="M-1", ticket="T-1", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+command 12
+  #12 2026-10-20T09:00:13Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="M-1:s1", failed=true, outcome="interrupted", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+command 13
+  #13 2026-10-20T09:00:15Z REAL DIRECTOR:director mission=M-1 auth=null cause=null SessionContinuationRequested(mission="M-1", ticket="T-1", agent="chris", session="M-1:s1")
+command 14
+  #14 2026-10-20T09:00:16Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="M-1:s2", mission="M-1", ticket="T-1", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+command 15
+  #15 2026-10-20T09:00:17Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null SessionContinued(session="M-1:s2", from="M-1:s1")
+command 16
+  #16 2026-10-20T09:00:19Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="M-1:s2", failed=true, outcome="failed", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = [ContinuationRequest(mission="M-1", ticket="T-1", agent="chris", session="M-1:s1", at=2026-10-20T09:00:15Z)]
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:19Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"M-1:s1"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="interrupted", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}, "M-1:s2"=AgentSession{agent="chris", capUsd=null, continuedFrom="M-1:s1", costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:19Z, failed=true, id="M-1:s2", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Validate token audience"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 17
+witnesses = {}
+workspaces = []
+# queries
+version = 17
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = WORKING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Validate token audience"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="interrupted", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}, AgentSession{agent="chris", capUsd=null, continuedFrom="M-1:s1", costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:19Z, failed=true, id="M-1:s2", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:19Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Validate token audience"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session M-1:s1 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:13Z, failed=true, id="M-1:s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="interrupted", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession M-1:s1 = "claude-sonnet-5-5"
+continuationRequested M-1:s1 = Optional.empty
+session M-1:s2 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom="M-1:s1", costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:19Z, failed=true, id="M-1:s2", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession M-1:s2 = "claude-sonnet-5-5"
+continuationRequested M-1:s2 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDirectorPinsAndForgetsProjectsOfRealMissions
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Add a gateway", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo", pinned=true)
+command 6
+  #6 2026-10-20T09:00:07Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo")
+command 7
+  #7 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo", pinned=true)
+command 8
+  #8 2026-10-20T09:00:10Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo")
+command 9
+  #9 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCreated(mission="M-2", title="Secure the APIs", objective="Add a gateway", workspace="C:/repo")
+  #10 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-2 auth=null cause=null WorkflowPinned(mission="M-2", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 2
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 2
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:04Z, "M-2"=2026-10-20T09:00:11Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}, "M-2"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:11Z, id="M-2", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0), "M-2"=Pin(at=1, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP)), "M-2"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {"C:/repo"=ProjectMark{forgottenAt=2026-10-20T09:00:10Z, path="C:/repo", pinned=false}}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 11
+witnesses = {}
+workspaces = []
+# queries
+version = 11
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}, Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:11Z, id="M-2", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+tickets M-1 = []
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:04Z]
+checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: PLANNING -> COMPLETED is not allowed
+checkPullRequest M-1 = "ok"
+mission M-2 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:11Z, id="M-2", objective="Add a gateway", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace="C:/repo"}]
+tickets M-2 = []
+actions M-2 = []
+questions M-2 = []
+sessions M-2 = []
+workspaces M-2 = []
+interventions M-2 = []
+committee M-2 = Optional.empty
+committees M-2 = []
+directorFiles M-2 = []
+pullRequests M-2 = []
+missionAssets M-2 = []
+retro M-2 = Optional.empty
+checkRuns M-2 = []
+spentUsdEstimated M-2 = 0.0
+staffingReview M-2 = Optional.empty
+budgetLeftUsd M-2 = Optional.empty
+budgetReached M-2 = false
+lastActivity M-2 = Optional[2026-10-20T09:00:11Z]
+checkCompleteMission M-2 = refused INVALID_TRANSITION: M-2: PLANNING -> COMPLETED is not allowed
+checkPullRequest M-2 = "ok"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/repo = Optional[ProjectMark{forgottenAt=2026-10-20T09:00:10Z, path="C:/repo", pinned=false}]
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live

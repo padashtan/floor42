@@ -1,0 +1,4 @@
+tool|toolu_p1|Read|{"file_path":"../../outside-1.txt"}|x
+tool|toolu_p2|Read|{"file_path":"../../outside-2.txt"}|x
+tool|toolu_p3|Read|{"file_path":"../../outside-3.txt"}|x
+text|Report: tried three files outside the workspace.

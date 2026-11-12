@@ -1,0 +1,44 @@
+# Keycloak 26 and its Postgres for Floor42's IAM mode. Dev only: run iam/bootstrap.sh first (it writes iam/.env).
+# Both services listen on loopback only.
+name: floor42-iam
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run iam/bootstrap.sh first}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  keycloak:
+    build: ./keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?run iam/bootstrap.sh first}
+      KC_HOSTNAME: http://localhost:8180
+      KC_HEALTH_ENABLED: "true"
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:?run iam/bootstrap.sh first}
+      # Replaces the ${FLOOR42_DAEMON_SECRET} placeholder of the realm file at import.
+      FLOOR42_DAEMON_SECRET: ${FLOOR42_DAEMON_SECRET:?run iam/bootstrap.sh first}
+      FLOOR42_API_SECRET: ${FLOOR42_API_SECRET:?run iam/bootstrap.sh first}
+    volumes:
+      - ./realm:/opt/keycloak/data/import:ro
+    ports:
+      - "127.0.0.1:8180:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:

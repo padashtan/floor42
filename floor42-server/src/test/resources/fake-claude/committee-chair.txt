@@ -1,0 +1,1 @@
+text|# Decision record\n## Recommended solution\nA gateway in front of the APIs.\n## Unresolved disagreements\nwhitfield: APIs must validate tokens themselves.\n## Acceptance criteria\n- Requests without a token are refused.\nRECOMMENDATION: Put a gateway in front of the APIs

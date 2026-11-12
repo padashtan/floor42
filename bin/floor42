@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# Floor42 from the terminal.
+#   floor42                  start the daemon if needed and open the office in your browser
+#   floor42 doctor           what this machine lacks for Floor42 (works with the daemon stopped; installs nothing)
+#   floor42 "objective..."   also propose a real mission on the git repository of the current directory
+# The daemon runs from a copy of the build in ~/.floor42/app. Java 25 is required (FLOOR42_JAVA or JAVA_HOME).
+set -euo pipefail
+
+# Office's name for it (before 1.5.0) still works, with a notice.
+if [ -z "${FLOOR42_JAVA:-}" ] && [ -n "${OFFICE_JAVA:-}" ]; then
+  echo "OFFICE_JAVA is now FLOOR42_JAVA: using it." >&2
+  FLOOR42_JAVA=$OFFICE_JAVA
+fi
+
+BASE="http://127.0.0.1:7420"
+DATA_DIR="$HOME/.floor42"
+APP_DIR="$DATA_DIR/app"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+BUILD="$ROOT/floor42-server/target/quarkus-app"
+# A release archive holds the build at its root.
+[ -d "$ROOT/quarkus-app" ] && BUILD="$ROOT/quarkus-app"
+# Installed by install.sh: the launcher sits in ~/.local/bin and the build is only in ~/.floor42/app.
+[ -f "$BUILD/quarkus-run.jar" ] || BUILD="$APP_DIR"
+
+find_java() {
+  for candidate in "${FLOOR42_JAVA:-}" "${JAVA_HOME:+$JAVA_HOME/bin/java}" java; do
+    [ -n "$candidate" ] || continue
+    major=$("$candidate" -version 2>&1 | head -1 | sed -E 's/.*"([0-9]+).*/\1/') || continue
+    if [ "${major:-0}" -ge 25 ] 2>/dev/null; then echo "$candidate"; return; fi
+  done
+  echo "Java 25 or later is required: set FLOOR42_JAVA." >&2
+  exit 1
+}
+
+daemon_up() { curl -fs -o /dev/null --max-time 2 "$BASE/api/status"; }
+
+# floor42 doctor: what this machine lacks for Floor42, measured now, with or without the daemon. Installs nothing;
+# exit code 0 when every required item is present, 1 otherwise.
+if [ "${1:-}" = doctor ]; then
+  [ -f "$BUILD/quarkus-run.jar" ] || BUILD="$APP_DIR"
+  [ -f "$BUILD/quarkus-run.jar" ] || { echo "No build found: run ./mvnw package first." >&2; exit 1; }
+  java_bin=$(find_java)
+  if command -v cygpath > /dev/null 2>&1; then
+    lib=$(cygpath -w "$BUILD")
+    cp="$lib\\app\\*;$lib\\lib\\boot\\*;$lib\\lib\\main\\*"
+  else
+    cp="$BUILD/app/*:$BUILD/lib/boot/*:$BUILD/lib/main/*"
+  fi
+  exec "$java_bin" --enable-native-access=ALL-UNNAMED -Djava.util.logging.manager=org.jboss.logmanager.LogManager -cp "$cp" dev.floor42.server.runtime.Doctor
+fi
+
+if ! daemon_up; then
+  [ -f "$BUILD/quarkus-run.jar" ] || { echo "No build found: run ./mvnw package first." >&2; exit 1; }
+  if [ ! -f "$APP_DIR/quarkus-run.jar" ] || ! diff -rq "$BUILD" "$APP_DIR" > /dev/null 2>&1; then
+    # Content, not file times: a zip carries the commit's time, so an older build never looks newer than the copy.
+    rm -rf "$APP_DIR"
+    mkdir -p "$DATA_DIR"
+    cp -r "$BUILD" "$APP_DIR"
+  fi
+  java_bin=$(find_java)
+  echo "Starting the Floor42 daemon..."
+  # No dynamic attach: a process of your user could otherwise load code into the daemon (SECURITY.md).
+  # The background subshell gets stdin from /dev/null and stdout/stderr in the log: else its subshell keeps the
+  # caller's descriptors and an ssh call without a TTY, or a pipe, never returns while the daemon lives.
+  [ ! -f "$DATA_DIR/daemon.log" ] || mv -f "$DATA_DIR/daemon.log" "$DATA_DIR/daemon.prev.log"
+  (cd "$DATA_DIR" && exec nohup "$java_bin" -XX:+DisableAttachMechanism --enable-native-access=ALL-UNNAMED -Djdk.httpclient.allowRestrictedHeaders=host -jar "$APP_DIR/quarkus-run.jar") < /dev/null >> "$DATA_DIR/daemon.log" 2>&1 &
+  for _ in $(seq 1 80); do daemon_up && break; sleep 0.5; done
+  daemon_up || { echo "The daemon did not start: see $DATA_DIR/daemon.log" >&2; exit 1; }
+fi
+
+if [ $# -gt 0 ]; then
+  # The director's token is in memory only (ADR-0034): proposing from the terminal needs a script token from the desk
+  # (System > Sessions and tokens, scope missions:write, ADR-0044) in FLOOR42_TOKEN, or the deprecated token file.
+  if [ -n "${FLOOR42_TOKEN:-}" ]; then
+    token="$FLOOR42_TOKEN"
+  elif [ -f "$DATA_DIR/session.token" ]; then
+    echo "Using the deprecated director token file: issue a script token from the desk instead (FLOOR42_TOKEN)." >&2
+    token=$(tr -d '[:space:]' < "$DATA_DIR/session.token")
+  else
+    echo "Proposing a mission from the terminal needs a script token: issue one from the desk (System > Sessions and" \
+      "tokens, scope missions:write) and set FLOOR42_TOKEN, or propose it from the desk." >&2
+    exit 1
+  fi
+  text="$*"
+  repository=$(git rev-parse --show-toplevel 2>/dev/null) || { echo 'Run floor42 "..." inside a git repository.' >&2; exit 1; }
+  title="${text:0:60}"
+  body=$(python3 -c 'import json,sys; print(json.dumps({"title": sys.argv[1], "objective": sys.argv[2], "repository": sys.argv[3]}))' \
+    "$title" "$text" "$repository")
+  # The daemon's answer is data: kept in a variable and parsed, never piped into an interpreter.
+  answer=$(curl -fsS -X POST "$BASE/api/missions" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' -d "$body")
+  python3 -c 'import json,sys; m=json.loads(sys.argv[1]); print(f"Mission {m[\"id\"]} proposed on {m[\"workspace\"]}.")' "$answer"
+  echo "Review its plan and permissions in your desk (press D), then approve it."
+fi
+
+# The daemon opens a single-use sign-in link in the default browser; the link never comes back here.
+curl -fsS -X POST -o /dev/null "$BASE/auth/open" || echo "No sign-in link opened: if the office is already open, reload it." >&2
+# Without a browser (a headless Linux, WSL without a desktop) the daemon keeps the link in a private file instead.
+if [ -f "$DATA_DIR/sign-in-link" ]; then
+  echo "No browser could be started here: the sign-in link (single use, 60 s) is in $DATA_DIR/sign-in-link: open it in a browser." >&2
+fi

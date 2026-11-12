@@ -1,0 +1,158 @@
+name: Security scans
+
+# Semgrep, Trivy and the OWASP ZAP baseline (docs/security-scanning.md). Every night and by hand, and called by the
+# release workflow with `release: true`, where Trivy fails on a HIGH or CRITICAL finding that .trivyignore does not list
+# (with a reason and an expiry). Semgrep and ZAP only report: their findings are artifacts to triage, not a gate.
+# The tools run through their official Docker images, pinned by digest in tools/quality/*.sh: the same commands as
+# `make semgrep` and `make trivy` on a developer machine.
+on:
+  schedule:
+    - cron: '47 3 * * *'
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      release:
+        description: Gate mode of a release (Trivy fails on HIGH and CRITICAL findings)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # Exit 1 means findings (reported in the SARIF file); any other failure is a real error.
+      - name: Semgrep
+        run: sh tools/quality/semgrep-run.sh || [ $? -eq 1 ]
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: semgrep-sarif
+          path: target/semgrep.sarif
+          retention-days: 30
+
+  trivy:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      # target/bom.json (the CycloneDX SBOM) is written by the package phase.
+      - name: Package (for the SBOM)
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      - name: Trivy fs, sbom, config and image
+        env:
+          TRIVY_EXIT: ${{ inputs.release && '1' || '0' }}
+        run: sh tools/quality/trivy-run.sh all
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: trivy-reports
+          path: target/trivy
+          retention-days: 30
+
+  # A nightly only: the ZAP scans need the daemon packaged, like the browser journeys, and adds minutes to a release
+  # that Trivy and the journeys already gate.
+  zap:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ (!inputs.release) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Package the daemon and its UI
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      # The baseline, then the API scan from the OpenAPI document, signed in; active (attack payloads) against this
+      # throwaway daemon, which holds no real data.
+      - name: ZAP baseline and API scan against a test daemon
+        env:
+          ZAP_API_ACTIVE: '1'
+        run: sh tools/quality/zap-scan.sh
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: zap-report
+          path: target/zap
+          retention-days: 30
+
+  # A nightly only, like ZAP: it needs the packaged daemon. Fails on a failure the baseline does not list.
+  api-fuzz:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ (!inputs.release) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Package the daemon and its UI
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      # Schemathesis (pinned image) against the OpenAPI document: signed in, then without a session.
+      - name: Schemathesis against a test daemon
+        run: sh tools/security/api-fuzz.sh
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: api-fuzz-report
+          path: target/api-fuzz
+          retention-days: 30

@@ -1,0 +1,14 @@
+# Bearer CLI (tools/quality/static-run.sh bearer, docs/security-scanning.md).
+scan:
+  skip-path:
+    - "**/node_modules/**"
+    - "**/target/**"
+    - "**/dist/**"
+    - "**/e2e-results/**"
+    - "floor42-web/e2e/**"
+    - "**/src/test/**"
+    - "**/*.test.ts"
+    - "tools/demo/**"
+  scanner:
+    - sast
+    - secrets

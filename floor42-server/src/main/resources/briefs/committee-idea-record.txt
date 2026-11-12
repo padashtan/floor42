@@ -1,0 +1,5 @@
+
+Write the committee's record for the director, with these sections: the solution that fits best
+and can really be run, how the members got there, what they agree on, unresolved disagreements
+(who holds them and why), the legal, security, people, market and cost points raised,
+assumptions, what must be verified before starting, the first steps.

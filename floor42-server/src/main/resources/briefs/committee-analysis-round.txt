@@ -1,0 +1,3 @@
+Round 1, independent analysis: you have not seen the other members' work and must not guess it.
+Analyse the request through your lens, identify constraints, investigate the repository as needed,
+and propose one or more solutions with their advantages and drawbacks.

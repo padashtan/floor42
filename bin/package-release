@@ -1,0 +1,41 @@
+#!/bin/sh
+# Packs the release zip floor42-<version>.zip (and its .sha256) from a finished build (./mvnw package), the same way
+# on a laptop and in the release workflow, so that two runs on one build give the same bytes (docs/releases.md):
+# every file's time is set to SOURCE_DATE_EPOCH, entries are added in byte order, and zip -X drops the extra fields
+# (owner ids, access times). SOURCE_DATE_EPOCH defaults to the HEAD commit's time.
+# THIRD-PARTY-LICENSES.txt (component, version, licence) is generated from the CycloneDX SBOMs when they exist:
+# target/bom.json and the file named by FLOOR42_SBOM_WEB (the release workflow writes it before packing); needs jq.
+# Needs zip and sha256sum. Usage: bin/package-release <version> [output folder, default .]
+set -eu
+version=${1:?usage: package-release <version> [output folder]}
+out=${2:-.}
+root=$(cd "$(dirname "$0")/.." && pwd)
+epoch=${SOURCE_DATE_EPOCH:-$(git -C "$root" log -1 --format=%ct)}
+dir="floor42-$version"
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+mkdir -p "$work/$dir/bin" "$out"
+out=$(cd "$out" && pwd)
+cp -r "$root/floor42-server/target/quarkus-app" "$work/$dir/quarkus-app"
+cp "$root/bin/floor42" "$root/bin/floor42.ps1" "$work/$dir/bin/"
+cp "$root/LICENSE" "$root/NOTICE" "$root/CHANGELOG.md" "$work/$dir/"
+# The docs/ and image links of the README point into the repository, not into this zip.
+{ printf 'Links to docs/, SECURITY.md and images below are in the repository: https://github.com/padashtan/floor42\n\n'; cat "$root/README.md"; } > "$work/$dir/README.md"
+
+# One line per component, sorted in byte order, so the list is the same for the same SBOMs.
+for bom in "$root/target/bom.json" "${FLOOR42_SBOM_WEB:-}"; do
+  [ -n "$bom" ] && [ -f "$bom" ] && jq -r '.components[]? | [.name, (.version // "?"),
+    ([.licenses[]? | .license.id // .license.name // .expression] | join(" OR ") | if . == "" then "UNKNOWN" else . end)] | @tsv' "$bom"
+done | LC_ALL=C sort -u > "$work/licenses.tsv"
+if [ -s "$work/licenses.tsv" ]; then
+  { echo "Third-party components in this release: name, version, licence (from the CycloneDX SBOMs)."; echo; cat "$work/licenses.tsv"; } \
+    > "$work/$dir/THIRD-PARTY-LICENSES.txt"
+fi
+
+export TZ=UTC LC_ALL=C
+find "$work/$dir" -exec touch -h -d "@$epoch" {} +
+rm -f "$out/$dir.zip" "$out/$dir.zip.sha256"
+(cd "$work" && find "$dir" -type f | sort | zip -X -q -@ "$out/$dir.zip")
+(cd "$out" && sha256sum "$dir.zip" > "$dir.zip.sha256")
+echo "package-release: $out/$dir.zip"

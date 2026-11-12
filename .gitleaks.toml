@@ -1,0 +1,33 @@
+# gitleaks configuration (tools/quality/static-run.sh, docs/security-scanning.md). Default rules stay on; only proven
+# false positives are listed, each scoped to a path and a reason.
+title = "floor42 gitleaks"
+
+[extend]
+useDefault = true
+
+# 2026-11-09 triage: 39 findings in the working tree, all false positives (no real secret).
+# Every entry lists single files (never a folder) and the rules it covers: a new test file, or a secret in a file not listed here, is flagged.
+
+[[allowlists]]
+description = "Build output and dependencies: untracked copies of the files below (the history scan never sees them)"
+paths = ['''(^|/)(target|node_modules)/''']
+
+[[allowlists]]
+description = "Fake client secrets of the throwaway test realm, fixture tokens, PET_SOUND_KEY (a localStorage key name)"
+paths = ['''(^|/)floor42-domain/src/test/resources/golden/fixture/ProofsTest\.txt$''', '''(^|/)floor42-domain/src/test/resources/golden/scenario/commands\.txt$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/AgentClientsDismissalTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/AgentClientsTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IamSessionTestBase\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IamStatusBackgroundTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IamStatusTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IdentityAuditTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IdentityWatchPassTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/IdentityWatchTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/KeycloakClientTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/ResourceBrokerCutTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/RevocationGuaranteesTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/iam/SessionIdentityTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/runtime/SandboxTest\.java$''', '''(^|/)floor42-web/src/App\.vue$''', '''(^|/)floor42-web/src/ui/useOfficeScene\.ts$''', '''(^|/)iam/keycloak-extensions/src/test/java/dev/floor42/iam/MappersIT\.java$''']
+targetRules = ["generic-api-key"]
+
+[[allowlists]]
+description = "Fake unsigned JWT in the masking test"
+paths = ['''(^|/)floor42-server/src/test/java/dev/floor42/server/journal/JournalMaskingTest\.java$''']
+targetRules = ["jwt"]
+
+[[allowlists]]
+description = "AWS and GitHub token lookalikes planted for the masking and leak tests"
+paths = ['''(^|/)floor42-server/src/test/java/dev/floor42/server/api/ReplayExportApiTest\.java$''', '''(^|/)floor42-server/src/test/resources/fake-claude/leak\.txt$''']
+targetRules = ["aws-access-token"]
+
+[[allowlists]]
+description = "curl -u takes shell variables filled by openssl rand"
+paths = ['''(^|/)iam/byo-keycloak-check\.sh$''']
+targetRules = ["curl-auth-user"]

@@ -1,0 +1,22 @@
+name: Feature request
+description: Something Floor42 should do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you are trying to do, and what stops you today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you propose
+      description: >-
+        How it could work. Permissions enforced by code and honest origins (real, simulated, estimated) are
+        constraints, not options.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

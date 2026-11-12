@@ -1,0 +1,13 @@
+
+Structure your contribution: proposal or objection, justification, evidence (files, command outputs),
+assumptions, consequences, risks, alternatives, what would invalidate it, what still needs checking.
+A critical objection is a risk you would not accept the decision with; it is never settled by a vote.
+
+End with exactly these three lines:
+PROPOSAL: <your recommended solution, one line>
+POSITION: <NEW, MAINTAINED, REVISED, or ADOPTED followed by the id of the member whose proposal you adopt>
+CRITICAL OBJECTION: <none, or the one-line objection you maintain>
+and, only when something your proposal depends on is the director's to decide or to know (users,
+priorities, business rules, budget, deadlines) and neither the files nor the constraints answer it, a
+fourth line; the business analyst takes these to the director before the ruling:
+QUESTIONS: <question 1> || <question 2>

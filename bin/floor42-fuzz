@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Real coverage-guided fuzzing (Jazzer, docs/quality.md). In a normal build the @FuzzTest methods only replay their
+# seeds. Here each one fuzzes in turn (Jazzer runs one fuzz test per JVM) for FUZZ_SECONDS seconds (default 120).
+#   bin/floor42-fuzz                      every target
+#   bin/floor42-fuzz ShellPatternsFuzzTest   the targets of one class (a Class or Class#method filter)
+# A crash is written as a seed under floor42-server/src/test/resources/<package>/<Class>Inputs/<method>/: keep it.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+secs="${FUZZ_SECONDS:-120}"
+filter="${1:-}"
+targets=$(find floor42-server/src/test/java -name '*FuzzTest.java' | sort | while read -r f; do
+  cls=$(basename "$f" .java)
+  awk -v c="$cls" '/@FuzzTest/ {t=1; next} t && /void [A-Za-z0-9_]+\(/ {match($0, /void [A-Za-z0-9_]+/); print c "#" substr($0, RSTART+5, RLENGTH-5); t=0}' "$f"
+done)
+failed=0
+for t in $targets; do
+  [[ -z "$filter" || "$t" == *"$filter"* ]] || continue
+  echo "== fuzzing $t for ${secs}s"
+  log=$(mktemp)
+  rc=0
+  JAZZER_FUZZ=1 ./mvnw -B -ntp -q -pl floor42-server -am test -Dspotless.check.skip=true -Dquarkus.quinoa=false     -Dtest="$t" -Dsurefire.failIfNoSpecifiedTests=false -Djazzer.max_duration="${secs}s" >"$log" 2>&1 || rc=$?
+  grep -aE "^#[0-9]+\s+DONE|Done [0-9]+ runs|FuzzTestFindingException|Test unit written|Expecting|ERROR\] +[A-Za-z]" "$log" | cut -c1-240 || true
+  rm -f "$log"
+  [[ "$rc" -eq 0 ]] || failed=1
+done
+exit $failed

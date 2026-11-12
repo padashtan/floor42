@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SpotBugs exclude filter: generated code (Quarkus ArC beans, client proxies, subclasses, build-time synthetic
+     classes), then the SECURITY findings triaged as false positives (docs/quality.md, "Security triage"). Each one is
+     narrowed to the method and the bug pattern it was triaged for, with its reason, so a new caller or a new pattern
+     in the same class is still reported. A finding that is real is fixed, never listed here. -->
+<FindBugsFilter>
+    <Match>
+        <Class name="~.*_(Bean|ClientProxy|Subclass|Observer_.*|Producer_.*|Synthetic.*|Interceptor.*)(\$.*)?"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.generated\..*"/>
+    </Match>
+
+    <!-- REDOS: patterns left in place, each linear (no nested or overlapping quantifier) and run under a 200 ms test
+         on a 50 000 character input (RegexBudgetTest, ReplaySanitizerTest, LegacyNamesTest). -->
+    <Match>
+        <!-- A step key is at most 40 characters before the pattern runs; the pattern has one unambiguous separator. -->
+        <Class name="~dev\.floor42\.domain\.workflow\.(DocumentCheck|Workflow)"/>
+        <Method name="&lt;clinit&gt;"/>
+        <Bug pattern="REDOS"/>
+    </Match>
+    <Match>
+        <!-- Remote URLs: every quantifier is bounded by a character that cannot repeat it (/ : @). -->
+        <Class name="dev.floor42.server.app.PullRequestGit"/>
+        <Method name="&lt;clinit&gt;"/>
+        <Bug pattern="REDOS"/>
+    </Match>
+    <Match>
+        <!-- Lines are squeezed (blank runs cut to 32) before the patterns run, so no run of blanks can be explored. -->
+        <Class name="dev.floor42.server.app.ReviewClaims"/>
+        <Method name="&lt;clinit&gt;"/>
+        <Bug pattern="REDOS"/>
+    </Match>
+    <Match>
+        <!-- A configuration name: [^.]+ and .+ are separated by literal dots, anchored at both ends. -->
+        <Class name="dev.floor42.server.config.LegacyNames"/>
+        <Method name="&lt;clinit&gt;"/>
+        <Bug pattern="REDOS"/>
+    </Match>
+    <Match>
+        <!-- Path patterns: each tail is a negated class that cannot fail, so nothing backtracks; the folder patterns
+             start only at the first separator of a run. -->
+        <Class name="dev.floor42.server.security.ReplaySanitizer"/>
+        <Method name="~&lt;clinit&gt;|root"/>
+        <Bug pattern="REDOS"/>
+    </Match>
+
+    <!-- PATH_TRAVERSAL_IN: the name is checked or constant, or the path is confined beneath its root. -->
+    <Match>
+        <!-- The vault name is checked against [a-z0-9-]{1,80} before any path is built (file()). -->
+        <Class name="dev.floor42.server.iam.SecretVault"/>
+        <Method name="put"/>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+    </Match>
+    <Match>
+        <!-- The temp file prefix is the name of the catalogue's own fixed files (resources.json, grants.json). -->
+        <Class name="dev.floor42.server.iam.ResourceCatalogue"/>
+        <Method name="write"/>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+    </Match>
+    <Match>
+        <!-- The folder comes from Claude Code's own registry file, which the director's tool writes; it is read only,
+             and a plugin path from a listing is checked beneath the clone (localPluginDir). -->
+        <Class name="dev.floor42.server.app.MarketplaceStore"/>
+        <Method name="~markets|refresh"/>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+    </Match>
+    <Match>
+        <!-- The scratch file is named by Floor42 inside its own proofs folder. -->
+        <Class name="dev.floor42.server.app.ProofSnapshot"/>
+        <Method name="scratch"/>
+        <Bug pattern="PATH_TRAVERSAL_IN"/>
+    </Match>
+
+    <!-- COMMAND_INJECTION: every process is started from an argument list, never through a shell. -->
+    <Match>
+        <!-- The checks' command is the director's recipe, run in the sandbox: running it is the feature. -->
+        <Class name="dev.floor42.server.app.BoundedProcess"/>
+        <Method name="builder"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- claude's plugin steps: names are checked by MarketplaceStore.NAME (never a leading dash). -->
+        <Class name="~dev\.floor42\.server\.app\.ClaudeCli(\$Process)?"/>
+        <Method name="run"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- The folder is an absolute path given to the explorer as its only argument. -->
+        <Class name="dev.floor42.server.app.Deliverables"/>
+        <Method name="launchExplorer"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- gh takes the repository (host/owner/name) as a positional argument: it comes from PullRequestGit.repositoryOf,
+             which accepts only a host, an owner and a name with no leading dash; the other values follow a flag. -->
+        <Class name="~dev\.floor42\.server\.app\.GhCli(\$Process)?"/>
+        <Method name="run"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- The command is the configured claude executable, with fixed flags. -->
+        <Class name="~dev\.floor42\.server\.runtime\.(ClaudeCodeProbe|ClaudeCodeRuntime)"/>
+        <Method name="~probe|start"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- git, with its fixed global options, then arguments built by Floor42 (a remote is checked in PullRequestGit,
+             git refuses a branch name that starts with a dash, and a repository setting that redirects a push is
+             refused by NetworkConfigGuard). -->
+        <Class name="dev.floor42.server.runtime.GitProcess"/>
+        <Method name="~once|gitToFile"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- The sandbox probe and the pseudo-terminal start the configured command, as an argument list. -->
+        <Class name="~dev\.floor42\.server\.runtime\.(SandboxProbe|pty\.PosixPty)"/>
+        <Method name="start"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+    <Match>
+        <!-- The link is Floor42's own sign-in URL, opened with rundll32, open or xdg-open: no shell parses it. -->
+        <Class name="dev.floor42.server.security.DirectorSignIn"/>
+        <Method name="deliver"/>
+        <Bug pattern="COMMAND_INJECTION"/>
+    </Match>
+
+    <!-- UNSAFE_HASH_EQUALS: digests of git objects and files, not secrets; a timing leak reveals nothing. -->
+    <Match>
+        <Class name="dev.floor42.server.app.Workshop"/>
+        <Method name="undo"/>
+        <Bug pattern="UNSAFE_HASH_EQUALS"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.journal.PendingRestore"/>
+        <Method name="readPrepared"/>
+        <Bug pattern="UNSAFE_HASH_EQUALS"/>
+    </Match>
+
+    <!-- UNENCRYPTED_(SERVER_)SOCKET: loopback only (InetAddress.getLoopbackAddress), a probe for a free or owned port. -->
+    <Match>
+        <Class name="dev.floor42.server.iam.SocketOwners"/>
+        <Method name="supported"/>
+        <Bug pattern="UNENCRYPTED_SOCKET,UNENCRYPTED_SERVER_SOCKET"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.DataChecks"/>
+        <Method name="realPort"/>
+        <Bug pattern="UNENCRYPTED_SERVER_SOCKET"/>
+    </Match>
+
+    <!-- NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE: Path.getParent() and Path.getFileName() are null only for a root or an
+         empty path. Each path here is a file under the data or project folder, an absolute path, or an entry listed
+         from a directory, so none is one; docs/quality.md ("Correctness triage"). -->
+    <Match>
+        <Class name="dev.floor42.server.api.ProjectsResource"/>
+        <Method name="~folders|lambda\$folders\$\d+|visibleFolder|lambda\$visibleFolder\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.BlobSource"/>
+        <Method name="~onDisk|lambda\$onDisk\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.ClaudeAssets"/>
+        <Method name="~agents|lambda\$agents\$\d+|list|lambda\$list\$\d+|skills|lambda\$skills\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.DirectorFiles"/>
+        <Method name="~writeAll|lambda\$writeAll\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.DocumentWriter"/>
+        <Method name="~place|lambda\$place\$\d+|refusal|lambda\$refusal\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.ManifestReader"/>
+        <Method name="~contents|lambda\$contents\$\d+|mdStems|lambda\$mdStems\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.MarketplaceStore"/>
+        <Method name="~refresh|lambda\$refresh\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.MissionAssets"/>
+        <Method name="~copyFile|lambda\$copyFile\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.ProofCopyRules"/>
+        <Method name="~sizeOf|lambda\$sizeOf\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.ProofSnapshot"/>
+        <Method name="~clean|lambda\$clean\$\d+|copy|lambda\$copy\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.SampleRepository"/>
+        <Method name="~redirected|lambda\$redirected\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.SampleWrites"/>
+        <Method name="~write|lambda\$write\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.SessionContinuity"/>
+        <Method name="~transcript|lambda\$transcript\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.Workshop"/>
+        <Method name="~reject|lambda\$reject\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.WorkshopFiles"/>
+        <Method name="~write|lambda\$write\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.app.Workspaces"/>
+        <Method name="~list|lambda\$list\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.iam.Delegations"/>
+        <Method name="~save|lambda\$save\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.iam.IamSettings"/>
+        <Method name="~save|lambda\$save\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.iam.LinuxSocketOwners"/>
+        <Method name="~holder|lambda\$holder\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.iam.ResourceCatalogue"/>
+        <Method name="~write|lambda\$write\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.iam.SecretVault"/>
+        <Method name="~put|lambda\$put\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.journal.BackupStore"/>
+        <Method name="~list|lambda\$list\$\d+|take|lambda\$take\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.journal.DataMigration"/>
+        <Method name="~copy|lambda\$copy\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.ClaudeCodeRuntime"/>
+        <Method name="~streamOf|lambda\$streamOf\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.DataChecks"/>
+        <Method name="~backup|lambda\$backup\$\d+|newestBackup|lambda\$newestBackup\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.GitProcess"/>
+        <Method name="~checkLinks|lambda\$checkLinks\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.Sandbox"/>
+        <Method name="~gitDirs|lambda\$gitDirs\$\d+|write|lambda\$write\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.ShellGuard"/>
+        <Method name="~violation|lambda\$violation\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.runtime.UnnamedLaunches"/>
+        <Method name="~unnamed|lambda\$unnamed\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.server.security.ConfigGuard"/>
+        <Method name="~foreignFiles|lambda\$foreignFiles\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+    </Match>
+
+    <!-- NP_NULL_ON_SOME_PATH, NP_GUARANTEED_DEREF: the argument is checked by require(...), which throws a
+         DomainException on null; SpotBugs does not know that the helper never returns. The check
+         runs first, so the dereference after it is never reached with null. -->
+    <Match>
+        <Class name="dev.floor42.domain.CommitteeConvening"/>
+        <Method name="~checkMembers|lambda\$checkMembers\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.CommitteeSeats"/>
+        <Method name="~panels|lambda\$panels\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.MeetingRounds"/>
+        <Method name="~speakers|lambda\$speakers\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.Meetings"/>
+        <Method name="~attendees|lambda\$attendees\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.Objections"/>
+        <Method name="~check|lambda\$check\$\d+|object|lambda\$object\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.Retrospectives"/>
+        <Method name="~requireParticipants|lambda\$requireParticipants\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.Setting"/>
+        <Method name="~normalize|lambda\$normalize\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.TicketApprovals"/>
+        <Method name="~approve|lambda\$approve\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+    <Match>
+        <Class name="dev.floor42.domain.TicketPlanning"/>
+        <Method name="~propose|lambda\$propose\$\d+"/>
+        <Bug pattern="NP_NULL_ON_SOME_PATH,NP_GUARANTEED_DEREF"/>
+    </Match>
+
+    <!-- EI_EXPOSE_REP, EI_EXPOSE_REP2: a record's List and Map components are copied in its compact constructor (the
+         accessor then hands out an immutable view, which SpotBugs accepts). What stays here is not a collection held
+         by a value: a collaborator injected by the container, a handle or an immutable JDK value. -->
+    <Match>
+        <!-- Constructor injection of the project's own services, Quarkus' request holder and the shared ObjectMapper:
+             the bean is meant to be shared, not copied. -->
+        <Class name="~(dev\.floor42\.server\.api\.BrokerCatalogueResource|dev\.floor42\.server\.api\.DemoResource|dev\.floor42\.server\.api\.EventLogResource|dev\.floor42\.server\.api\.IdentityAuditResource|dev\.floor42\.server\.api\.IdentityResource|dev\.floor42\.server\.api\.MissionsResource|dev\.floor42\.server\.api\.QuestionsResource|dev\.floor42\.server\.api\.RetrosResource|dev\.floor42\.server\.api\.TrustChainResource|dev\.floor42\.server\.app\.Deliverables|dev\.floor42\.server\.app\.GhClient|dev\.floor42\.server\.app\.ManifestReader|dev\.floor42\.server\.app\.OfficeService|dev\.floor42\.server\.app\.PluginCli|dev\.floor42\.server\.app\.PullRequestDraft|dev\.floor42\.server\.app\.PullRequests|dev\.floor42\.server\.app\.WorkshopDiscard|dev\.floor42\.server\.iam\.Jwks|dev\.floor42\.server\.iam\.ResourceBroker|dev\.floor42\.server\.runtime\.MachineChecklist$Checklist|dev\.floor42\.server\.runtime\.StreamJsonParser)"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- The options list is an unmodifiable copy built in the constructor. -->
+        <Class name="dev.floor42.domain.Setting"/>
+        <Method name="options"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <!-- The company hands out its facades: each one is the aggregate's own service, shared by design. -->
+        <Class name="dev.floor42.domain.Company"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <!-- The mission's own live policy, read and amended through its methods by the permission commands. -->
+        <Class name="dev.floor42.domain.Mission"/>
+        <Method name="policy"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <!-- The first bytes of a checked file: a bounded preview, read once, never written after the check. -->
+        <Class name="dev.floor42.server.app.Delivered$Blob"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- The signed bytes of a token, built once by the parser and only read by the verifier. -->
+        <Class name="dev.floor42.server.iam.Jwts$Parsed"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- InetAddress is immutable. -->
+        <Class name="dev.floor42.server.iam.SafeUrls$Target"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- The body subscriber's own result future: the caller waits on it, by design. -->
+        <Class name="dev.floor42.server.iam.CappedBody"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+</FindBugsFilter>

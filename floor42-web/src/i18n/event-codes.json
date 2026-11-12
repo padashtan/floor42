@@ -1,0 +1,2104 @@
+{
+  "ActionAuthorized" : {
+    "line" : "Floor42 authorizes chris Read 'pom.xml' (rule: ALLOW READ for any agent)",
+    "params" : [ "action", "basis", "basisCode", "call" ],
+    "sample" : {
+      "action" : "a1",
+      "basis" : "rule: ALLOW READ for any agent",
+      "basis.agent" : "",
+      "basis.decision" : "ALLOW",
+      "basis.target" : "READ",
+      "basis.ticket" : "",
+      "basisCode" : "rule",
+      "call" : "chris Read 'pom.xml'"
+    }
+  },
+  "ActionConfirmed" : {
+    "line" : "Confirmed chris Read 'pom.xml': Same file",
+    "params" : [ "action", "call", "evidence" ],
+    "sample" : {
+      "action" : "a1",
+      "call" : "chris Read 'pom.xml'",
+      "evidence" : "Same file"
+    }
+  },
+  "ActionDenied" : {
+    "line" : "Floor42 denies chris Grep 'TODO' [POLICY] rule: DENY Grep for any agent",
+    "params" : [ "action", "call", "detail", "reason" ],
+    "sample" : {
+      "action" : "a3",
+      "call" : "chris Grep 'TODO'",
+      "detail" : "rule: DENY Grep for any agent",
+      "detail.agent" : "",
+      "detail.decision" : "DENY",
+      "detail.target" : "Grep",
+      "detail.ticket" : "",
+      "detailCode" : "rule",
+      "reason" : "POLICY"
+    }
+  },
+  "ActionExecuted.authorized" : {
+    "line" : "Executed chris Read 'pom.xml'",
+    "params" : [ "action", "authorized", "call" ],
+    "sample" : {
+      "action" : "a1",
+      "authorized" : "true",
+      "call" : "chris Read 'pom.xml'"
+    }
+  },
+  "ActionExecuted.unauthorized" : {
+    "line" : "EXECUTED WITHOUT AUTHORIZATION chris Bash 'curl y'",
+    "params" : [ "action", "authorized", "call" ],
+    "sample" : {
+      "action" : "u2",
+      "authorized" : "false",
+      "call" : "chris Bash 'curl y'"
+    }
+  },
+  "ActionFailed" : {
+    "line" : "Failed chris Bash 'mvn test': BUILD FAILURE",
+    "params" : [ "action", "call", "error" ],
+    "sample" : {
+      "action" : "a2",
+      "call" : "chris Bash 'mvn test'",
+      "error" : "BUILD FAILURE"
+    }
+  },
+  "ActionProgressed" : {
+    "line" : "chris Bash 'mvn test' still running after 10 s (Claude Code)",
+    "params" : [ "action", "call", "seconds" ],
+    "sample" : {
+      "action" : "a2",
+      "call" : "chris Bash 'mvn test'",
+      "seconds" : "10"
+    }
+  },
+  "ActionRequested" : {
+    "line" : "chris requests Read: pom.xml",
+    "params" : [ "action", "agent", "category", "mission", "summary", "ticket", "tool" ],
+    "sample" : {
+      "action" : "a1",
+      "agent" : "chris",
+      "category" : "READ",
+      "mission" : "M-1",
+      "summary" : "pom.xml",
+      "ticket" : "T-4",
+      "tool" : "Read"
+    }
+  },
+  "AgentAssignmentsResumed" : {
+    "line" : "ivo accepts assignments again",
+    "params" : [ "agent" ],
+    "sample" : {
+      "agent" : "ivo"
+    }
+  },
+  "AgentAssignmentsSuspended" : {
+    "line" : "ivo takes no new assignments: holidays",
+    "params" : [ "agent", "reason" ],
+    "sample" : {
+      "agent" : "ivo",
+      "reason" : "holidays"
+    }
+  },
+  "AgentDismissed" : {
+    "line" : "ken leaves the company: cost",
+    "params" : [ "agent", "reason" ],
+    "sample" : {
+      "agent" : "ken",
+      "reason" : "cost"
+    }
+  },
+  "AgentHired" : {
+    "line" : "Galen joins as Planner (claude-sonnet-5-5)",
+    "params" : [ "agent", "displayName", "effort", "model", "provider", "role", "skills" ],
+    "sample" : {
+      "agent" : "galen",
+      "displayName" : "Galen",
+      "effort" : "medium",
+      "model" : "claude-sonnet-5-5",
+      "provider" : "anthropic",
+      "role" : "Planner",
+      "skills" : ""
+    }
+  },
+  "AgentMarkedCore" : {
+    "line" : "Director made chris a core member",
+    "params" : [ "agent" ],
+    "sample" : {
+      "agent" : "chris"
+    }
+  },
+  "AgentReconfigured.effort" : {
+    "line" : "chris now runs on claude-opus-5-5, effort xhigh",
+    "params" : [ "agent", "effort", "model" ],
+    "sample" : {
+      "agent" : "chris",
+      "effort" : "xhigh",
+      "model" : "claude-opus-5-5"
+    }
+  },
+  "AgentReconfigured.model" : {
+    "line" : "ivo now runs on claude-sonnet-5-5",
+    "params" : [ "agent", "effort", "model" ],
+    "sample" : {
+      "agent" : "ivo",
+      "effort" : "",
+      "model" : "claude-sonnet-5-5"
+    }
+  },
+  "AgentRemarked" : {
+    "line" : "chris: Reading the code",
+    "params" : [ "agent", "session", "text", "ticket" ],
+    "sample" : {
+      "agent" : "chris",
+      "session" : "s1",
+      "text" : "Reading the code",
+      "ticket" : "T-4"
+    }
+  },
+  "AgentRoleAssigned" : {
+    "line" : "galen works as planner",
+    "params" : [ "agent", "workRole" ],
+    "sample" : {
+      "agent" : "galen",
+      "workRole" : "PLANNER"
+    }
+  },
+  "AgentSessionEnded.ended" : {
+    "line" : "Session s3 ended",
+    "params" : [ "costUsdEstimated", "failed", "inputTokensProvided", "outcome", "outputTokensProvided", "session", "short", "turns" ],
+    "sample" : {
+      "costUsdEstimated" : "",
+      "failed" : "false",
+      "inputTokensProvided" : "2000",
+      "outcome" : "completed",
+      "outputTokensProvided" : "300",
+      "session" : "s3",
+      "short" : "s3",
+      "turns" : "5"
+    }
+  },
+  "AgentSessionEnded.ended.cost" : {
+    "line" : "Session s-plan ended · cost 0.1000 USD (estimated)",
+    "params" : [ "cost", "costUsdEstimated", "failed", "inputTokensProvided", "outcome", "outputTokensProvided", "session", "short", "turns" ],
+    "sample" : {
+      "cost" : "0.1000",
+      "costUsdEstimated" : "0.1",
+      "failed" : "false",
+      "inputTokensProvided" : "1000",
+      "outcome" : "completed",
+      "outputTokensProvided" : "200",
+      "session" : "s-plan",
+      "short" : "s-plan",
+      "turns" : "3"
+    }
+  },
+  "AgentSessionEnded.ended.simulated" : {
+    "line" : "Session sim-1 ended · simulated: no model was called",
+    "params" : [ "failed", "outcome", "session", "short", "turns" ],
+    "sample" : {
+      "failed" : "false",
+      "outcome" : "completed",
+      "session" : "sim-1",
+      "short" : "sim-1",
+      "turns" : "1"
+    }
+  },
+  "AgentSessionEnded.failed" : {
+    "line" : "Session s-d failed: killed",
+    "params" : [ "costUsdEstimated", "failed", "inputTokensProvided", "outcome", "outputTokensProvided", "session", "short", "turns" ],
+    "sample" : {
+      "costUsdEstimated" : "",
+      "failed" : "true",
+      "inputTokensProvided" : "",
+      "outcome" : "killed",
+      "outputTokensProvided" : "",
+      "session" : "s-d",
+      "short" : "s-d",
+      "turns" : ""
+    }
+  },
+  "AgentSessionEnded.failed.cost" : {
+    "line" : "Session s2 failed: error_max_turns · cost 0.7500 USD (estimated)",
+    "params" : [ "cost", "costUsdEstimated", "failed", "inputTokensProvided", "outcome", "outputTokensProvided", "session", "short", "turns" ],
+    "sample" : {
+      "cost" : "0.7500",
+      "costUsdEstimated" : "0.75",
+      "failed" : "true",
+      "inputTokensProvided" : "",
+      "outcome" : "error_max_turns",
+      "outputTokensProvided" : "",
+      "session" : "s2",
+      "short" : "s2",
+      "turns" : "40"
+    }
+  },
+  "AgentSessionEnded.failed.simulated" : {
+    "line" : "Session s1 failed: crashed · simulated: no model was called",
+    "params" : [ "failed", "outcome", "session", "short", "turns" ],
+    "sample" : {
+      "failed" : "true",
+      "outcome" : "crashed",
+      "session" : "s1",
+      "short" : "s1",
+      "turns" : ""
+    }
+  },
+  "AgentSessionStarted" : {
+    "line" : "galen opens a session on T-1 (claude-sonnet-5-5)",
+    "params" : [ "agent", "mission", "model", "runtimeVersion", "session", "ticket" ],
+    "sample" : {
+      "agent" : "galen",
+      "mission" : "M-1",
+      "model" : "claude-sonnet-5-5",
+      "runtimeVersion" : "2.1.0",
+      "session" : "s-plan",
+      "ticket" : "T-1"
+    }
+  },
+  "AgentTokenIssued" : {
+    "line" : "chris badges in for T-19: token jti-1 from https://id.test/realms/floor42, valid until 2026-10-21T01:00:00Z",
+    "params" : [ "agent", "expiresAt", "issuer", "session", "ticket", "tokenId" ],
+    "sample" : {
+      "agent" : "chris",
+      "expiresAt" : "2026-10-21T01:00:00Z",
+      "issuer" : "https://id.test/realms/floor42",
+      "session" : "s-iam",
+      "ticket" : "T-19",
+      "tokenId" : "jti-1"
+    }
+  },
+  "AgentTokenIssued.simulated" : {
+    "line" : "(simulated) chris badges in for T-24: token sim-jti-1 from urn:floor42:simulated, valid until 2026-10-21T01:00:00Z",
+    "params" : [ "agent", "expiresAt", "issuer", "session", "ticket", "tokenId" ],
+    "sample" : {
+      "agent" : "chris",
+      "expiresAt" : "2026-10-21T01:00:00Z",
+      "issuer" : "urn:floor42:simulated",
+      "session" : "sim-iam",
+      "ticket" : "T-24",
+      "tokenId" : "sim-jti-1"
+    }
+  },
+  "AgentUnmarkedCore" : {
+    "line" : "chris is no longer a core member",
+    "params" : [ "agent" ],
+    "sample" : {
+      "agent" : "chris"
+    }
+  },
+  "ApiTokenIssued" : {
+    "line" : "Director issued script token tok-1 (scope read, until 2026-11-30T00:00:00Z)",
+    "params" : [ "expiresAt", "label", "scope", "sha256", "token" ],
+    "sample" : {
+      "expiresAt" : "2026-11-30T00:00:00Z",
+      "label" : "ci",
+      "scope" : "read",
+      "sha256" : "abababababababababababababababababababababababababababababababab",
+      "token" : "tok-1"
+    }
+  },
+  "ApiTokenRevoked.everywhere" : {
+    "line" : "Script token tok-1 ended: the director signed out everywhere",
+    "params" : [ "reason", "sha256", "token" ],
+    "sample" : {
+      "reason" : "everywhere",
+      "sha256" : "abababababababababababababababababababababababababababababababab",
+      "token" : "tok-1"
+    }
+  },
+  "ApiTokenRevoked.revoked" : {
+    "line" : "Script token TOK-9 revoked by the director",
+    "params" : [ "reason", "sha256", "token" ],
+    "sample" : {
+      "reason" : "revoked",
+      "sha256" : "sha",
+      "token" : "TOK-9"
+    }
+  },
+  "ApprovalForgotten.askedAgain" : {
+    "line" : "Q-1: refusal lifted by the director, the next such call asks again",
+    "params" : [ "question", "reason" ],
+    "sample" : {
+      "question" : "Q-1",
+      "reason" : "asked again by the director, answering Q-2"
+    }
+  },
+  "ApprovalForgotten.forgotten" : {
+    "line" : "Q-2: remembered answer forgotten by the director, the next request asks again",
+    "params" : [ "question", "reason" ],
+    "sample" : {
+      "question" : "Q-2",
+      "reason" : "forgotten by the director"
+    }
+  },
+  "ApprovalForgotten.once" : {
+    "line" : "Q-1: the answer will apply to this call only",
+    "params" : [ "question", "reason" ],
+    "sample" : {
+      "question" : "Q-1",
+      "reason" : "asked for this call only"
+    }
+  },
+  "BranchesMerged.clean" : {
+    "line" : "Floor42 merged floor42/chris for T-9",
+    "params" : [ "branches", "clean", "detail", "into", "mission", "ticket" ],
+    "sample" : {
+      "branches" : "floor42/chris",
+      "clean" : "true",
+      "detail" : "",
+      "into" : "",
+      "mission" : "M-9",
+      "ticket" : "T-9"
+    }
+  },
+  "BranchesMerged.clean.into" : {
+    "line" : "Floor42 merged floor42/chris into ivo's worktree for T-9: x",
+    "params" : [ "branches", "clean", "detail", "into", "mission", "ticket" ],
+    "sample" : {
+      "branches" : "floor42/chris",
+      "clean" : "true",
+      "detail" : "x",
+      "into" : "ivo",
+      "mission" : "M-9",
+      "ticket" : "T-9"
+    }
+  },
+  "BranchesMerged.failed" : {
+    "line" : "Floor42 could not merge floor42/chris for T-9",
+    "params" : [ "branches", "clean", "detail", "into", "mission", "ticket" ],
+    "sample" : {
+      "branches" : "floor42/chris",
+      "clean" : "false",
+      "detail" : "",
+      "into" : "",
+      "mission" : "M-9",
+      "ticket" : "T-9"
+    }
+  },
+  "BranchesMerged.failed.into" : {
+    "line" : "Floor42 could not merge floor42/ken into chris's worktree for T-5: conflict in App.java",
+    "params" : [ "branches", "clean", "detail", "into", "mission", "ticket" ],
+    "sample" : {
+      "branches" : "floor42/ken",
+      "clean" : "false",
+      "detail" : "conflict in App.java",
+      "into" : "chris",
+      "mission" : "M-1",
+      "ticket" : "T-5"
+    }
+  },
+  "BreakGlassSignIn" : {
+    "line" : "The director signed in with the console link (break-glass) while IAM mode is on",
+    "params" : [ "session" ],
+    "sample" : {
+      "session" : "S-1"
+    }
+  },
+  "BudgetSet.none" : {
+    "line" : "No budget limit on M-1",
+    "params" : [ "mission", "usd" ],
+    "sample" : {
+      "mission" : "M-1",
+      "usd" : ""
+    }
+  },
+  "BudgetSet.usd" : {
+    "line" : "Budget of M-1: 5.0000 USD",
+    "params" : [ "mission", "usd" ],
+    "sample" : {
+      "mission" : "M-1",
+      "usd" : "5.0000"
+    }
+  },
+  "ChecksConfigured.automatic" : {
+    "line" : "Director set the checks of M-1: mvn -q verify (after every delivery)",
+    "params" : [ "automatic", "command", "mission" ],
+    "sample" : {
+      "automatic" : "true",
+      "command" : "mvn -q verify",
+      "mission" : "M-1"
+    }
+  },
+  "ChecksConfigured.manual" : {
+    "line" : "Director set the checks of M-1: mvn test",
+    "params" : [ "automatic", "command", "mission" ],
+    "sample" : {
+      "automatic" : "false",
+      "command" : "mvn test",
+      "mission" : "M-1"
+    }
+  },
+  "ChecksConfigured.removed" : {
+    "line" : "Director removed the checks of M-9",
+    "params" : [ "automatic", "command", "mission" ],
+    "sample" : {
+      "automatic" : "false",
+      "command" : "",
+      "mission" : "M-9"
+    }
+  },
+  "ChecksRan.failed" : {
+    "line" : "Checks on the work of chris: failed (exit 1) in 12 s (measured)",
+    "params" : [ "command", "durationMs", "exitCode", "head", "mission", "seconds", "timedOut", "trigger", "workspace" ],
+    "sample" : {
+      "command" : "mvn -q verify",
+      "durationMs" : "12345",
+      "exitCode" : "1",
+      "head" : "abc1234",
+      "mission" : "M-1",
+      "seconds" : "12",
+      "timedOut" : "false",
+      "trigger" : "manual",
+      "workspace" : "chris"
+    }
+  },
+  "ChecksRan.passed" : {
+    "line" : "Checks on the work of chris: passed in 0 s (measured)",
+    "params" : [ "command", "durationMs", "exitCode", "head", "mission", "seconds", "timedOut", "trigger", "workspace" ],
+    "sample" : {
+      "command" : "mvn test",
+      "durationMs" : "10",
+      "exitCode" : "0",
+      "head" : "abc",
+      "mission" : "M-1",
+      "seconds" : "0",
+      "timedOut" : "false",
+      "trigger" : "director",
+      "workspace" : "chris"
+    }
+  },
+  "ChecksRan.timeout" : {
+    "line" : "Checks on the work of chris: timed out in 600 s (measured)",
+    "params" : [ "command", "durationMs", "exitCode", "head", "mission", "seconds", "timedOut", "trigger", "workspace" ],
+    "sample" : {
+      "command" : "mvn -q verify",
+      "durationMs" : "600000",
+      "exitCode" : "",
+      "head" : "",
+      "mission" : "M-1",
+      "seconds" : "600",
+      "timedOut" : "true",
+      "trigger" : "auto",
+      "workspace" : "chris"
+    }
+  },
+  "CommitteeAdvanced.adopted" : {
+    "line" : "Committee of M-9: decision adopted",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-9",
+      "round" : "2",
+      "stage" : "ADOPTED"
+    }
+  },
+  "CommitteeAdvanced.analysis" : {
+    "line" : "Committee of M-9: each member analyses alone",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-9",
+      "round" : "2",
+      "stage" : "ANALYSIS"
+    }
+  },
+  "CommitteeAdvanced.awaiting_answers" : {
+    "line" : "Committee of M-2: the business analyst’s questions await your answers",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-2",
+      "round" : "2",
+      "stage" : "AWAITING_ANSWERS"
+    }
+  },
+  "CommitteeAdvanced.awaiting_director" : {
+    "line" : "Committee of M-2: decision record awaits you",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-2",
+      "round" : "4",
+      "stage" : "AWAITING_DIRECTOR"
+    }
+  },
+  "CommitteeAdvanced.clarification" : {
+    "line" : "Committee of M-9: the business analyst gathers the questions for you",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-9",
+      "round" : "2",
+      "stage" : "CLARIFICATION"
+    }
+  },
+  "CommitteeAdvanced.debate" : {
+    "line" : "Committee of M-2: debate, round 2",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-2",
+      "round" : "2",
+      "stage" : "DEBATE"
+    }
+  },
+  "CommitteeAdvanced.rejected" : {
+    "line" : "Committee of M-9: decision rejected",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-9",
+      "round" : "2",
+      "stage" : "REJECTED"
+    }
+  },
+  "CommitteeAdvanced.synthesis" : {
+    "line" : "Committee of M-2: the chair writes the decision record",
+    "params" : [ "mission", "round", "stage" ],
+    "sample" : {
+      "mission" : "M-2",
+      "round" : "2",
+      "stage" : "SYNTHESIS"
+    }
+  },
+  "CommitteeArbitrated.adopted" : {
+    "line" : "Director adopted the committee's decision on M-2; implementation planned",
+    "params" : [ "adopted", "implement", "mission", "overCriticalObjection" ],
+    "sample" : {
+      "adopted" : "true",
+      "implement" : "true",
+      "mission" : "M-2",
+      "overCriticalObjection" : "false"
+    }
+  },
+  "CommitteeArbitrated.rejected" : {
+    "line" : "Director rejected the committee's decision on M-3",
+    "params" : [ "adopted", "implement", "mission", "overCriticalObjection" ],
+    "sample" : {
+      "adopted" : "false",
+      "implement" : "false",
+      "mission" : "M-3",
+      "overCriticalObjection" : "false"
+    }
+  },
+  "CommitteeClarificationOpened" : {
+    "line" : "ana gathers the committee’s questions for you",
+    "params" : [ "analyst", "mission", "round" ],
+    "sample" : {
+      "analyst" : "ana",
+      "mission" : "M-2",
+      "round" : "2"
+    }
+  },
+  "CommitteeClarificationWritten" : {
+    "line" : "ana asks you 3 question(s) for the committee",
+    "params" : [ "analyst", "mission", "questions", "text" ],
+    "sample" : {
+      "analyst" : "ana",
+      "mission" : "M-2",
+      "questions" : "3",
+      "text" : "Two questions for you"
+    }
+  },
+  "CommitteeClarified.answers" : {
+    "line" : "Your answers go to the committee for one more round",
+    "params" : [ "answers", "mission" ],
+    "sample" : {
+      "answers" : "The director answered \"Which SLA?\": 99.9, The director answered \"Which region?\": EU only",
+      "mission" : "M-2"
+    }
+  },
+  "CommitteeClarified.none" : {
+    "line" : "No question left for you: the record goes to your ruling",
+    "params" : [ "answers", "mission" ],
+    "sample" : {
+      "answers" : "",
+      "mission" : "M-2"
+    }
+  },
+  "CommitteeContributed.analysis" : {
+    "line" : "galen analysed: Gateway",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "",
+      "criticalObjection" : "",
+      "kind" : "ANALYSIS",
+      "member" : "galen",
+      "mission" : "M-2",
+      "position" : "NEW",
+      "proposal" : "Gateway",
+      "questions" : "Which SLA?, Which budget?",
+      "round" : "1",
+      "text" : "Gateway"
+    }
+  },
+  "CommitteeContributed.analysis.director" : {
+    "line" : "The director, in the seat of chris, analysed: Rent, not sell",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "true",
+      "criticalObjection" : "",
+      "kind" : "ANALYSIS",
+      "member" : "chris",
+      "mission" : "M-3",
+      "position" : "NEW",
+      "proposal" : "Rent, not sell",
+      "questions" : "",
+      "round" : "1",
+      "text" : "My analysis"
+    }
+  },
+  "CommitteeContributed.rebuttal" : {
+    "line" : "galen answered in round 2: Gateway",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "",
+      "criticalObjection" : "",
+      "kind" : "REBUTTAL",
+      "member" : "galen",
+      "mission" : "M-2",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : "",
+      "round" : "2",
+      "text" : "Still a gateway"
+    }
+  },
+  "CommitteeContributed.rebuttal.director" : {
+    "line" : "The director, in the seat of chris, answered in round 2",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "true",
+      "criticalObjection" : "",
+      "kind" : "REBUTTAL",
+      "member" : "chris",
+      "mission" : "M-3",
+      "position" : "ADOPTED darius",
+      "proposal" : "",
+      "questions" : "",
+      "round" : "2",
+      "text" : "Changed my mind"
+    }
+  },
+  "CommitteeContributed.synthesis" : {
+    "line" : "galen wrote the decision record: Adopt a gateway",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "",
+      "criticalObjection" : "",
+      "kind" : "SYNTHESIS",
+      "member" : "galen",
+      "mission" : "M-2",
+      "position" : "",
+      "proposal" : "Adopt a gateway",
+      "questions" : "",
+      "round" : "2",
+      "text" : "# Record"
+    }
+  },
+  "CommitteeContributed.synthesis.director" : {
+    "line" : "The director, in the seat of ivo, wrote the decision record: p · CRITICAL OBJECTION: o",
+    "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
+    "sample" : {
+      "byDirector" : "true",
+      "criticalObjection" : "o",
+      "kind" : "SYNTHESIS",
+      "member" : "ivo",
+      "mission" : "M-9",
+      "position" : "pos",
+      "proposal" : "p",
+      "questions" : "",
+      "round" : "2",
+      "text" : "t"
+    }
+  },
+  "CommitteeConvened" : {
+    "line" : "Committee convened on M-2: galen, darius, chris",
+    "params" : [ "directorSeat", "maxDebateRounds", "members", "mission", "moderated", "panel", "roles", "ticket", "topic" ],
+    "sample" : {
+      "directorSeat" : "",
+      "maxDebateRounds" : "1",
+      "members" : "galen, darius, chris",
+      "mission" : "M-2",
+      "moderated" : "false",
+      "panel" : "architecture",
+      "roles" : "Architect, Security, Developer",
+      "ticket" : "T-13",
+      "topic" : "Gateway?"
+    }
+  },
+  "CommitteeSeatDefined" : {
+    "line" : "Director defined the committee seat Lena, Lawyer (idea, architecture)",
+    "params" : [ "effort", "key", "lens", "model", "name", "panels", "title" ],
+    "sample" : {
+      "effort" : "high",
+      "key" : "lawyer",
+      "lens" : "Reads every risk as a lawyer",
+      "model" : "claude-opus-5-5",
+      "name" : "Lena",
+      "panels" : "idea, architecture",
+      "title" : "Lawyer"
+    }
+  },
+  "CommitteeSentBack" : {
+    "line" : "Director sent the decision of M-2 back: Must run on-premises",
+    "params" : [ "constraint", "mission" ],
+    "sample" : {
+      "constraint" : "Must run on-premises",
+      "mission" : "M-2"
+    }
+  },
+  "CompanyWorkflowRemoved" : {
+    "line" : "Director removed the workflow Light",
+    "params" : [ "name" ],
+    "sample" : {
+      "name" : "Light"
+    }
+  },
+  "CompanyWorkflowSaved" : {
+    "line" : "Director saved the workflow Light",
+    "params" : [ "name" ],
+    "sample" : {
+      "name" : "Light"
+    }
+  },
+  "ConsultationAnswered.agent" : {
+    "line" : "galen answers the consultation on T-4",
+    "params" : [ "answer", "by", "ticket" ],
+    "sample" : {
+      "answer" : "Check the audience too",
+      "by" : "galen",
+      "ticket" : "T-4"
+    }
+  },
+  "ConsultationAnswered.floor42" : {
+    "line" : "Floor42 answers the consultation on T-4",
+    "params" : [ "answer", "by", "ticket" ],
+    "sample" : {
+      "answer" : "Research is not allowed on this mission",
+      "by" : "",
+      "ticket" : "T-4"
+    }
+  },
+  "ConsultationRequested.consult" : {
+    "line" : "darius consults the security on T-4: Is the token check enough?",
+    "params" : [ "kind", "question", "reviewer", "role", "ticket" ],
+    "sample" : {
+      "kind" : "CONSULT",
+      "question" : "Is the token check enough?",
+      "reviewer" : "darius",
+      "role" : "security",
+      "ticket" : "T-4"
+    }
+  },
+  "ConsultationRequested.research" : {
+    "line" : "darius asks for a web research on T-4: RFC 7519 audience?",
+    "params" : [ "kind", "question", "reviewer", "role", "ticket" ],
+    "sample" : {
+      "kind" : "RESEARCH",
+      "question" : "RFC 7519 audience?",
+      "reviewer" : "darius",
+      "role" : "",
+      "ticket" : "T-4"
+    }
+  },
+  "DefaultPermissionSet.builtin" : {
+    "line" : "Director set the default permission of Bash for new missions to Floor42's built-in line",
+    "params" : [ "category", "decision", "tool" ],
+    "sample" : {
+      "category" : "EXECUTE",
+      "decision" : "",
+      "tool" : "Bash"
+    }
+  },
+  "DefaultPermissionSet.value" : {
+    "line" : "Director set the default permission of Bash for new missions to DENY",
+    "params" : [ "category", "decision", "tool" ],
+    "sample" : {
+      "category" : "EXECUTE",
+      "decision" : "DENY",
+      "tool" : "Bash"
+    }
+  },
+  "DeliverablesCopied.copied" : {
+    "line" : "M-7: 1 document(s) copied into C:/repo/api/deliverables/M-7, 1 kept beside a file of the same name, 0 already there, 2 left out",
+    "params" : [ "folder", "keptBoth", "leftOut", "mission", "same", "truncated", "written" ],
+    "sample" : {
+      "folder" : "C:/repo/api/deliverables/M-7",
+      "keptBoth" : "1",
+      "leftOut" : "2",
+      "mission" : "M-7",
+      "same" : "0",
+      "truncated" : "false",
+      "written" : "1"
+    }
+  },
+  "DeliverablesDestinationSet.set" : {
+    "line" : "Director chose C:/repo/api/deliverables for the deliverables of M-7",
+    "params" : [ "folder", "mission" ],
+    "sample" : {
+      "folder" : "C:/repo/api/deliverables",
+      "mission" : "M-7"
+    }
+  },
+  "DirectiveGiven" : {
+    "line" : "Director's directive on T-5: Add the expiry test",
+    "params" : [ "directive", "mission", "ticket" ],
+    "sample" : {
+      "directive" : "Add the expiry test",
+      "mission" : "M-1",
+      "ticket" : "T-5"
+    }
+  },
+  "DirectorEditedFile" : {
+    "line" : "Director edited src/App.java in the workspace of chris",
+    "params" : [ "mission", "note", "path", "workspace" ],
+    "sample" : {
+      "mission" : "M-1",
+      "note" : "a fix",
+      "path" : "src/App.java",
+      "workspace" : "chris"
+    }
+  },
+  "DirectorFilesCommitted" : {
+    "line" : "Director committed files for M-1: docs/spec.md, docs/logo.png",
+    "params" : [ "commit", "files", "mission" ],
+    "sample" : {
+      "commit" : "f1e2d3c",
+      "files" : "docs/spec.md, docs/logo.png",
+      "mission" : "M-1"
+    }
+  },
+  "IncidentRaised" : {
+    "line" : "INCIDENT I-1 [critical] chris ran Bash without an Floor42 authorization: curl y",
+    "params" : [ "action", "criticality", "description", "description.agent", "description.summary", "description.tool", "descriptionCode", "incident", "mission" ],
+    "sample" : {
+      "action" : "u2",
+      "criticality" : "CRITICAL",
+      "description" : "chris ran Bash without an Floor42 authorization: curl y",
+      "description.agent" : "chris",
+      "description.summary" : "curl y",
+      "description.tool" : "Bash",
+      "descriptionCode" : "ranWithoutAuthorization",
+      "incident" : "I-1",
+      "mission" : "M-1"
+    }
+  },
+  "LessonAccepted" : {
+    "line" : "Director accepted lesson L-1: Write the test first",
+    "params" : [ "lesson", "text" ],
+    "sample" : {
+      "lesson" : "L-1",
+      "text" : "Write the test first"
+    }
+  },
+  "LessonProposed.all" : {
+    "line" : "Lesson L-2 proposed: Say what was not verified",
+    "params" : [ "audience", "lesson", "mission", "proposedBy", "text" ],
+    "sample" : {
+      "audience" : "",
+      "lesson" : "L-2",
+      "mission" : "M-1",
+      "proposedBy" : "galen",
+      "text" : "Say what was not verified"
+    }
+  },
+  "LessonProposed.audience" : {
+    "line" : "Lesson L-1 proposed for developer: Write the test first",
+    "params" : [ "audience", "lesson", "mission", "proposedBy", "text" ],
+    "sample" : {
+      "audience" : "DEVELOPER",
+      "lesson" : "L-1",
+      "mission" : "M-1",
+      "proposedBy" : "galen",
+      "text" : "Write the test first"
+    }
+  },
+  "LessonRejected" : {
+    "line" : "Director rejected lesson L-3: rejected by the director",
+    "params" : [ "lesson", "reason" ],
+    "sample" : {
+      "lesson" : "L-3",
+      "reason" : "rejected by the director"
+    }
+  },
+  "LessonRetired" : {
+    "line" : "Director retired lesson L-1: Obvious now",
+    "params" : [ "lesson", "reason" ],
+    "sample" : {
+      "lesson" : "L-1",
+      "reason" : "Obvious now"
+    }
+  },
+  "MeetingCalled" : {
+    "line" : "Director called chris to the table about M-1 (MT-1)",
+    "params" : [ "agenda", "attendees", "meeting", "mission" ],
+    "sample" : {
+      "agenda" : "",
+      "attendees" : "chris",
+      "meeting" : "MT-1",
+      "mission" : "M-1"
+    }
+  },
+  "MeetingCalled.agenda" : {
+    "line" : "Director called chris, darius to the table about M-5 (MT-1): Where we go next",
+    "params" : [ "agenda", "attendees", "meeting", "mission" ],
+    "sample" : {
+      "agenda" : "Where we go next",
+      "attendees" : "chris, darius",
+      "meeting" : "MT-1",
+      "mission" : "M-5"
+    }
+  },
+  "MeetingClosed" : {
+    "line" : "Director closed MT-1 about M-5: chris, darius go back to work",
+    "params" : [ "attendees", "meeting", "mission" ],
+    "sample" : {
+      "attendees" : "chris, darius",
+      "meeting" : "MT-1",
+      "mission" : "M-5"
+    }
+  },
+  "MeetingNoteGiven.all" : {
+    "line" : "Director, at MT-1, to everyone: Keep the API stable",
+    "params" : [ "agent", "meeting", "text" ],
+    "sample" : {
+      "agent" : "",
+      "meeting" : "MT-1",
+      "text" : "Keep the API stable"
+    }
+  },
+  "MeetingNoteGiven.one" : {
+    "line" : "Director, at MT-1, to chris: Start with the tests",
+    "params" : [ "agent", "meeting", "text" ],
+    "sample" : {
+      "agent" : "chris",
+      "meeting" : "MT-1",
+      "text" : "Start with the tests"
+    }
+  },
+  "MeetingPlaced" : {
+    "line" : "MT-2 sits at the conference table",
+    "params" : [ "meeting", "place" ],
+    "sample" : {
+      "meeting" : "MT-2",
+      "place" : "CONFERENCE"
+    }
+  },
+  "MeetingTurnTaken.heard" : {
+    "line" : "darius, at MT-2: Tighten it",
+    "params" : [ "agent", "meeting", "text" ],
+    "sample" : {
+      "agent" : "darius",
+      "meeting" : "MT-2",
+      "text" : "Tighten it"
+    }
+  },
+  "MeetingTurnTaken.notHeard" : {
+    "line" : "chris was not heard at MT-2: the meeting's cost cap is reached",
+    "params" : [ "agent", "meeting", "text" ],
+    "sample" : {
+      "agent" : "chris",
+      "meeting" : "MT-2",
+      "text" : "the meeting's cost cap is reached"
+    }
+  },
+  "MeetingViewsAsked" : {
+    "line" : "Director asked darius, chris for their view at MT-2 (round 1, cap 0.5 USD estimated)",
+    "params" : [ "cap", "meeting", "round", "speakers" ],
+    "sample" : {
+      "cap" : "0.5",
+      "meeting" : "MT-2",
+      "round" : "1",
+      "speakers" : "darius, chris"
+    }
+  },
+  "MissionArchived" : {
+    "line" : "M-1 archived",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "MissionAssetsSelected.none" : {
+    "line" : "Director gives M-1's sessions no skill or agent of their own",
+    "params" : [ "count", "items", "mission" ],
+    "sample" : {
+      "count" : "0",
+      "items" : "",
+      "mission" : "M-1"
+    }
+  },
+  "MissionAssetsSelected.some" : {
+    "line" : "Director gives M-1's sessions 2 skill(s) and agent(s)",
+    "params" : [ "count", "items", "mission" ],
+    "sample" : {
+      "count" : "2",
+      "items" : "floor42:pr-review@claude-plugins-official/agent/code-reviewer, claude:docs@market/skill/write",
+      "mission" : "M-1"
+    }
+  },
+  "MissionCancelled" : {
+    "line" : "M-2 cancelled: Bought a product instead",
+    "params" : [ "mission", "reason" ],
+    "sample" : {
+      "mission" : "M-2",
+      "reason" : "Bought a product instead"
+    }
+  },
+  "MissionCompleted" : {
+    "line" : "M-1 completed: Login shipped",
+    "params" : [ "mission", "summary" ],
+    "sample" : {
+      "mission" : "M-1",
+      "summary" : "Login shipped"
+    }
+  },
+  "MissionCreated" : {
+    "line" : "New mission M-1: App",
+    "params" : [ "mission", "objective", "title", "workspace" ],
+    "sample" : {
+      "mission" : "M-1",
+      "objective" : "Ship the app",
+      "title" : "App",
+      "workspace" : "C:/repo/app"
+    }
+  },
+  "MissionPlanApproved" : {
+    "line" : "Director approved the plan of M-1",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "MissionPlanRejected" : {
+    "line" : "Director rejected the plan of M-1: Add a test ticket",
+    "params" : [ "mission", "reason" ],
+    "sample" : {
+      "mission" : "M-1",
+      "reason" : "Add a test ticket"
+    }
+  },
+  "MissionPlanSubmitted" : {
+    "line" : "Plan of M-1 submitted for approval",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "MissionQuarantined" : {
+    "line" : "chris’s session on T-19 was quarantined at risk level alert (path outside its workspace); steps taken: delegation revoked, session stopped",
+    "params" : [ "agent", "done", "level", "reasons", "session", "ticket" ],
+    "sample" : {
+      "agent" : "chris",
+      "done" : "REVOKED, STOPPED",
+      "level" : "ALERT",
+      "reasons" : "OUTSIDE_WORKSPACE",
+      "session" : "s-iam",
+      "ticket" : "T-19"
+    }
+  },
+  "MissionResumed" : {
+    "line" : "M-1 resumed",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "MissionSuspended" : {
+    "line" : "M-1 suspended: unauthorized execution of action u2",
+    "params" : [ "mission", "reason" ],
+    "sample" : {
+      "mission" : "M-1",
+      "reason" : "unauthorized execution of action u2",
+      "reason.action" : "u2",
+      "reasonCode" : "unauthorizedExecution"
+    }
+  },
+  "MissionUnarchived" : {
+    "line" : "M-1 restored from the archives",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "NodePlanned" : {
+    "line" : "The approval planned T-23: risk high, tier light, 1 test command(s)",
+    "params" : [ "count", "risk", "ticket", "tier" ],
+    "sample" : {
+      "count" : "1",
+      "risk" : "high",
+      "ticket" : "T-23",
+      "tier" : "light"
+    }
+  },
+  "NoteAdded" : {
+    "line" : "Director noted N-1: Make the board faster\nIt lags on big missions",
+    "params" : [ "note", "text" ],
+    "sample" : {
+      "note" : "N-1",
+      "text" : "Make the board faster\nIt lags on big missions"
+    }
+  },
+  "NoteChecked.done" : {
+    "line" : "Director ticked N-2",
+    "params" : [ "done", "note" ],
+    "sample" : {
+      "done" : "true",
+      "note" : "N-2"
+    }
+  },
+  "NoteChecked.reopened" : {
+    "line" : "Director reopened N-2",
+    "params" : [ "done", "note" ],
+    "sample" : {
+      "done" : "false",
+      "note" : "N-2"
+    }
+  },
+  "NoteCommitted" : {
+    "line" : "N-4 implemented by commit ABCDEF1",
+    "params" : [ "commit", "note" ],
+    "sample" : {
+      "commit" : "ABCDEF1",
+      "note" : "N-4"
+    }
+  },
+  "NoteRemoved" : {
+    "line" : "Director removed N-2",
+    "params" : [ "note" ],
+    "sample" : {
+      "note" : "N-2"
+    }
+  },
+  "NoteTurnedIntoTicket" : {
+    "line" : "Director made N-1 into T-10",
+    "params" : [ "note", "ticket" ],
+    "sample" : {
+      "note" : "N-1",
+      "ticket" : "T-10"
+    }
+  },
+  "PatchAccepted" : {
+    "line" : "Director accepted the changes of chris (2 file(s), commit abc1234)",
+    "params" : [ "commit", "count", "files", "message", "mission", "short", "workspace" ],
+    "sample" : {
+      "commit" : "abc1234",
+      "count" : "2",
+      "files" : "src/Login.java, src/App.java",
+      "message" : "Login page",
+      "mission" : "M-1",
+      "short" : "abc1234",
+      "workspace" : "chris"
+    }
+  },
+  "PatchRejected" : {
+    "line" : "Director rejected the changes of ken: Wrong approach",
+    "params" : [ "archive", "files", "mission", "reason", "workspace" ],
+    "sample" : {
+      "archive" : "archive/ken-1.patch",
+      "files" : "build.gradle",
+      "mission" : "M-1",
+      "reason" : "Wrong approach",
+      "workspace" : "ken"
+    }
+  },
+  "PermissionRuleAdded" : {
+    "line" : "Permission on M-1: ALLOW READ for any agent",
+    "params" : [ "mission", "rule", "rule.agent", "rule.decision", "rule.target", "rule.ticket", "ruleCode" ],
+    "sample" : {
+      "mission" : "M-1",
+      "rule" : "ALLOW READ for any agent",
+      "rule.agent" : "",
+      "rule.decision" : "ALLOW",
+      "rule.target" : "READ",
+      "rule.ticket" : "",
+      "ruleCode" : "rule"
+    }
+  },
+  "PermissionRuleRemoved" : {
+    "line" : "Permission removed on M-1: ASK Write for any agent",
+    "params" : [ "mission", "rule", "rule.agent", "rule.decision", "rule.target", "rule.ticket", "ruleCode" ],
+    "sample" : {
+      "mission" : "M-1",
+      "rule" : "ASK Write for any agent",
+      "rule.agent" : "",
+      "rule.decision" : "ASK",
+      "rule.target" : "Write",
+      "rule.ticket" : "",
+      "ruleCode" : "rule"
+    }
+  },
+  "PlanUsageObserved" : {
+    "line" : "Plan usage, 5-hour window: 42% (measured by Claude Code)",
+    "params" : [ "percent", "resetsAtEpochSecond", "session", "status", "utilization", "window" ],
+    "sample" : {
+      "percent" : "42",
+      "resetsAtEpochSecond" : "1800000000",
+      "session" : "s1",
+      "status" : "allowed",
+      "utilization" : "0.42",
+      "window" : "5-hour"
+    }
+  },
+  "PluginCommandRan.claude.installed" : {
+    "line" : "Director installed p@m in their own Claude Code (1.0)",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "INSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "true",
+      "target" : "CLAUDE",
+      "version" : "1.0"
+    }
+  },
+  "PluginCommandRan.claude.notInstalled" : {
+    "line" : "Director tried to install p@m in their Claude Code: not installed",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "INSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "false",
+      "target" : "CLAUDE",
+      "version" : ""
+    }
+  },
+  "PluginCommandRan.claude.removed" : {
+    "line" : "Director uninstalled p@m from their Claude Code",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "UNINSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "false",
+      "target" : "CLAUDE",
+      "version" : ""
+    }
+  },
+  "PluginCommandRan.claude.stillInstalled" : {
+    "line" : "Director tried to uninstall skill-creator@claude-plugins-official from their Claude Code: still installed",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "UNINSTALL",
+      "commands" : "claude plugin uninstall skill-creator@claude-plugins-official --json",
+      "exitCode" : "1",
+      "marketplace" : "claude-plugins-official",
+      "plugin" : "skill-creator",
+      "present" : "true",
+      "target" : "CLAUDE",
+      "version" : "1.0.0"
+    }
+  },
+  "PluginCommandRan.floor42.installed" : {
+    "line" : "Director installed pr-review@claude-plugins-official for Floor42 only (1.2.0)",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "INSTALL",
+      "commands" : "claude plugin install pr-review",
+      "exitCode" : "0",
+      "marketplace" : "claude-plugins-official",
+      "plugin" : "pr-review",
+      "present" : "true",
+      "target" : "FLOOR42",
+      "version" : "1.2.0"
+    }
+  },
+  "PluginCommandRan.floor42.notInstalled" : {
+    "line" : "Director tried to install p@m for Floor42: not installed",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "INSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "false",
+      "target" : "FLOOR42",
+      "version" : ""
+    }
+  },
+  "PluginCommandRan.floor42.removed" : {
+    "line" : "Director uninstalled p@m from Floor42's folder",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "UNINSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "false",
+      "target" : "FLOOR42",
+      "version" : ""
+    }
+  },
+  "PluginCommandRan.floor42.stillInstalled" : {
+    "line" : "Director tried to uninstall p@m from Floor42's folder: still installed",
+    "params" : [ "action", "commands", "exitCode", "marketplace", "plugin", "present", "target", "version" ],
+    "sample" : {
+      "action" : "UNINSTALL",
+      "commands" : "claude plugin",
+      "exitCode" : "0",
+      "marketplace" : "m",
+      "plugin" : "p",
+      "present" : "true",
+      "target" : "FLOOR42",
+      "version" : "1.0"
+    }
+  },
+  "ProjectForgotten" : {
+    "line" : "Director took C:/repo/app off the recent projects",
+    "params" : [ "path" ],
+    "sample" : {
+      "path" : "C:/repo/app"
+    }
+  },
+  "ProjectMerged.clean" : {
+    "line" : "Director's files merged into chris's worktree",
+    "params" : [ "agent", "clean", "commit", "detail", "mission" ],
+    "sample" : {
+      "agent" : "chris",
+      "clean" : "true",
+      "commit" : "f1e2d3d",
+      "detail" : "",
+      "mission" : "M-1"
+    }
+  },
+  "ProjectMerged.conflict" : {
+    "line" : "Director's files could not be merged into ken's worktree: conflict",
+    "params" : [ "agent", "clean", "commit", "detail", "mission" ],
+    "sample" : {
+      "agent" : "ken",
+      "clean" : "false",
+      "commit" : "f1e2d3d",
+      "detail" : "conflict",
+      "mission" : "M-1"
+    }
+  },
+  "ProjectPinned.pinned" : {
+    "line" : "Director pinned C:/repo/app on the recent projects",
+    "params" : [ "path", "pinned" ],
+    "sample" : {
+      "path" : "C:/repo/app",
+      "pinned" : "true"
+    }
+  },
+  "ProjectPinned.unpinned" : {
+    "line" : "Director unpinned C:/repo/app on the recent projects",
+    "params" : [ "path", "pinned" ],
+    "sample" : {
+      "path" : "C:/repo/app",
+      "pinned" : "false"
+    }
+  },
+  "ProofRan.failed" : {
+    "line" : "Floor42 ran the proof of ivo on M-9 in the sandbox: 1 step(s) failed, 0 passed",
+    "params" : [ "agent", "director", "failed", "mission", "passed" ],
+    "sample" : {
+      "agent" : "ivo",
+      "director" : "1",
+      "failed" : "1",
+      "mission" : "M-9",
+      "passed" : "0"
+    }
+  },
+  "ProofRan.notRun" : {
+    "line" : "Floor42 ran no step of the proof of ivo on M-9: none passed, 1 left to the director",
+    "params" : [ "agent", "director", "failed", "mission", "passed" ],
+    "sample" : {
+      "agent" : "ivo",
+      "director" : "1",
+      "failed" : "0",
+      "mission" : "M-9",
+      "passed" : "0"
+    }
+  },
+  "ProofRan.passed" : {
+    "line" : "Floor42 ran the proof of chris on M-5 in the sandbox: 1 step(s) passed, 1 left to the director",
+    "params" : [ "agent", "director", "failed", "mission", "passed" ],
+    "sample" : {
+      "agent" : "chris",
+      "director" : "1",
+      "failed" : "0",
+      "mission" : "M-5",
+      "passed" : "1"
+    }
+  },
+  "ProofStepWitnessed.fails" : {
+    "line" : "Director ran step 2 of the proof of chris on M-5: it does not work",
+    "params" : [ "agent", "mission", "step" ],
+    "sample" : {
+      "agent" : "chris",
+      "mission" : "M-5",
+      "step" : "2"
+    }
+  },
+  "ProofStepWitnessed.works" : {
+    "line" : "Director ran step 2 of the proof of chris on M-1: it works",
+    "params" : [ "agent", "mission", "step" ],
+    "sample" : {
+      "agent" : "chris",
+      "mission" : "M-1",
+      "step" : "2"
+    }
+  },
+  "ProofVerdictGiven.notProven" : {
+    "line" : "Director judged the delivery of M-5 not proven",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-5"
+    }
+  },
+  "ProofVerdictGiven.proven" : {
+    "line" : "Director judged the delivery of M-1 proven",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "PullRequestCheckState.failed" : {
+    "line" : "Checks of pull request #7 on GitHub: 1 of 2 failed",
+    "params" : [ "checks", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS, lint|fail|FAILURE",
+      "count" : "2",
+      "failed" : "1",
+      "mission" : "M-1",
+      "number" : "7",
+      "pending" : "0"
+    }
+  },
+  "PullRequestCheckState.none" : {
+    "line" : "GitHub reports no check on pull request #9",
+    "params" : [ "checks", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "",
+      "count" : "0",
+      "failed" : "0",
+      "mission" : "M-9",
+      "number" : "9",
+      "pending" : "0"
+    }
+  },
+  "PullRequestCheckState.passed" : {
+    "line" : "Checks of pull request #7 on GitHub: all 1 passed",
+    "params" : [ "checks", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS",
+      "count" : "1",
+      "failed" : "0",
+      "mission" : "M-1",
+      "number" : "7",
+      "pending" : "0"
+    }
+  },
+  "PullRequestCheckState.pending" : {
+    "line" : "Checks of pull request #9 on GitHub: 1 of 2 still running",
+    "params" : [ "checks", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS, e2e|pending|IN_PROGRESS",
+      "count" : "2",
+      "failed" : "0",
+      "mission" : "M-9",
+      "number" : "9",
+      "pending" : "1"
+    }
+  },
+  "PullRequestOpened.found" : {
+    "line" : "Floor42 found pull request #9 for M-1: director/work into main (https://github.com/o/r/pull/9)",
+    "params" : [ "base", "branch", "found", "mission", "number", "remote", "url", "workspace" ],
+    "sample" : {
+      "base" : "main",
+      "branch" : "director/work",
+      "found" : "true",
+      "mission" : "M-1",
+      "number" : "9",
+      "remote" : "origin",
+      "url" : "https://github.com/o/r/pull/9",
+      "workspace" : ""
+    }
+  },
+  "PullRequestOpened.opened" : {
+    "line" : "Director opened pull request #7 for M-1: floor42/chris into main (https://github.com/o/r/pull/7)",
+    "params" : [ "base", "branch", "found", "mission", "number", "remote", "url", "workspace" ],
+    "sample" : {
+      "base" : "main",
+      "branch" : "floor42/chris",
+      "found" : "false",
+      "mission" : "M-1",
+      "number" : "7",
+      "remote" : "origin",
+      "url" : "https://github.com/o/r/pull/7",
+      "workspace" : "chris"
+    }
+  },
+  "QuestionAnswered" : {
+    "line" : "Director answered Q-2: ALLOW",
+    "params" : [ "answer", "question" ],
+    "sample" : {
+      "answer" : "ALLOW",
+      "question" : "Q-2"
+    }
+  },
+  "QuestionAsked.blocking" : {
+    "line" : "Blocking question Q-1 for the director: Allow chris to use Write?",
+    "params" : [ "action", "askedBy", "blocking", "context", "criticality", "kind", "mission", "optionCodes", "options", "question", "recommendation", "subject", "ticket" ],
+    "sample" : {
+      "action" : "a4",
+      "askedBy" : "chris",
+      "blocking" : "true",
+      "context" : "src\\App.java\nYour answer applies to this call only: you edited src\\App.java in the workshop.",
+      "criticality" : "MEDIUM",
+      "kind" : "ACTION_APPROVAL",
+      "mission" : "M-1",
+      "optionCodes" : ", ",
+      "options" : "ALLOW, DENY",
+      "phrase" : "approval",
+      "phrase.agent" : "chris",
+      "phrase.tool" : "Write",
+      "question" : "Q-1",
+      "recommendation" : "",
+      "subject" : "Allow chris to use Write?",
+      "ticket" : "T-4"
+    }
+  },
+  "QuestionAsked.open" : {
+    "line" : "Question Q-8 for the director: Disk almost full",
+    "params" : [ "action", "askedBy", "blocking", "context", "criticality", "kind", "mission", "optionCodes", "options", "question", "recommendation", "subject", "ticket" ],
+    "sample" : {
+      "action" : "",
+      "askedBy" : "",
+      "blocking" : "false",
+      "context" : "2% left",
+      "criticality" : "LOW",
+      "kind" : "OPEN",
+      "mission" : "M-1",
+      "optionCodes" : "",
+      "options" : "",
+      "phrase" : "disk",
+      "phrase.left" : "2%",
+      "question" : "Q-8",
+      "recommendation" : "",
+      "subject" : "Disk almost full",
+      "ticket" : ""
+    }
+  },
+  "QuestionWithdrawn" : {
+    "line" : "Q-6 withdrawn: not now",
+    "params" : [ "question", "reason" ],
+    "sample" : {
+      "question" : "Q-6",
+      "reason" : "not now"
+    }
+  },
+  "RetroConcluded.first" : {
+    "line" : "Retrospective of M-1 concluded: Keep tests first",
+    "params" : [ "conclusions", "first", "mission", "reason", "text" ],
+    "sample" : {
+      "conclusions" : "Keep tests first",
+      "first" : "Keep tests first",
+      "mission" : "M-1",
+      "reason" : "",
+      "text" : "We shipped"
+    }
+  },
+  "RetroConcluded.none" : {
+    "line" : "Retrospective of M-1 closed without conclusion: closed by the director before every turn was heard",
+    "params" : [ "conclusions", "first", "mission", "reason", "text" ],
+    "sample" : {
+      "conclusions" : "",
+      "first" : "",
+      "mission" : "M-1",
+      "reason" : "closed by the director before every turn was heard",
+      "reasonCode" : "retroClosedEarly",
+      "text" : ""
+    }
+  },
+  "RetroConcluded.plain" : {
+    "line" : "Retrospective of M-1 concluded",
+    "params" : [ "conclusions", "first", "mission", "reason", "text" ],
+    "sample" : {
+      "conclusions" : "",
+      "first" : "",
+      "mission" : "M-1",
+      "reason" : "",
+      "text" : "done"
+    }
+  },
+  "RetroContributed" : {
+    "line" : "chris spoke in the retrospective of M-1: 1 went well, 0 went badly",
+    "params" : [ "agent", "badly", "mission", "text", "well", "wentBadly", "wentWell" ],
+    "sample" : {
+      "agent" : "chris",
+      "badly" : "0",
+      "mission" : "M-1",
+      "text" : "Good flow",
+      "well" : "1",
+      "wentBadly" : "",
+      "wentWell" : "Tests first"
+    }
+  },
+  "RetroOpened" : {
+    "line" : "Retrospective of M-1 at the table: galen, chris, darius; galen chairs",
+    "params" : [ "chair", "mission", "participants", "ticket" ],
+    "sample" : {
+      "chair" : "galen",
+      "mission" : "M-1",
+      "participants" : "galen, chris, darius",
+      "ticket" : "T-12"
+    }
+  },
+  "RetroSkipped" : {
+    "line" : "darius did not speak in the retrospective of M-1: usage window",
+    "params" : [ "agent", "mission", "reason" ],
+    "sample" : {
+      "agent" : "darius",
+      "mission" : "M-1",
+      "reason" : "usage window"
+    }
+  },
+  "ReviewItemsRecorded" : {
+    "line" : "Review of T-21 by darius: 1 reservation(s) tied to a criterion, 3 note(s)",
+    "params" : [ "declared", "notes", "reservations", "reviewer", "ticket" ],
+    "sample" : {
+      "declared" : "VALIDATED_WITH_RESERVATIONS",
+      "notes" : "3",
+      "reservations" : "1",
+      "reviewer" : "darius",
+      "ticket" : "T-21"
+    }
+  },
+  "RuntimeLineRecorded" : {
+    "line" : "chris’s session sent a thinking line: Let me look",
+    "params" : [ "agent", "content", "kind", "session", "ticket" ],
+    "sample" : {
+      "agent" : "chris",
+      "content" : "Let me look",
+      "kind" : "thinking",
+      "session" : "s1",
+      "ticket" : "T-4"
+    }
+  },
+  "SandboxToolsProbed.measured" : {
+    "line" : "Floor42 measured the sandbox (Ubuntu): 2 of 2 tools present",
+    "params" : [ "count", "distro", "measured", "osId", "osLike", "osName", "osVersion", "present", "reason", "tools" ],
+    "sample" : {
+      "count" : "2",
+      "distro" : "Ubuntu",
+      "measured" : "true",
+      "osId" : "ubuntu",
+      "osLike" : "debian",
+      "osName" : "Ubuntu 24.04",
+      "osVersion" : "24.04",
+      "present" : "2",
+      "reason" : "",
+      "tools" : "git|/usr/bin/git|2.43.0, java|/usr/bin/java|25"
+    }
+  },
+  "SandboxToolsProbed.unknown" : {
+    "line" : "Floor42 could not measure the sandbox (Ubuntu): wsl.exe not found",
+    "params" : [ "count", "distro", "measured", "osId", "osLike", "osName", "osVersion", "present", "reason", "tools" ],
+    "sample" : {
+      "count" : "0",
+      "distro" : "Ubuntu",
+      "measured" : "false",
+      "osId" : "",
+      "osLike" : "",
+      "osName" : "",
+      "osVersion" : "",
+      "present" : "0",
+      "reason" : "wsl.exe not found",
+      "tools" : ""
+    }
+  },
+  "SessionContinuationRequested" : {
+    "line" : "Director asked that chris's next session on T-4 continue session s2 (Claude Code --resume)",
+    "params" : [ "agent", "mission", "session", "ticket" ],
+    "sample" : {
+      "agent" : "chris",
+      "mission" : "M-1",
+      "session" : "s2",
+      "ticket" : "T-4"
+    }
+  },
+  "SessionContinued" : {
+    "line" : "Session s3 continues session s2 (Claude Code --resume)",
+    "params" : [ "from", "session" ],
+    "sample" : {
+      "from" : "s2",
+      "session" : "s3"
+    }
+  },
+  "SessionRiskRaised" : {
+    "line" : "chris’s session on T-19 is at risk level alert: path outside its workspace",
+    "params" : [ "agent", "level", "reasons", "session", "ticket" ],
+    "sample" : {
+      "agent" : "chris",
+      "level" : "ALERT",
+      "reasons" : "OUTSIDE_WORKSPACE",
+      "session" : "s-iam",
+      "ticket" : "T-19"
+    }
+  },
+  "SettingChanged.default" : {
+    "line" : "Director set agent language back to the default",
+    "params" : [ "setting", "value" ],
+    "sample" : {
+      "setting" : "agent language",
+      "value" : ""
+    }
+  },
+  "SettingChanged.value" : {
+    "line" : "Director set agent language to fr",
+    "params" : [ "setting", "value" ],
+    "sample" : {
+      "setting" : "agent language",
+      "value" : "fr"
+    }
+  },
+  "StaffingAdvised.hire" : {
+    "line" : "Staffing advice on M-1: hire Lou, Max",
+    "params" : [ "advice", "hires", "mission", "names", "parallel", "ticket", "worthIt" ],
+    "sample" : {
+      "advice" : "Two more developers",
+      "hires" : "Hire[name=Lou, title=Backend developer], Hire[name=Max, title=UI developer]",
+      "mission" : "M-1",
+      "names" : "Lou, Max",
+      "parallel" : "3",
+      "ticket" : "T-7",
+      "worthIt" : "true"
+    }
+  },
+  "StaffingAdvised.nohire" : {
+    "line" : "Staffing advice on M-1: do not hire",
+    "params" : [ "advice", "hires", "mission", "names", "parallel", "ticket", "worthIt" ],
+    "sample" : {
+      "advice" : "No measure yet",
+      "hires" : "",
+      "mission" : "M-1",
+      "names" : "",
+      "parallel" : "",
+      "ticket" : "T-8",
+      "worthIt" : "false"
+    }
+  },
+  "StaffingReviewRequested" : {
+    "line" : "Director asked galen whether to reinforce the team of M-1",
+    "params" : [ "mission", "planner", "ticket" ],
+    "sample" : {
+      "mission" : "M-1",
+      "planner" : "galen",
+      "ticket" : "T-7"
+    }
+  },
+  "TerminalClosed.closed" : {
+    "line" : "Terminal TERM-1 on C:/work/app closed by the director",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "",
+      "project" : "C:/work/app",
+      "reason" : "closed",
+      "terminal" : "TERM-1"
+    }
+  },
+  "TerminalClosed.closed.code" : {
+    "line" : "Terminal TERM-9 on C:/repo/app closed by the director (exit code 1)",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "1",
+      "project" : "C:/repo/app",
+      "reason" : "closed",
+      "terminal" : "TERM-9"
+    }
+  },
+  "TerminalClosed.exited" : {
+    "line" : "Terminal TERM-9 on C:/repo/app ended by itself",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "",
+      "project" : "C:/repo/app",
+      "reason" : "exited",
+      "terminal" : "TERM-9"
+    }
+  },
+  "TerminalClosed.exited.code" : {
+    "line" : "Terminal TERM-2 on C:/work/app ended by itself (exit code 0)",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "0",
+      "project" : "C:/work/app",
+      "reason" : "exited",
+      "terminal" : "TERM-2"
+    }
+  },
+  "TerminalClosed.interrupted" : {
+    "line" : "Terminal TERM-9 on C:/repo/app stopped with the daemon",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "",
+      "project" : "C:/repo/app",
+      "reason" : "interrupted",
+      "terminal" : "TERM-9"
+    }
+  },
+  "TerminalClosed.interrupted.code" : {
+    "line" : "Terminal TERM-2 on C:/work/site stopped with the daemon (exit code 130)",
+    "params" : [ "exitCode", "project", "reason", "terminal" ],
+    "sample" : {
+      "exitCode" : "130",
+      "project" : "C:/work/site",
+      "reason" : "interrupted",
+      "terminal" : "TERM-2"
+    }
+  },
+  "TerminalOpened" : {
+    "line" : "Director opened their own Claude Code in terminal TERM-1 on C:/work/app",
+    "params" : [ "project", "terminal" ],
+    "sample" : {
+      "project" : "C:/work/app",
+      "terminal" : "TERM-1"
+    }
+  },
+  "TicketApproved" : {
+    "line" : "Director approves T-4",
+    "params" : [ "ticket" ],
+    "sample" : {
+      "ticket" : "T-4"
+    }
+  },
+  "TicketAssigned" : {
+    "line" : "T-1 assigned to galen",
+    "params" : [ "agent", "ticket" ],
+    "sample" : {
+      "agent" : "galen",
+      "ticket" : "T-1"
+    }
+  },
+  "TicketCancelled" : {
+    "line" : "T-6 cancelled: Later",
+    "params" : [ "reason", "ticket" ],
+    "sample" : {
+      "reason" : "Later",
+      "ticket" : "T-6"
+    }
+  },
+  "TicketCompleted" : {
+    "line" : "T-1 done",
+    "params" : [ "ticket" ],
+    "sample" : {
+      "ticket" : "T-1"
+    }
+  },
+  "TicketCreated" : {
+    "line" : "T-1 created: Plan the work",
+    "params" : [ "acceptanceCriteria", "dependsOn", "description", "kind", "mission", "priority", "ticket", "title" ],
+    "sample" : {
+      "acceptanceCriteria" : "A plan",
+      "dependsOn" : "",
+      "description" : "",
+      "kind" : "WORK",
+      "mission" : "M-1",
+      "priority" : "NORMAL",
+      "ticket" : "T-1",
+      "title" : "Plan the work"
+    }
+  },
+  "TicketEdited" : {
+    "line" : "Director edits T-6: Profile page",
+    "params" : [ "acceptanceCriteria", "description", "ticket", "title" ],
+    "sample" : {
+      "acceptanceCriteria" : "Shows it",
+      "description" : "Show the profile",
+      "ticket" : "T-6",
+      "title" : "Profile page"
+    }
+  },
+  "TicketEdited.floor42" : {
+    "line" : "Floor42 tidies T-23's description",
+    "params" : [ "acceptanceCriteria", "description", "ticket", "title" ],
+    "sample" : {
+      "acceptanceCriteria" : "a summary, Test: cat SUMMARY.md => it prints the summary",
+      "description" : "Reads it.\n\nWhy this risk: it only reads",
+      "ticket" : "T-23",
+      "title" : "Read the code"
+    }
+  },
+  "TicketReleased" : {
+    "line" : "T-2 goes back to the queue: ken has left; their changes stay on their branch",
+    "params" : [ "agent", "ticket" ],
+    "sample" : {
+      "agent" : "ken",
+      "ticket" : "T-2"
+    }
+  },
+  "TicketReopened" : {
+    "line" : "T-4 reopened: No audience check",
+    "params" : [ "reason", "ticket" ],
+    "sample" : {
+      "reason" : "No audience check",
+      "ticket" : "T-4"
+    }
+  },
+  "TicketReviewed" : {
+    "line" : "darius reviewed T-4: rejected",
+    "params" : [ "reviewer", "ticket", "verdict" ],
+    "sample" : {
+      "reviewer" : "darius",
+      "ticket" : "T-4",
+      "verdict" : "REJECTED"
+    }
+  },
+  "TicketStarted" : {
+    "line" : "galen starts T-1",
+    "params" : [ "assignee", "ticket" ],
+    "sample" : {
+      "assignee" : "galen",
+      "ticket" : "T-1"
+    }
+  },
+  "TicketSubmittedForReview" : {
+    "line" : "T-4 submitted for independent review",
+    "params" : [ "assignee", "ticket" ],
+    "sample" : {
+      "assignee" : "chris",
+      "ticket" : "T-4"
+    }
+  },
+  "TicketValidationEnabled" : {
+    "line" : "Tickets of M-1 now wait for the director's approval",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "UncommittedWorkAccepted.files" : {
+    "line" : "Director accepted M-9 with 2 file(s) not committed in 1 worktree(s)",
+    "params" : [ "files", "mission", "unknown", "worktrees" ],
+    "sample" : {
+      "files" : "2",
+      "mission" : "M-9",
+      "unknown" : "0",
+      "worktrees" : "1"
+    }
+  },
+  "UncommittedWorkAccepted.unknown" : {
+    "line" : "Director accepted M-8 without knowing what is committed in 1 of 2 worktree(s) (2 file(s) not committed elsewhere)",
+    "params" : [ "files", "mission", "unknown", "worktrees" ],
+    "sample" : {
+      "files" : "2",
+      "mission" : "M-8",
+      "unknown" : "1",
+      "worktrees" : "2"
+    }
+  },
+  "UnprovenDeliveryAccepted.FAILED" : {
+    "line" : "Director accepted M-9 although a step of its proof failed",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-9"
+    }
+  },
+  "UnprovenDeliveryAccepted.NOT_PROVEN" : {
+    "line" : "Director accepted M-5 although they judged it not proven",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-5"
+    }
+  },
+  "UnprovenDeliveryAccepted.NOT_RUN" : {
+    "line" : "Director accepted M-9 with its proof not run on the code as it is",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-9"
+    }
+  },
+  "UnprovenDeliveryAccepted.NO_RECIPE" : {
+    "line" : "Director accepted M-9 with no usable proof recipe",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-9"
+    }
+  },
+  "UnprovenDeliveryAccepted.NO_VERDICT" : {
+    "line" : "Director accepted M-1 without a verdict on its proof",
+    "params" : [ "mission" ],
+    "sample" : {
+      "mission" : "M-1"
+    }
+  },
+  "UnsafeModeChanged.off" : {
+    "line" : "Director switched unsafe mode off: a real mission’s shell runs in the sandbox again",
+    "params" : [ "reason" ],
+    "sample" : {
+      "reason" : ""
+    }
+  },
+  "UnsafeModeChanged.on" : {
+    "line" : "Director switched unsafe mode on: a real mission’s shell may run without the sandbox, as the daemon’s own user (WSL is not installed)",
+    "params" : [ "reason" ],
+    "sample" : {
+      "reason" : "WSL is not installed"
+    }
+  },
+  "WorkflowPinned.readable" : {
+    "line" : "M-1 follows the workflow built-in",
+    "params" : [ "mission", "name" ],
+    "sample" : {
+      "mission" : "M-1",
+      "name" : "built-in"
+    }
+  },
+  "WorkflowPinned.unreadable" : {
+    "line" : "M-9 follows a workflow this version of Floor42 cannot read",
+    "params" : [ "mission", "name" ],
+    "sample" : {
+      "mission" : "M-9",
+      "name" : ""
+    }
+  },
+  "WorkflowProposalClosed.adopted" : {
+    "line" : "Director saved workflow proposal 1",
+    "params" : [ "proposal" ],
+    "sample" : {
+      "proposal" : "1"
+    }
+  },
+  "WorkflowProposalClosed.dismissed" : {
+    "line" : "Director dismissed workflow proposal 2",
+    "params" : [ "proposal" ],
+    "sample" : {
+      "proposal" : "2"
+    }
+  },
+  "WorkflowProposed" : {
+    "line" : "The planner proposed the workflow Talk while planning M-7 (proposal 1)",
+    "params" : [ "mission", "name", "proposal" ],
+    "sample" : {
+      "mission" : "M-7",
+      "name" : "Talk",
+      "proposal" : "1"
+    }
+  },
+  "WorkflowStepTicketOpened" : {
+    "line" : "The approval of M-9 opened T-22 for the workflow step research",
+    "params" : [ "mission", "step", "ticket" ],
+    "sample" : {
+      "mission" : "M-9",
+      "step" : "research",
+      "ticket" : "T-22"
+    }
+  },
+  "WorkspacePrepared" : {
+    "line" : "Workspace of chris ready on branch floor42/chris",
+    "params" : [ "agent", "baseCommit", "branch", "mission", "path" ],
+    "sample" : {
+      "agent" : "chris",
+      "baseCommit" : "base000",
+      "branch" : "floor42/chris",
+      "mission" : "M-1",
+      "path" : "C:/ws/chris"
+    }
+  }
+}

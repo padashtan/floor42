@@ -1,0 +1,1 @@
+text|I produced the ticket and it went through review at once.\nWENT WELL: The ticket was validated on its first review\nWENT BADLY: Every Bash command waited for the director

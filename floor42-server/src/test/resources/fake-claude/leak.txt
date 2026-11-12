@@ -1,0 +1,3 @@
+tool|toolu_l1|Read|{"file_path":"README.md"}|config: api_key=ghp_abcdefghijklmnopqrstuvwxyz0123 and AKIAABCDEFGHIJKLMNOP at C:\Users\director\secret-project\.env and /home/director/.ssh/id_rsa {{lorem}}
+tool|toolu_l2|Read|{"file_path":"notes.md"}|Authorization: Bearer abcdefghijklmnop.qrstuvwxyz and \\fileserver\share\plans.docx and /Users/director/Documents/plan.txt
+text|Report: read the configuration; password=hunter2hunter2 stays out of the report.

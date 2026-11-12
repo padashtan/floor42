@@ -1,0 +1,50 @@
+# Floor42 project rules for Semgrep (tools/quality/semgrep-run.sh adds the registry packs). Each rule is a pattern the
+# security design forbids; a justified exception is a `// nosemgrep: <rule id>` with the reason on the line above.
+rules:
+  - id: floor42-shell-c-concatenation
+    languages: [java]
+    severity: ERROR
+    message: >-
+      A shell started with "-c" and a string built by concatenation is command injection. Pass the arguments as a list
+      (ProcessBuilder with one element per argument) and never through a shell.
+    metadata:
+      cwe: "CWE-78: OS Command Injection"
+    pattern-either:
+      - pattern: new ProcessBuilder("sh", "-c", $A + $B, ...)
+      - pattern: new ProcessBuilder("bash", "-c", $A + $B, ...)
+      - pattern: new ProcessBuilder("cmd", "/c", $A + $B, ...)
+      - pattern: Runtime.getRuntime().exec($A + $B)
+
+  - id: floor42-regex-from-request-input
+    languages: [java]
+    severity: WARNING
+    message: >-
+      Pattern.compile on a request value allows ReDoS and regex injection. Use Pattern.quote, a literal match, or a
+      bounded fixed pattern.
+    metadata:
+      cwe: "CWE-1333: Inefficient Regular Expression Complexity"
+    mode: taint
+    pattern-sources:
+      - pattern: |
+          @QueryParam(...) String $P
+      - pattern: |
+          @PathParam(...) String $P
+      - pattern: |
+          @FormParam(...) String $P
+      - pattern: |
+          @HeaderParam(...) String $P
+    pattern-sanitizers:
+      - pattern: Pattern.quote(...)
+    pattern-sinks:
+      - pattern: Pattern.compile($X, ...)
+
+  - id: floor42-ts-raw-html
+    languages: [typescript, javascript]
+    severity: WARNING
+    message: innerHTML and document.write write unescaped markup; agent output is untrusted, so render text or sanitise first.
+    metadata:
+      cwe: "CWE-79: Cross-site Scripting"
+    pattern-either:
+      - pattern: $E.innerHTML = $X
+      - pattern: $E.outerHTML = $X
+      - pattern: document.write(...)

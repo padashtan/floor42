@@ -1,0 +1,2 @@
+tool|toolu_b1|Read|{"file_path":"README.md"}|1	# Fake project
+text|Note: chris and nora both ask who calls the APIs; I merged their questions. README.md does not say.\nCLARIFY: Who calls the APIs?\nCONTEXT: chris and nora; a gateway pays off with outside callers\nOPTIONS: Only our own apps | Outside partners too\nRECOMMENDED: Outside partners too\nCLARIFY: How much may a gateway cost each month?\nCONTEXT: nora\nOPTIONS: none\nRECOMMENDED: none

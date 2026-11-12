@@ -1,0 +1,1805 @@
+=== aMeetingTurnWithNoReportedCostCountsOnce
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=1.0)
+command 12
+  #12 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda="Review the release notes")
+  #13 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingPlaced(meeting="MT-1", place=CONFERENCE)
+command 13
+  #14 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+command 14
+  #15 2026-10-20T09:00:14Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-d", mission="M-1", ticket="MT-1.turns", agent="darius", model="m", runtimeVersion=null, capUsd=0.4)
+command 15
+  #16 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-d", failed=true, outcome="killed", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=0.4)
+command 16
+  #17 2026-10-20T09:00:16Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="darius", session="s-d", answer=null, why="the session was stopped", budgetUsd=0.4)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:16Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:12Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:13Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session="s-d", answer=null, why="the session was stopped", budgetUsd=0.4, at=2026-10-20T09:00:16Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-d"=AgentSession{agent="darius", capUsd=0.4, continuedFrom=null, costUsdBound=0.4, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="killed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:13Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 18
+witnesses = {}
+workspaces = []
+# queries
+version = 18
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="darius", capUsd=0.4, continuedFrom=null, costUsdBound=0.4, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="killed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional[0.6]
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:16Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s-d = Optional[AgentSession{agent="darius", capUsd=0.4, continuedFrom=null, costUsdBound=0.4, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="killed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession s-d = "m"
+continuationRequested s-d = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== aTurnChargedItsBudgetCountsAgainstTheMissionsBudgetAsABound
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=1.0)
+command 12
+  #12 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda="Review the release notes")
+  #13 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingPlaced(meeting="MT-1", place=CONFERENCE)
+command 13
+  #14 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+command 14
+  #15 2026-10-20T09:00:14Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-d", mission="M-1", ticket="MT-1.turns", agent="darius", model="m", runtimeVersion=null, capUsd=null)
+command 15
+  #16 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-d", failed=true, outcome="failed", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+command 16
+  #17 2026-10-20T09:00:16Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="darius", session="s-d", answer=null, why="the session failed", budgetUsd=0.4)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:16Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:12Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:13Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session="s-d", answer=null, why="the session failed", budgetUsd=0.4, at=2026-10-20T09:00:16Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-d"=AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:13Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 18
+witnesses = {}
+workspaces = []
+# queries
+version = 18
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=1.0, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional[0.6]
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:16Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s-d = Optional[AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:15Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:14Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession s-d = "m"
+continuationRequested s-d = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== aTurnNamesASessionOfItsOwnRoundOnlyChargedOnce
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris"], agenda=null)
+command 12
+  #12 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["chris"], capUsd=1.0, question=null)
+command 13
+  #13 2026-10-20T09:00:13Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s1", mission="M-1", ticket="MT-1.turns", agent="chris", model="m", runtimeVersion=null, capUsd=null)
+command 14
+  #14 2026-10-20T09:00:14Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s1", failed=false, outcome="completed", turns=1, inputTokensProvided=1, outputTokensProvided=1, costUsdEstimated=0.3, costUsdBound=null)
+command 15
+  #15 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="chris", session="s1", answer="fine", why=null, budgetUsd=0.5)
+command 16
+  #16 2026-10-20T09:00:16Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=2, speakers=["chris"], capUsd=1.0, question=null)
+command 17
+  #17 2026-10-20T09:00:18Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=2, attendee="chris", session=null, answer=null, why="restart", budgetUsd=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:18Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda=null, attendees=["chris"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=TABLE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:12Z, capUsd=1.0, number=1, question=null, speakers=["chris"], turns={"chris"=MeetingTurn(attendee="chris", session="s1", answer="fine", why=null, budgetUsd=0.5, at=2026-10-20T09:00:15Z)}}, MeetingRound{askedAt=2026-10-20T09:00:16Z, capUsd=1.0, number=2, question=null, speakers=["chris"], turns={"chris"=MeetingTurn(attendee="chris", session=null, answer=null, why="restart", budgetUsd=null, at=2026-10-20T09:00:18Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s1"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.3, endedAt=2026-10-20T09:00:14Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:12Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 18
+witnesses = {}
+workspaces = []
+# queries
+version = 18
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.3, endedAt=2026-10-20T09:00:14Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.3
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:18Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s1 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.3, endedAt=2026-10-20T09:00:14Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+modelOfSession s1 = "m"
+continuationRequested s1 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== aTurnNeverBecomesTheLatestSessionOnTheAttendeesWork
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-work", mission="M-1", ticket="T-1", agent="chris", model="m", runtimeVersion=null, capUsd=null)
+command 12
+  #12 2026-10-20T09:00:12Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-work", failed=true, outcome="stopped", turns=3, inputTokensProvided=1, outputTokensProvided=1, costUsdEstimated=0.2, costUsdBound=null)
+command 13
+  #13 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda="Review the release notes")
+  #14 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingPlaced(meeting="MT-1", place=CONFERENCE)
+command 14
+  #15 2026-10-20T09:00:14Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+command 15
+  #16 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="darius", session=null, answer=null, why="not heard", budgetUsd=null)
+command 16
+  #17 2026-10-20T09:00:16Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-turn", mission="M-1", ticket="MT-1.turns", agent="chris", model="m", runtimeVersion=null, capUsd=null)
+command 17
+  #18 2026-10-20T09:00:17Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-turn", failed=false, outcome="completed", turns=1, inputTokensProvided=1, outputTokensProvided=1, costUsdEstimated=0.01, costUsdBound=null)
+events not recorded by the test: 1
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = [ContinuationRequest(mission="M-1", ticket="T-1", agent="chris", session="s-work", at=2026-10-20T09:00:18Z)]
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:18Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:13Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:14Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session=null, answer=null, why="not heard", budgetUsd=null, at=2026-10-20T09:00:15Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-work"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}, "s-turn"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:14Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 20
+witnesses = {}
+workspaces = []
+# queries
+version = 20
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}, AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.21
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:18Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s-work = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}]
+modelOfSession s-work = "m"
+continuationRequested s-work = Optional["s-work"]
+session s-turn = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+modelOfSession s-turn = "m"
+continuationRequested s-turn = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: 
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:17Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:13Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:14Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session=null, answer=null, why="not heard", budgetUsd=null, at=2026-10-20T09:00:15Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-work"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}, "s-turn"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:14Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 19
+witnesses = {}
+workspaces = []
+# queries
+version = 19
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}, AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.21
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:17Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s-work = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.2, endedAt=2026-10-20T09:00:12Z, failed=true, id="s-work", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="stopped", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:11Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=3}]
+modelOfSession s-work = "m"
+continuationRequested s-work = Optional.empty
+session s-turn = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.01, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-turn", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:16Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+modelOfSession s-turn = "m"
+continuationRequested s-turn = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+=== aTurnWithoutAnEstimateIsChargedItsBudgetAndALongAnswerIsKeptCut
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda="Review the release notes")
+  #12 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingPlaced(meeting="MT-1", place=CONFERENCE)
+command 12
+  #13 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+command 13
+  #14 2026-10-20T09:00:13Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-d", mission="M-1", ticket="MT-1.turns", agent="darius", model="m", runtimeVersion=null, capUsd=null)
+command 14
+  #15 2026-10-20T09:00:14Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-d", failed=true, outcome="failed", turns=null, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+command 15
+  #16 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="darius", session="s-d", answer=null, why="the session failed", budgetUsd=0.4)
+command 16
+  #17 2026-10-20T09:00:17Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-c", mission="M-1", ticket="MT-1.turns", agent="chris", model="m", runtimeVersion=null, capUsd=null)
+command 17
+  #18 2026-10-20T09:00:18Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="chris", session="s-c", answer="word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word  [cut by Floor42: the answer was longer]", why=null, budgetUsd=0.1)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:18Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:12Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session="s-d", answer=null, why="the session failed", budgetUsd=0.4, at=2026-10-20T09:00:15Z), "chris"=MeetingTurn(attendee="chris", session="s-c", answer="word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word  [cut by Floor42: the answer was longer]", why=null, budgetUsd=0.1, at=2026-10-20T09:00:18Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-d"=AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:14Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}, "s-c"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s-c", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:17Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:12Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 19
+witnesses = {}
+workspaces = []
+# queries
+version = 19
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = true
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:14Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}, AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s-c", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:17Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:18Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = refused AGENT_AT_WORK: An agent session is running on M-1: wait for it to end
+session s-d = Optional[AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:14Z, failed=true, id="s-d", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome="failed", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession s-d = "m"
+continuationRequested s-d = Optional.empty
+session s-c = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s-c", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="m", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:17Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession s-c = "m"
+continuationRequested s-c = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== noRoundOnAMissionNotInProgressNorOnASimulatedOne
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris"], agenda=null)
+command 12
+  #12 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionSuspended(mission="M-1", reason="pause")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:12Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda=null, attendees=["chris"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=TABLE, rounds=[], ticket=null}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=SUSPENDED, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 13
+witnesses = {}
+workspaces = []
+# queries
+version = 13
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=SUSPENDED, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=SUSPENDED, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:12Z]
+checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: SUSPENDED -> COMPLETED is not allowed
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = refused MISSION_NOT_ACTIVE: M-1 is SUSPENDED
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== refusalsSayWhy
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda=null)
+command 12
+  #12 2026-10-20T09:00:18Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["chris"], capUsd=1.0, question=null)
+command 13
+  #13 2026-10-20T09:00:27Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s1", mission="M-1", ticket="MT-1.turns", agent="chris", model="m", runtimeVersion=null, capUsd=null)
+command 14
+  #14 2026-10-20T09:00:28Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s1", failed=false, outcome="completed", turns=1, inputTokensProvided=1, outputTokensProvided=1, costUsdEstimated=0.9, costUsdBound=null)
+command 15
+  #15 2026-10-20T09:00:29Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="chris", session="s1", answer="fine", why=null, budgetUsd=null)
+command 16
+  #16 2026-10-20T09:00:32Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=2, speakers=["chris"], capUsd=1.5, question=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:32Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda=null, attendees=["chris", "darius"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=TABLE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:18Z, capUsd=1.0, number=1, question=null, speakers=["chris"], turns={"chris"=MeetingTurn(attendee="chris", session="s1", answer="fine", why=null, budgetUsd=null, at=2026-10-20T09:00:29Z)}}, MeetingRound{askedAt=2026-10-20T09:00:32Z, capUsd=1.5, number=2, question=null, speakers=["chris"], turns={}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s1"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.9, endedAt=2026-10-20T09:00:28Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:27Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:18Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 17
+witnesses = {}
+workspaces = []
+# queries
+version = 17
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.9, endedAt=2026-10-20T09:00:28Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:27Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.9
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:32Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s1 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.9, endedAt=2026-10-20T09:00:28Z, failed=false, id="s1", inputTokensProvided=1, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=1, runtimeVersion=null, startedAt=2026-10-20T09:00:27Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+modelOfSession s1 = "m"
+continuationRequested s1 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== speakersTakeTheirTurnInTheDirectorsOrderOnTheMeetingsOwnTicket
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris", "darius"], agenda="Review the release notes")
+  #12 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingPlaced(meeting="MT-1", place=CONFERENCE)
+command 12
+  #13 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+command 13
+  #14 2026-10-20T09:00:15Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-d", mission="M-1", ticket="MT-1.turns", agent="darius", model="m", runtimeVersion=null, capUsd=null)
+command 14
+  #15 2026-10-20T09:00:16Z REAL AGENT:darius mission=M-1 auth=null cause=null ActionRequested(action="M-1:read", mission="M-1", ticket="MT-1.turns", agent="darius", category=READ, tool="Read", summary="NOTES.md")
+  #16 2026-10-20T09:00:16Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionDenied(action="M-1:read", reason=POLICY, detail="no rule allows it (default deny)")
+command 15
+  #17 2026-10-20T09:00:17Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-d", failed=false, outcome="completed", turns=2, inputTokensProvided=10, outputTokensProvided=5, costUsdEstimated=0.12, costUsdBound=null)
+command 16
+  #18 2026-10-20T09:00:18Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="darius", session="s-d", answer="Tighten it.", why=null, budgetUsd=null)
+command 17
+  #19 2026-10-20T09:00:19Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null MeetingTurnTaken(meeting="MT-1", round=1, attendee="chris", session=null, answer=null, why="the cap is reached", budgetUsd=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {"M-1:read"=Action{agent="darius", authorizedByOffice=false, category=READ, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="M-1:read", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:16Z, result=null, runningSeconds=null, stage=DENIED, summary="NOTES.md", ticket="MT-1.turns", tool="Read", updatedAt=2026-10-20T09:00:16Z}}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:19Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda="Review the release notes", attendees=["chris", "darius"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=CONFERENCE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:12Z, capUsd=0.5, number=1, question="Is it good?", speakers=["darius", "chris"], turns={"darius"=MeetingTurn(attendee="darius", session="s-d", answer="Tighten it.", why=null, budgetUsd=null, at=2026-10-20T09:00:18Z), "chris"=MeetingTurn(attendee="chris", session=null, answer=null, why="the cap is reached", budgetUsd=null, at=2026-10-20T09:00:19Z)}}], ticket="MT-1.turns"}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s-d"=AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.12, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-d", inputTokensProvided=10, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=5, runtimeVersion=null, startedAt=2026-10-20T09:00:15Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=2}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:12Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 20
+witnesses = {}
+workspaces = []
+# queries
+version = 20
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = [Action{agent="darius", authorizedByOffice=false, category=READ, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="M-1:read", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:16Z, result=null, runningSeconds=null, stage=DENIED, summary="NOTES.md", ticket="MT-1.turns", tool="Read", updatedAt=2026-10-20T09:00:16Z}]
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.12, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-d", inputTokensProvided=10, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=5, runtimeVersion=null, startedAt=2026-10-20T09:00:15Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=2}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.12
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:19Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s-d = Optional[AgentSession{agent="darius", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=0.12, endedAt=2026-10-20T09:00:17Z, failed=false, id="s-d", inputTokensProvided=10, lastTokenId=null, mission="M-1", model="m", outcome="completed", outputTokensProvided=5, runtimeVersion=null, startedAt=2026-10-20T09:00:15Z, ticket="MT-1.turns", tokenExpiresAt=null, tokenIssuer=null, turns=2}]
+modelOfSession s-d = "m"
+continuationRequested s-d = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+planLimitRisk m = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theMeetingTableIsLeftUnsaidAndAMeetingReplaysToTheSameState
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-1", attendees=["chris"], agenda=null)
+command 12
+  #12 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCreated(mission="M-2", title="Ship the release", objective="A release ready to ship", workspace="C:/repo")
+  #13 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-2 auth=null cause=null WorkflowPinned(mission="M-2", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 13
+  #14 2026-10-20T09:00:14Z REAL AGENT:galen mission=M-2 auth=null cause=null TicketCreated(ticket="T-2", mission="M-2", title="Write the release notes", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 14
+  #15 2026-10-20T09:00:15Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketAssigned(ticket="T-2", agent="chris")
+command 15
+  #16 2026-10-20T09:00:16Z REAL AGENT:galen mission=M-2 auth=null cause=null MissionPlanSubmitted(mission="M-2")
+command 16
+  #17 2026-10-20T09:00:17Z REAL DIRECTOR:director mission=M-2 auth=null cause=null BudgetSet(mission="M-2", usd=null)
+command 17
+  #18 2026-10-20T09:00:18Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionPlanApproved(mission="M-2")
+command 18
+  #19 2026-10-20T09:00:19Z REAL AGENT:chris mission=M-2 auth=null cause=null TicketStarted(ticket="T-2")
+command 19
+  #20 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MeetingCalled(meeting="MT-2", mission="M-2", attendees=["darius"], agenda=null)
+  #21 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MeetingPlaced(meeting="MT-2", place=CONFERENCE)
+command 20
+  #22 2026-10-20T09:00:20Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MeetingViewsAsked(meeting="MT-1", ticket="MT-1.turns", round=1, speakers=["chris"], capUsd=1.0, question=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 2
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 2
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:20Z, "M-2"=2026-10-20T09:00:19Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {"MT-1"=Meeting{agenda=null, attendees=["chris"], calledAt=2026-10-20T09:00:11Z, closedAt=null, id="MT-1", mission="M-1", notes=[], place=TABLE, rounds=[MeetingRound{askedAt=2026-10-20T09:00:20Z, capUsd=1.0, number=1, question=null, speakers=["chris"], turns={}}], ticket="MT-1.turns"}, "MT-2"=Meeting{agenda=null, attendees=["darius"], calledAt=2026-10-20T09:00:12Z, closedAt=null, id="MT-2", mission="M-2", notes=[], place=CONFERENCE, rounds=[], ticket=null}}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}, "M-2"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:13Z, id="M-2", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0), "M-2"=Pin(at=1, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP)), "M-2"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}, "T-2"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:14Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-2", kind=WORK, mission="M-2", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:19Z, status=IN_PROGRESS, title="Write the release notes"}, "MT-1.turns"=Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T09:00:20Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-1.", directives=[], endedAt=null, id="MT-1.turns", kind=MEETING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-1: the attendees' views"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 23
+witnesses = {}
+workspaces = []
+# queries
+version = 23
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}, Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:13Z, id="M-2", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = IN_MEETING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1", "T-2"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = IN_MEETING
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:20Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+mission M-2 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:13Z, id="M-2", objective="A release ready to ship", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Ship the release", workspace="C:/repo"}]
+tickets M-2 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:14Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-2", kind=WORK, mission="M-2", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:19Z, status=IN_PROGRESS, title="Write the release notes"}]
+actions M-2 = []
+questions M-2 = []
+sessions M-2 = []
+workspaces M-2 = []
+interventions M-2 = []
+committee M-2 = Optional.empty
+committees M-2 = []
+directorFiles M-2 = []
+pullRequests M-2 = []
+missionAssets M-2 = []
+retro M-2 = Optional.empty
+checkRuns M-2 = []
+spentUsdEstimated M-2 = 0.0
+staffingReview M-2 = Optional.empty
+budgetLeftUsd M-2 = Optional.empty
+budgetReached M-2 = false
+lastActivity M-2 = Optional[2026-10-20T09:00:19Z]
+checkCompleteMission M-2 = refused MISSION_NOT_FINISHED: Some tickets of M-2 are still open
+checkPullRequest M-2 = "ok"
+ticket T-2 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:14Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-2", kind=WORK, mission="M-2", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:19Z, status=IN_PROGRESS, title="Write the release notes"}]
+merge T-2 = Optional.empty
+isStaffingTicket T-2 = false
+commitFor T-2 = null
+checkDirective T-2 = "T-2"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/repo = Optional.empty
+projectForgotten C:/repo = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live

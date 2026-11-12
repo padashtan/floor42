@@ -1,0 +1,2 @@
+tool|toolu_r1|Read|{"file_path":"README.md"}|1	# Fake project
+text|Checked README.md myself.\nRESERVATION C1: the report skips the install step | CHANGE: add the install step\nRESERVATION: the headings could be shorter | CHANGE: shorten them\nNOTE: a table would read better\nVERDICT: VALIDATED_WITH_RESERVATIONS

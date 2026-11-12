@@ -1,0 +1,349 @@
+=== aCleanMergeMovesTheBaseTheAgentsWorkIsMeasuredFrom
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Write the report", objective="A report for a client", workspace="C:/work/report")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Deliver: the report", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null WorkspacePrepared(mission="M-1", agent="chris", path="C:/ws/M-1-chris", branch="floor42/m-1-chris", baseCommit="abc")
+command 12
+  #12 2026-10-20T09:00:12Z REAL DIRECTOR:director mission=M-1 auth=null cause=null DirectorFilesCommitted(mission="M-1", commit="def", files=["inputs/brief.pdf"])
+command 13
+  #13 2026-10-20T09:00:13Z REAL DIRECTOR:director mission=M-1 auth=null cause=null DirectorFilesCommitted(mission="M-1", commit="deg", files=["inputs/brief.pdf", "in/report.pdf"])
+command 14
+  #14 2026-10-20T09:00:14Z REAL DIRECTOR:director mission=M-1 auth=null cause=null ProjectMerged(mission="M-1", agent="chris", commit="def", clean=false, detail="conflict in README.md")
+command 15
+  #15 2026-10-20T09:00:15Z REAL DIRECTOR:director mission=M-1 auth=null cause=null ProjectMerged(mission="M-1", agent="chris", commit="def", clean=true, detail=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {"M-1"=["inputs/brief.pdf", "in/report.pdf"]}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:15Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 16
+witnesses = {}
+workspaces = [Workspace{agent="chris", baseCommit="def", branch="floor42/m-1-chris", editedByDirector=[], mission="M-1", path="C:/ws/M-1-chris", startCommit="abc"}]
+# queries
+version = 16
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = WORKING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = [Workspace{agent="chris", baseCommit="def", branch="floor42/m-1-chris", editedByDirector=[], mission="M-1", path="C:/ws/M-1-chris", startCommit="abc"}]
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = ["inputs/brief.pdf", "in/report.pdf"]
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:15Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+checkWorkshopAccess M-1 chris = "ok"
+checkChecksCanRun M-1 chris = refused NO_CHECKS: No checks configured for M-1
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/work/report = Optional.empty
+projectForgotten C:/work/report = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== neverUnderARunningAgentsFeetAndOnlyTheDirector
+## fixture 1 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Write the report", objective="A report for a client", workspace="C:/work/report")
+  #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+command 5
+  #5 2026-10-20T09:00:05Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Deliver: the report", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+command 9
+  #9 2026-10-20T09:00:09Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 10
+  #10 2026-10-20T09:00:10Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 11
+  #11 2026-10-20T09:00:11Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null WorkspacePrepared(mission="M-1", agent="chris", path="C:/ws/M-1-chris", branch="floor42/m-1-chris", baseCommit="abc")
+command 12
+  #12 2026-10-20T09:00:13Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s1", mission="M-1", ticket="T-1", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 1
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:13Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {"M-1"=Pin(at=0, start=0)}
+pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s1"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 13
+witnesses = {}
+workspaces = [Workspace{agent="chris", baseCommit="abc", branch="floor42/m-1-chris", editedByDirector=[], mission="M-1", path="C:/ws/M-1-chris", startCommit="abc"}]
+# queries
+version = 13
+agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+statusOf galen = AVAILABLE
+atWork galen = false
+handedBackOnDismissal galen = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = WORKING
+atWork chris = true
+handedBackOnDismissal chris = ["T-1"]
+agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+statusOf darius = AVAILABLE
+atWork darius = false
+handedBackOnDismissal darius = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=true, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="A report for a client", origin=REAL, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Write the report", workspace="C:/work/report"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+workspaces M-1 = [Workspace{agent="chris", baseCommit="abc", branch="floor42/m-1-chris", editedByDirector=[], mission="M-1", path="C:/ws/M-1-chris", startCommit="abc"}]
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:13Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = "ok"
+checkWorkshopAccess M-1 chris = refused AGENT_AT_WORK: An agent session is running on M-1: wait for it to end
+checkChecksCanRun M-1 chris = refused NO_CHECKS: No checks configured for M-1
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:10Z, status=IN_PROGRESS, title="Deliver: the report"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = refused AGENT_AT_WORK: An agent session is running on M-1: wait for it to end
+session s1 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=null, failed=null, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome=null, outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:13Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=null}]
+modelOfSession s1 = "claude-sonnet-5-5"
+continuationRequested s1 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/work/report = Optional.empty
+projectForgotten C:/work/report = false
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live

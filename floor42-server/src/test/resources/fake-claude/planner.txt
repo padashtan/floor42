@@ -1,0 +1,2 @@
+tool|toolu_p1|Read|{"file_path":"README.md"}|1	# Fake project
+text|The repository has a README only.\n\nTICKET: Describe the project\nWHY: The director needs a summary first.\nDONE WHEN: README read; summary written\nDEPENDS ON: none\nSIZE: S\n\nTICKET: **List the risks**\nWHY: Know what could break.\nDONE WHEN: risks listed\nDEPENDS ON: 1\nSIZE: M\n\nTICKET: Rewrite everything\nWHY: Too big for now.\nDONE WHEN: done\nDEPENDS ON: 2, 7\nSIZE: L

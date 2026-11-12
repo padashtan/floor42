@@ -1,0 +1,2 @@
+tool|toolu_s1|Read|{"file_path":"README.md"}|1	# Fake project
+text|Analysis: tokens are not validated per API behind the gateway.\nPROPOSAL: Gateway, and every API still validates its tokens\nPOSITION: MAINTAINED\nCRITICAL OBJECTION: APIs must validate tokens themselves

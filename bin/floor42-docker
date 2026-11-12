@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Floor42 in Docker, from WSL 2 or Linux (docs/docker.md).
+#   floor42-docker up       build if needed, start the daemon and open the office in your browser
+#   floor42-docker login    sign Claude Code in, inside the container (once; kept in the office-home volume)
+#   floor42-docker open     open the office in your browser
+#   floor42-docker logs     follow the daemon's log
+#   floor42-docker down     stop the daemon (data and sign-in are kept)
+# FLOOR42_PROJECTS must name the folder holding your git repositories: agents see that folder and nothing else.
+# FLOOR42_PORT changes the port (7420 by default); FLOOR42_NO_BROWSER=1 starts without opening a browser.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+# Office's names (before 1.5.0) still work, with a notice.
+for name in PROJECTS PORT NO_BROWSER; do
+  old="OFFICE_$name" new="FLOOR42_$name"
+  if [ -z "${!new:-}" ] && [ -n "${!old:-}" ]; then
+    echo "$old is now $new: using it." >&2
+    export "$new=${!old}"
+  fi
+done
+BASE="http://127.0.0.1:${FLOOR42_PORT:-7420}"
+: "${FLOOR42_PROJECTS:?Set FLOOR42_PROJECTS to the folder holding your git repositories, e.g. export FLOOR42_PROJECTS=\$HOME/code}"
+export FLOOR42_PROJECTS
+# Real agents need Claude Code: build the image here, with it, under a local name (the published image has none).
+export FLOOR42_IMAGE="${FLOOR42_IMAGE:-floor42:local}"
+# The commit the image is built from, for /api/status (build.commit): the build context has no .git.
+if git rev-parse --verify -q HEAD > /dev/null 2>&1; then
+  FLOOR42_COMMIT=$(git rev-parse HEAD)
+  FLOOR42_COMMIT_TIME=$(git log -1 --format=%cI)
+  if [ -n "$(git status --porcelain --untracked-files=no)" ]; then FLOOR42_COMMIT_DIRTY=true; else FLOOR42_COMMIT_DIRTY=false; fi
+  export FLOOR42_COMMIT FLOOR42_COMMIT_TIME FLOOR42_COMMIT_DIRTY
+fi
+
+daemon_up() { curl -fs -o /dev/null --max-time 2 "$BASE/api/status"; }
+
+open_floor42() {
+  # The daemon prints a single-use sign-in link on the container's standard output (ADR-0034): read from the host,
+  # never from inside the container, where the agents work. It is not printed here when a browser can be opened.
+  local code url
+  curl -fsS -X POST -o /dev/null "$BASE/auth/open" || { echo "The daemon gave no sign-in link: try again in a few seconds." >&2; return 1; }
+  sleep 1
+  code=$(docker compose logs --no-log-prefix --since 30s floor42 | grep -o 'auth?code=[A-Za-z0-9_-]*' | tail -1 | cut -d= -f2)
+  [ -n "$code" ] || { echo "No sign-in link found in the daemon's output: floor42-docker logs" >&2; return 1; }
+  url="$BASE/auth?code=$code"
+  if command -v wslview > /dev/null; then wslview "$url"
+  elif command -v cmd.exe > /dev/null; then cmd.exe /c start "" "$url" 2> /dev/null
+  elif command -v xdg-open > /dev/null; then xdg-open "$url"
+  else echo "Open $url"
+  fi
+}
+
+case "${1:-up}" in
+  up)
+    docker compose up -d --build
+    echo "Waiting for the Floor42 daemon..."
+    for _ in $(seq 1 120); do daemon_up && break; sleep 1; done
+    daemon_up || { echo "The daemon did not start: floor42-docker logs" >&2; exit 1; }
+    if [ -n "${FLOOR42_NO_BROWSER:-}" ]; then echo "Floor42 runs on $BASE: floor42-docker open opens it."; else open_floor42; fi
+    ;;
+  # As uid 1000 in its home, whatever the image's USER and WORKDIR: the sign-in lands in the office-home volume.
+  login) docker compose exec -it -u 1000 -e HOME=/home/office -w /home/office floor42 claude ;;
+  open) open_floor42 ;;
+  logs) docker compose logs -f floor42 ;;
+  down) docker compose down ;;
+  *) sed -n '2,9p' "$0"; exit 1 ;;
+esac

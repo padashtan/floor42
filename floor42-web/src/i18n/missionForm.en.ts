@@ -1,0 +1,21 @@
+// The English texts of one area (the new mission form); i18n/en.ts merges them. Every key has its French twin in missionForm.fr.ts.
+export const missionFormEn = {
+  'mission.labelTitle': 'Title',
+  'mission.labelObjective': 'Objective',
+  'mission.labelIdea': 'Idea',
+  'mission.labelProject': 'Project',
+  'mission.labelChecks': 'Checks command (optional)',
+  'mission.titleSuggest': 'Title from the objective:',
+  'mission.titleUse': 'Use this title',
+  'mission.kindExisting': 'Existing project: a git repository already on this machine',
+  'mission.kindNew': 'New project: Floor42 creates an empty one in the folder',
+  'mission.fieldNewFolder': 'Folder for the new project, e.g. C:\work\my-new-project',
+  'mission.notRepository': 'This folder is not a git repository. Pick a repository, or choose "New project".',
+  'mission.willCreate': 'Floor42 will create a new empty project in {folder}.',
+  'mission.pathsMissing': 'The objective names files that do not exist in this new project: {files}.',
+  'afterArchive.title': 'Mission archived. What should the board show now?',
+  'afterArchive.put': 'Put on the board',
+  'afterArchive.empty': 'Leave the board empty',
+  'afterArchive.new': 'New mission',
+  'afterArchive.none': 'No other mission is open.',
+} as const

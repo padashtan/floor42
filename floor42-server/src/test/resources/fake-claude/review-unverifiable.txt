@@ -1,0 +1,2 @@
+tool|toolu_u1|Read|{"file_path":"README.md"}|1	# Fake project
+text|The report rests on commands I cannot run here, so I cannot confirm it.\nVERDICT: UNVERIFIABLE

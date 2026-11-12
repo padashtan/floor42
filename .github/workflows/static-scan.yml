@@ -1,0 +1,70 @@
+name: Static scans
+
+# OSV-Scanner, gitleaks and Bearer (docs/security-scanning.md). Every pull request, every night and by hand. The tools
+# run through their official Docker images, pinned by digest in tools/quality/static-run.sh: the same commands as
+# `make security-static`. A finding that no exception covers fails the job: the exceptions live in osv-scanner.toml
+# (reason and expiry), .gitleaks.toml (path-scoped) and bearer.ignore (fingerprint and reason).
+on:
+  pull_request:
+  schedule:
+    - cron: '23 4 * * *'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  osv-scanner:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # ./mvnw builds the SBOM that OSV-Scanner reads.
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: OSV-Scanner
+        run: sh tools/quality/static-run.sh osv
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: osv-report
+          path: target/static
+          retention-days: 30
+
+  gitleaks:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      # The whole history: `gitleaks git` reads every commit of every ref.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: gitleaks (history and working tree)
+        run: sh tools/quality/static-run.sh gitleaks
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: gitleaks-report
+          path: target/static
+          retention-days: 30
+
+  bearer:
+    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Bearer
+        run: sh tools/quality/static-run.sh bearer
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: bearer-report
+          path: target/static
+          retention-days: 30

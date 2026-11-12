@@ -1,0 +1,3975 @@
+:root {
+  --bg: #070f14;
+  --panel: rgba(8, 22, 30, 0.93);
+  --line: #2a7f8f;
+  --text: #cfe6ec;
+  --muted: #86a5af;
+  --cyan: #3fe0f0;
+  --amber: #f2a93b;
+  --red: #ff4b3e;
+  --green: #6fe36a;
+  color-scheme: dark;
+  font-family: 'Bahnschrift', 'Arial Narrow', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+}
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+/* One thin scrollbar everywhere, in the decade's colours: the frame line for the thumb, the accent on hover. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--line);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--cyan);
+}
+canvas.view {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  /* Above the name tags that follow the agents: panels always win. */
+  z-index: 2;
+}
+.hud > *,
+.hud .crew > * {
+  pointer-events: auto;
+}
+.panel {
+  position: absolute;
+  background: var(--panel);
+  border: 2px solid var(--line);
+  box-shadow: inset 0 0 0 1px #0b2a33;
+  padding: 6px 10px;
+  /* Long paths, hashes and commands break inside the frame instead of pushing it wider. */
+  overflow-wrap: break-word;
+}
+.panel code {
+  overflow-wrap: anywhere;
+}
+.title {
+  color: var(--cyan);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sub {
+  color: var(--cyan);
+  margin: 8px 0 2px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hint,
+.empty {
+  color: var(--muted);
+}
+code,
+pre {
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  font-size: 13px;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 4px 0;
+  color: var(--muted);
+}
+button {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  border-color: var(--cyan);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button.action {
+  padding: 3px 10px;
+  margin: 4px 6px 0 0;
+}
+button.recommended {
+  border-color: var(--amber);
+}
+button.close {
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-size: 16px;
+  line-height: 1;
+}
+.ok {
+  color: var(--green);
+}
+.warn {
+  color: var(--amber);
+}
+.bad {
+  color: var(--red);
+}
+
+/* top bar */
+.brand {
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.brand b {
+  color: var(--cyan);
+  letter-spacing: 0.25em;
+  font-size: 16px;
+}
+.badge {
+  color: #1a1205;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+.badge.sim {
+  background: var(--amber);
+}
+.badge.real {
+  background: var(--red);
+  color: #fff;
+}
+.badge.ready {
+  background: var(--green);
+}
+.badge.off {
+  background: var(--muted);
+}
+.badge.build {
+  background: none;
+  color: var(--muted);
+  font-weight: 400;
+  font-family: ui-monospace, monospace;
+}
+.stream.live {
+  color: var(--green);
+}
+.stream.connecting,
+.stream.reconnecting {
+  color: var(--amber);
+}
+.brand {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+/* The bar's buttons never shrink nor scroll: the badges give way (ui/topBarLayout.ts checks the numbers). */
+.bar-nav {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+.bar-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  flex: none;
+  white-space: nowrap;
+}
+.brand > b,
+.brand > .stream {
+  flex: none;
+}
+/* Measured numbers (quota gauges, spend) keep their full width: the other badges give way (ui/topBarLayout.ts). */
+.brand > .measure {
+  flex: none;
+  white-space: nowrap;
+}
+.brand > .sign-out {
+  flex: none;
+  white-space: nowrap;
+}
+/* ui/topBarLayout.ts (COMPACT_UPTO, COMPACT_BAND_END, HINT_HIDDEN_UPTO): the direct buttons show their icon alone up to
+   1504 px and, with the log beside the bar, from 1701 to 1912 px (label in the tooltip and for screen readers); elsewhere
+   the label sits beside the icon. Where the labels show and the bar is tight (up to 2106 px) the session-time hint gives
+   way: its text stays in the Sessions panel. */
+@media (max-width: 1504px), (min-width: 1701px) and (max-width: 1912px) {
+  .bar-nav .direct-label.keyed {
+    display: none;
+  }
+}
+@media (min-width: 1505px) and (max-width: 1700px), (min-width: 1913px) and (max-width: 2106px) {
+  .brand > .session-time {
+    display: none;
+  }
+}
+.brand > .shrink {
+  flex: 0 1 auto;
+  min-width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Wider than 1700 px the log sits in the top right corner: the bar stops before it. */
+@media (min-width: 1701px) {
+  .brand {
+    max-width: calc(100vw - 424px);
+  }
+}
+.count {
+  background: var(--amber);
+  color: #1a1205;
+  padding: 0 5px;
+  font-weight: 700;
+}
+.crew {
+  position: absolute;
+  top: 54px;
+  left: 8px;
+  display: flex;
+  gap: 6px;
+}
+.card {
+  width: 74px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: var(--panel);
+  border-width: 2px;
+}
+.face {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #071015;
+}
+.card .name {
+  color: var(--cyan);
+  font-weight: 700;
+}
+.card .bar {
+  width: 100%;
+  height: 4px;
+}
+
+/* event log */
+.log {
+  top: 8px;
+  right: 8px;
+  width: 400px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  max-height: 45vh;
+  /* Long lines wrap: the last ones were cut off below the frame with no way to read them. */
+  overflow-y: auto;
+}
+.log .line > :last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.log .line {
+  display: flex;
+  gap: 6px;
+  padding: 2px 0;
+  border-top: 1px solid #12323c;
+}
+.log .line.clickable {
+  cursor: pointer;
+}
+.log .line.important {
+  color: #ffe0b0;
+}
+.log .time {
+  color: var(--muted);
+  min-width: 56px;
+}
+.origin.sim {
+  color: var(--amber);
+}
+.origin.real {
+  color: var(--red);
+}
+
+/* selection */
+.selection {
+  bottom: 8px;
+  left: 8px;
+  width: 380px;
+  max-height: 46vh;
+  overflow: auto;
+}
+.selection table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.selection td {
+  padding: 2px 4px;
+  border-top: 1px solid #12323c;
+  vertical-align: top;
+}
+.selection td:first-child {
+  color: var(--muted);
+  width: 90px;
+}
+.selection .row {
+  padding: 3px 0;
+  border-top: 1px solid #12323c;
+}
+.selection .basis {
+  color: var(--muted);
+  font-size: 12px;
+}
+.selection .result {
+  max-height: 60px;
+  overflow: auto;
+}
+
+/* director's desk */
+.desk-panel {
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(820px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  border-color: var(--amber);
+}
+.question {
+  border: 1px solid #12323c;
+  padding: 6px;
+  margin: 4px 0;
+}
+.question.blocking {
+  border-left: 3px solid var(--amber);
+}
+.question.focused {
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+.question .head {
+  color: var(--muted);
+  font-size: 12px;
+}
+.question .subject {
+  font-size: 14px;
+  margin: 3px 0;
+}
+.question .context {
+  color: var(--muted);
+}
+.question .subject,
+.question .context {
+  overflow-wrap: anywhere;
+}
+.question .free-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.question .free-answer textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.question .free-answer button {
+  align-self: flex-end;
+}
+.question .free-answer button.link {
+  align-self: flex-start;
+}
+
+/* menus, toasts, help */
+.menu {
+  min-width: 220px;
+  padding: 4px 0;
+}
+.menu .item {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.menu .item:hover:not(.disabled),
+.menu .item:focus-visible {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+/* A destructive action reads differently from the others (colour and a mark, not colour alone). */
+.menu .item.danger {
+  color: #ff8a80;
+  border-top: 1px solid #5b2a28;
+}
+.menu .item.danger::before {
+  content: '! ';
+  font-weight: 700;
+}
+.menu .item.disabled {
+  color: var(--muted);
+  cursor: default;
+}
+.menu .why {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.toasts {
+  position: absolute;
+  top: 120px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 400px;
+  margin-top: 45vh;
+}
+.toast {
+  position: static;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-color: var(--amber);
+}
+.toast > span {
+  flex: 1;
+  min-width: 0;
+}
+.help {
+  bottom: 8px;
+  right: 8px;
+  color: var(--muted);
+}
+.help b {
+  color: var(--text);
+  font-weight: 400;
+}
+.fps {
+  color: var(--cyan);
+}
+.pet-sound {
+  margin-top: 4px;
+  padding: 0 6px;
+  font-size: 11px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.pet-sound[aria-pressed='true'] {
+  color: var(--text);
+}
+
+/* ---- Pets: the small speech bubbles over the cat and the dog (a meow, a bark, a sleeper's z) ------------------- */
+.pet-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-style: italic;
+  color: #1b2a30;
+  background: #f4efe2;
+  border-radius: 9px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pet-bubble {
+    transition: none;
+  }
+}
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--panel);
+  border: 1px solid var(--cyan);
+  padding: 2px 6px;
+}
+.confirm-scrim.login-scrim {
+  z-index: 1;
+}
+.login {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 620px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  box-sizing: border-box;
+  overflow: auto;
+  border-color: var(--amber);
+  /* Nothing works before the sign-in: it stands above every panel. */
+  z-index: 45;
+}
+.error {
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  max-height: 30vh;
+  overflow: auto;
+  box-sizing: border-box;
+  border-color: var(--red);
+  display: flex;
+  gap: 8px;
+  z-index: 45;
+}
+
+/* permission table */
+.permissions {
+  border-collapse: collapse;
+  width: 100%;
+}
+.permissions th {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  padding: 2px 4px;
+}
+.permissions th:first-child,
+.permissions td.tool {
+  text-align: left;
+}
+.permissions td {
+  padding: 3px 4px 0;
+}
+.permissions td.choice {
+  text-align: center;
+}
+.permissions .category {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: 6px;
+}
+.permissions tr.details td {
+  padding: 0 4px 4px;
+  border-bottom: 1px solid #12323c;
+  font-size: 12px;
+  color: var(--muted);
+}
+.permissions .remembered {
+  color: var(--text);
+}
+button.radio {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 2px solid var(--line);
+  background: #0d2630;
+}
+button.radio.on.allow {
+  background: var(--green);
+  border-color: var(--green);
+}
+button.radio.on.ask,
+button.radio.on.ask_always {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+button.radio.on.deny {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* mission control */
+.new-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.new-mission .field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+.new-mission .notice {
+  margin-top: 6px;
+}
+.new-mission .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.new-mission input,
+.new-mission textarea {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  padding: 3px 6px;
+}
+.plan {
+  border-left: 3px solid var(--amber);
+  padding: 4px 8px;
+  margin: 4px 0;
+}
+
+/* ---- Engineering workshop ---------------------------------------------------------------------------------------- */
+.workshop {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  border-color: var(--cyan);
+}
+.workshop-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 10px;
+}
+.workshop-side {
+  overflow: auto;
+  border-right: 1px solid #12323c;
+  padding-right: 8px;
+}
+.workshop-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.change-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.change-line input[type='checkbox'] {
+  flex: none;
+}
+.change-line .discard {
+  flex: none;
+  margin-left: 8px;
+}
+.picked-count {
+  margin: 6px 0;
+}
+.file-row {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+  align-items: center;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+}
+.file-row.on,
+.file-row:hover {
+  background: #0f3540;
+}
+.file-row .name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-row .status {
+  width: 14px;
+  font-weight: 700;
+}
+.status.added {
+  color: var(--green);
+}
+.status.deleted {
+  color: var(--red);
+}
+.status.modified,
+.status.renamed {
+  color: var(--amber);
+}
+.file-row .mine {
+  color: var(--amber);
+  font-size: 12px;
+}
+.counts .plus {
+  color: var(--green);
+  margin-left: 4px;
+}
+.counts .minus {
+  color: var(--red);
+  margin-left: 4px;
+}
+.file-list {
+  max-height: 220px;
+  overflow: auto;
+}
+.filter {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 2px 0 4px;
+}
+button.link {
+  border: none;
+  background: none;
+  color: var(--cyan);
+  padding: 0 4px;
+}
+.trace {
+  font-size: 12px;
+  margin: 2px 0;
+  color: var(--text);
+}
+.trace .when {
+  color: var(--muted);
+  margin-right: 4px;
+}
+.viewer-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.tabs button.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.workshop .code {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 6px;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+}
+.workshop .code pre {
+  margin: 0;
+  white-space: pre;
+}
+.code .line {
+  white-space: pre;
+}
+.line.add {
+  color: var(--green);
+  background: rgba(111, 227, 106, 0.08);
+}
+.line.remove {
+  color: var(--red);
+  background: rgba(255, 75, 62, 0.08);
+}
+.line.hunk {
+  color: var(--cyan);
+}
+.line.meta {
+  color: var(--muted);
+}
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.editor textarea {
+  flex: 1;
+  resize: none;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  background: #050c10;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.editor .row,
+.workshop-actions .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.editor .row input {
+  flex: 1;
+}
+.workshop-actions {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #12323c;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+.workshop-actions textarea,
+.workshop-actions input,
+.workshop-actions select {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* The decision footer: always in view under the files (it never scrolls), each decision in its own box, large
+   readable buttons, accepting filled in the recommended colour. */
+.workshop .workshop-actions {
+  flex: none;
+  margin: 10px -10px -6px;
+  padding: 10px;
+  border-top: 2px solid var(--line);
+  background: #050f14;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+.workshop-actions .footer-why {
+  grid-column: 1 / -1;
+}
+.workshop-actions .block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #1d4a57;
+  background: #071a21;
+}
+.workshop-actions .block .sub {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.workshop-actions textarea,
+.workshop-actions input,
+.workshop-actions select {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  padding: 5px 8px;
+}
+.workshop-actions button.action {
+  align-self: flex-start;
+  margin: 0;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  background: #0f3540;
+  border: 1px solid var(--cyan);
+  color: var(--text);
+}
+.workshop-actions button.action.recommended {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1205;
+}
+.workshop-actions button.action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 760px) {
+  .workshop-body,
+  .workshop-actions {
+    grid-template-columns: 1fr;
+  }
+  .workshop-body {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+/* The viewer's Diff/File/Edit buttons are not the desk's tabs: no underline bar, and a long path wraps beside them. */
+.viewer-head .tabs {
+  flex: none;
+  flex-wrap: nowrap;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.viewer-head .viewer-path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.workshop .code.fill-host {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+/* A terminal that fills its container: one scrollbar, the terminal's, instead of two nested ones. */
+.terminal.fill {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.terminal.fill .terminal-body {
+  flex: 1;
+  min-height: 0;
+  height: auto !important;
+  resize: none;
+}
+
+/* ---- Results, checks and budget ------------------------------------------------------------------------------------ */
+.scorecard {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.scorecard td {
+  padding: 2px 4px;
+  border-bottom: 1px solid #12323c;
+  vertical-align: top;
+}
+.scorecard .label {
+  color: var(--muted);
+  white-space: nowrap;
+}
+.scorecard .basis {
+  text-align: right;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.basis.measured {
+  color: var(--green);
+}
+.basis.estimated {
+  color: var(--amber);
+}
+.basis.reported {
+  color: var(--cyan);
+}
+.basis.unavailable {
+  color: var(--muted);
+}
+.desk-panel .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.desk-panel .row input {
+  flex: 1;
+}
+.check-run {
+  margin-top: 4px;
+}
+.check-run .passed {
+  color: var(--green);
+}
+.check-run .failed {
+  color: var(--red);
+}
+.check-run pre {
+  max-height: 160px;
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 4px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+/* ---- Meeting room ------------------------------------------------------------------------------------------------ */
+.meeting {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  border-color: var(--green);
+}
+.meeting .topic {
+  font-size: 15px;
+  margin: 4px 0;
+}
+.meeting .stage.awaiting_director {
+  color: var(--amber);
+}
+.meeting .stage.adopted {
+  color: var(--green);
+}
+.meeting .stage.rejected {
+  color: var(--red);
+}
+.members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+}
+.member {
+  border: 1px solid #12323c;
+  padding: 2px 6px;
+}
+.member.pending {
+  border-color: var(--green);
+}
+.constraint {
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  padding: 0 4px;
+  margin-left: 4px;
+}
+/* The committee scrolls as a whole: a long debate no longer pushes the ruling out of the panel. */
+.meeting .committee {
+  display: flex;
+  flex-direction: column;
+}
+.meeting-body {
+  flex: 1 0 340px;
+  min-height: 340px;
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 10px;
+}
+.rounds {
+  overflow: auto;
+}
+.reader {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.contribution {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #12323c;
+  background: none;
+  padding: 4px 6px;
+  margin: 3px 0;
+}
+.contribution.on,
+.contribution:hover {
+  background: #0f3540;
+}
+.contribution.critical {
+  border-left: 3px solid var(--red);
+}
+.contribution.record {
+  border-left: 3px solid var(--green);
+}
+.contribution .position {
+  float: right;
+  color: var(--cyan);
+  font-size: 12px;
+}
+.contribution .proposal {
+  margin-top: 2px;
+}
+.contribution .objection {
+  color: var(--red);
+  font-size: 12px;
+}
+.reader {
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 6px;
+}
+.reader pre {
+  white-space: pre-wrap;
+  margin: 0;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+}
+.ruling {
+  border-top: 1px solid #12323c;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+.ruling .standing {
+  color: var(--red);
+  margin-bottom: 4px;
+}
+.ruling .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.ruling .row input {
+  flex: 1;
+}
+.roles {
+  display: flex;
+  flex-direction: column;
+  margin-left: 18px;
+}
+@media (max-width: 760px) {
+  .meeting-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.remembered .forget {
+  margin-left: 4px;
+  padding: 0 4px;
+  font-size: 12px;
+}
+
+/* ---- API console ------------------------------------------------------------------------------------------------- */
+a.button {
+  display: inline-block;
+  border: 1px solid #12323c;
+  padding: 2px 8px;
+  color: inherit;
+  text-decoration: none;
+}
+a.button:hover {
+  background: #0f3540;
+}
+.api-console {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+}
+.api-console .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 4px 0;
+}
+.api-console .row input:not([type]) {
+  flex: 1;
+  min-width: 220px;
+}
+.api-console .calls {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 4px 6px;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+}
+.api-console .call {
+  display: grid;
+  grid-template-columns: 96px 58px 40px 64px 82px 1fr;
+  gap: 8px;
+  white-space: nowrap;
+}
+.api-console .path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.api-console .method.get {
+  color: var(--cyan);
+}
+.api-console .method.post,
+.api-console .method.put {
+  color: var(--amber);
+}
+.api-console .method.delete {
+  color: var(--red);
+}
+.api-console .status.ok {
+  color: var(--green);
+}
+.api-console .status.warn {
+  color: var(--amber);
+}
+.api-console .status.bad {
+  color: var(--red);
+}
+.api-console .duration,
+.api-console .time {
+  color: #6f8d96;
+}
+
+/* ---- Usage ------------------------------------------------------------------------------------------------------- */
+/* Next to the brand, outside the rooms' scrolling strip: never pushed off screen. */
+.gauges {
+  display: inline-flex;
+  gap: 8px;
+  flex: none;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+.gauge.low {
+  color: var(--green);
+}
+.gauge.medium {
+  color: var(--amber);
+}
+.gauge.high {
+  color: var(--red);
+}
+.gauge.unknown {
+  color: var(--muted);
+}
+.usage {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(860px, calc(100vw - 32px));
+  max-height: calc(100vh - 140px);
+  overflow: auto;
+}
+.usage .window {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 2px 10px;
+  align-items: center;
+  margin: 6px 0;
+}
+.usage .window .facts {
+  grid-column: 2;
+  font-size: 12px;
+  color: #9fb6bd;
+}
+.usage .bar {
+  position: relative;
+  height: 12px;
+  border: 1px solid #12323c;
+  background: #050c10;
+}
+.usage .bar.stale {
+  opacity: 0.4;
+}
+.usage .bar .fill {
+  height: 100%;
+  background: var(--green);
+}
+.usage .bar .fill.medium {
+  background: var(--amber);
+}
+.usage .bar .fill.high {
+  background: var(--red);
+}
+.usage .bar .limit {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--red);
+}
+.usage table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.usage th,
+.usage td {
+  text-align: left;
+  padding: 2px 6px;
+  border-bottom: 1px solid #12323c;
+}
+@media (max-width: 760px) {
+  .usage .window {
+    grid-template-columns: 1fr;
+  }
+  .usage .window .facts {
+    grid-column: 1;
+  }
+}
+
+/* Below this width the top bar reaches the event log: the log moves down one line, beside the crew. */
+@media (max-width: 1700px) {
+  .log {
+    top: 54px;
+    max-height: calc(45vh - 46px);
+  }
+}
+
+/* ---- Improvement checklist --------------------------------------------------------------------------------------- */
+.note-form {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+.note-form input {
+  flex: 1;
+}
+.note {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  padding: 2px 0;
+}
+.note .text {
+  flex: 1;
+}
+.note.done .text {
+  text-decoration: line-through;
+  color: #6f8d96;
+}
+
+/* ---- Proposed tickets (ADR-0017) --------------------------------------------------------------------------------- */
+.proposal {
+  border-left: 2px solid #3a6f7d;
+  padding: 2px 0 4px 8px;
+  margin: 4px 0;
+}
+.proposal .head {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.edit-ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.proposal .criteria {
+  margin: 2px 0 0;
+  padding-left: 18px;
+}
+
+/* ---- Name tags over agents (V1) --------------------------------------------------------------------------------- */
+.name-tags {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.name-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1px 6px 2px;
+  border: 1px solid #2b6f7f;
+  background: rgba(6, 20, 26, 0.82);
+  font-size: 12px;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: #cfe9ee;
+}
+.name-tag span {
+  font-size: 12px;
+  color: #8fb3bb;
+}
+.name-tag[data-tone='work'] span {
+  color: #3fe0f0;
+}
+.name-tag[data-tone='wait'] {
+  border-color: #f0a83f;
+}
+.name-tag[data-tone='wait'] span {
+  color: #f0a83f;
+}
+.name-tag[data-tone='alert'] span {
+  color: #ff5a5a;
+}
+.name-tag[data-tone='off'] {
+  opacity: 0.6;
+}
+/* The voice just recorded at a committee or a meeting: the speaker's tag lights up. */
+.name-tag[data-speaking='1'] {
+  border-color: #ffb000;
+  box-shadow: 0 0 8px #ffb000;
+}
+
+/* ---- Crew cards say what each agent does ------------------------------------------------------------------------ */
+.crew .card .state {
+  font-size: 12px;
+  line-height: 1.1;
+  margin-top: 1px;
+}
+
+/* ---- Desk button pulses while something waits for the director ---------------------------------------------- */
+.bar-nav button.desk.waiting {
+  border-color: #f0a83f;
+  animation: waiting-pulse 1.6s ease-in-out infinite;
+}
+@keyframes waiting-pulse {
+  50% {
+    box-shadow: 0 0 0 2px rgba(240, 168, 63, 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-nav button.desk.waiting {
+    animation: none;
+  }
+}
+
+/* ---- Context menu shortcut hints, agent settings, log filters ------------------------------------------------ */
+.menu .key {
+  float: right;
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.agent-settings {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agent-settings label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.log .title .filters {
+  float: right;
+  display: inline-flex;
+  gap: 2px;
+}
+.log .title .filters button {
+  font-size: 12px;
+  padding: 0 5px;
+  opacity: 0.6;
+}
+.log .title .filters button.on {
+  opacity: 1;
+  border-color: #3fe0f0;
+}
+
+/* ---- Activity line in name tags, desk "locate" (V2) ------------------------------------------------------------ */
+.name-tag i.doing {
+  font-style: normal;
+  font-size: 12px;
+  color: #cfe9ee;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.name-tag i.doing:empty {
+  display: none;
+}
+.name-tag i.doing[data-tone='wait'] {
+  color: #f0a83f;
+}
+.name-tag i.doing[data-tone='alert'] {
+  color: #ff5a5a;
+}
+.question .head .locate {
+  margin-left: 6px;
+  font-size: 12px;
+  padding: 0 5px;
+}
+
+/* ---- Board panel: the mission's tickets as cards (B) ------------------------------------------------------------ */
+.board-panel {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+  z-index: 20;
+  border-color: var(--cyan);
+  /* Opaque: the event log and the scene must not show through the cards. */
+  background: #071a21;
+}
+/* An open ticket: the panel widens, the board scrolls on the left and the ticket on the right, each on its own. */
+.board-panel.split {
+  width: min(1560px, calc(100vw - 32px));
+}
+.board-panel.split .board-body {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  padding-right: 0;
+}
+.board-panel.split .board-main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding-right: 8px;
+}
+.board-panel.split .ticket-detail {
+  flex: 0 0 min(460px, 40%);
+  margin-top: 0;
+  overflow: auto;
+}
+.board-panel.split .columns {
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+}
+@media (max-width: 900px) {
+  .board-panel.split .board-body {
+    flex-direction: column;
+    overflow: auto;
+  }
+  .board-panel.split .board-main {
+    overflow: visible;
+  }
+  .board-panel.split .ticket-detail {
+    order: -1;
+    flex: none;
+    max-height: 55vh;
+  }
+}
+.board-panel .columns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+@media (max-width: 900px) {
+  .board-panel .columns {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+.board-panel .column {
+  background: rgba(4, 16, 22, 0.6);
+  border: 1px solid #12323c;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+.board-panel .column.proposed {
+  border-color: #6b4a1c;
+}
+.board-panel .column-head {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.board-panel .column.proposed .column-head {
+  color: var(--amber);
+}
+.board-panel .count-chip {
+  display: inline-block;
+  min-width: 16px;
+  padding: 0 4px;
+  margin-left: 4px;
+  text-align: center;
+  background: #12323c;
+  color: var(--text);
+}
+.board-panel .empty-col {
+  color: var(--muted);
+  text-align: center;
+}
+.ticket-card {
+  background: #0b2530;
+  border: 1px solid #1d4a57;
+  border-left: 3px solid var(--cyan);
+  padding: 5px 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.column.proposed .ticket-card {
+  border-left-color: var(--amber);
+  border-style: dashed solid dashed solid;
+}
+.column.done .ticket-card {
+  border-left-color: var(--green);
+  opacity: 0.85;
+}
+.ticket-card:hover,
+.ticket-card.selected {
+  border-color: var(--cyan);
+  background: #0f3140;
+}
+.ticket-card.waiting {
+  box-shadow: 0 0 0 1px var(--amber);
+}
+.ticket-card .card-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ticket-card .card-title {
+  margin: 3px 0;
+  line-height: 1.25;
+  color: var(--text);
+}
+.ticket-card .card-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.ticket-card .avatar {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* The agent's colour darkened (BoardPanel.vue), so the white initial reads at 4.5:1 whatever the colour. */
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+.ticket-card .blocked {
+  color: var(--amber);
+}
+.verdict {
+  font-size: 12px;
+  padding: 0 4px;
+  border: 1px solid currentColor;
+  text-transform: lowercase;
+}
+.verdict.validated {
+  color: var(--green);
+}
+.verdict.validated_with_reservations {
+  color: #b9e36a;
+}
+.verdict.rejected {
+  color: #ff5a5a;
+}
+.verdict.unverifiable,
+.verdict.waits {
+  color: var(--amber);
+}
+.ticket-detail {
+  margin-top: 8px;
+  border: 1px solid #1d4a57;
+  padding: 8px;
+  background: rgba(4, 16, 22, 0.8);
+}
+.ticket-detail .detail-head {
+  color: var(--muted);
+}
+.ticket-detail .detail-title {
+  font-size: 14px;
+  margin: 4px 0;
+  color: var(--text);
+}
+.ticket-detail .criteria {
+  margin: 2px 0 4px;
+  padding-left: 18px;
+}
+.ticket-detail .deliverable {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 240px;
+  overflow: auto;
+  background: #061016;
+  padding: 6px;
+  font-size: 12px;
+}
+
+
+/* ---- Framed panels: the close button sits outside the frame; only the content scrolls --------------------------- */
+.panel > .title > button.close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: #071a21;
+  color: var(--text);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+.panel > .title > button.close:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.panel.framed {
+  /* Above the event log and the selection panel. */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  padding: 14px 20px 16px;
+  background: #071a21;
+}
+.panel.framed > .title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  /* The buttons of the title bar never touch each other or the text. */
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.ticket-card.dropped {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+.delivery.abandoned {
+  border-color: var(--red);
+}
+.panel-scroll {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 8px;
+}
+.empty-state {
+  color: var(--muted);
+  padding: 18px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* ---- Desk tabs ------------------------------------------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #1d4a57;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.tabs .tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.tabs .tab:hover {
+  color: var(--text);
+}
+.tabs .tab.on {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+.tabs .tab.alert .count {
+  background: var(--amber);
+  color: #061016;
+}
+.tabs .tab .count {
+  display: inline-block;
+  min-width: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  background: #12323c;
+  color: var(--text);
+  font-size: 12px;
+  text-align: center;
+}
+.desk-panel .question {
+  padding: 12px 14px;
+  margin: 10px 0;
+  line-height: 1.45;
+}
+.desk-panel .question .subject {
+  font-size: 16px;
+  margin: 6px 0;
+}
+.desk-panel .options {
+  margin-top: 10px;
+  gap: 8px;
+}
+.desk-panel .sub {
+  margin-top: 14px;
+}
+.desk-panel input,
+.desk-panel textarea {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+
+/* ---- Requests, profile and machine outputs ------------------------------------------------------------------ */
+.requests-panel,
+.profile-panel,
+.machine-panel {
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-height: calc(100vh - 170px);
+  z-index: 22;
+}
+/* A crew card's double click opens both: the profile on the left, what the agent waits for on the right. */
+.hud:has(> .requests-panel) > .profile-panel {
+  left: 24px;
+  transform: none;
+}
+.profile-panel ~ .requests-panel {
+  left: auto;
+  right: 24px;
+  transform: none;
+}
+.requests-panel {
+  width: min(640px, calc(100vw - 48px));
+  border-color: var(--amber);
+}
+.requests-panel .question {
+  padding: 12px 14px;
+  margin: 8px 0;
+}
+.requests-panel .question .subject {
+  font-size: 16px;
+  margin: 6px 0;
+}
+.profile-panel {
+  width: min(720px, calc(100vw - 48px));
+  line-height: 1.45;
+}
+.machine-panel {
+  width: min(1000px, calc(100vw - 48px));
+}
+.profile-head {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.profile-head .portrait {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #061016;
+}
+.profile-head .profile-name {
+  font-size: 20px;
+  color: var(--cyan);
+}
+.profile-head .profile-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.kv {
+  border-collapse: collapse;
+  width: 100%;
+}
+.kv td {
+  padding: 4px 8px 4px 0;
+  vertical-align: top;
+}
+.kv td:first-child {
+  color: var(--muted);
+  width: 160px;
+}
+.chip {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 0 4px 4px 0;
+  border: 1px solid #1d4a57;
+  background: #0b2530;
+}
+.fact {
+  padding: 6px 10px;
+  margin: 4px 0;
+  border-left: 3px solid var(--muted);
+  background: #0b2530;
+}
+.fact.strength {
+  border-left-color: var(--green);
+}
+.fact.watch {
+  border-left-color: var(--amber);
+}
+.fact .fact-kind {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 6px;
+  color: var(--muted);
+}
+.fact.strength .fact-kind {
+  color: var(--green);
+}
+.fact.watch .fact-kind {
+  color: var(--amber);
+}
+.machine-panel .run {
+  border: 1px solid #12323c;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.machine-panel .machine-tools {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.machine-panel .machine-tools input {
+  font-size: 14px;
+  padding: 4px 8px;
+  min-width: 220px;
+}
+
+/* ---- Terminal blocks: resizable, copy, export ---------------------------------------------------------------- */
+.terminal {
+  margin: 6px 0;
+  border: 1px solid #1d4a57;
+  background: #040c10;
+}
+.terminal-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 3px 6px;
+  border-bottom: 1px solid #12323c;
+  font-size: 12px;
+}
+.terminal-bar .hint {
+  margin-right: auto;
+}
+.terminal-bar button {
+  font-size: 12px;
+  padding: 2px 8px;
+}
+.terminal-bar button.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+/* Outputs are read, not decorated: a plain monospace, a bright colour on the dark ground, tabs kept at 4. */
+.terminal-body {
+  overflow: auto;
+  resize: vertical;
+  min-height: 60px;
+  padding: 8px 10px;
+  font-family: 'Cascadia Mono', 'Cascadia Code', Consolas, 'DejaVu Sans Mono', monospace;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #dcecf0;
+  tab-size: 4;
+}
+.terminal.large .terminal-body {
+  font-size: 16px;
+}
+.terminal-text {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.terminal-body.nowrap .terminal-text,
+.terminal-body.nowrap .code-line {
+  white-space: pre;
+  overflow-wrap: normal;
+}
+.terminal-body .numbered {
+  border-collapse: collapse;
+  width: 100%;
+}
+.terminal-body .gutter {
+  color: #4f7682;
+  text-align: right;
+  padding: 0 10px 0 0;
+  border-right: 1px solid #1d4a57;
+  user-select: none;
+  vertical-align: top;
+  width: 1%;
+  white-space: nowrap;
+}
+.terminal-body .code-line {
+  padding: 0 0 0 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.terminal-body .match-file + .match-file {
+  margin-top: 10px;
+}
+.terminal-body .match-path,
+.terminal-body .paths li {
+  color: var(--cyan);
+}
+.terminal-body .paths {
+  margin: 0;
+  padding-left: 18px;
+}
+/* A report rendered from Markdown: prose in the interface's font, code in monospace. */
+.terminal-body .md {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.terminal.large .terminal-body .md {
+  font-size: 17px;
+}
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  color: var(--cyan);
+  margin: 12px 0 6px;
+  font-size: 1.05em;
+}
+.md h3 {
+  font-size: 1.2em;
+}
+.md p {
+  margin: 6px 0;
+}
+.md ul,
+.md ol {
+  margin: 4px 0 8px;
+  padding-left: 22px;
+}
+.md li {
+  margin: 2px 0;
+}
+.md li.nested {
+  margin-left: 18px;
+}
+.md code,
+.md .md-code {
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  font-size: 0.92em;
+  color: #f4d38a;
+}
+.md .md-code {
+  display: block;
+  background: #020709;
+  border: 1px solid #12323c;
+  padding: 6px 8px;
+  white-space: pre;
+  overflow-x: auto;
+}
+.md strong {
+  color: #ffffff;
+}
+.md blockquote {
+  border-left: 3px solid var(--line);
+  margin: 6px 0;
+  padding-left: 10px;
+  color: var(--muted);
+}
+.md .md-table {
+  border-collapse: collapse;
+  margin: 6px 0;
+}
+.md .md-table th,
+.md .md-table td {
+  border: 1px solid #1d4a57;
+  padding: 3px 8px;
+  vertical-align: top;
+  text-align: left;
+}
+.md .md-table th {
+  color: var(--cyan);
+  background: #0a1d24;
+}
+.md a {
+  color: var(--cyan);
+}
+
+/* ---- Hiring and the night ----------------------------------------------------------------------------------- */
+/* The hire and core cards grow with their label ("Embaucher" ran out of a 74 px card). */
+.crew .card.hire {
+  width: auto;
+  min-width: 74px;
+  white-space: nowrap;
+}
+.crew .card.hire .face {
+  background: transparent;
+  border: 1px dashed var(--cyan);
+  color: var(--cyan);
+}
+.hire-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.hire-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hire-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hire-form input,
+.hire-form select {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+.hire-form .roles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hire-form .roles .role {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #1d4a57;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.hire-form .roles .role.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* ---- Settings ----------------------------------------------------------------------------------------------- */
+.settings-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* The director's meeting had no place of its own: it opened at the very top, its close button above the screen. */
+.panel.director-meeting {
+  top: 90px;
+  right: 24px;
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* The Workflows panel had no place of its own: it sat at the top edge, its close button off the screen. */
+.panel.workflows-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(980px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* Two panes (ADR-0052): the library, then the timeline; they stack on a narrow screen. */
+.workflow-panes {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 16px;
+}
+.workflow-library {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.workflow-library .lib-item {
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  color: inherit;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.workflow-library .lib-item[aria-current='true'] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.workflow-library .lib-new {
+  margin-top: 8px;
+}
+.workflow-library .lib-template {
+  padding-left: 18px;
+}
+.workflow-detail .imp-problems {
+  border: 1px solid var(--amber, #c9a227);
+  padding: 6px 10px;
+  margin: 6px 0;
+}
+.workflow-detail .imp-problems ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+.workflow-detail .wf-versions {
+  margin: 8px 0;
+}
+.workflow-detail .wf-version-list {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+}
+.workflow-detail .wf-version-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #1d4a57;
+}
+.workflow-detail .wf-version-list .hint {
+  flex-basis: 100%;
+}
+.workflow-detail .tl-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.workflow-detail .tl-back {
+  display: none;
+}
+.timeline {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid #1d4a57;
+}
+.timeline .tl-row {
+  position: relative;
+  padding: 6px 0 6px 12px;
+}
+.timeline .tl-dot {
+  position: absolute;
+  left: -21px;
+  top: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.timeline .tl-row.fixed .tl-dot {
+  background: var(--muted);
+}
+.timeline .tl-row.off {
+  opacity: 0.6;
+}
+.timeline .tl-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+.timeline .tl-title {
+  font-weight: bold;
+}
+.timeline .tl-desc {
+  color: var(--muted);
+}
+.timeline .tl-max input {
+  width: 4em;
+}
+.timeline .tl-lock {
+  position: relative;
+  margin-left: auto;
+}
+.timeline .lock {
+  display: inline-flex;
+  color: var(--muted);
+  cursor: help;
+  padding: 2px;
+}
+.timeline .lock:focus-visible {
+  outline: 2px solid var(--cyan);
+}
+/* The reason opens under its row, in the flow: it never covers another row. */
+.timeline .lock-why {
+  display: none;
+  margin: 2px 0 0;
+}
+.timeline .tl-row:has(.lock:hover) .lock-why,
+.timeline .tl-row:has(.lock:focus) .lock-why {
+  display: block;
+}
+.timeline .tl-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.timeline .tl-name input {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* The footer stays at the bottom of the scrolling panel: problems, Save and Cancel are always reachable. */
+.workflow-detail .tl-foot {
+  position: sticky;
+  bottom: 0;
+  background: #06161c;
+  padding: 8px 0;
+  border-top: 1px solid #1d4a57;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+@media (max-width: 720px) {
+  .workflow-panes {
+    grid-template-columns: 1fr;
+  }
+  .workflow-detail .tl-back {
+    display: inline-block;
+  }
+}
+.caps-panel {
+  top: 90px;
+  right: 24px;
+  width: min(460px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.caps-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 6px 0;
+}
+.caps-facts dt {
+  color: var(--muted);
+}
+.caps-facts dd {
+  margin: 0;
+}
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.settings-form .choices {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.settings-form .choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #1d4a57;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.settings-form .choice.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.settings-form .setting {
+  border-top: 1px solid #1d4a57;
+  padding-top: 8px;
+}
+.settings-form .setting .facts {
+  color: var(--muted);
+  margin-left: 8px;
+}
+.settings-form .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+.settings-form select,
+.settings-form input {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+.night-banner {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 22px;
+  max-width: min(720px, calc(100vw - 48px));
+  background: rgba(6, 12, 26, 0.92);
+  border: 2px solid #4b5fa8;
+  color: #d8def7;
+  font-size: 16px;
+  line-height: 1.45;
+  z-index: 3;
+}
+.night-banner .moon {
+  font-size: 34px;
+  color: #f3e6a6;
+}
+
+/* ---- Workshop: what it is for -------------------------------------------------------------------------------- */
+.workshop-help {
+  border: 1px solid #1d4a57;
+  background: #06141a;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+.workshop-help summary {
+  color: var(--cyan);
+  cursor: pointer;
+}
+.workshop-help ol {
+  margin: 6px 0;
+  padding-left: 20px;
+  line-height: 1.5;
+}
+.selection {
+  width: 440px;
+}
+/* The help strip starts after the selection panel: it ran under it below 1920 px (seen by the browser tests). */
+.help {
+  /* 8 px from the edge, the panel's 440 px with its padding (2 × 10) and border (2 × 2), then a gap of 8 px. */
+  left: calc(8px + 440px + 24px + 8px);
+}
+
+/* ---- Board: delivery and timing ------------------------------------------------------------------------------ */
+.board-panel .delivery {
+  border: 2px solid var(--green);
+  background: #071d14;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.board-panel .delivery.done {
+  border-color: var(--line);
+  background: #071a21;
+}
+.board-panel .delivery-head {
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.board-panel .delivery.done .delivery-head {
+  color: var(--cyan);
+}
+.board-panel .delivery-facts {
+  margin: 4px 0;
+}
+.board-panel .delivery .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.board-panel .delivery .row input {
+  flex: 1;
+  min-width: 220px;
+  font-size: 14px;
+  padding: 5px 8px;
+}
+.board-panel .clock {
+  color: var(--muted);
+}
+.board-panel .clock.running {
+  color: var(--cyan);
+}
+.board-panel .timing {
+  margin: 6px 0 8px;
+  padding: 6px 8px;
+  border: 1px solid #12323c;
+  background: #06141a;
+}
+.board-panel .review {
+  margin: 8px 0;
+}
+
+/* ---- One tool call of an agent ------------------------------------------------------------------------------ */
+.exec-card {
+  --kind: var(--muted);
+  border: 1px solid #12323c;
+  border-left: 4px solid var(--kind);
+  padding: 8px 10px;
+  margin: 8px 0;
+  background: #06141a;
+}
+.exec-card.read {
+  --kind: #58a6ff;
+}
+.exec-card.search {
+  --kind: #a78bfa;
+}
+.exec-card.write {
+  --kind: var(--green);
+}
+.exec-card.shell {
+  --kind: var(--amber);
+}
+.exec-card.web {
+  --kind: #f472b6;
+}
+.exec-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.exec-kind {
+  color: #061015;
+  background: var(--kind);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+}
+.exec-tool {
+  color: var(--kind);
+  font-weight: 700;
+}
+.exec-summary {
+  color: #f1f7f9;
+  font-size: 13.5px;
+  overflow-wrap: anywhere;
+}
+.exec-meta {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.exec-meta b {
+  color: var(--text);
+}
+.exec-basis {
+  font-size: 12px;
+  color: var(--muted);
+}
+button.link {
+  background: none;
+  border: none;
+  color: var(--cyan);
+  padding: 2px 0;
+  text-decoration: underline;
+}
+
+/* Panels move by their title bar and resize from their corner (ui/panels.ts): double click the title to put a panel
+   back as it opens. */
+.hud > .panel > .title {
+  cursor: move;
+  user-select: none;
+}
+.hud > .panel.dragging {
+  opacity: 0.92;
+  box-shadow: 0 0 0 2px var(--cyan);
+}
+
+/* Menus, toasts and tooltips stand above every panel. */
+.menu,
+.toasts,
+.tooltip {
+  z-index: 40;
+}
+
+/* ---- Agent profile: its terminal ------------------------------------------------------------------------------ */
+.profile-terminal {
+  margin: 8px 0;
+}
+.profile-terminal summary {
+  cursor: pointer;
+}
+.profile-terminal .terminal-filter {
+  width: 100%;
+  margin: 4px 0 6px;
+}
+.profile-panel {
+  width: 560px;
+}
+
+/* ---- API console: a call opened with its bodies -------------------------------------------------------------- */
+.api-console .call {
+  cursor: pointer;
+}
+.api-console .call:hover,
+.api-console .call.opened {
+  background: #0d2630;
+}
+.api-console .call-detail {
+  border-left: 2px solid var(--cyan);
+  margin: 2px 0 8px 12px;
+  padding: 4px 8px;
+}
+
+/* ---- Notes: archive ------------------------------------------------------------------------------------------ */
+.note .note-id,
+.note-archive .note-id {
+  color: var(--cyan);
+  font-family: var(--mono, monospace);
+  margin-right: 6px;
+}
+.note-archive {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+.note-archive th,
+.note-archive td {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 6px;
+  border-bottom: 1px solid #16323c;
+}
+.note-archive code.commit {
+  user-select: all;
+  color: #9fe870;
+}
+
+/* ---- Board: reinforce the team; meeting room: a retrospective that waits ------------------------------------- */
+.board-panel .title .reinforce {
+  margin-left: 12px;
+}
+.board-panel .title .reinforce.urgent {
+  border-color: var(--amber, #ffb000);
+  color: var(--amber, #ffb000);
+}
+.retro-wait {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+/* ---- Board: a developer held until the director accepts its finished changes ---------------------------------- */
+.board-panel .held {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 4px 0 8px;
+}
+
+/* ---- Panels the director resized: the content fills the panel and scrolls inside ------------------------------ */
+.hud > .panel > .resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 2;
+  background: linear-gradient(135deg, transparent 0 50%, var(--line) 50% 60%, transparent 60% 70%, var(--line) 70% 80%, transparent 80%);
+  opacity: 0.7;
+}
+.hud > .panel > .resize-handle:hover {
+  opacity: 1;
+  background: linear-gradient(135deg, transparent 0 50%, var(--cyan) 50% 60%, transparent 60% 70%, var(--cyan) 70% 80%, transparent 80%);
+}
+.hud > .panel.sized {
+  /* The stored size is the panel's outer size (offsetWidth): padding and border stay inside it. */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* Not hidden: the close button sits outside the frame. The content blocks scroll instead. */
+  overflow: visible;
+}
+.hud > .panel.sized > :not(.title):not(.resize-handle) {
+  max-height: none;
+  min-height: 0;
+  flex: 0 1 auto;
+  overflow: auto;
+}
+.hud > .panel.sized .panel-scroll {
+  max-height: none;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- Idea committee: the director speaking in person in their double's seat ------------------------------------ */
+.meeting .by-director {
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  padding: 0 4px;
+  margin-left: 4px;
+  font-size: 12px;
+}
+.meeting .in-person {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+
+/* ---- Jokes of idle agents: decoration from a fixed list, set apart from the journal's activity line ------------- */
+.name-tag q.joke {
+  display: block;
+  max-width: 220px;
+  margin-top: 2px;
+  padding: 2px 6px;
+  font-style: italic;
+  font-size: 12px;
+  color: #1b2a30;
+  background: #f4efe2;
+  border-radius: 8px;
+  white-space: normal;
+}
+.name-tag q.joke:empty {
+  display: none;
+}
+.name-tag q.joke::before,
+.name-tag q.joke::after {
+  content: '';
+}
+
+/* ---- Themes: one decade each (OFFICE_THEME). The 1990s are the original look above. -------------------------- */
+:root[data-theme='1980s'] {
+  --bg: #12051f;
+  --panel: rgba(24, 6, 40, 0.94);
+  --line: #ff3fd2;
+  --text: #f6e6ff;
+  --muted: #a487c4;
+  --cyan: #29f6ff;
+  --amber: #ffd319;
+  font-family: 'Courier New', 'Cascadia Mono', monospace;
+}
+:root[data-theme='1980s'] .panel {
+  text-shadow: 0 0 4px rgba(255, 63, 210, 0.45);
+}
+:root[data-theme='2000s'] {
+  --bg: #9fd6f2;
+  --panel: rgba(18, 52, 86, 0.9);
+  --line: #6ccff6;
+  --text: #f2f8fc;
+  --muted: #a9c6dc;
+  --cyan: #8fe3ff;
+  --amber: #ffcf5a;
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+}
+:root[data-theme='2000s'] .panel {
+  border-radius: 10px;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 40%);
+}
+:root[data-theme='2020s'] {
+  --bg: #e9ece4;
+  --panel: rgba(38, 46, 40, 0.92);
+  --line: #8aa68a;
+  --text: #f1f2ec;
+  --muted: #a7b2a3;
+  --cyan: #9fd8b8;
+  --amber: #f2cc8f;
+  --red: #e07a5f;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+:root[data-theme='2020s'] .panel {
+  border-radius: 14px;
+}
+:root[data-theme='2020s'] canvas.view {
+  image-rendering: auto;
+}
+
+/* The thinking agent's own words (AgentRemarked), quoted as said: unlike jokes and reactions, these are real. */
+.name-tag q.said {
+  display: block;
+  max-width: 260px;
+  margin-top: 2px;
+  padding: 3px 7px;
+  font-size: 12px;
+  color: #10242a;
+  background: #ffffff;
+  border: 2px solid var(--cyan);
+  border-radius: 10px;
+  white-space: normal;
+}
+.name-tag q.said:empty {
+  display: none;
+}
+
+/* ---- Default permissions for new missions (D3) ---------------------------------------------------------------- */
+.settings-form table.defaults {
+  border-collapse: collapse;
+  width: 100%;
+}
+.settings-form table.defaults td {
+  padding: 3px 8px 3px 0;
+  border-top: 1px solid #1d4a57;
+}
+.settings-form table.defaults .facts {
+  color: var(--muted);
+  font-size: 12px;
+}
+.settings-form button.link {
+  background: none;
+  border: none;
+  color: var(--cyan);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* The online demo's ribbon (ADR-0031): always visible, never in the way of a click. */
+.demo-ribbon {
+  position: fixed;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: min(760px, calc(100vw - 32px));
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(20, 12, 36, 0.88);
+  color: #ffd319;
+  font-size: 13px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Sandbox readiness (ADR-0033) */
+.sandbox-panel {
+  top: 90px;
+  right: 24px;
+  width: min(620px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.sandbox-readiness {
+  margin: 6px 0;
+}
+.sandbox-tools {
+  border-collapse: collapse;
+  width: 100%;
+}
+.sandbox-tools th,
+.sandbox-tools td {
+  text-align: left;
+  vertical-align: top;
+  padding: 2px 8px 2px 0;
+}
+.sandbox-tools th {
+  color: var(--muted);
+  font-weight: normal;
+}
+.sandbox-tools .state-present {
+  color: var(--green);
+}
+.sandbox-tools .state-older {
+  color: var(--amber);
+}
+.sandbox-tools .state-missing {
+  color: var(--red, #e66);
+}
+.sandbox-tools .state-unknown {
+  color: var(--muted);
+}
+.sandbox-tools .state-optional {
+  color: var(--amber);
+}
+.machine-checklist {
+  margin-bottom: 8px;
+}
+.checklist-command {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+  margin-bottom: 2px;
+}
+.sandbox-commands {
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+  margin: 0;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Skills and agents (W3): installed, reaching the sessions, to add */
+.skills-panel {
+  top: 90px;
+  right: 24px;
+  width: min(760px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.skills-filter {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+.skills-filter input {
+  flex: 1;
+}
+.skills-group {
+  margin-top: 8px;
+  color: var(--cyan);
+}
+.skills-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.skills-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 8px 3px 0;
+  border-top: 1px solid rgba(111, 141, 150, 0.2);
+}
+.skills-table td:first-child {
+  width: 26%;
+  word-break: break-word;
+}
+.skills-table td:last-child {
+  width: 24%;
+}
+.skills-flags {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+.skills-session {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.skills-panel button.prefill {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85em;
+}
+.skills-session button.prefill {
+  display: inline;
+  margin: 0 0 0 4px;
+}
+.skills-suggestion {
+  margin: 8px 0;
+  padding: 6px 0;
+  border-top: 1px solid rgba(111, 141, 150, 0.2);
+}
+.reach-available {
+  color: var(--green);
+}
+.reach-not_available {
+  color: var(--amber);
+}
+.reach-unknown {
+  color: var(--muted);
+}
+/* ---- Context gauge (W18): measured tokens, a share estimated against the documented window ------------------- */
+.card .ctx-bar,
+.context-gauge .ctx-track {
+  width: 100%;
+  height: 3px;
+  margin-top: 2px;
+  background: rgba(111, 141, 150, 0.25);
+  overflow: hidden;
+}
+.context-gauge .ctx-track {
+  height: 6px;
+  margin: 4px 0;
+}
+.ctx-bar .ctx-fill,
+.ctx-track .ctx-fill {
+  height: 100%;
+  background: var(--green);
+}
+.ctx-bar.medium .ctx-fill,
+.ctx-track.medium .ctx-fill {
+  background: var(--amber);
+}
+.ctx-bar.high .ctx-fill,
+.ctx-track.high .ctx-fill {
+  background: var(--red);
+}
+/* No known window: no share is drawn, only a dashed track. */
+.ctx-bar.unknown,
+.ctx-track.unknown {
+  background: repeating-linear-gradient(90deg, #6f8d96 0 4px, transparent 4px 8px);
+  opacity: 0.6;
+}
+.context-gauge {
+  margin-bottom: 8px;
+}
+/* Pull requests (ADR-0036): a full row of the workshop's footer, and the confirmation dialog above everything. */
+.workshop-actions .pull-requests {
+  grid-column: 1 / -1;
+}
+.pull-requests .pr-line {
+  border-top: 1px solid #12323c;
+  padding-top: 4px;
+}
+.pull-requests a {
+  color: var(--cyan);
+}
+.pull-requests .pr-checks.failed,
+.pull-requests .pr-check-list .fail,
+.pull-requests .pr-check-list .cancel {
+  color: #ff8a7a;
+}
+.pull-requests .pr-check-list {
+  margin: 2px 0 0 18px;
+  padding: 0;
+  font-size: 13px;
+}
+.pull-requests .pr-check-list .pass {
+  color: #7be0a0;
+}
+.pull-requests .pr-outcome.failed,
+.pull-requests .pr-outcome.unknown {
+  color: #ffc46b;
+}
+.pr-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.pr-dialog-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(860px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 14px 16px;
+  background: #071a21;
+  border: 2px solid var(--cyan);
+}
+.pr-dialog-box .title {
+  font-weight: 700;
+  font-size: 15px;
+}
+.pr-dialog-box textarea {
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  min-height: 220px;
+}
+.pr-facts th {
+  text-align: left;
+  padding-right: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pr-gh {
+  padding: 6px 8px;
+  border: 1px solid #ffc46b;
+}
+
+/* core-members */
+.core-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0 4px;
+}
+.core-toggle.on {
+  color: var(--amber);
+}
+/* The director's own terminal (ADR-0041) */
+.director-terminal {
+  top: 80px;
+  left: 24px;
+  width: min(980px, calc(100vw - 48px));
+  height: min(620px, calc(100vh - 140px));
+  display: flex;
+  flex-direction: column;
+  z-index: 25;
+}
+.terminal-warning {
+  margin: 4px 0 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-weight: bold;
+}
+.terminal-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.terminal-bar .facts {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 40%;
+}
+.terminal-cost {
+  margin-left: auto;
+  color: var(--cyan);
+}
+.terminal-screen {
+  flex: 1;
+  min-height: 120px;
+  background: #0b0f14;
+  padding: 4px;
+  overflow: hidden;
+}
+.terminal-line {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ---- topbar-palette: the bar's menus and the command palette (Ctrl+K) ---------------------------------------- */
+.bar-dropdown {
+  position: fixed;
+  z-index: 45;
+  width: 280px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.bar-dropdown .item {
+  display: block;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  text-decoration: none;
+}
+.bar-dropdown .item:hover,
+.bar-dropdown .item:focus-visible {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+.bar-dropdown .sep {
+  border-top: 1px solid var(--line);
+  margin: 4px 0;
+}
+.palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(2, 8, 12, 0.45);
+}
+.palette {
+  top: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.palette input {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--cyan);
+  padding: 6px 8px;
+}
+.palette ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.palette li {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  column-gap: 8px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.palette li.active {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+.palette li.none {
+  color: var(--muted);
+  cursor: default;
+}
+.palette .kind {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  align-self: center;
+}
+.palette .label {
+  color: var(--cyan);
+}
+.palette .detail {
+  grid-column: 2 / 4;
+  color: var(--muted);
+  font-size: 12px;
+}
+.palette kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  padding: 0 4px;
+  align-self: center;
+}
+
+/* waiting-banner: what waits for the director, under the bar, above the crew (TopBar.vue sets both tops). */
+.waiting-box {
+  position: absolute;
+  top: var(--waiting-top, 54px);
+  left: 8px;
+  /* Beside the event log's column, never over it. */
+  right: 416px;
+  /* No z-index: a panel the director opens comes later in the page and covers the banner, never the other way. */
+}
+@media (max-width: 760px) {
+  .waiting-box {
+    right: 8px;
+  }
+}
+.waiting-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: center;
+  padding: 8px 14px;
+  background: rgba(96, 66, 8, 0.96);
+  border: 2px solid #f0b429;
+  color: #fff1d0;
+}
+.waiting-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.waiting-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.waiting-mark {
+  color: #f0b429;
+  font-size: 18px;
+}
+
+/* journal-resilience (ADR-0042): rows replay left out, said loudly. */
+.journal-banner {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 18px;
+  max-width: min(820px, calc(100vw - 48px));
+  background: rgba(90, 14, 14, 0.95);
+  border: 2px solid #ff5a4f;
+  color: #ffe9e6;
+  z-index: 30;
+}
+/* The first continuity check after an upgrade: expected once, so amber and not the alarm's red. */
+.journal-banner.notice {
+  background: rgba(96, 66, 8, 0.95);
+  border-color: #f0b429;
+  color: #fff1d0;
+}
+.journal-panel {
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 48px));
+  max-height: calc(100vh - 220px);
+  z-index: 30;
+}
+
+/* security-hardening: the Sessions and tokens panel (ADR-0044) */
+.sessions-panel {
+  /* A place of its own: without one it opened at the very top, its close button above the screen. */
+  top: 90px;
+  right: 24px;
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+  width: min(560px, 92vw);
+}
+.sessions-panel .session-row {
+  border-top: 1px solid var(--line, #333);
+  padding: 6px 0;
+}
+.sessions-panel .facts.muted {
+  opacity: 0.7;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+.sessions-panel .token-form {
+  display: grid;
+  gap: 6px;
+}
+.sessions-panel .issued-token code {
+  display: block;
+  overflow-wrap: anywhere;
+  user-select: all;
+  margin: 4px 0;
+}
+
+/* ---- The page's confirmation (ConfirmDialog.vue): above everything, the page behind it out of reach ----------- */
+.confirm-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 9, 12, 0.6);
+}
+.confirm-dialog {
+  position: static;
+  width: min(460px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 16px 20px;
+  background: #071a21;
+}
+.confirm-message {
+  margin: 0 0 12px;
+  max-width: 70ch;
+}
+.confirm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+.confirm-field input {
+  font: inherit;
+}
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.confirm-actions button.action {
+  margin: 0;
+  padding: 4px 14px;
+}
+button.danger {
+  border-color: var(--red);
+  color: #ffd9d6;
+}
+button.danger:hover:not(:disabled) {
+  background: #3a1210;
+  border-color: var(--red);
+}
+
+/* ---- Narrow screens (UI audit F1, F2, F3, F16, F24) ---------------------------------------------------------------- */
+/* Whatever the width, no framed panel is wider than the window, and the toasts and the sign-in card neither. */
+.panel.framed,
+.panel.workshop {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+.toasts {
+  max-width: calc(100vw - 16px);
+}
+.login {
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+}
+/* The crew sits under the bar, whatever height the bar has (TopBar.vue measures it). */
+.crew {
+  top: var(--crew-top, 54px);
+  flex-wrap: wrap;
+  max-width: calc(100vw - 16px);
+}
+@media (max-width: 760px) {
+  /* The bar wraps instead of leaving buttons off screen: every menu stays reachable. */
+  .brand {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .brand > .shrink {
+    max-width: 100%;
+  }
+  /* The panels start under the wrapped bar, which would otherwise hide the menu that opened them. */
+  .hud > .panel.framed,
+  .hud > .workshop,
+  .hud > .meeting,
+  .hud > .api-console,
+  .hud > .usage,
+  .hud > .director-terminal {
+    top: calc(var(--crew-top, 54px) + 8px);
+  }
+  .bar-nav {
+    flex-wrap: wrap;
+  }
+  /* The close button sits inside the corner of the frame, where the window cannot cut it. */
+  .panel > .title > button.close {
+    top: 4px;
+    right: 4px;
+  }
+  .panel.framed > .title,
+  .panel.workshop > .title {
+    padding-right: 34px;
+  }
+  .panel.framed {
+    padding: 12px 12px 12px;
+  }
+  /* The keyboard help is of no use here, and the log gives way to the panel in front of it. */
+  .help {
+    display: none;
+  }
+  .log {
+    top: auto;
+    bottom: 8px;
+    right: 8px;
+    max-height: 22vh;
+    z-index: 1;
+  }
+  .hud:has(> .panel.framed) > .log,
+  .hud:has(> .panel.workshop) > .log,
+  .hud:has(> .selection) > .log {
+    display: none;
+  }
+  .toasts {
+    top: auto;
+    bottom: 8px;
+    margin-top: 0;
+    width: calc(100vw - 16px);
+  }
+  /* The settings sections wrap instead of scrolling sideways out of sight. */
+  .sectioned-nav {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+/* Targets of at least 24 px (F20), lines of a readable length (F23), no overflow in the sessions form (F27). */
+button:not(.link):not(.card):not(.tab),
+select,
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']) {
+  min-height: 24px;
+}
+button:not(.link) {
+  min-width: 24px;
+}
+button.link,
+a.button,
+details > summary {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+details > summary {
+  display: list-item;
+}
+.log .title .filters button {
+  padding: 2px 8px;
+}
+.help {
+  max-width: min(110ch, calc(100vw - 16px));
+}
+.hint {
+  max-width: 100ch;
+}
+.sessions-panel .token-form > *,
+.sessions-panel form > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.git-graph .scroll {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.sessions-panel button.action + button.action {
+  margin-left: 8px;
+}
+
+/* An empty meeting room is a small panel with its one action, not a screen-sized frame (F11). */
+.meeting.meeting-empty {
+  height: auto;
+  width: min(520px, calc(100vw - 32px));
+}
+
+/*
+ * A panel takes the focus when it opens (ui/onePanel.ts). Opened from the keyboard, its frame shows where the focus is;
+ * opened with the mouse, no ring (the browser's :focus-visible rule).
+ */
+.hud > .panel:focus {
+  outline: none;
+}
+.hud > .panel:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+}
+
+/* The workshop: its help folded by default, the files always get room, the body is opaque (F5, F17). */
+.panel.workshop {
+  background: #071a21;
+}
+.workshop-body {
+  min-height: 200px;
+}
+.workshop .workshop-actions {
+  max-height: 40%;
+  overflow-y: auto;
+}
+.workshop-help:not([open]) {
+  margin-bottom: 4px;
+}
+
+/* ---- Sandbox, skills, meeting room, report and proof on the section list: the frame of Settings ----------------- */
+/* Same place, size and level as .settings-panel; opaque, above the event log and the away summary. */
+.panel.sandbox-panel,
+.panel.skills-panel,
+.panel.meeting.sectioned-panel,
+.panel.mission-end,
+.panel.prove-panel {
+  top: 90px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(1000px, calc(100vw - 48px));
+  height: calc(100vh - 170px);
+  max-height: none;
+  z-index: 24;
+  background: #071a21;
+}
+.meeting.meeting-empty {
+  z-index: 24;
+}
+.sb-sections,
+.settings-form.sb-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sb-block,
+.sk-block,
+.mr-block,
+.mr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #0a232c;
+  border: 1px solid #1d4a57;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.mr-card > .card-label {
+  color: var(--cyan);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mr-card.question .topic {
+  font-size: 16px;
+  margin: 0;
+}
+.mr-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.mr-members .mr-card {
+  gap: 4px;
+}
+.mr-members .mr-card.pending {
+  border-color: var(--green);
+}
+.mr-members .mr-card .state {
+  font-size: 12px;
+  color: var(--muted);
+}
+.mr-members .mr-card.pending .state {
+  color: var(--green);
+}
+.sk-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.mr-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel.meeting .meeting-body {
+  display: grid;
+  grid-template-columns: minmax(300px, 46%) minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.panel.meeting .rounds {
+  overflow: visible;
+}
+.panel.meeting .contribution {
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: #0a232c;
+  border: 1px solid #1d4a57;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.panel.meeting .contribution.on {
+  border-color: var(--cyan);
+}
+.panel.meeting .round > .sub {
+  margin-top: 12px;
+  color: var(--cyan);
+}
+.panel.meeting .reader {
+  background: #050c10;
+  position: sticky;
+  top: 0;
+  max-height: 70vh;
+}
+.committee-decision .in-person,
+.committee-decision .ruling,
+.committee-decision .clarifying {
+  border-top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* The desk's Archives (ADR-0054). */
+.mission-archives .archived-list {
+  padding-left: 18px;
+}
+.mission-archives .archived-mission {
+  margin: 4px 0;
+}
+.mission-archives .archived-mission .restore {
+  margin-left: 10px;
+}
+.mission-archives .clean-report {
+  margin: 6px 0;
+}
+/* ---- A director's check, defined over the timeline (WorkflowStepDialog.vue, ADR-0052) ------------------------------ */
+.step-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+.step-dialog h3 {
+  margin: 0 0 12px;
+}
+.step-dialog fieldset {
+  border: 0;
+  padding: 0;
+}
+.step-dialog textarea,
+.step-dialog select {
+  font: inherit;
+}
+.timeline .tl-checks {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 0 12px;
+}
+.timeline .tl-check {
+  padding: 4px 0;
+}
+
+/* ---- To do: under the event log, always on screen; the pin button next to a panel's close cross ------------------- */
+.todo {
+  top: var(--log-bottom, 50vh);
+  right: 8px;
+  width: 400px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  max-height: calc(100vh - var(--log-bottom, 50vh) - 8px);
+  overflow-y: auto;
+}
+.todo .title .fold {
+  margin-left: auto;
+  border: none;
+  background: none;
+}
+.todo .count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--amber);
+  color: #071a21;
+  font-size: 12px;
+  text-align: center;
+}
+.todo .count.zero {
+  background: none;
+  color: var(--muted);
+}
+.todo .sub {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.todo .row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  padding: 3px 0;
+  border-top: 1px solid #12323c;
+}
+.todo .what {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.todo .what .facts {
+  display: block;
+}
+.todo .row button.action {
+  margin: 0;
+  flex: none;
+}
+.panel > .title > button.pin {
+  position: absolute;
+  top: -15px;
+  right: 21px;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: #071a21;
+  color: var(--text);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+.panel > .title > button.pin:hover,
+.panel[data-pinned] > .title > button.pin {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+@media (max-width: 760px) {
+  .panel > .title > button.pin {
+    top: 4px;
+    right: 40px;
+  }
+  /* Narrow: the log sits at the bottom (above), the list just over it, and both give way to a panel in front. */
+  .todo {
+    top: auto;
+    bottom: calc(22vh + 16px);
+    max-height: 26vh;
+  }
+  .hud:has(> .panel.framed) > .todo,
+  .hud:has(> .panel.workshop) > .todo,
+  .hud:has(> .selection) > .todo {
+    display: none;
+  }
+}
+
+/* ---- Remote today: a small video-call strip of the agents drawn at their home desk (decor) ---------------------- */
+.remote-strip {
+  top: 156px;
+  left: 8px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+.remote-strip .title .fold {
+  margin-left: auto;
+  border: none;
+  background: none;
+}
+.remote-strip .count {
+  font-size: 12px;
+  color: var(--amber);
+}
+.remote-strip .tiles {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.remote-strip .tile {
+  position: relative;
+  width: 128px;
+  padding: 0;
+  margin: 0;
+  border: 2px solid var(--line);
+  background: #071a21;
+  cursor: pointer;
+}
+.remote-strip .tile[data-state='typing'] {
+  border-color: var(--cyan);
+}
+.remote-strip canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+}
+.remote-strip .tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1px 4px;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: left;
+  background: rgba(7, 26, 33, 0.82);
+  color: var(--text);
+}
+.remote-strip .tag i {
+  font-style: normal;
+  color: var(--muted);
+}
+.pet-sound.remote-days {
+  margin-left: 6px;
+}
+@media (max-width: 760px) {
+  .remote-strip .tile {
+    width: 96px;
+  }
+  .hud:has(> .panel.framed) > .remote-strip,
+  .hud:has(> .panel.workshop) > .remote-strip,
+  .hud:has(> .selection) > .remote-strip {
+    display: none;
+  }
+}
+
+/* How long this browser session, the Keycloak sign-in and the mission's delegation still hold; amber in the last 5 min. */
+.session-time {
+  margin: 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.session-time.ending {
+  color: #ffb84d;
+  font-weight: 700;
+}
+/* How this browser is signed in, as one padlock chip: closed (Keycloak, with the first end to come) or open. */
+.id-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--line, #3a5a6a);
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--cyan, #5fd4e6);
+  text-decoration: none;
+}
+.id-chip .session-time {
+  margin: 0;
+}
+.id-chip.ending,
+.id-chip.ending .session-time {
+  border-color: #ffb84d;
+  color: #ffb84d;
+}
+.id-chip.warn {
+  border-color: var(--amber, #ffb84d);
+  color: var(--amber, #ffb84d);
+  cursor: pointer;
+}
+.id-chip.warn:hover {
+  background: rgba(255, 184, 77, 0.12);
+}
+/* The sign-in card in IAM mode: Keycloak as the one clear way in. */
+.login .keycloak-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--amber, #ffb84d);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--amber, #ffb84d);
+  text-decoration: none;
+}
+.login .keycloak-sign-in:hover,
+.login .keycloak-sign-in:focus-visible {
+  background: rgba(255, 184, 77, 0.14);
+}
+.session-toast {
+  position: fixed;
+  top: 96px;
+  right: 24px;
+  z-index: 50;
+  max-width: 360px;
+  padding: 10px 14px;
+  background: rgba(70, 48, 8, 0.96);
+  border: 2px solid #ffb84d;
+  color: #ffe9c2;
+}
+.after-archive-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.after-archive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.after-archive-row button.action {
+  margin: 0;
+  flex: none;
+}
+
+/* ---- Accessibility (WCAG 2.2 AA): visible focus, target size, reduced motion. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+button.close,
+button.small {
+  min-width: 24px;
+  min-height: 24px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
