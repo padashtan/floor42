@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# The quick loop: only the tests a change touches, against HEAD (staged, unstaged and new files).
+#   bin/floor42-quick           Java: the changed test classes, and <Class>Test* for each changed main class; web: vitest --changed
+#   bin/floor42-quick <ref>     the same against another ref (a branch, HEAD~1)
+# Not a gate: `make gate` is. A change to a pom or to a resource runs every test of the Java modules.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+REF="${1:-HEAD}"
+MVNW="./mvnw -B -ntp -q"
+
+changed="$( { git diff --name-only "$REF" --; git ls-files --others --exclude-standard; } | sort -u)"
+if [ -z "$changed" ]; then echo "quick: nothing changed since $REF."; exit 0; fi
+
+classes=()
+whole_java=false
+while IFS= read -r f; do
+  case "$f" in
+    pom.xml|floor42-*/pom.xml) whole_java=true ;;
+    floor42-domain/src/test/*.java|floor42-server/src/test/*.java)
+      classes+=("$(basename "$f" .java)") ;;
+    floor42-server/src/test/resources/*|floor42-server/src/main/resources/*) whole_java=true ;;
+    floor42-domain/src/main/*.java|floor42-server/src/main/*.java)
+      classes+=("$(basename "$f" .java)Test*") ;;
+  esac
+done <<< "$changed"
+
+if $whole_java || [ "${#classes[@]}" -gt 0 ]; then
+  args=(-pl floor42-server -am test -Dspotless.check.skip=true)
+  if ! $whole_java; then
+    list="$(IFS=,; echo "${classes[*]}")"
+    args+=("-Dtest=$list" -Dsurefire.failIfNoSpecifiedTests=false)
+    echo "quick: Java tests $list"
+  else
+    echo "quick: a pom or a resource changed, every Java test runs."
+  fi
+  $MVNW "${args[@]}"
+else
+  echo "quick: no Java change."
+fi
+
+if echo "$changed" | grep -q '^floor42-web/'; then
+  (cd floor42-web && npx vitest run --changed "$REF" --passWithNoTests)
+else
+  echo "quick: no web change."
+fi

@@ -1,0 +1,109 @@
+name: Nightly
+
+# The slow tests (-Pslow) and the browser journeys, every night and by hand. Too slow for each push.
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  slow:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      # The native Linux sandbox (ADR-0028) needs unprivileged user namespaces (restricted by AppArmor on Ubuntu 24.04)
+      # and pasta, so that the slow sandbox tests run instead of skipping.
+      - name: Allow user namespaces and install pasta (sandbox tests)
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          sudo apt-get update
+          sudo apt-get install -y passt
+          unshare -Urm true
+
+      - name: Slow tests
+        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+      # SandboxNativeEscapeTest is not tagged slow (the push build runs it); the nightly runs it too, on this runner.
+      - name: Native sandbox escape tests
+        run: >-
+          ./mvnw -B -ntp -pl floor42-server -am test -Dtest=SandboxNativeEscapeTest
+          -Dsurefire.failIfNoSpecifiedTests=false -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+  # Static analysis and coverage reports (docs/quality.md). No SonarQube server in CI: the reports are artifacts.
+  quality:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: ESLint report
+        run: npm run lint:report
+        working-directory: floor42-web
+
+      - name: Quality profile
+        run: ./mvnw -B -ntp -Pquality verify -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+      - name: Mutation tests on the security code
+        run: ./mvnw -B -ntp -Pquality -Dspotless.check.skip=true -Dquarkus.quinoa=false test-compile org.pitest:pitest-maven:mutationCoverage
+
+      # Real fuzzing (docs/quality.md), capped: 10 @FuzzTest methods, each in its own Maven run (Jazzer fuzzes one test per
+      # JVM) of 60 s plus the Maven start (19 s measured on a quiet machine, 65 s under load): 13 to 21 minutes, 30 at
+      # most. A crash fails the job and leaves its reproducer in the artifact below.
+      - name: Fuzzing
+        run: FUZZ_SECONDS=60 bin/floor42-fuzz
+        timeout-minutes: 30
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: quality-reports
+          retention-days: 14
+          path: |
+            */target/site/jacoco/
+            */target/site/jacoco-aggregate/
+            */target/pmd.xml
+            */target/cpd.xml
+            */target/spotbugsXml.xml
+            */target/pit-reports/
+            floor42-web/target/eslint-report.json
+            floor42-server/src/test/resources/**/*Inputs/

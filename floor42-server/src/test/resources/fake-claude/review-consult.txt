@@ -1,0 +1,2 @@
+tool|toolu_c1|Read|{"file_path":"README.md"}|1	# Fake project
+text|The report looks right but I cannot judge the token handling.\nCONSULT: security: Is a static token acceptable for this service?

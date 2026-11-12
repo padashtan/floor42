@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Floor42's fast loop: Quarkus dev mode, with Vite's dev server behind Quinoa.
+#   bin/floor42-dev                 Java changes reload on the next request, UI changes reload in the page (HMR)
+#   bin/floor42-dev --test          also run the tests continuously: only those a change affects run again
+#   bin/floor42-dev --real-claude   sessions run the real Claude Code (paid); by default the fake plays them
+# It listens on http://127.0.0.1:7421 with its own data in ~/.floor42-dev, next to an installed daemon on 7420
+# (~/.floor42 is never touched). The sign-in link is printed in this console. Java 25 is required (JAVA_HOME).
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+BASE="http://127.0.0.1:7421"
+args=()
+for a in "$@"; do
+  case "$a" in
+    --real-claude) args+=("-Dfloor42.claude.command=claude" "-Dfloor42.sandbox.mandatory=true") ;;
+    --test) args+=("-Dquarkus.test.continuous-testing=enabled") ;;
+    *) args+=("$a") ;;
+  esac
+done
+
+[ -d "$ROOT/floor42-web/node_modules" ] || (cd "$ROOT/floor42-web" && npm ci)
+
+# Once the daemon answers, ask it for a sign-in link: dev mode prints it on its console (floor42.sign-in.delivery).
+launcher=$$
+(
+  for _ in $(seq 1 300); do
+    # Maven runs in this shell's process (exec below): when it stops, so does this wait.
+    kill -0 "$launcher" 2>/dev/null || exit 0
+    if curl -fs -o /dev/null --max-time 2 "$BASE/api/status"; then
+      curl -fsS -X POST -o /dev/null "$BASE/auth/open" || true
+      exit 0
+    fi
+    sleep 1
+  done
+) &
+
+cd "$ROOT"
+# No dynamic attach into the dev daemon either (SECURITY.md); FLOOR42_DEV_ATTACH=1 allows it, for jcmd or a profiler.
+jvm_args="-Djdk.httpclient.allowRestrictedHeaders=host" # the token broker pins the checked address and sets Host
+[ -n "${FLOOR42_DEV_ATTACH:-}" ] || jvm_args="-XX:+DisableAttachMechanism $jvm_args"
+args+=("-Djvm.args=$jvm_args")
+# The format is the full gate's business (make verify), not the loop's.
+exec ./mvnw -pl floor42-server -am quarkus:dev -Dspotless.check.skip=true "${args[@]}"

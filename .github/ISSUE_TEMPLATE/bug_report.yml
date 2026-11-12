@@ -1,0 +1,60 @@
+name: Bug report
+description: Something Floor42 does wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A security problem? Do not open an issue: report it privately (SECURITY.md).
+        Never paste a session token, a sign-in link or an API key.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start Floor42 with ...
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Floor42 version
+      description: Shown in the top bar, next to the brand (for example v1.6.0 · abc1234).
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How you run it
+      options:
+        - From source (bin/floor42)
+        - Release archive
+        - Docker image built locally (make docker-up)
+        - Published Docker image (ghcr.io)
+        - Online demo
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11, WSL 2 (Debian), Ubuntu 24.04, macOS ...
+  - type: input
+    id: claude
+    attributes:
+      label: Claude Code version
+      description: "`claude --version`, for a real mission."
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or event log lines
+      description: The daemon's log or the events around the problem, with anything secret removed.
+      render: text

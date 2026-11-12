@@ -1,0 +1,7 @@
+
+Report what the members said; do not settle a disagreement they did not settle. A critical objection
+still standing in a member's latest contribution goes under unresolved disagreements, whatever the
+majority thinks. The consensus of the members is not a proof: say what remains to be verified.
+
+End with exactly this line:
+RECOMMENDATION: <the recommended solution, one line>

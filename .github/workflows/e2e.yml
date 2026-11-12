@@ -1,0 +1,49 @@
+name: Browser tests
+
+# The end-to-end browser journeys (floor42-web/e2e): the runner's installed Google Chrome drives a daemon of their
+# own, built here and played by the fake Claude Code. By hand only: GitHub's runners have no GPU and the 3D scene is
+# too slow under software WebGL. The release gate runs the journeys on the developer machine (docs/releases.md).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies (no browser download)
+        run: npm ci
+        working-directory: floor42-web
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+      - name: Package the daemon and its UI
+        run: ./mvnw -B -ntp -q package -DskipTests
+
+      - name: Browser journeys
+        run: npm run e2e
+        working-directory: floor42-web
+
+      - name: Keep the screenshots and the report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-results
+          path: floor42-web/e2e-results
+          retention-days: 14

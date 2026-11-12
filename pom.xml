@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.floor42</groupId>
+    <artifactId>floor42-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>Floor42</name>
+    <description>A management game in which humans and governed AI agents do real software work.</description>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>floor42-domain</module>
+        <module>floor42-server</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Reproducible archives (jar and zip entry times). Fixed here so two builds of one commit are byte for byte
+             the same; the release workflow passes the tagged commit's own time instead
+             (-Dproject.build.outputTimestamp=..., docs/releases.md). -->
+        <project.build.outputTimestamp>2026-11-04T14:33:27Z</project.build.outputTimestamp>
+
+        <!-- Surefire JVMs of the server module (floor42-server/pom.xml). -->
+        <floor42.test.forks>6</floor42.test.forks>
+        <!-- Heap of each of those JVMs (ci.yml sets 2g for its 2 forks). -->
+        <floor42.test.heap>768m</floor42.test.heap>
+        <!-- Test JVM flag forbidding attach to the process (the daemon runs with it, StatusResourceTest asserts it); empty it to attach a profiler or agent: the fuzz execution has its own argLine. -->
+        <floor42.test.noattach>-XX:+DisableAttachMechanism</floor42.test.noattach>
+        <!-- Tests tagged @Tag("slow") (real timeouts, the real WSL sandbox) are left out of the default verify; -Pslow runs only them. -->
+        <floor42.test.groups></floor42.test.groups>
+        <floor42.test.excludedGroups>slow,fuzz</floor42.test.excludedGroups>
+
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.version>3.40.1.1</quarkus.platform.version>
+        <quarkus-quinoa.version>2.9.3</quarkus-quinoa.version>
+        <quarkus-jdbc-sqlite.version>3.0.11</quarkus-jdbc-sqlite.version>
+        <archunit.version>1.5.1</archunit.version>
+        <assertj.version>3.27.7</assertj.version>
+        <jazzer.version>0.30.0</jazzer.version>
+
+        <compiler-plugin.version>3.16.0</compiler-plugin.version>
+        <surefire-plugin.version>3.6.1</surefire-plugin.version>
+        <spotless-plugin.version>3.11.0</spotless-plugin.version>
+        <cyclonedx-plugin.version>2.9.3</cyclonedx-plugin.version>
+
+        <!-- Quality suite (-Pquality, docs/quality.md). Empty here so the late-bound @{argLine} of the server's surefire
+             works with and without the JaCoCo agent. -->
+        <argLine></argLine>
+        <jacoco-plugin.version>0.8.16</jacoco-plugin.version>
+        <pmd-plugin.version>3.28.0</pmd-plugin.version>
+        <spotbugs-plugin.version>4.10.5.0</spotbugs-plugin.version>
+        <spotbugs.version>4.10.5</spotbugs.version>
+        <findsecbugs.version>1.14.0</findsecbugs.version>
+        <pitest-plugin.version>1.30.2</pitest-plugin.version>
+        <pitest-junit5.version>1.2.3</pitest-junit5.version>
+        <sonar-plugin.version>5.8.0.7211</sonar-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>dev.floor42</groupId>
+                <artifactId>floor42-domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkiverse.quinoa</groupId>
+                <artifactId>quarkus-quinoa</artifactId>
+                <version>${quarkus-quinoa.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkiverse.jdbc</groupId>
+                <artifactId>quarkus-jdbc-sqlite</artifactId>
+                <version>${quarkus-jdbc-sqlite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit-junit5</artifactId>
+                <version>${archunit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.code-intelligence</groupId>
+                <artifactId>jazzer-junit</artifactId>
+                <version>${jazzer.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${compiler-plugin.version}</version>
+                    <configuration>
+                        <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire-plugin.version}</version>
+                </plugin>
+                <!-- Known to every module, so `./mvnw -pl floor42-server -am quarkus:dev` resolves the prefix in the
+                     domain module too (bin/floor42-dev): the domain is built from the reactor, never installed. -->
+                <plugin>
+                    <groupId>${quarkus.platform.group-id}</groupId>
+                    <artifactId>quarkus-maven-plugin</artifactId>
+                    <version>${quarkus.platform.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Before the compilation, not after the tests: a format slip fails in seconds, not after
+                             the whole test run. Skip it in the fast loop with -Dspotless.check.skip=true. -->
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <java>
+                        <palantirJavaFormat/>
+                        <removeUnusedImports/>
+                    </java>
+                </configuration>
+            </plugin>
+            <!-- The Java software bill of materials (CycloneDX): one aggregate over both modules, target/bom.json and
+                 target/bom.xml of the root. Released next to the zip (docs/releases.md). Root only: the modules
+                 do not inherit it. -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>${cyclonedx-plugin.version}</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>sbom</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>makeAggregateBom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <projectType>application</projectType>
+                    <schemaVersion>1.6</schemaVersion>
+                    <outputFormat>all</outputFormat>
+                    <outputName>bom</outputName>
+                    <includeTestScope>false</includeTestScope>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <!-- Only the tests tagged "slow": ./mvnw verify -Pslow (docs/releases.md; part of the release gate). -->
+            <id>slow</id>
+            <properties>
+                <floor42.test.groups>slow</floor42.test.groups>
+                <floor42.test.excludedGroups></floor42.test.excludedGroups>
+            </properties>
+        </profile>
+        <profile>
+            <!-- Static analysis and test quality, opt in, never part of the normal verify (docs/quality.md):
+                 ./mvnw -Pquality verify [sonar:sonar]. Reports only, nothing fails the build yet. -->
+            <id>quality</id>
+            <modules>
+                <module>floor42-coverage</module>
+            </modules>
+            <properties>
+                <!-- A local SonarQube Community. The token is read from the SONAR_TOKEN environment variable only. -->
+                <!-- A failing test must not hide the reports. -->
+                <maven.test.failure.ignore>true</maven.test.failure.ignore>
+                <sonar.host.url>http://127.0.0.1:9000</sonar.host.url>
+                <sonar.projectKey>floor42</sonar.projectKey>
+                <sonar.projectName>Floor42</sonar.projectName>
+                <!-- The root module analyses the Vue/TypeScript sources; the Java modules reset it to src/main/java. -->
+                <sonar.sources>floor42-web/src</sonar.sources>
+                <sonar.tests>floor42-web/src</sonar.tests>
+                <sonar.test.inclusions>floor42-web/src/**/*.test.ts</sonar.test.inclusions>
+                <sonar.exclusions>**/target/**,**/node_modules/**,floor42-web/dist/**,floor42-web/dist-demo/**,**/generated/**,**/src/test/resources/**</sonar.exclusions>
+                <!-- The en and fr catalogues carry the same keys by design (ADR-0021): not duplication. -->
+                <sonar.cpd.exclusions>floor42-web/src/i18n/**</sonar.cpd.exclusions>
+                <sonar.coverage.exclusions>**/src/test/**,floor42-web/**</sonar.coverage.exclusions>
+                <sonar.coverage.jacoco.xmlReportPaths>${maven.multiModuleProjectDirectory}/floor42-coverage/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+                <sonar.eslint.reportPaths>${maven.multiModuleProjectDirectory}/floor42-web/target/eslint-report.json</sonar.eslint.reportPaths>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${pmd-plugin.version}</version>
+                        <configuration>
+                            <rulesets>
+                                <ruleset>${maven.multiModuleProjectDirectory}/tools/quality/pmd-ruleset.xml</ruleset>
+                            </rulesets>
+                            <printFailingErrors>false</printFailingErrors>
+                            <failOnViolation>false</failOnViolation>
+                            <includeTests>false</includeTests>
+                            <targetJdk>25</targetJdk>
+                            <minimumTokens>100</minimumTokens>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>pmd-cpd</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pmd</goal>
+                                    <goal>cpd</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${spotbugs-plugin.version}</version>
+                        <configuration>
+                            <effort>Max</effort>
+                            <threshold>Medium</threshold>
+                            <xmlOutput>true</xmlOutput>
+                            <failOnError>false</failOnError>
+                            <excludeFilterFile>${maven.multiModuleProjectDirectory}/tools/quality/spotbugs-exclude.xml</excludeFilterFile>
+                            <plugins>
+                                <plugin>
+                                    <groupId>com.h3xstream.findsecbugs</groupId>
+                                    <artifactId>findsecbugs-plugin</artifactId>
+                                    <version>${findsecbugs.version}</version>
+                                </plugin>
+                            </plugins>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.spotbugs</groupId>
+                                <artifactId>spotbugs</artifactId>
+                                <version>${spotbugs.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>spotbugs</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>spotbugs</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Mutation testing is slow: run on demand (make mutation), not bound to a phase. -->
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${pitest-plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>${pitest-junit5.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <outputFormats>
+                                <outputFormat>XML</outputFormat>
+                                <outputFormat>HTML</outputFormat>
+                            </outputFormats>
+                            <timestampedReports>false</timestampedReports>
+                            <threads>4</threads>
+                            <failWhenNoMutations>false</failWhenNoMutations>
+                            <mutationThreshold>0</mutationThreshold>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>${sonar-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

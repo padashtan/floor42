@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dev.floor42</groupId>
+        <artifactId>floor42-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>floor42-domain</artifactId>
+    <name>Floor42 :: Domain</name>
+    <description>Pure business model: entities, state machines and invariants. Depends on the JDK only.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- The golden master's snapshot, for the server's replay of a real journal, and the golden journals' tests
+                     (the scripted day and the fixtures), for the server's characterisation of event lines. -->
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>dev/floor42/domain/golden/**</include>
+                                <include>dev/floor42/domain/*.class</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- Quality suite (root pom, docs/quality.md). -->
+            <id>quality</id>
+            <properties>
+                <sonar.sources>src/main/java</sonar.sources>
+                <sonar.tests>src/test/java</sonar.tests>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <targetClasses>
+                                <param>dev.floor42.domain.PermissionRule*</param>
+                                <param>dev.floor42.domain.SessionRisk*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>dev.floor42.domain.*Test</param>
+                            </targetTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

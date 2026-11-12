@@ -1,0 +1,2 @@
+tool|toolu_r9|Read|{"file_path":"README.md"}|1	# Fake project
+text|The PDFs are not rendered: the sandbox has no browser. Everything else is done.\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED

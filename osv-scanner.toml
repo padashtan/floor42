@@ -1,0 +1,26 @@
+# OSV-Scanner exceptions (tools/quality/static-run.sh osv, docs/security-scanning.md). One block per advisory, each
+# with an expiry (ignoreUntil) and its reason; review the block when the date passes. An advisory with no block fails
+# the scan: it is fixed by upgrading, not ignored.
+
+# The four advisories below come only from iam/keycloak-extensions/pom.xml, through the provided-scope org.keycloak
+# 26.8.1 dependencies. The reason is the same for each.
+
+[[IgnoredVulns]]
+id = "GHSA-xxph-c9ww-hj94" # com.google.guava:guava 32.1.2-jre
+ignoreUntil = 2026-12-31
+reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not packaged in the Floor42 extension jar; Keycloak 26.8.2 still pins it; recheck at the next Keycloak release"
+
+[[IgnoredVulns]]
+id = "GHSA-735f-pc8j-v9w8" # com.google.protobuf:protobuf-java 3.25.1
+ignoreUntil = 2026-12-31
+reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not packaged in the Floor42 extension jar; Keycloak 26.8.2 still pins it; recheck at the next Keycloak release"
+
+[[IgnoredVulns]]
+id = "GHSA-mfg7-5gfp-c4w3" # io.netty:netty-codec-dns 4.1.135.Final
+ignoreUntil = 2026-12-31
+reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not packaged in the Floor42 extension jar; Keycloak 26.8.2 still pins it; recheck at the next Keycloak release"
+
+[[IgnoredVulns]]
+id = "GHSA-ccrj-gw8r-854m" # io.opentelemetry:opentelemetry-api 1.62.0
+ignoreUntil = 2026-12-31
+reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not packaged in the Floor42 extension jar; Keycloak 26.8.2 still pins it; recheck at the next Keycloak release"

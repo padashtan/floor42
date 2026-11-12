@@ -1,0 +1,7 @@
+# Trivy exceptions (tools/quality/trivy-run.sh). One id per line, with `exp:YYYY-MM-DD` after it (the exception lapses
+# on that day and the release fails on the finding again). A comment line above each id says why: not affected (and the
+# proof), no fix yet, who decided. Empty on purpose: the baseline of 2026-11-09 is in docs/security-scanning.md.
+#
+# Format:
+# <comment: why this finding is accepted>
+# CVE-YYYY-NNNNN exp:YYYY-MM-DD

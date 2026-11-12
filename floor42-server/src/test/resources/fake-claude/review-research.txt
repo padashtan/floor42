@@ -1,0 +1,1 @@
+text|I cannot tell whether the library version is still supported.\nRESEARCH: Is JUnit 4.12 still supported?

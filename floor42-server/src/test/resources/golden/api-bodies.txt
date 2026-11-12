@@ -1,0 +1,4579 @@
+== GET /api/missions -> 200
+[ {
+  "agents" : [ "dehren", "geoffrey", "chris" ],
+  "archived" : false,
+  "id" : "M-2",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "CANCELLED",
+  "tickets" : 2,
+  "ticketsDone" : 1,
+  "title" : "Gateway?"
+}, {
+  "agents" : [ "geoffrey" ],
+  "archived" : false,
+  "id" : "M-3",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "COMPLETED",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Idea"
+}, {
+  "agents" : [ "chris" ],
+  "archived" : false,
+  "id" : "M-4",
+  "openQuestions" : 0,
+  "origin" : "SIMULATED",
+  "status" : "CANCELLED",
+  "tickets" : 3,
+  "ticketsDone" : 0,
+  "title" : "Sim"
+}, {
+  "agents" : [ ],
+  "archived" : false,
+  "id" : "M-5",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "PLANNING",
+  "tickets" : 0,
+  "ticketsDone" : 0,
+  "title" : "Again"
+}, {
+  "agents" : [ "chris" ],
+  "archived" : false,
+  "id" : "M-6",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "IN_PROGRESS",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Release"
+}, {
+  "agents" : [ "geoffrey" ],
+  "archived" : false,
+  "id" : "M-7",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "PLANNING",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Pinned"
+}, {
+  "agents" : [ "chris", "dehren" ],
+  "archived" : false,
+  "id" : "M-8",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "COMPLETED",
+  "tickets" : 1,
+  "ticketsDone" : 1,
+  "title" : "Calibrated"
+}, {
+  "agents" : [ ],
+  "archived" : false,
+  "id" : "M-9",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "IN_PROGRESS",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Research"
+}, {
+  "agents" : [ ],
+  "archived" : false,
+  "id" : "M-10",
+  "openQuestions" : 0,
+  "origin" : "REAL",
+  "status" : "PLANNING",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Graph"
+}, {
+  "agents" : [ "chris" ],
+  "archived" : false,
+  "id" : "M-11",
+  "openQuestions" : 0,
+  "origin" : "SIMULATED",
+  "status" : "IN_PROGRESS",
+  "tickets" : 1,
+  "ticketsDone" : 0,
+  "title" : "Badge"
+} ]
+== GET /api/missions/M-1 -> 200
+{
+  "actions" : [ {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "READ",
+    "decisionBasis" : "rule: ALLOW READ for any agent",
+    "decisionBasisCode" : "rule",
+    "decisionBasisParams" : {
+      "agent" : "",
+      "decision" : "ALLOW",
+      "target" : "READ",
+      "ticket" : ""
+    },
+    "denialReason" : null,
+    "id" : "a1",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:37:00Z",
+    "result" : "<project/>",
+    "runningSeconds" : null,
+    "stage" : "CONFIRMED",
+    "summary" : "pom.xml",
+    "ticket" : "T-4",
+    "tool" : "Read",
+    "updatedAt" : "2026-10-20T10:41:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "EXECUTE",
+    "decisionBasis" : "rule: ALLOW EXECUTE 'mvn' for chris",
+    "decisionBasisCode" : "ruleAgent",
+    "decisionBasisParams" : {
+      "agent" : "chris",
+      "decision" : "ALLOW",
+      "target" : "EXECUTE 'mvn'",
+      "ticket" : ""
+    },
+    "denialReason" : null,
+    "id" : "a2",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:42:00Z",
+    "result" : "BUILD FAILURE",
+    "runningSeconds" : 10,
+    "stage" : "FAILED",
+    "summary" : "mvn test",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T10:46:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "READ",
+    "decisionBasis" : "rule: DENY Grep for any agent",
+    "decisionBasisCode" : "rule",
+    "decisionBasisParams" : {
+      "agent" : "",
+      "decision" : "DENY",
+      "target" : "Grep",
+      "ticket" : ""
+    },
+    "denialReason" : "POLICY",
+    "id" : "a3",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T10:49:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "TODO",
+    "ticket" : "T-4",
+    "tool" : "Grep",
+    "updatedAt" : "2026-10-20T10:49:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "WRITE",
+    "decisionBasis" : "director denied it (Q-1)",
+    "decisionBasisCode" : "directorDenied",
+    "decisionBasisParams" : {
+      "question" : "Q-1"
+    },
+    "denialReason" : "DIRECTOR",
+    "id" : "a4",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T10:50:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "src\\App.java",
+    "ticket" : "T-4",
+    "tool" : "Write",
+    "updatedAt" : "2026-10-20T11:10:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "WRITE",
+    "decisionBasis" : "rule: ALLOW Write for any agent",
+    "decisionBasisCode" : "rule",
+    "decisionBasisParams" : {
+      "agent" : "",
+      "decision" : "ALLOW",
+      "target" : "Write",
+      "ticket" : ""
+    },
+    "denialReason" : null,
+    "id" : "a5",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:51:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "src/Other.java",
+    "ticket" : "T-4",
+    "tool" : "Write",
+    "updatedAt" : "2026-10-20T14:04:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "FLOOR42",
+    "decisionBasis" : "Floor42 tools are always available",
+    "decisionBasisCode" : "floor42Tools",
+    "decisionBasisParams" : { },
+    "denialReason" : null,
+    "id" : "a6",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:52:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "question",
+    "ticket" : "T-4",
+    "tool" : "mcp__floor42__ask",
+    "updatedAt" : "2026-10-20T14:05:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "READ",
+    "decisionBasis" : "C:/secret is outside C:/ws/chris",
+    "decisionBasisCode" : null,
+    "decisionBasisParams" : null,
+    "denialReason" : "OUTSIDE_WORKSPACE",
+    "id" : "a7",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T10:53:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "C:/secret",
+    "ticket" : "T-4",
+    "tool" : "Read",
+    "updatedAt" : "2026-10-20T10:53:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "READ",
+    "decisionBasis" : "chris is neither working on nor reviewing T-2",
+    "decisionBasisCode" : "notOnTicket",
+    "decisionBasisParams" : {
+      "agent" : "chris",
+      "ticket" : "T-2"
+    },
+    "denialReason" : "POLICY",
+    "id" : "a8",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T10:54:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "x",
+    "ticket" : "T-2",
+    "tool" : "Read",
+    "updatedAt" : "2026-10-20T10:54:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "EXECUTE",
+    "decisionBasis" : "director allowed it (Q-2)",
+    "decisionBasisCode" : "directorAllowed",
+    "decisionBasisParams" : {
+      "question" : "Q-2"
+    },
+    "denialReason" : null,
+    "id" : "b1",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:58:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "rm -rf build",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T14:06:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "EXECUTE",
+    "decisionBasis" : "director allowed it (Q-2)",
+    "decisionBasisCode" : "directorAllowed",
+    "decisionBasisParams" : {
+      "question" : "Q-2"
+    },
+    "denialReason" : null,
+    "id" : "b2",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T10:59:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "rm -rf build",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T14:07:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : "director denied it (Q-3)",
+    "decisionBasisCode" : "directorDenied",
+    "decisionBasisParams" : {
+      "question" : "Q-3"
+    },
+    "denialReason" : "DIRECTOR",
+    "id" : "b3",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T11:00:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "git push",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:07:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "NETWORK",
+    "decisionBasis" : "director allowed it (Q-4)",
+    "decisionBasisCode" : "directorAllowed",
+    "decisionBasisParams" : {
+      "question" : "Q-4"
+    },
+    "denialReason" : null,
+    "id" : "b4",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T11:01:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "https://example.org",
+    "ticket" : "T-4",
+    "tool" : "WebFetch",
+    "updatedAt" : "2026-10-20T14:08:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "NETWORK",
+    "decisionBasis" : "director allowed it (Q-5)",
+    "decisionBasisCode" : "directorAllowed",
+    "decisionBasisParams" : {
+      "question" : "Q-5"
+    },
+    "denialReason" : null,
+    "id" : "b5",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T11:02:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "https://example.org",
+    "ticket" : "T-4",
+    "tool" : "WebFetch",
+    "updatedAt" : "2026-10-20T14:09:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : true,
+    "category" : "EXECUTE",
+    "decisionBasis" : "director already allowed this exact command from chris (Q-2)",
+    "decisionBasisCode" : "alreadyAllowedCommand",
+    "decisionBasisParams" : {
+      "agent" : "chris",
+      "question" : "Q-2"
+    },
+    "denialReason" : null,
+    "id" : "b6",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T11:11:00Z",
+    "result" : "stopped",
+    "runningSeconds" : null,
+    "stage" : "FAILED",
+    "summary" : "rm -rf build",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T14:10:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : "director already denied this exact command from chris (Q-3)",
+    "decisionBasisCode" : "alreadyDeniedCommand",
+    "decisionBasisParams" : {
+      "agent" : "chris",
+      "question" : "Q-3"
+    },
+    "denialReason" : "DIRECTOR",
+    "id" : "b7",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T11:12:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "git push",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:12:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : "refused by Claude Code",
+    "decisionBasisCode" : null,
+    "decisionBasisParams" : null,
+    "denialReason" : "BLOCKED_UPSTREAM",
+    "id" : "b8",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T11:16:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "rm -rf build",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:20:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : "not offered",
+    "decisionBasisCode" : null,
+    "decisionBasisParams" : null,
+    "denialReason" : "BLOCKED_UPSTREAM",
+    "id" : "u1",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T11:22:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "curl x",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:22:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : null,
+    "decisionBasisCode" : null,
+    "decisionBasisParams" : null,
+    "denialReason" : null,
+    "id" : "u2",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T11:24:00Z",
+    "result" : "200",
+    "runningSeconds" : null,
+    "stage" : "EXECUTED",
+    "summary" : "curl y",
+    "ticket" : "T-4",
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:24:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "EXECUTE",
+    "decisionBasis" : null,
+    "decisionBasisCode" : null,
+    "decisionBasisParams" : null,
+    "denialReason" : null,
+    "id" : "u3",
+    "ran" : true,
+    "requestedAt" : "2026-10-20T11:25:00Z",
+    "result" : "200",
+    "runningSeconds" : null,
+    "stage" : "EXECUTED",
+    "summary" : "curl z",
+    "ticket" : null,
+    "tool" : "Bash",
+    "updatedAt" : "2026-10-20T11:25:00Z"
+  }, {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "READ",
+    "decisionBasis" : "mission is SUSPENDED",
+    "decisionBasisCode" : "missionNotActive",
+    "decisionBasisParams" : {
+      "status" : "SUSPENDED"
+    },
+    "denialReason" : "MISSION_NOT_ACTIVE",
+    "id" : "b9",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T11:29:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "x",
+    "ticket" : "T-4",
+    "tool" : "Read",
+    "updatedAt" : "2026-10-20T11:29:00Z"
+  } ],
+  "archived" : true,
+  "budgetUsd" : null,
+  "capDecided" : true,
+  "checkCommand" : "mvn -q verify",
+  "checkRuns" : [ {
+    "at" : "2026-10-20T12:46:00Z",
+    "command" : "mvn -q verify",
+    "durationMs" : 12345,
+    "exitCode" : 1,
+    "head" : "abc1234",
+    "output" : "FAIL",
+    "passed" : false,
+    "timedOut" : false,
+    "trigger" : "manual",
+    "workspace" : "chris"
+  }, {
+    "at" : "2026-10-20T12:47:00Z",
+    "command" : "mvn -q verify",
+    "durationMs" : 600000,
+    "exitCode" : null,
+    "head" : null,
+    "output" : "",
+    "passed" : false,
+    "timedOut" : true,
+    "trigger" : "auto",
+    "workspace" : "chris"
+  } ],
+  "checksAutomatic" : true,
+  "closedAt" : "2026-10-20T14:12:00Z",
+  "committee" : null,
+  "committees" : [ ],
+  "delivery" : null,
+  "id" : "M-1",
+  "incidents" : [ {
+    "action" : "u2",
+    "criticality" : "CRITICAL",
+    "description" : "chris ran Bash without an Floor42 authorization: curl y",
+    "descriptionCode" : "ranWithoutAuthorization",
+    "descriptionParams" : {
+      "agent" : "chris",
+      "summary" : "curl y",
+      "tool" : "Bash"
+    },
+    "id" : "I-1",
+    "raisedAt" : "2026-10-20T11:24:00Z"
+  }, {
+    "action" : "u3",
+    "criticality" : "CRITICAL",
+    "description" : "chris ran Bash without an Floor42 authorization: curl z",
+    "descriptionCode" : "ranWithoutAuthorization",
+    "descriptionParams" : {
+      "agent" : "chris",
+      "summary" : "curl z",
+      "tool" : "Bash"
+    },
+    "id" : "I-2",
+    "raisedAt" : "2026-10-20T11:25:00Z"
+  } ],
+  "meeting" : null,
+  "objective" : "Ship the app",
+  "origin" : "REAL",
+  "outcome" : "Login shipped",
+  "permissions" : [ "ALLOW READ for any agent", "ALLOW EXECUTE 'mvn' for chris", "ALLOW Write for any agent", "ASK Bash for any agent", "ASK_ALWAYS WebFetch for any agent", "DENY Grep for any agent" ],
+  "questions" : [ {
+    "action" : "a4",
+    "answer" : "DENY",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T10:50:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "src\\App.java\nYour answer applies to this call only: you edited src\\App.java in the workshop.",
+    "contextCode" : "approvalEdited",
+    "contextParams" : {
+      "path" : "<masked>",
+      "summary" : "src\\App.java"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-1",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "Write"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Allow chris to use Write?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : "b1",
+    "answer" : "ALLOW",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T10:58:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "rm -rf build\nYour answer applies to this exact command from chris for the rest of this mission.",
+    "contextCode" : "approvalCommand",
+    "contextParams" : {
+      "agent" : "chris",
+      "summary" : "rm -rf build"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-2",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "Bash"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Allow chris to use Bash?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : "b3",
+    "answer" : "DENY",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:00:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "git push\nYour answer applies to this exact command from chris for the rest of this mission.",
+    "contextCode" : "approvalCommand",
+    "contextParams" : {
+      "agent" : "chris",
+      "summary" : "git push"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-3",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "Bash"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Allow chris to use Bash?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : "b4",
+    "answer" : "ALLOW",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:01:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "https://example.org\nYour answer applies to this call only (setting: ask every time).",
+    "contextCode" : "approvalAskAlways",
+    "contextParams" : {
+      "summary" : "https://example.org"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-4",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "WebFetch"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Allow chris to use WebFetch?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : "b5",
+    "answer" : "ALLOW",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:02:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "https://example.org\nYour answer applies to this call only (setting: ask every time).",
+    "contextCode" : "approvalAskAlways",
+    "contextParams" : {
+      "summary" : "https://example.org"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-5",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "WebFetch"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Allow chris to use WebFetch?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : "b8",
+    "answer" : null,
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:16:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "rm -rf build\nYour answer applies to this exact command from chris for the rest of this mission.",
+    "contextCode" : "approvalCommand",
+    "contextParams" : {
+      "agent" : "chris",
+      "summary" : "rm -rf build"
+    },
+    "criticality" : "MEDIUM",
+    "id" : "Q-6",
+    "kind" : "ACTION_APPROVAL",
+    "mission" : "M-1",
+    "options" : [ "ALLOW", "DENY" ],
+    "phraseCode" : "approval",
+    "phraseParams" : {
+      "agent" : "chris",
+      "tool" : "Bash"
+    },
+    "recommendation" : null,
+    "status" : "WITHDRAWN",
+    "subject" : "Allow chris to use Bash?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "en",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:31:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "fr or en",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-7",
+    "kind" : "OPEN",
+    "mission" : "M-1",
+    "options" : [ "fr", "en" ],
+    "phraseCode" : null,
+    "phraseParams" : null,
+    "recommendation" : "fr",
+    "status" : "ANSWERED",
+    "subject" : "Which locale?",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "cleaned up",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T11:34:00Z",
+    "askedBy" : "floor42",
+    "blocking" : false,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "2% left",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "LOW",
+    "id" : "Q-8",
+    "kind" : "OPEN",
+    "mission" : "M-1",
+    "options" : [ ],
+    "phraseCode" : "disk",
+    "phraseParams" : {
+      "left" : "2%"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Disk almost full",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Request another review",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T12:19:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "dehren: Cannot run the browser",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-9",
+    "kind" : "REVIEW_ESCALATION",
+    "mission" : "M-1",
+    "options" : [ "Accept as is", "Send back to work", "Request another review" ],
+    "phraseCode" : "reviewUnverifiable",
+    "phraseParams" : {
+      "findings" : "Cannot run the browser",
+      "reviewer" : "dehren",
+      "ticket" : "T-4"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Review of T-4 could not be verified",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Send back to work",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T12:21:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "dehren: Still cannot",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-10",
+    "kind" : "REVIEW_ESCALATION",
+    "mission" : "M-1",
+    "options" : [ "Accept as is", "Send back to work", "Request another review" ],
+    "phraseCode" : "reviewUnverifiable",
+    "phraseParams" : {
+      "findings" : "Still cannot",
+      "reviewer" : "dehren",
+      "ticket" : "T-4"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Review of T-4 could not be verified",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Accept as is",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T12:24:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "dehren: No browser",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-11",
+    "kind" : "REVIEW_ESCALATION",
+    "mission" : "M-1",
+    "options" : [ "Accept as is", "Send back to work", "Request another review" ],
+    "phraseCode" : "reviewUnverifiable",
+    "phraseParams" : {
+      "findings" : "No browser",
+      "reviewer" : "dehren",
+      "ticket" : "T-4"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Review of T-4 could not be verified",
+    "ticket" : "T-4",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Hire them",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:20:00Z",
+    "askedBy" : "geoffrey",
+    "blocking" : false,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "The planner advises it. Parallel sessions would go to 3. Estimated by Floor42: 2 days sooner",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-12",
+    "kind" : "STAFFING",
+    "mission" : "M-1",
+    "options" : [ "Hire them", "Not now" ],
+    "phraseCode" : "staffing",
+    "phraseParams" : {
+      "who" : "Lou (Backend developer), Max (UI developer)"
+    },
+    "recommendation" : "Hire them",
+    "status" : "ANSWERED",
+    "subject" : "Reinforce the team: hire Lou (Backend developer), Max (UI developer)?",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Not now",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:26:00Z",
+    "askedBy" : "geoffrey",
+    "blocking" : false,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "The planner advises against it. ",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-13",
+    "kind" : "STAFFING",
+    "mission" : "M-1",
+    "options" : [ "Not now", "Hire anyway" ],
+    "phraseCode" : "staffing",
+    "phraseParams" : {
+      "who" : "Lou (Backend developer)"
+    },
+    "recommendation" : "Not now",
+    "status" : "ANSWERED",
+    "subject" : "Reinforce the team: hire Lou (Backend developer)?",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Run anyway",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:28:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "5-hour window at 92% (measured by Claude Code); a session adds about 4% (estimated from earlier sessions, of claude-opus-5-5 when known; use outside Floor42 counts too). It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-14",
+    "kind" : "PLAN_LIMIT",
+    "mission" : "M-1",
+    "options" : [ "Wait for the reset", "Run anyway", "Stop here" ],
+    "phraseCode" : "planLimit",
+    "phraseParams" : {
+      "window" : "5-hour"
+    },
+    "recommendation" : "Wait for the reset",
+    "status" : "ANSWERED",
+    "subject" : "The 5-hour usage limit may cut the next session",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Wait for the reset",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:32:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "weekly window at 97% (measured by Claude Code); a session adds less than 1% (estimated from earlier sessions; readings are in whole percents; use outside Floor42 counts too). It resets at 2026-10-25T00:00:00Z. A session cut by the limit loses its work in progress.",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-15",
+    "kind" : "PLAN_LIMIT",
+    "mission" : "M-1",
+    "options" : [ "Wait for the reset", "Run anyway", "Stop here" ],
+    "phraseCode" : "planLimit",
+    "phraseParams" : {
+      "window" : "weekly"
+    },
+    "recommendation" : "Wait for the reset",
+    "status" : "ANSWERED",
+    "subject" : "The weekly usage limit may cut the next session",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Stop here",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:34:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "5-hour window at 99% (measured by Claude Code); how much one session adds is not known yet. It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-16",
+    "kind" : "PLAN_LIMIT",
+    "mission" : "M-1",
+    "options" : [ "Wait for the reset", "Run anyway", "Stop here" ],
+    "phraseCode" : "planLimit",
+    "phraseParams" : {
+      "window" : "5-hour"
+    },
+    "recommendation" : "Wait for the reset",
+    "status" : "ANSWERED",
+    "subject" : "The 5-hour usage limit may cut the next session",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Raise the budget by 50%",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:38:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "Estimated spending 2.4500 USD of a 1.5000 USD budget (estimates by the runtime). No new agent session starts until you raise it.",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-17",
+    "kind" : "BUDGET_REACHED",
+    "mission" : "M-1",
+    "options" : [ "Raise the budget by 50%", "Stop here" ],
+    "phraseCode" : "budget",
+    "phraseParams" : {
+      "budget" : "1.5000",
+      "mission" : "M-1",
+      "spent" : "2.4500"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Budget of M-1 reached",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Stop here",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T13:44:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "Estimated spending 2.4500 USD of a 2.0000 USD budget (estimates by the runtime). No new agent session starts until you raise it.",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-18",
+    "kind" : "BUDGET_REACHED",
+    "mission" : "M-1",
+    "options" : [ "Raise the budget by 50%", "Stop here" ],
+    "phraseCode" : "budget",
+    "phraseParams" : {
+      "budget" : "2.0000",
+      "mission" : "M-1",
+      "spent" : "2.4500"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Budget of M-1 reached",
+    "ticket" : null,
+    "writesAsked" : null,
+    "writesNow" : null
+  } ],
+  "retro" : {
+    "chair" : "geoffrey",
+    "concluded" : true,
+    "conclusions" : [ "Keep tests first" ],
+    "contributions" : [ {
+      "agent" : "chris",
+      "at" : "2026-10-20T14:26:00Z",
+      "skipped" : null,
+      "text" : "Good flow",
+      "wentBadly" : [ ],
+      "wentWell" : [ "Tests first" ]
+    }, {
+      "agent" : "dehren",
+      "at" : "2026-10-20T14:29:00Z",
+      "skipped" : "usage window",
+      "text" : null,
+      "wentBadly" : [ ],
+      "wentWell" : [ ]
+    }, {
+      "agent" : "geoffrey",
+      "at" : "2026-10-20T14:31:00Z",
+      "skipped" : null,
+      "text" : "Mostly fine",
+      "wentBadly" : [ "Budget surprises" ],
+      "wentWell" : [ "Plan held" ]
+    } ],
+    "facts" : "12 sessions, 2 rejections",
+    "lessons" : [ {
+      "audience" : "DEVELOPER",
+      "id" : "L-1",
+      "mission" : "M-1",
+      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedBy" : "geoffrey",
+      "reason" : "Obvious now",
+      "status" : "RETIRED",
+      "text" : "Write the test first"
+    }, {
+      "audience" : null,
+      "id" : "L-2",
+      "mission" : "M-1",
+      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedBy" : "geoffrey",
+      "reason" : null,
+      "status" : "ACCEPTED",
+      "text" : "Say what you did not verify"
+    }, {
+      "audience" : "REVIEWER",
+      "id" : "L-3",
+      "mission" : "M-1",
+      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedBy" : "geoffrey",
+      "reason" : "rejected by the director",
+      "status" : "REJECTED",
+      "text" : "Run the browser"
+    } ],
+    "participants" : [ "geoffrey", "chris", "dehren" ],
+    "pending" : [ ],
+    "reason" : null,
+    "text" : "We shipped",
+    "ticket" : "T-12"
+  },
+  "scorecard" : [ {
+    "basis" : "measured by Floor42",
+    "code" : "checks.timedOut",
+    "label" : "Checks",
+    "params" : {
+      "exit" : "null",
+      "runs" : "2"
+    },
+    "value" : "timed out · 2 run(s)"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Tickets done",
+    "params" : null,
+    "value" : "7 / 12"
+  }, {
+    "basis" : "reported by the reviewer agent",
+    "code" : null,
+    "label" : "Independent review",
+    "params" : null,
+    "value" : "T-4 unverifiable, T-5 validated with reservations, T-10 validated"
+  }, {
+    "basis" : "estimated by Claude Code",
+    "code" : "cost.usd",
+    "label" : "Cost",
+    "params" : {
+      "budget" : "",
+      "usd" : "2.4600"
+    },
+    "value" : "2.4600 USD"
+  }, {
+    "basis" : "provided by Claude Code",
+    "code" : "tokens",
+    "label" : "Tokens",
+    "params" : {
+      "in" : "54010",
+      "out" : "4620",
+      "sessions" : "7"
+    },
+    "value" : "54010 in · 4620 out · 7 session(s)"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Agent time",
+    "params" : null,
+    "value" : "5880.0 s"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : "governance",
+    "label" : "Governance",
+    "params" : {
+      "asked" : "6",
+      "calls" : "20",
+      "refused" : "9"
+    },
+    "value" : "20 tool calls · 6 asked you · 9 refused"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : "interventions",
+    "label" : "Your interventions",
+    "params" : {
+      "count" : "5"
+    },
+    "value" : "5 in the workshop"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Incidents",
+    "params" : null,
+    "value" : "2"
+  } ],
+  "sessions" : [ {
+    "agent" : "geoffrey",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.1,
+    "endedAt" : "2026-10-20T10:00:00Z",
+    "failed" : false,
+    "id" : "s-plan",
+    "inputTokensProvided" : 1000,
+    "model" : "claude-sonnet-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 200,
+    "startedAt" : "2026-10-20T09:59:00Z",
+    "ticket" : "T-1",
+    "turns" : 3
+  }, {
+    "agent" : "chris",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 1.25,
+    "endedAt" : "2026-10-20T11:43:00Z",
+    "failed" : false,
+    "id" : "s1",
+    "inputTokensProvided" : 50000,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 4000,
+    "startedAt" : "2026-10-20T10:27:00Z",
+    "ticket" : "T-4",
+    "turns" : 12
+  }, {
+    "agent" : "chris",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.75,
+    "endedAt" : "2026-10-20T11:48:00Z",
+    "failed" : true,
+    "id" : "s2",
+    "inputTokensProvided" : null,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "error_max_turns",
+    "outputTokensProvided" : null,
+    "startedAt" : "2026-10-20T11:46:00Z",
+    "ticket" : "T-4",
+    "turns" : 40
+  }, {
+    "agent" : "chris",
+    "costUsdBound" : null,
+    "costUsdEstimated" : null,
+    "endedAt" : "2026-10-20T11:56:00Z",
+    "failed" : false,
+    "id" : "s3",
+    "inputTokensProvided" : 2000,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 300,
+    "startedAt" : "2026-10-20T11:52:00Z",
+    "ticket" : "T-4",
+    "turns" : 5
+  }, {
+    "agent" : "dehren",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.3,
+    "endedAt" : "2026-10-20T12:15:00Z",
+    "failed" : false,
+    "id" : "s-rev",
+    "inputTokensProvided" : 900,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 100,
+    "startedAt" : "2026-10-20T12:03:00Z",
+    "ticket" : "T-4",
+    "turns" : 4
+  }, {
+    "agent" : "ken",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.05,
+    "endedAt" : "2026-10-20T12:32:00Z",
+    "failed" : false,
+    "id" : "s-ken",
+    "inputTokensProvided" : 100,
+    "model" : "claude-haiku-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 10,
+    "startedAt" : "2026-10-20T12:30:00Z",
+    "ticket" : "T-2",
+    "turns" : 2
+  }, {
+    "agent" : "chris",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.01,
+    "endedAt" : "2026-10-20T14:24:00Z",
+    "failed" : false,
+    "id" : "s-retro",
+    "inputTokensProvided" : 10,
+    "model" : "claude-haiku-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 10,
+    "startedAt" : "2026-10-20T14:23:00Z",
+    "ticket" : "T-12",
+    "turns" : 1
+  } ],
+  "sessionsBounded" : 0,
+  "spentUsdBound" : null,
+  "spentUsdEstimated" : 2.46,
+  "staffingReview" : null,
+  "status" : "COMPLETED",
+  "tickets" : [ {
+    "acceptanceCriteria" : [ "A plan" ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T09:26:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T10:05:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-1",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T09:58:00Z",
+    "status" : "DONE",
+    "title" : "Plan the work",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Builds" ],
+    "assignee" : "chris",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T09:27:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ "T-1" ],
+    "description" : "Build it",
+    "directives" : [ "Use Gradle" ],
+    "endedAt" : "2026-10-20T13:58:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-2",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "HIGH",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T12:29:00Z",
+    "status" : "CANCELLED",
+    "title" : "Build",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ ],
+    "assignee" : "ken",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T09:51:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:59:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-3",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "LOW",
+    "reviews" : [ ],
+    "startedAt" : null,
+    "status" : "CANCELLED",
+    "title" : "Tests",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Logs in" ],
+    "assignee" : "chris",
+    "consultations" : [ {
+      "answer" : "Check the audience too",
+      "answeredBy" : "geoffrey",
+      "kind" : "CONSULT",
+      "question" : "Is the token check enough?",
+      "reviewer" : "dehren",
+      "role" : "security",
+      "round" : 0
+    }, {
+      "answer" : "Research is not allowed on this mission",
+      "answeredBy" : null,
+      "kind" : "RESEARCH",
+      "question" : "RFC 7519 audience?",
+      "reviewer" : "dehren",
+      "role" : null,
+      "round" : 1
+    } ],
+    "createdAt" : "2026-10-20T10:05:00Z",
+    "deliverable" : "Third try",
+    "dependsOn" : [ ],
+    "description" : "The login page",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T12:25:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-4",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ {
+      "findings" : "No audience check",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "REJECTED"
+    }, {
+      "findings" : "Cannot run the browser",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "findings" : "Still cannot",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "findings" : "No browser",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    } ],
+    "startedAt" : "2026-10-20T10:23:00Z",
+    "status" : "DONE",
+    "title" : "Login",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ ],
+    "assignee" : "chris",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T10:05:00Z",
+    "deliverable" : "Logout",
+    "dependsOn" : [ "T-4" ],
+    "description" : "",
+    "directives" : [ "Add the expiry test" ],
+    "endedAt" : "2026-10-20T14:00:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-5",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ {
+      "findings" : "Fine, no test for expiry",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED_WITH_RESERVATIONS"
+    } ],
+    "startedAt" : "2026-10-20T12:26:00Z",
+    "status" : "CANCELLED",
+    "title" : "Logout",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Shows it" ],
+    "assignee" : "chris",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T10:05:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ "T-4", "T-5" ],
+    "description" : "Show the profile",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T10:12:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-6",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : null,
+    "status" : "CANCELLED",
+    "title" : "Profile page",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:16:00Z",
+    "deliverable" : "Two more developers",
+    "dependsOn" : [ ],
+    "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:20:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-7",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T13:16:00Z",
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:23:00Z",
+    "deliverable" : "No measure yet",
+    "dependsOn" : [ ],
+    "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:24:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-8",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T13:23:00Z",
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:25:00Z",
+    "deliverable" : "Not worth it",
+    "dependsOn" : [ ],
+    "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:26:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-9",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T13:25:00Z",
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Done as the note asks: Make the board faster\nIt lags on big missions" ],
+    "assignee" : "chris",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:47:00Z",
+    "deliverable" : "Faster board",
+    "dependsOn" : [ ],
+    "description" : "Make the board faster\nIt lags on big missions\n\nFrom the director's note N-1.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:54:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-10",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ {
+      "findings" : "Fast",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED"
+    } ],
+    "startedAt" : "2026-10-20T13:52:00Z",
+    "status" : "DONE",
+    "title" : "Make the board faster",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Done as the note asks: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ],
+    "assignee" : null,
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:49:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nFrom the director's note N-3.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T14:01:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-11",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : null,
+    "status" : "CANCELLED",
+    "title" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Every participant speaks from the facts of the journal", "The chair proposes lessons; only the director makes them binding" ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : null,
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "What went well, what did not, and what to do better next time.",
+    "directives" : [ ],
+    "endedAt" : null,
+    "environmentBlocker" : null,
+    "id" : "T-12",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : null,
+    "status" : "DONE",
+    "title" : "Retrospective",
+    "toRecheck" : false,
+    "waitingFor" : null
+  } ],
+  "title" : "App",
+  "workflow" : {
+    "follows" : null,
+    "pinned" : true,
+    "refusal" : null,
+    "schemaVersion" : null,
+    "workflow" : {
+      "mode" : "loop",
+      "name" : "built-in",
+      "steps" : [ {
+        "check" : null,
+        "maxTickets" : 8,
+        "step" : "plan",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "approval",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "committee",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "produce",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "review",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "accept",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "retro",
+        "task" : null
+      } ]
+    }
+  },
+  "workspace" : "C:/repo/app"
+}
+== GET /api/missions/M-2 -> 200
+{
+  "actions" : [ {
+    "agent" : "chris",
+    "authorizedByOffice" : false,
+    "category" : "READ",
+    "decisionBasis" : "no rule allows it (default deny)",
+    "decisionBasisCode" : "defaultDeny",
+    "decisionBasisParams" : { },
+    "denialReason" : "POLICY",
+    "id" : "c1",
+    "ran" : false,
+    "requestedAt" : "2026-10-20T15:36:00Z",
+    "result" : null,
+    "runningSeconds" : null,
+    "stage" : "DENIED",
+    "summary" : "kong.yml",
+    "ticket" : "T-14",
+    "tool" : "Read",
+    "updatedAt" : "2026-10-20T15:36:00Z"
+  } ],
+  "archived" : false,
+  "budgetUsd" : null,
+  "capDecided" : true,
+  "checkCommand" : null,
+  "checkRuns" : [ ],
+  "checksAutomatic" : false,
+  "closedAt" : "2026-10-20T15:38:00Z",
+  "committee" : {
+    "agreement" : null,
+    "analyst" : null,
+    "clarificationNote" : "I settled the vendor myself",
+    "clarifications" : 2,
+    "constraints" : [ "The director answered \"Which SLA?\": 99.9", "The director answered \"Which region?\": EU only", "Must run on-premises" ],
+    "contributions" : [ {
+      "at" : "2026-10-20T15:03:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "ANALYSIS",
+      "member" : "geoffrey",
+      "position" : "NEW",
+      "proposal" : "Gateway",
+      "questions" : [ "Which SLA?", "Which budget?" ],
+      "role" : "Architect",
+      "round" : 1,
+      "text" : "Gateway"
+    }, {
+      "at" : "2026-10-20T15:04:00Z",
+      "byDirector" : false,
+      "criticalObjection" : "Tokens are not checked per API",
+      "kind" : "ANALYSIS",
+      "member" : "dehren",
+      "position" : "NEW",
+      "proposal" : "Gateway with mTLS",
+      "questions" : [ ],
+      "role" : "Security",
+      "round" : 1,
+      "text" : "mTLS"
+    }, {
+      "at" : "2026-10-20T15:06:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "ANALYSIS",
+      "member" : "chris",
+      "position" : "NEW",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Developer",
+      "round" : 1,
+      "text" : "Fine"
+    }, {
+      "at" : "2026-10-20T15:08:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "geoffrey",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Architect",
+      "round" : 2,
+      "text" : "Still a gateway"
+    }, {
+      "at" : "2026-10-20T15:09:00Z",
+      "byDirector" : false,
+      "criticalObjection" : "Tokens still not checked",
+      "kind" : "REBUTTAL",
+      "member" : "dehren",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway with mTLS",
+      "questions" : [ ],
+      "role" : "Security",
+      "round" : 2,
+      "text" : "Still"
+    }, {
+      "at" : "2026-10-20T15:10:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "chris",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Developer",
+      "round" : 2,
+      "text" : "Ok"
+    }, {
+      "at" : "2026-10-20T15:11:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "SYNTHESIS",
+      "member" : "geoffrey",
+      "position" : null,
+      "proposal" : "Adopt a gateway",
+      "questions" : [ ],
+      "role" : "Architect",
+      "round" : 2,
+      "text" : "# Record"
+    }, {
+      "at" : "2026-10-20T15:17:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "geoffrey",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ "Which vendor?" ],
+      "role" : "Architect",
+      "round" : 3,
+      "text" : "With 99.9"
+    }, {
+      "at" : "2026-10-20T15:18:00Z",
+      "byDirector" : false,
+      "criticalObjection" : "Tokens still not checked",
+      "kind" : "REBUTTAL",
+      "member" : "dehren",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway with mTLS",
+      "questions" : [ ],
+      "role" : "Security",
+      "round" : 3,
+      "text" : "Still"
+    }, {
+      "at" : "2026-10-20T15:19:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "chris",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Developer",
+      "round" : 3,
+      "text" : "Ok"
+    }, {
+      "at" : "2026-10-20T15:20:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "SYNTHESIS",
+      "member" : "geoffrey",
+      "position" : null,
+      "proposal" : null,
+      "questions" : [ ],
+      "role" : "Architect",
+      "round" : 3,
+      "text" : "# Record 2"
+    }, {
+      "at" : "2026-10-20T15:24:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "geoffrey",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Architect",
+      "round" : 4,
+      "text" : "On-prem gateway"
+    }, {
+      "at" : "2026-10-20T15:25:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "dehren",
+      "position" : "ADOPTED geoffrey",
+      "proposal" : "Gateway with mTLS",
+      "questions" : [ ],
+      "role" : "Security",
+      "round" : 4,
+      "text" : "Fine with mTLS"
+    }, {
+      "at" : "2026-10-20T15:26:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "REBUTTAL",
+      "member" : "chris",
+      "position" : "MAINTAINED",
+      "proposal" : "Gateway",
+      "questions" : [ ],
+      "role" : "Developer",
+      "round" : 4,
+      "text" : "Ok"
+    }, {
+      "at" : "2026-10-20T15:27:00Z",
+      "byDirector" : false,
+      "criticalObjection" : null,
+      "kind" : "SYNTHESIS",
+      "member" : "geoffrey",
+      "position" : null,
+      "proposal" : "On-prem gateway",
+      "questions" : [ ],
+      "role" : "Architect",
+      "round" : 4,
+      "text" : "# Record 3"
+    } ],
+    "debateRounds" : 0,
+    "directorSeat" : null,
+    "implement" : true,
+    "maxDebateRounds" : 1,
+    "members" : [ {
+      "agent" : "geoffrey",
+      "chair" : true,
+      "pending" : false,
+      "role" : "Architect"
+    }, {
+      "agent" : "dehren",
+      "chair" : false,
+      "pending" : false,
+      "role" : "Security"
+    }, {
+      "agent" : "chris",
+      "chair" : false,
+      "pending" : false,
+      "role" : "Developer"
+    } ],
+    "moderated" : false,
+    "number" : 1,
+    "panel" : "architecture",
+    "round" : 4,
+    "stage" : "ADOPTED",
+    "standingCriticalObjections" : [ ],
+    "ticket" : "T-13",
+    "topic" : "Gateway?"
+  },
+  "committees" : [ {
+    "implement" : true,
+    "number" : 1,
+    "recommendation" : "On-prem gateway",
+    "stage" : "ADOPTED",
+    "ticket" : "T-13",
+    "topic" : "Gateway?"
+  } ],
+  "delivery" : null,
+  "id" : "M-2",
+  "incidents" : [ ],
+  "meeting" : null,
+  "objective" : "Put a gateway in front of the APIs?",
+  "origin" : "REAL",
+  "outcome" : "Bought a product instead",
+  "permissions" : [ ],
+  "questions" : [ {
+    "action" : null,
+    "answer" : "99.9",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedBy" : "ana",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "Uptime",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-19",
+    "kind" : "CLARIFICATION",
+    "mission" : "M-2",
+    "options" : [ "99.9", "99.99" ],
+    "phraseCode" : null,
+    "phraseParams" : null,
+    "recommendation" : "99.99",
+    "status" : "ANSWERED",
+    "subject" : "Which SLA?",
+    "ticket" : "T-13",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : null,
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedBy" : "ana",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : null,
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-20",
+    "kind" : "CLARIFICATION",
+    "mission" : "M-2",
+    "options" : [ ],
+    "phraseCode" : null,
+    "phraseParams" : null,
+    "recommendation" : "Small",
+    "status" : "WITHDRAWN",
+    "subject" : "Which budget?",
+    "ticket" : "T-13",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "EU only",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedBy" : "ana",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : null,
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-21",
+    "kind" : "CLARIFICATION",
+    "mission" : "M-2",
+    "options" : [ ],
+    "phraseCode" : null,
+    "phraseParams" : null,
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Which region?",
+    "ticket" : "T-13",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : null,
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:21:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "Recommendation: (not stated: read the record)\nCritical objections still standing (a majority cannot remove them):\n- dehren (Security): Tokens still not checked",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-22",
+    "kind" : "COMMITTEE_ARBITRATION",
+    "mission" : "M-2",
+    "options" : [ "Adopt despite the critical objection", "Adopt and implement (writes ask you first) despite the critical objection", "Reject" ],
+    "phraseCode" : "committee",
+    "phraseParams" : {
+      "topic" : "Gateway?"
+    },
+    "recommendation" : null,
+    "status" : "WITHDRAWN",
+    "subject" : "Committee decision: Gateway?",
+    "ticket" : "T-13",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : "Adopt and implement (writes ask you first)",
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:27:00Z",
+    "askedBy" : "floor42",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : "Recommendation: On-prem gateway",
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "MEDIUM",
+    "id" : "Q-23",
+    "kind" : "COMMITTEE_ARBITRATION",
+    "mission" : "M-2",
+    "options" : [ "Adopt", "Adopt and implement (writes ask you first)", "Reject" ],
+    "phraseCode" : "committee",
+    "phraseParams" : {
+      "topic" : "Gateway?"
+    },
+    "recommendation" : null,
+    "status" : "ANSWERED",
+    "subject" : "Committee decision: Gateway?",
+    "ticket" : "T-13",
+    "writesAsked" : null,
+    "writesNow" : null
+  }, {
+    "action" : null,
+    "answer" : null,
+    "askAgain" : [ ],
+    "askBack" : {
+      "possible" : false,
+      "rounds" : 0,
+      "text" : null
+    },
+    "askedAt" : "2026-10-20T15:34:00Z",
+    "askedBy" : "chris",
+    "blocking" : true,
+    "causeBy" : null,
+    "causeCode" : null,
+    "causeParams" : null,
+    "context" : null,
+    "contextCode" : null,
+    "contextParams" : null,
+    "criticality" : "HIGH",
+    "id" : "Q-24",
+    "kind" : "OPEN",
+    "mission" : "M-2",
+    "options" : [ ],
+    "phraseCode" : null,
+    "phraseParams" : null,
+    "recommendation" : null,
+    "status" : "WITHDRAWN",
+    "subject" : "Kong or Envoy?",
+    "ticket" : "T-14",
+    "writesAsked" : null,
+    "writesNow" : null
+  } ],
+  "retro" : null,
+  "scorecard" : [ {
+    "basis" : "unavailable",
+    "code" : "checks.none",
+    "label" : "Checks",
+    "params" : { },
+    "value" : "none configured"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Tickets done",
+    "params" : null,
+    "value" : "1 / 2"
+  }, {
+    "basis" : "unavailable",
+    "code" : "review.none",
+    "label" : "Independent review",
+    "params" : { },
+    "value" : "none yet"
+  }, {
+    "basis" : "measured by Floor42; contents reported by the member agents",
+    "code" : "committee",
+    "label" : "Committee",
+    "params" : {
+      "contributions" : "15",
+      "members" : "3",
+      "objections" : "0",
+      "stage" : "adopted"
+    },
+    "value" : "adopted · 3 members · 15 contributions · 0 critical objection(s) standing"
+  }, {
+    "basis" : "estimated by Claude Code",
+    "code" : "cost.usd",
+    "label" : "Cost",
+    "params" : {
+      "budget" : "",
+      "usd" : "0.0400"
+    },
+    "value" : "0.0400 USD"
+  }, {
+    "basis" : "provided by Claude Code",
+    "code" : "tokens",
+    "label" : "Tokens",
+    "params" : {
+      "in" : "20",
+      "out" : "20",
+      "sessions" : "2"
+    },
+    "value" : "20 in · 20 out · 2 session(s)"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Agent time",
+    "params" : null,
+    "value" : "120.0 s"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : "governance",
+    "label" : "Governance",
+    "params" : {
+      "asked" : "0",
+      "calls" : "1",
+      "refused" : "1"
+    },
+    "value" : "1 tool calls · 0 asked you · 1 refused"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : "interventions",
+    "label" : "Your interventions",
+    "params" : {
+      "count" : "1"
+    },
+    "value" : "1 in the workshop"
+  }, {
+    "basis" : "measured by Floor42",
+    "code" : null,
+    "label" : "Incidents",
+    "params" : null,
+    "value" : "0"
+  } ],
+  "sessions" : [ {
+    "agent" : "dehren",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.02,
+    "endedAt" : "2026-10-20T14:58:00Z",
+    "failed" : false,
+    "id" : "s-c1",
+    "inputTokensProvided" : 10,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 10,
+    "startedAt" : "2026-10-20T14:57:00Z",
+    "ticket" : "T-13",
+    "turns" : 2
+  }, {
+    "agent" : "geoffrey",
+    "costUsdBound" : null,
+    "costUsdEstimated" : 0.02,
+    "endedAt" : "2026-10-20T15:00:00Z",
+    "failed" : false,
+    "id" : "s-c2",
+    "inputTokensProvided" : 10,
+    "model" : "claude-opus-5-5",
+    "open" : false,
+    "outcome" : "completed",
+    "outputTokensProvided" : 10,
+    "startedAt" : "2026-10-20T14:59:00Z",
+    "ticket" : "T-13",
+    "turns" : 2
+  } ],
+  "sessionsBounded" : 0,
+  "spentUsdBound" : null,
+  "spentUsdEstimated" : 0.04,
+  "staffingReview" : null,
+  "status" : "CANCELLED",
+  "tickets" : [ {
+    "acceptanceCriteria" : [ ],
+    "assignee" : "geoffrey",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T14:46:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T15:28:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-13",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T14:56:00Z",
+    "status" : "DONE",
+    "title" : "Decide: gateway",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ ],
+    "assignee" : "chris",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T15:30:00Z",
+    "deliverable" : null,
+    "dependsOn" : [ ],
+    "description" : "",
+    "directives" : [ "Use Kong" ],
+    "endedAt" : "2026-10-20T15:38:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-14",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T15:35:00Z",
+    "status" : "CANCELLED",
+    "title" : "Implement the gateway",
+    "toRecheck" : false,
+    "waitingFor" : null
+  } ],
+  "title" : "Gateway?",
+  "workflow" : {
+    "follows" : null,
+    "pinned" : true,
+    "refusal" : null,
+    "schemaVersion" : null,
+    "workflow" : {
+      "mode" : "loop",
+      "name" : "built-in",
+      "steps" : [ {
+        "check" : null,
+        "maxTickets" : 8,
+        "step" : "plan",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "approval",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "committee",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "produce",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "review",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "accept",
+        "task" : null
+      }, {
+        "check" : null,
+        "maxTickets" : null,
+        "step" : "retro",
+        "task" : null
+      } ]
+    }
+  },
+  "workspace" : "C:/repo/api"
+}
+== GET /api/agents -> 200
+[ {
+  "atWork" : false,
+  "core" : false,
+  "effort" : "medium",
+  "id" : "geoffrey",
+  "model" : "claude-sonnet-5-5",
+  "name" : "Geoffrey",
+  "provider" : "anthropic",
+  "role" : "Planner",
+  "status" : "ASSIGNED",
+  "stays" : true,
+  "suspended" : false,
+  "workRole" : "PLANNER"
+}, {
+  "atWork" : true,
+  "core" : false,
+  "effort" : "xhigh",
+  "id" : "chris",
+  "model" : "claude-opus-5-5",
+  "name" : "Chris",
+  "provider" : "anthropic",
+  "role" : "Developer",
+  "status" : "WORKING",
+  "stays" : false,
+  "suspended" : false,
+  "workRole" : "DEVELOPER"
+}, {
+  "atWork" : false,
+  "core" : true,
+  "effort" : null,
+  "id" : "dehren",
+  "model" : "claude-opus-5-5",
+  "name" : "Dehren",
+  "provider" : "anthropic",
+  "role" : "Reviewer",
+  "status" : "AVAILABLE",
+  "stays" : false,
+  "suspended" : false,
+  "workRole" : "REVIEWER"
+}, {
+  "atWork" : false,
+  "core" : false,
+  "effort" : "medium",
+  "id" : "ana",
+  "model" : "claude-sonnet-5-5",
+  "name" : "Ana",
+  "provider" : "anthropic",
+  "role" : "Analyst",
+  "status" : "AVAILABLE",
+  "stays" : false,
+  "suspended" : false,
+  "workRole" : "ANALYST"
+}, {
+  "atWork" : false,
+  "core" : false,
+  "effort" : "medium",
+  "id" : "rita",
+  "model" : "claude-sonnet-5-5",
+  "name" : "Rita",
+  "provider" : "anthropic",
+  "role" : "Researcher",
+  "status" : "AVAILABLE",
+  "stays" : false,
+  "suspended" : false,
+  "workRole" : "RESEARCHER"
+} ]
+== GET /api/agents/ana/profile -> 200
+{
+  "duties" : [ ],
+  "effort" : "medium",
+  "facts" : [ {
+    "basis" : "journal, real missions",
+    "code" : "none",
+    "kind" : "INFO",
+    "params" : { },
+    "text" : "No real session yet: nothing measured"
+  } ],
+  "focus" : null,
+  "id" : "ana",
+  "model" : "claude-sonnet-5-5",
+  "modelTrait" : "Balance of capability, speed and cost; the usual choice for coding work",
+  "name" : "Ana",
+  "provider" : "anthropic",
+  "record" : {
+    "actions" : { },
+    "consultationsAnswered" : 0,
+    "costUsdEstimated" : null,
+    "denials" : { },
+    "failedSessions" : 0,
+    "inputTokensProvided" : 0,
+    "missions" : 0,
+    "outputTokensProvided" : 0,
+    "sessions" : 0,
+    "ticketsAssigned" : 0,
+    "ticketsDone" : 0,
+    "verdictsGiven" : { },
+    "verdictsReceived" : { },
+    "workMs" : 0
+  },
+  "role" : "Analyst",
+  "skills" : [ ],
+  "status" : "AVAILABLE",
+  "suspended" : false,
+  "tickets" : [ ]
+}
+== GET /api/agents/chris/profile -> 200
+{
+  "duties" : [ "Works approved tickets, one at a time, in its own git worktree", "Sits on committees (read only)" ],
+  "effort" : "xhigh",
+  "facts" : [ {
+    "basis" : "journal, real missions",
+    "code" : "rejected",
+    "kind" : "WATCH",
+    "params" : {
+      "rejected" : "1",
+      "total" : "4"
+    },
+    "text" : "1 of 4 review(s) of its work rejected"
+  }, {
+    "basis" : "journal, real missions",
+    "code" : "outside",
+    "kind" : "WATCH",
+    "params" : {
+      "count" : "1"
+    },
+    "text" : "1 attempt(s) to reach files outside its worktree, blocked by Floor42"
+  }, {
+    "basis" : "journal, real missions",
+    "code" : "failed",
+    "kind" : "WATCH",
+    "params" : {
+      "failed" : "1",
+      "sessions" : "5"
+    },
+    "text" : "1 of 5 session(s) failed"
+  }, {
+    "basis" : "estimated by Claude Code",
+    "code" : "cost",
+    "kind" : "INFO",
+    "params" : {
+      "per" : "0.402",
+      "sessions" : "5",
+      "total" : "2.0100"
+    },
+    "text" : "About 0.402 USD per session (2.0100 USD over 5)"
+  } ],
+  "focus" : "What the code really does today, effort and risk of the change, testability, migration path; on a new project, what it takes to build and maintain.",
+  "id" : "chris",
+  "model" : "claude-opus-5-5",
+  "modelTrait" : "Most capable for long, hard reasoning; the most expensive per session",
+  "name" : "Chris",
+  "provider" : "anthropic",
+  "record" : {
+    "actions" : {
+      "CONFIRMED" : 1,
+      "DENIED" : 10,
+      "EXECUTED" : 2,
+      "FAILED" : 8
+    },
+    "consultationsAnswered" : 0,
+    "costUsdEstimated" : 2.01,
+    "denials" : {
+      "BLOCKED_UPSTREAM" : 2,
+      "DIRECTOR" : 3,
+      "MISSION_NOT_ACTIVE" : 1,
+      "OUTSIDE_WORKSPACE" : 1,
+      "POLICY" : 3
+    },
+    "failedSessions" : 1,
+    "inputTokensProvided" : 52010,
+    "missions" : 4,
+    "outputTokensProvided" : 4310,
+    "sessions" : 5,
+    "ticketsAssigned" : 8,
+    "ticketsDone" : 3,
+    "verdictsGiven" : { },
+    "verdictsReceived" : {
+      "REJECTED" : 1,
+      "UNVERIFIABLE" : 3,
+      "VALIDATED" : 1,
+      "VALIDATED_WITH_RESERVATIONS" : 2
+    },
+    "workMs" : 4980000
+  },
+  "role" : "Developer",
+  "skills" : [ ],
+  "status" : "WORKING",
+  "suspended" : false,
+  "tickets" : [ {
+    "lastVerdict" : "VALIDATED_WITH_RESERVATIONS",
+    "mission" : "M-8",
+    "status" : "DONE",
+    "ticket" : "T-21",
+    "title" : "Write the guide",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-6",
+    "status" : "IN_PROGRESS",
+    "ticket" : "T-19",
+    "title" : "Write the release notes",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-2",
+    "status" : "CANCELLED",
+    "ticket" : "T-14",
+    "title" : "Implement the gateway",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : "VALIDATED",
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-10",
+    "title" : "Make the board faster",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "CANCELLED",
+    "ticket" : "T-6",
+    "title" : "Profile page",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : "VALIDATED_WITH_RESERVATIONS",
+    "mission" : "M-1",
+    "status" : "CANCELLED",
+    "ticket" : "T-5",
+    "title" : "Logout",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : "UNVERIFIABLE",
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-4",
+    "title" : "Login",
+    "workMs" : 4920000
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "CANCELLED",
+    "ticket" : "T-2",
+    "title" : "Build",
+    "workMs" : 0
+  } ]
+}
+== GET /api/agents/dehren/profile -> 200
+{
+  "duties" : [ "Reviews deliverables it did not produce, reading only; may consult a colleague or ask for web research" ],
+  "effort" : null,
+  "facts" : [ {
+    "basis" : "journal, real missions",
+    "code" : "reviewed",
+    "kind" : "INFO",
+    "params" : {
+      "given" : "7",
+      "rejected" : "1"
+    },
+    "text" : "Reviewed 7 deliverable(s), rejected 1"
+  }, {
+    "basis" : "estimated by Claude Code",
+    "code" : "cost",
+    "kind" : "INFO",
+    "params" : {
+      "per" : "0.160",
+      "sessions" : "2",
+      "total" : "0.3200"
+    },
+    "text" : "About 0.160 USD per session (0.3200 USD over 2)"
+  } ],
+  "focus" : null,
+  "id" : "dehren",
+  "model" : "claude-opus-5-5",
+  "modelTrait" : "Most capable for long, hard reasoning; the most expensive per session",
+  "name" : "Dehren",
+  "provider" : "anthropic",
+  "record" : {
+    "actions" : { },
+    "consultationsAnswered" : 0,
+    "costUsdEstimated" : 0.32,
+    "denials" : { },
+    "failedSessions" : 0,
+    "inputTokensProvided" : 910,
+    "missions" : 2,
+    "outputTokensProvided" : 110,
+    "sessions" : 2,
+    "ticketsAssigned" : 0,
+    "ticketsDone" : 0,
+    "verdictsGiven" : {
+      "REJECTED" : 1,
+      "UNVERIFIABLE" : 3,
+      "VALIDATED" : 1,
+      "VALIDATED_WITH_RESERVATIONS" : 2
+    },
+    "verdictsReceived" : { },
+    "workMs" : 780000
+  },
+  "role" : "Reviewer",
+  "skills" : [ ],
+  "status" : "AVAILABLE",
+  "suspended" : false,
+  "tickets" : [ ]
+}
+== GET /api/agents/geoffrey/profile -> 200
+{
+  "duties" : [ "Plans a mission into tickets you approve (one read-only session)", "Sits on committees (read only)" ],
+  "effort" : "medium",
+  "facts" : [ {
+    "basis" : "estimated by Claude Code",
+    "code" : "cost",
+    "kind" : "INFO",
+    "params" : {
+      "per" : "0.060",
+      "sessions" : "2",
+      "total" : "0.1200"
+    },
+    "text" : "About 0.060 USD per session (0.1200 USD over 2)"
+  } ],
+  "focus" : "Structure, boundaries and coupling, fitness for the stated objective, cost of change, simplicity; on a new project, the global architecture as a whole.",
+  "id" : "geoffrey",
+  "model" : "claude-sonnet-5-5",
+  "modelTrait" : "Balance of capability, speed and cost; the usual choice for coding work",
+  "name" : "Geoffrey",
+  "provider" : "anthropic",
+  "record" : {
+    "actions" : { },
+    "consultationsAnswered" : 1,
+    "costUsdEstimated" : 0.12,
+    "denials" : { },
+    "failedSessions" : 0,
+    "inputTokensProvided" : 1010,
+    "missions" : 4,
+    "outputTokensProvided" : 210,
+    "sessions" : 2,
+    "ticketsAssigned" : 8,
+    "ticketsDone" : 6,
+    "verdictsGiven" : { },
+    "verdictsReceived" : { },
+    "workMs" : 120000
+  },
+  "role" : "Planner",
+  "skills" : [ ],
+  "status" : "ASSIGNED",
+  "suspended" : false,
+  "tickets" : [ {
+    "lastVerdict" : null,
+    "mission" : "M-7",
+    "status" : "TODO",
+    "ticket" : "T-20",
+    "title" : "Plan: Pinned",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-3",
+    "status" : "CANCELLED",
+    "ticket" : "T-15",
+    "title" : "Decide: idea",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-2",
+    "status" : "DONE",
+    "ticket" : "T-13",
+    "title" : "Decide: gateway",
+    "workMs" : 60000
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-12",
+    "title" : "Retrospective",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-9",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-8",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-7",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : 0
+  }, {
+    "lastVerdict" : null,
+    "mission" : "M-1",
+    "status" : "DONE",
+    "ticket" : "T-1",
+    "title" : "Plan the work",
+    "workMs" : 60000
+  } ]
+}
+== GET /api/agents/rita/profile -> 200
+{
+  "duties" : [ "Researches the web for a reviewer, without access to the repository" ],
+  "effort" : "medium",
+  "facts" : [ {
+    "basis" : "journal, real missions",
+    "code" : "none",
+    "kind" : "INFO",
+    "params" : { },
+    "text" : "No real session yet: nothing measured"
+  } ],
+  "focus" : null,
+  "id" : "rita",
+  "model" : "claude-sonnet-5-5",
+  "modelTrait" : "Balance of capability, speed and cost; the usual choice for coding work",
+  "name" : "Rita",
+  "provider" : "anthropic",
+  "record" : {
+    "actions" : { },
+    "consultationsAnswered" : 0,
+    "costUsdEstimated" : null,
+    "denials" : { },
+    "failedSessions" : 0,
+    "inputTokensProvided" : 0,
+    "missions" : 0,
+    "outputTokensProvided" : 0,
+    "sessions" : 0,
+    "ticketsAssigned" : 0,
+    "ticketsDone" : 0,
+    "verdictsGiven" : { },
+    "verdictsReceived" : { },
+    "workMs" : 0
+  },
+  "role" : "Researcher",
+  "skills" : [ ],
+  "status" : "AVAILABLE",
+  "suspended" : false,
+  "tickets" : [ ]
+}
+== GET /api/questions -> 200
+[ ]
+== GET /api/progress -> 200
+[ {
+  "forYou" : [ ],
+  "mission" : "M-5",
+  "running" : [ ],
+  "stall" : {
+    "agent" : null,
+    "elsewhere" : null,
+    "reason" : "NOT_DISPATCHED",
+    "since" : null,
+    "state" : "IDLE",
+    "ticket" : null,
+    "until" : null,
+    "work" : null
+  },
+  "status" : "PLANNING",
+  "stuck" : [ ],
+  "ticketsAll" : 0,
+  "ticketsDone" : 0,
+  "title" : "Again"
+}, {
+  "forYou" : [ ],
+  "mission" : "M-6",
+  "running" : [ {
+    "agent" : "chris",
+    "count" : null,
+    "deadline" : null,
+    "kind" : "SILENT",
+    "question" : null,
+    "runningSeconds" : null,
+    "since" : "2026-10-20T18:12:00Z",
+    "status" : null,
+    "text" : null,
+    "ticket" : "T-19"
+  } ],
+  "stall" : {
+    "agent" : "chris",
+    "elsewhere" : null,
+    "reason" : "WOULD_START",
+    "since" : "<masked>",
+    "state" : "DUE",
+    "ticket" : "T-19",
+    "until" : null,
+    "work" : "PRODUCE"
+  },
+  "status" : "IN_PROGRESS",
+  "stuck" : [ {
+    "agent" : "chris",
+    "count" : null,
+    "deadline" : null,
+    "kind" : "SESSION_RISK",
+    "question" : null,
+    "runningSeconds" : null,
+    "since" : "2026-10-20T18:26:00Z",
+    "status" : "ALERT",
+    "text" : "OUTSIDE_WORKSPACE",
+    "ticket" : "T-19"
+  } ],
+  "ticketsAll" : 1,
+  "ticketsDone" : 0,
+  "title" : "Release"
+}, {
+  "forYou" : [ ],
+  "mission" : "M-7",
+  "running" : [ ],
+  "stall" : {
+    "agent" : null,
+    "elsewhere" : null,
+    "reason" : "NOT_DISPATCHED",
+    "since" : null,
+    "state" : "IDLE",
+    "ticket" : null,
+    "until" : null,
+    "work" : null
+  },
+  "status" : "PLANNING",
+  "stuck" : [ ],
+  "ticketsAll" : 1,
+  "ticketsDone" : 0,
+  "title" : "Pinned"
+}, {
+  "forYou" : [ ],
+  "mission" : "M-9",
+  "running" : [ ],
+  "stall" : {
+    "agent" : "rita",
+    "elsewhere" : null,
+    "reason" : "WOULD_START",
+    "since" : "<masked>",
+    "state" : "DUE",
+    "ticket" : "T-22",
+    "until" : null,
+    "work" : "TASK"
+  },
+  "status" : "IN_PROGRESS",
+  "stuck" : [ ],
+  "ticketsAll" : 1,
+  "ticketsDone" : 0,
+  "title" : "Research"
+}, {
+  "forYou" : [ ],
+  "mission" : "M-10",
+  "running" : [ ],
+  "stall" : {
+    "agent" : null,
+    "elsewhere" : null,
+    "reason" : "NOT_DISPATCHED",
+    "since" : null,
+    "state" : "IDLE",
+    "ticket" : null,
+    "until" : null,
+    "work" : null
+  },
+  "status" : "PLANNING",
+  "stuck" : [ ],
+  "ticketsAll" : 1,
+  "ticketsDone" : 0,
+  "title" : "Graph"
+}, {
+  "forYou" : [ ],
+  "mission" : "M-11",
+  "running" : [ {
+    "agent" : "chris",
+    "count" : null,
+    "deadline" : null,
+    "kind" : "SESSION",
+    "question" : null,
+    "runningSeconds" : null,
+    "since" : "2026-10-20T18:20:00Z",
+    "status" : null,
+    "text" : null,
+    "ticket" : "T-24"
+  } ],
+  "stall" : {
+    "agent" : null,
+    "elsewhere" : null,
+    "reason" : "NOT_DISPATCHED",
+    "since" : null,
+    "state" : "IDLE",
+    "ticket" : null,
+    "until" : null,
+    "work" : null
+  },
+  "status" : "IN_PROGRESS",
+  "stuck" : [ ],
+  "ticketsAll" : 1,
+  "ticketsDone" : 0,
+  "title" : "Badge"
+} ]
+== GET /api/missions/M-1/report -> 200
+{
+  "askedBack" : [ ],
+  "checks" : [ {
+    "at" : "2026-10-20T12:46:00Z",
+    "command" : "mvn -q verify",
+    "durationMs" : 12345,
+    "exitCode" : 1,
+    "passed" : false,
+    "timedOut" : false,
+    "trigger" : "manual",
+    "workspace" : "chris"
+  }, {
+    "at" : "2026-10-20T12:47:00Z",
+    "command" : "mvn -q verify",
+    "durationMs" : 600000,
+    "exitCode" : null,
+    "passed" : false,
+    "timedOut" : true,
+    "trigger" : "auto",
+    "workspace" : "chris"
+  } ],
+  "followUp" : {
+    "objective" : "Follow-up of M-1 \"App\".\n\nObjective of M-1:\nShip the app\n\nWhat M-1 left open (Floor42's report):\n- T-4: review UNVERIFIABLE (No browser)\n- the last check failed: mvn -q verify",
+    "repository" : "C:/repo/app",
+    "title" : "Follow-up: App"
+  },
+  "mission" : "M-1",
+  "next" : [ {
+    "available" : false,
+    "code" : "INVALID_TRANSITION",
+    "kind" : "CLOSE",
+    "message" : "M-1: COMPLETED -> COMPLETED is not allowed"
+  }, {
+    "available" : false,
+    "code" : "MISSION_NOT_ACTIVE",
+    "kind" : "REOPEN",
+    "message" : "M-1 is COMPLETED"
+  }, {
+    "available" : true,
+    "code" : null,
+    "kind" : "PULL_REQUEST",
+    "message" : null
+  }, {
+    "available" : false,
+    "code" : "NOTHING_ACCEPTED",
+    "kind" : "MERGE",
+    "message" : "No branch of this mission holds commits beyond the project's: accept work in the workshop first"
+  }, {
+    "available" : true,
+    "code" : null,
+    "kind" : "FOLLOW_UP",
+    "message" : null
+  }, {
+    "available" : true,
+    "code" : null,
+    "kind" : "ARCHIVE",
+    "message" : null
+  } ],
+  "objections" : [ ],
+  "origin" : "REAL",
+  "outcome" : "Login shipped",
+  "outputs" : [ {
+    "accepted" : -1,
+    "agent" : "chris",
+    "branch" : "floor42/chris",
+    "ignored" : [ ],
+    "ignoredCount" : 0,
+    "mergeCommand" : null,
+    "path" : "<masked>",
+    "readable" : false,
+    "uncommitted" : [ ],
+    "uncommittedCount" : 0
+  }, {
+    "accepted" : -1,
+    "agent" : "ken",
+    "branch" : "floor42/ken",
+    "ignored" : [ ],
+    "ignoredCount" : 0,
+    "mergeCommand" : null,
+    "path" : "<masked>",
+    "readable" : false,
+    "uncommitted" : [ ],
+    "uncommittedCount" : 0
+  } ],
+  "projectBranch" : null,
+  "readAt" : "<masked>",
+  "repository" : "C:/repo/app",
+  "retro" : {
+    "chair" : "geoffrey",
+    "conclusions" : [ "Keep tests first" ],
+    "lessons" : [ {
+      "audience" : "DEVELOPER",
+      "id" : "L-1",
+      "status" : "RETIRED",
+      "text" : "Write the test first"
+    }, {
+      "audience" : null,
+      "id" : "L-2",
+      "status" : "ACCEPTED",
+      "text" : "Say what you did not verify"
+    }, {
+      "audience" : "REVIEWER",
+      "id" : "L-3",
+      "status" : "REJECTED",
+      "text" : "Run the browser"
+    } ],
+    "reason" : null,
+    "state" : "CONCLUDED"
+  },
+  "reviews" : {
+    "rejected" : 1,
+    "reviews" : 6,
+    "unverifiable" : 3,
+    "validated" : 1,
+    "withReservations" : 1
+  },
+  "status" : "COMPLETED",
+  "tickets" : [ {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : 0.1
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 420000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-1",
+    "kind" : "WORK",
+    "producer" : "geoffrey",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 1,
+    "status" : "DONE",
+    "title" : "Plan the work",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : 60000.0
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : 0.05
+    },
+    "directives" : 1,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 5340000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-2",
+    "kind" : "WORK",
+    "producer" : "chris",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 1,
+    "status" : "CANCELLED",
+    "title" : "Build",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : 120000.0
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-3",
+    "kind" : "WORK",
+    "producer" : "ken",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "CANCELLED",
+    "title" : "Tests",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : "abc1234",
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : 2.3
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 7320000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 1,
+    "id" : "T-4",
+    "kind" : "WORK",
+    "producer" : "chris",
+    "producerVerdict" : null,
+    "rejections" : 1,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ {
+      "firstLine" : "No audience check",
+      "reviewer" : "dehren",
+      "verdict" : "REJECTED"
+    }, {
+      "firstLine" : "Cannot run the browser",
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "firstLine" : "Still cannot",
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "firstLine" : "No browser",
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    } ],
+    "sessions" : 4,
+    "status" : "DONE",
+    "title" : "Login",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : 5640000.0
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 1,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 5640000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-5",
+    "kind" : "WORK",
+    "producer" : "chris",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ {
+      "firstLine" : "Fine, no test for expiry",
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED_WITH_RESERVATIONS"
+    } ],
+    "sessions" : 0,
+    "status" : "CANCELLED",
+    "title" : "Logout",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-6",
+    "kind" : "WORK",
+    "producer" : "chris",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "CANCELLED",
+    "title" : "Profile page",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 240000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-7",
+    "kind" : "STAFFING",
+    "producer" : "geoffrey",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 60000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-8",
+    "kind" : "STAFFING",
+    "producer" : "geoffrey",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 60000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-9",
+    "kind" : "STAFFING",
+    "producer" : "geoffrey",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 120000.0
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-10",
+    "kind" : "WORK",
+    "producer" : "chris",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ {
+      "firstLine" : "Fast",
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED"
+    } ],
+    "sessions" : 0,
+    "status" : "DONE",
+    "title" : "Make the board faster",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : null
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-11",
+    "kind" : "WORK",
+    "producer" : null,
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : "M-1 is COMPLETED",
+    "reopenRefusedCode" : "MISSION_NOT_ACTIVE",
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 0,
+    "status" : "CANCELLED",
+    "title" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    }
+  }, {
+    "commit" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : 0.01
+    },
+    "directives" : 0,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : null
+    },
+    "environmentBlocker" : null,
+    "failedSessions" : 0,
+    "id" : "T-12",
+    "kind" : "RETRO",
+    "producer" : "geoffrey",
+    "producerVerdict" : null,
+    "rejections" : 0,
+    "reopenRefused" : null,
+    "reopenRefusedCode" : null,
+    "reopenTo" : null,
+    "reviews" : [ ],
+    "sessions" : 1,
+    "status" : "DONE",
+    "title" : "Retrospective",
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : 60000.0
+    }
+  } ],
+  "title" : "App",
+  "totals" : {
+    "budgetUsd" : null,
+    "costBound" : {
+      "costUsd" : {
+        "basis" : "UPPER_BOUND",
+        "value" : null
+      },
+      "sessions" : 0
+    },
+    "costUsd" : {
+      "basis" : "ESTIMATED",
+      "value" : 2.46
+    },
+    "done" : 6,
+    "dropped" : 5,
+    "elapsedMs" : {
+      "basis" : "MEASURED",
+      "value" : 1.458E7
+    },
+    "failedSessions" : 1,
+    "open" : 0,
+    "sessions" : 7,
+    "workMs" : {
+      "basis" : "MEASURED",
+      "value" : 5820000.0
+    }
+  },
+  "warnings" : [ {
+    "agent" : "chris",
+    "code" : "WORKTREE_UNREADABLE",
+    "count" : null,
+    "path" : "<masked>",
+    "text" : null,
+    "ticket" : null
+  }, {
+    "agent" : "ken",
+    "code" : "WORKTREE_UNREADABLE",
+    "count" : null,
+    "path" : "<masked>",
+    "text" : null,
+    "ticket" : null
+  }, {
+    "agent" : "dehren",
+    "code" : "REVIEW_UNVERIFIABLE",
+    "count" : null,
+    "path" : null,
+    "text" : "No browser",
+    "ticket" : "T-4"
+  }, {
+    "agent" : "chris",
+    "code" : "CHECKS_FAILED",
+    "count" : null,
+    "path" : null,
+    "text" : "mvn -q verify",
+    "ticket" : null
+  } ]
+}
+== GET /api/missions/M-1/deliverables -> 200
+{
+  "available" : false,
+  "branches" : [ {
+    "agent" : "chris",
+    "branch" : "floor42/chris",
+    "commits" : [ ],
+    "committed" : [ ],
+    "ignoredHidden" : 0,
+    "legacy" : false,
+    "merged" : "UNKNOWN",
+    "notInProject" : -1,
+    "start" : null,
+    "tickets" : [ "T-2", "T-4", "T-5", "T-6", "T-10" ],
+    "tip" : null,
+    "truncated" : false,
+    "uncommitted" : [ ],
+    "worktree" : "<masked>",
+    "worktreePresent" : false
+  }, {
+    "agent" : "ken",
+    "branch" : "floor42/ken",
+    "commits" : [ ],
+    "committed" : [ ],
+    "ignoredHidden" : 0,
+    "legacy" : false,
+    "merged" : "UNKNOWN",
+    "notInProject" : -1,
+    "start" : null,
+    "tickets" : [ "T-3" ],
+    "tip" : null,
+    "truncated" : false,
+    "uncommitted" : [ ],
+    "worktree" : "<masked>",
+    "worktreePresent" : false
+  } ],
+  "ignoredShown" : false,
+  "maxViewBytes" : 26214400,
+  "maxViewText" : 1048576,
+  "maxZipBytes" : 536870912,
+  "mission" : "M-1",
+  "origin" : "REAL",
+  "projectBranch" : null,
+  "projectHead" : null,
+  "pullRequests" : [ {
+    "agent" : "chris",
+    "base" : "main",
+    "branch" : "floor42/chris",
+    "number" : 7,
+    "openedAt" : "2026-10-20T13:05:00Z",
+    "url" : "https://github.com/o/r/pull/7"
+  }, {
+    "agent" : null,
+    "base" : "main",
+    "branch" : "director/work",
+    "number" : 9,
+    "openedAt" : "2026-10-20T13:08:00Z",
+    "url" : "https://github.com/o/r/pull/9"
+  } ],
+  "repository" : "C:/repo/app",
+  "status" : "COMPLETED",
+  "tickets" : [ {
+    "assignee" : "geoffrey",
+    "deliverable" : null,
+    "id" : "T-1",
+    "reviews" : [ ],
+    "status" : "DONE",
+    "title" : "Plan the work",
+    "verdict" : null
+  }, {
+    "assignee" : "chris",
+    "deliverable" : null,
+    "id" : "T-2",
+    "reviews" : [ ],
+    "status" : "CANCELLED",
+    "title" : "Build",
+    "verdict" : null
+  }, {
+    "assignee" : "ken",
+    "deliverable" : null,
+    "id" : "T-3",
+    "reviews" : [ ],
+    "status" : "CANCELLED",
+    "title" : "Tests",
+    "verdict" : null
+  }, {
+    "assignee" : "chris",
+    "deliverable" : "Third try",
+    "id" : "T-4",
+    "reviews" : [ {
+      "findings" : "No audience check",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "REJECTED"
+    }, {
+      "findings" : "Cannot run the browser",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "findings" : "Still cannot",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    }, {
+      "findings" : "No browser",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "UNVERIFIABLE"
+    } ],
+    "status" : "DONE",
+    "title" : "Login",
+    "verdict" : "UNVERIFIABLE"
+  }, {
+    "assignee" : "chris",
+    "deliverable" : "Logout",
+    "id" : "T-5",
+    "reviews" : [ {
+      "findings" : "Fine, no test for expiry",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED_WITH_RESERVATIONS"
+    } ],
+    "status" : "CANCELLED",
+    "title" : "Logout",
+    "verdict" : "VALIDATED_WITH_RESERVATIONS"
+  }, {
+    "assignee" : "chris",
+    "deliverable" : null,
+    "id" : "T-6",
+    "reviews" : [ ],
+    "status" : "CANCELLED",
+    "title" : "Profile page",
+    "verdict" : null
+  }, {
+    "assignee" : "geoffrey",
+    "deliverable" : "Two more developers",
+    "id" : "T-7",
+    "reviews" : [ ],
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "verdict" : null
+  }, {
+    "assignee" : "geoffrey",
+    "deliverable" : "No measure yet",
+    "id" : "T-8",
+    "reviews" : [ ],
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "verdict" : null
+  }, {
+    "assignee" : "geoffrey",
+    "deliverable" : "Not worth it",
+    "id" : "T-9",
+    "reviews" : [ ],
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "verdict" : null
+  }, {
+    "assignee" : "chris",
+    "deliverable" : "Faster board",
+    "id" : "T-10",
+    "reviews" : [ {
+      "findings" : "Fast",
+      "items" : null,
+      "reviewer" : "dehren",
+      "verdict" : "VALIDATED"
+    } ],
+    "status" : "DONE",
+    "title" : "Make the board faster",
+    "verdict" : "VALIDATED"
+  }, {
+    "assignee" : null,
+    "deliverable" : null,
+    "id" : "T-11",
+    "reviews" : [ ],
+    "status" : "CANCELLED",
+    "title" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
+    "verdict" : null
+  }, {
+    "assignee" : "geoffrey",
+    "deliverable" : null,
+    "id" : "T-12",
+    "reviews" : [ ],
+    "status" : "DONE",
+    "title" : "Retrospective",
+    "verdict" : null
+  } ],
+  "title" : "App"
+}
+== GET /api/costs -> 200
+{
+  "at" : "<masked>",
+  "missions" : [ {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : false,
+    "mission" : "M-11",
+    "origin" : "SIMULATED",
+    "status" : "IN_PROGRESS",
+    "title" : "Badge",
+    "total" : {
+      "costBasis" : "simulated: no model was called",
+      "inputTokens" : 0,
+      "key" : "M-11",
+      "name" : "Badge",
+      "outputTokens" : 0,
+      "sessions" : 1,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 1,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : false,
+    "mission" : "M-10",
+    "origin" : "REAL",
+    "status" : "PLANNING",
+    "title" : "Graph",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-10",
+      "name" : "Graph",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : 2.0,
+    "capDecided" : true,
+    "mission" : "M-9",
+    "origin" : "REAL",
+    "status" : "IN_PROGRESS",
+    "title" : "Research",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-9",
+      "name" : "Research",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : 2.0,
+    "capDecided" : true,
+    "mission" : "M-8",
+    "origin" : "REAL",
+    "status" : "COMPLETED",
+    "title" : "Calibrated",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-8",
+      "name" : "Calibrated",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : false,
+    "mission" : "M-7",
+    "origin" : "REAL",
+    "status" : "PLANNING",
+    "title" : "Pinned",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-7",
+      "name" : "Pinned",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : 5.0,
+    "capDecided" : true,
+    "mission" : "M-6",
+    "origin" : "REAL",
+    "status" : "IN_PROGRESS",
+    "title" : "Release",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-6",
+      "name" : "Release",
+      "outputTokens" : 0,
+      "sessions" : 1,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 1,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : 0.1,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : false,
+    "mission" : "M-5",
+    "origin" : "REAL",
+    "status" : "PLANNING",
+    "title" : "Again",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-5",
+      "name" : "Again",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : false,
+    "mission" : "M-4",
+    "origin" : "SIMULATED",
+    "status" : "CANCELLED",
+    "title" : "Sim",
+    "total" : {
+      "costBasis" : "simulated: no model was called",
+      "inputTokens" : 0,
+      "key" : "M-4",
+      "name" : "Sim",
+      "outputTokens" : 0,
+      "sessions" : 1,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : 10.0,
+    "capDecided" : true,
+    "mission" : "M-3",
+    "origin" : "REAL",
+    "status" : "COMPLETED",
+    "title" : "Idea",
+    "total" : {
+      "costBasis" : "unavailable",
+      "inputTokens" : 0,
+      "key" : "M-3",
+      "name" : "Idea",
+      "outputTokens" : 0,
+      "sessions" : 0,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "unavailable",
+      "usdBound" : null,
+      "usdEstimated" : 0.0
+    }
+  }, {
+    "archived" : false,
+    "budgetUsd" : null,
+    "capDecided" : true,
+    "mission" : "M-2",
+    "origin" : "REAL",
+    "status" : "CANCELLED",
+    "title" : "Gateway?",
+    "total" : {
+      "costBasis" : "estimated by Claude Code",
+      "inputTokens" : 20,
+      "key" : "M-2",
+      "name" : "Gateway?",
+      "outputTokens" : 20,
+      "sessions" : 2,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 0,
+      "tokensBasis" : "provided by Claude Code",
+      "usdBound" : null,
+      "usdEstimated" : 0.04
+    }
+  }, {
+    "archived" : true,
+    "budgetUsd" : null,
+    "capDecided" : true,
+    "mission" : "M-1",
+    "origin" : "REAL",
+    "status" : "COMPLETED",
+    "title" : "App",
+    "total" : {
+      "costBasis" : "estimated by Claude Code",
+      "inputTokens" : 54010,
+      "key" : "M-1",
+      "name" : "App",
+      "outputTokens" : 4620,
+      "sessions" : 7,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 1,
+      "tokensBasis" : "provided by Claude Code",
+      "usdBound" : null,
+      "usdEstimated" : 2.4599999999999995
+    }
+  } ],
+  "month" : {
+    "costBasis" : "unavailable",
+    "inputTokens" : 0,
+    "key" : "month",
+    "name" : null,
+    "outputTokens" : 0,
+    "sessions" : 0,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "unavailable",
+    "usdBound" : null,
+    "usdEstimated" : 0.0
+  },
+  "today" : {
+    "costBasis" : "unavailable",
+    "inputTokens" : 0,
+    "key" : "today",
+    "name" : null,
+    "outputTokens" : 0,
+    "sessions" : 0,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "unavailable",
+    "usdBound" : null,
+    "usdEstimated" : 0.0
+  },
+  "week" : {
+    "costBasis" : "unavailable",
+    "inputTokens" : 0,
+    "key" : "week",
+    "name" : null,
+    "outputTokens" : 0,
+    "sessions" : 0,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "unavailable",
+    "usdBound" : null,
+    "usdEstimated" : 0.0
+  },
+  "zone" : "Europe/Paris"
+}
+== GET /api/missions/M-1/costs -> 200
+{
+  "agents" : [ {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 52010,
+    "key" : "chris",
+    "name" : "Chris",
+    "outputTokens" : 4310,
+    "sessions" : 4,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 1,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 2.01
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 900,
+    "key" : "dehren",
+    "name" : "Dehren",
+    "outputTokens" : 100,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.3
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 1000,
+    "key" : "geoffrey",
+    "name" : "Geoffrey",
+    "outputTokens" : 200,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.1
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 100,
+    "key" : "ken",
+    "name" : "Ken",
+    "outputTokens" : 10,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.05
+  } ],
+  "mission" : {
+    "archived" : true,
+    "budgetUsd" : null,
+    "capDecided" : true,
+    "mission" : "M-1",
+    "origin" : "REAL",
+    "status" : "COMPLETED",
+    "title" : "App",
+    "total" : {
+      "costBasis" : "estimated by Claude Code",
+      "inputTokens" : 54010,
+      "key" : "M-1",
+      "name" : "App",
+      "outputTokens" : 4620,
+      "sessions" : 7,
+      "sessionsBasis" : "measured by Floor42",
+      "sessionsOpen" : 0,
+      "sessionsWithoutCost" : 1,
+      "tokensBasis" : "provided by Claude Code",
+      "usdBound" : null,
+      "usdEstimated" : 2.4599999999999995
+    }
+  },
+  "tickets" : [ {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 52900,
+    "key" : "T-4",
+    "name" : "Login",
+    "outputTokens" : 4400,
+    "sessions" : 4,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 1,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 2.3
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 1000,
+    "key" : "T-1",
+    "name" : "Plan the work",
+    "outputTokens" : 200,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.1
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 100,
+    "key" : "T-2",
+    "name" : "Build",
+    "outputTokens" : 10,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.05
+  }, {
+    "costBasis" : "estimated by Claude Code",
+    "inputTokens" : 10,
+    "key" : "T-12",
+    "name" : "Retrospective",
+    "outputTokens" : 10,
+    "sessions" : 1,
+    "sessionsBasis" : "measured by Floor42",
+    "sessionsOpen" : 0,
+    "sessionsWithoutCost" : 0,
+    "tokensBasis" : "provided by Claude Code",
+    "usdBound" : null,
+    "usdEstimated" : 0.01
+  } ]
+}
+== GET /api/usage -> 200
+{
+  "accountUsageUrl" : "https://claude.ai/settings/usage",
+  "days" : [ {
+    "archived" : false,
+    "costUsdEstimated" : 2.5,
+    "inputTokens" : 54030,
+    "key" : "2026-10-20",
+    "outputTokens" : 4640,
+    "sessions" : 10,
+    "title" : null
+  } ],
+  "missions" : [ {
+    "archived" : false,
+    "costUsdEstimated" : 0.0,
+    "inputTokens" : 0,
+    "key" : "M-6",
+    "outputTokens" : 0,
+    "sessions" : 1,
+    "title" : "Release"
+  }, {
+    "archived" : false,
+    "costUsdEstimated" : 0.04,
+    "inputTokens" : 20,
+    "key" : "M-2",
+    "outputTokens" : 20,
+    "sessions" : 2,
+    "title" : "Gateway?"
+  }, {
+    "archived" : true,
+    "costUsdEstimated" : 2.46,
+    "inputTokens" : 54010,
+    "key" : "M-1",
+    "outputTokens" : 4620,
+    "sessions" : 7,
+    "title" : "App"
+  } ],
+  "night" : null,
+  "threshold" : 0.9,
+  "windows" : [ {
+    "current" : true,
+    "expectedIncrease" : null,
+    "label" : "5-hour",
+    "observedAt" : "2026-10-20T11:38:00Z",
+    "resetsAt" : "2027-01-15T08:00:00Z",
+    "status" : "allowed",
+    "utilization" : 0.42,
+    "window" : "five_hour"
+  }, {
+    "current" : true,
+    "expectedIncrease" : null,
+    "label" : "weekly",
+    "observedAt" : "2026-10-20T11:39:00Z",
+    "resetsAt" : "2027-01-21T02:53:20Z",
+    "status" : "allowed_warning",
+    "utilization" : 0.61,
+    "window" : "seven_day"
+  } ]
+}
+== GET /api/resume -> 200
+{
+  "missions" : [ {
+    "action" : "NUDGE",
+    "doing" : "T-19",
+    "doingStatus" : "IN_PROGRESS",
+    "doingTitle" : "Write the release notes",
+    "id" : "M-6",
+    "lastActivity" : "2026-10-20T18:28:00Z",
+    "openQuestions" : 0,
+    "origin" : "REAL",
+    "retryQuestion" : null,
+    "state" : "IDLE",
+    "status" : "IN_PROGRESS",
+    "suspendedAgents" : [ ],
+    "title" : "Release",
+    "workspace" : "C:/repo/app"
+  }, {
+    "action" : "NONE",
+    "doing" : "T-24",
+    "doingStatus" : "IN_PROGRESS",
+    "doingTitle" : "Badge in",
+    "id" : "M-11",
+    "lastActivity" : "2026-10-20T18:21:00Z",
+    "openQuestions" : 0,
+    "origin" : "SIMULATED",
+    "retryQuestion" : null,
+    "state" : "IDLE",
+    "status" : "IN_PROGRESS",
+    "suspendedAgents" : [ ],
+    "title" : "Badge",
+    "workspace" : null
+  }, {
+    "action" : "NONE",
+    "doing" : null,
+    "doingStatus" : null,
+    "doingTitle" : null,
+    "id" : "M-10",
+    "lastActivity" : "2026-10-20T18:08:00Z",
+    "openQuestions" : 0,
+    "origin" : "REAL",
+    "retryQuestion" : null,
+    "state" : "OPEN",
+    "status" : "PLANNING",
+    "suspendedAgents" : [ ],
+    "title" : "Graph",
+    "workspace" : "C:/repo/api"
+  }, {
+    "action" : "NUDGE",
+    "doing" : null,
+    "doingStatus" : null,
+    "doingTitle" : null,
+    "id" : "M-9",
+    "lastActivity" : "2026-10-20T18:04:00Z",
+    "openQuestions" : 0,
+    "origin" : "REAL",
+    "retryQuestion" : null,
+    "state" : "IDLE",
+    "status" : "IN_PROGRESS",
+    "suspendedAgents" : [ ],
+    "title" : "Research",
+    "workspace" : "C:/repo/api"
+  }, {
+    "action" : "NONE",
+    "doing" : null,
+    "doingStatus" : null,
+    "doingTitle" : null,
+    "id" : "M-5",
+    "lastActivity" : "2026-10-20T17:59:00Z",
+    "openQuestions" : 0,
+    "origin" : "REAL",
+    "retryQuestion" : null,
+    "state" : "OPEN",
+    "status" : "PLANNING",
+    "suspendedAgents" : [ ],
+    "title" : "Again",
+    "workspace" : "C:/repo/api"
+  }, {
+    "action" : "NONE",
+    "doing" : null,
+    "doingStatus" : null,
+    "doingTitle" : null,
+    "id" : "M-7",
+    "lastActivity" : "2026-10-20T17:28:00Z",
+    "openQuestions" : 0,
+    "origin" : "REAL",
+    "retryQuestion" : null,
+    "state" : "OPEN",
+    "status" : "PLANNING",
+    "suspendedAgents" : [ ],
+    "title" : "Pinned",
+    "workspace" : "C:/repo/api"
+  } ],
+  "sessions" : [ ]
+}
+== GET /api/missions/M-1/replay-export/preview -> 200
+{
+  "agents" : [ "Geoffrey", "Chris", "Ken", "Dehren" ],
+  "costs" : 6,
+  "details" : [ {
+    "event" : 41,
+    "field" : "diff",
+    "kind" : "DIRECTOR_FILE",
+    "type" : "DirectorEditedFile"
+  }, {
+    "event" : 45,
+    "field" : "text",
+    "kind" : "SECRET",
+    "type" : "AgentRemarked"
+  }, {
+    "event" : 47,
+    "field" : "text",
+    "kind" : "SECRET",
+    "type" : "RuntimeLineRecorded"
+  }, {
+    "event" : 65,
+    "field" : "text",
+    "kind" : "PATH",
+    "type" : "ActionRequested"
+  }, {
+    "event" : 66,
+    "field" : "text",
+    "kind" : "PATH",
+    "type" : "ActionDenied"
+  }, {
+    "event" : 66,
+    "field" : "text",
+    "kind" : "PATH",
+    "type" : "ActionDenied"
+  }, {
+    "event" : 130,
+    "field" : "text",
+    "kind" : "SECRET",
+    "type" : "ConsultationRequested"
+  }, {
+    "event" : 211,
+    "field" : "text",
+    "kind" : "SECRET",
+    "type" : "TicketCreated"
+  }, {
+    "event" : 0,
+    "field" : "ticket",
+    "kind" : "SECRET",
+    "type" : "Mission"
+  } ],
+  "detailsTruncated" : true,
+  "digest" : "52e2029ab35b2ed957f62bb68e9d714c1c8a9dfd1ba1f88431dd5e2b3f9087b1",
+  "events" : 246,
+  "masked" : [ {
+    "count" : 5,
+    "kind" : "SECRET"
+  }, {
+    "count" : 4,
+    "kind" : "PATH"
+  }, {
+    "count" : 1,
+    "kind" : "DIRECTOR_FILE"
+  } ],
+  "mission" : "M-1",
+  "origin" : "REAL",
+  "outputs" : 4,
+  "real" : 246,
+  "simulated" : 0,
+  "tickets" : 12,
+  "title" : "App",
+  "version" : "<app-version>"
+}
+== GET /api/missions/M-1/archive -> 200
+{
+  "available" : false,
+  "branch" : null,
+  "branches" : [ ],
+  "graph" : {
+    "commits" : [ ],
+    "heads" : [ ],
+    "truncated" : false
+  },
+  "mission" : "M-1",
+  "repository" : "C:/repo/app",
+  "trunk" : [ ]
+}
+== GET /api/lessons -> 200
+[ {
+  "audience" : "DEVELOPER",
+  "id" : "L-1",
+  "mission" : "M-1",
+  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedBy" : "geoffrey",
+  "reason" : "Obvious now",
+  "status" : "RETIRED",
+  "text" : "Write the test first"
+}, {
+  "audience" : null,
+  "id" : "L-2",
+  "mission" : "M-1",
+  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedBy" : "geoffrey",
+  "reason" : null,
+  "status" : "ACCEPTED",
+  "text" : "Say what you did not verify"
+}, {
+  "audience" : "REVIEWER",
+  "id" : "L-3",
+  "mission" : "M-1",
+  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedBy" : "geoffrey",
+  "reason" : "rejected by the director",
+  "status" : "REJECTED",
+  "text" : "Run the browser"
+} ]
+== GET /api/notes -> 200
+[ {
+  "addedAt" : "2026-10-20T08:58:00Z",
+  "commit" : null,
+  "done" : true,
+  "doneAt" : "2026-10-20T13:55:00Z",
+  "id" : "N-1",
+  "text" : "Make the board faster\nIt lags on big missions",
+  "ticket" : "T-10"
+}, {
+  "addedAt" : "2026-10-20T09:00:00Z",
+  "commit" : null,
+  "done" : false,
+  "doneAt" : null,
+  "id" : "N-3",
+  "text" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "ticket" : "T-11"
+}, {
+  "addedAt" : "2026-10-20T09:08:00Z",
+  "commit" : "abcdef2",
+  "done" : true,
+  "doneAt" : "2026-10-20T09:09:00Z",
+  "id" : "N-4",
+  "text" : "Ids are never reused",
+  "ticket" : null
+} ]

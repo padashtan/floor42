@@ -1,0 +1,614 @@
+{
+  "4ac937e277c5aef3544df84b21beffac_0": {
+    "author": "q8c",
+    "comment": "Constant text of a label or a message, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "180be10223a8425d70b6b448d9bde476_0": {
+    "author": "q8c",
+    "comment": "Constant text of a label or a message, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "f1738081643065fe21e21ed56cc3b891_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "b5a47f88de9882da41672636aad0831d_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "e4ec7872a1065bc3a20b8304119f4f0b_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "f25c7626c6646f35edb578d338e0d90a_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "66a222053f72311043eac569ed3fef8e_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "368964f123ea686b76c4730885739ff1_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "9bfc630b53591c190f4b7af73fad67b8_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. This site reads a token Floor42 got itself from Keycloak (or one already checked by AgentTokenVerifier/IdTokenCheck.verify, signature, alg, audience, expiry) and takes no trust decision from it; the verifying paths are AgentTokenVerifier.verify and IdTokenCheck.claims",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4cc8e6ead6688558109daeee2b60d0fd_0": {
+    "author": "q8c",
+    "comment": "Plain socket bound to the loopback address to test port ownership, no data crosses it (same as the Semgrep unencrypted-socket triage)",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "e3aa1af1cb4bd6b8241edb2c4a1ac283_0": {
+    "author": "q8c",
+    "comment": "French UI label naming a secret field, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "e3aa1af1cb4bd6b8241edb2c4a1ac283_1": {
+    "author": "q8c",
+    "comment": "French UI label naming a secret field, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "d9e5de2acc25599aae1f4cfbaf404797_0": {
+    "author": "q8c",
+    "comment": "French UI label naming a secret field, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "e8c33c271b316b70a20a8240369dc628_0": {
+    "author": "q8c",
+    "comment": "os.execv of the command the daemon asked the sandbox to run: the daemon is the only caller, there is no external input",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_0": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_1": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_2": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_3": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_4": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "4bb5d860a6f8595cd516237ee8534160_5": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "191a2f8f07cc1d70add8778b8808d711_0": {
+    "author": "q8c",
+    "comment": "createElement with a literal tag name and textContent for the text: no HTML is parsed",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "7db10c93f4da3306c5ac98c612cb78c9_0": {
+    "author": "q8c",
+    "comment": "escapeHtml is applied first and the renderer only adds its own tags (markdown.ts tests)",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "69fd1a14fb99d8fe0166bcf34a5c3193_0": {
+    "author": "q8c",
+    "comment": "Sandbox helper: paths come from the daemon-built mount listing and the credential-folder scan, not from a remote request; escape is covered by the sandbox tests",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "69fd1a14fb99d8fe0166bcf34a5c3193_1": {
+    "author": "q8c",
+    "comment": "Sandbox helper: paths come from the daemon-built mount listing and the credential-folder scan, not from a remote request; escape is covered by the sandbox tests",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "69fd1a14fb99d8fe0166bcf34a5c3193_2": {
+    "author": "q8c",
+    "comment": "Sandbox helper: paths come from the daemon-built mount listing and the credential-folder scan, not from a remote request; escape is covered by the sandbox tests",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_0": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_1": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_2": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_3": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_4": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_5": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_6": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_7": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_8": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_9": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_10": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_11": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_12": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_13": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_14": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_15": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_16": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_17": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_18": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_19": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_20": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_21": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "89c73d25d0ef9121760c08360adbafb9_22": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "91ad495aa6f28e2eb47336d1e7976e36_0": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "91ad495aa6f28e2eb47336d1e7976e36_1": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_0": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_1": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_2": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_3": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_4": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_5": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_6": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_7": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_8": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_9": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "fd13995dd1fbeb69fc78c3092ff28708_10": {
+    "author": "q8c",
+    "comment": "Developer script run by hand on the developer machine, arguments from its own command line, never shipped or reachable",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "75a99c238eb058bd5a36ca6f51d77f1a_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "ddeeaf58d90fe544816be5789ca5df25_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "ddeeaf58d90fe544816be5789ca5df25_1": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "ddeeaf58d90fe544816be5789ca5df25_2": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "ddeeaf58d90fe544816be5789ca5df25_3": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "ddeeaf58d90fe544816be5789ca5df25_4": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "72a40dac7adb2d29fbdfd62dbd80b7ba_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "72a40dac7adb2d29fbdfd62dbd80b7ba_1": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "72a40dac7adb2d29fbdfd62dbd80b7ba_2": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "b1ad3d60e741ec04e1ab2d13e5a26155_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "71a34e04c4e64c4aa461da1c5404ecc6_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "10fd51c905c210f0a1c595a57704e392_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "10fd51c905c210f0a1c595a57704e392_1": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "10fd51c905c210f0a1c595a57704e392_2": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "bf943b95df351442e8a80029cde14f83_0": {
+    "author": "q8c",
+    "comment": "Cosmetic randomness (scene animation, or a client-side toast key): no security property depends on it",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "3c8a2be1c4b3e765b8be87ec83a85f02_0": {
+    "author": "q8c",
+    "comment": "Developer script (tools/diagrams) printing a count of pages, no sensitive data",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "e04c3a7f608de13ee42e0a660512d919_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "81fe13ce7318c48c7e418de80cac9ce4_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "6882df592765cb5133a82ae31576edca_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "6882df592765cb5133a82ae31576edca_1": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "8998ca4c40648bebcc095f8a2ea9baeb_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "95d18edbf378cbd66d6901afcd4e0c27_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "95d18edbf378cbd66d6901afcd4e0c27_1": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "0a31d245e94e33f578ba1c8d0fb33fa0_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "d158047e629e25304e6cfd500282b877_0": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "d158047e629e25304e6cfd500282b877_1": {
+    "author": "q8c",
+    "comment": "Comparison of non-secret values (hashes of public rows, ids, sets, UI tokens), or an internal call; no remote caller can time a secret comparison here",
+    "false_positive": true,
+    "ignored_at": "2026-11-09T00:00:00Z"
+  },
+  "f2bfa01a3d8a7683933b2887342bdac9_0": {
+    "author": "ci-triage",
+    "comment": "The argument list is fixed text, the java binary (JAVA or JAVA_HOME, set by the operator or by the workflow) and paths under the repository checkout and self.base (tempfile.mkdtemp); no request, no suite answer and no external text reaches the command. The tool runs on the director's machine (make oidc-conformance) and on a CI runner (assurance.yml, oidc-conformance.yml), never on a server",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "f2bfa01a3d8a7683933b2887342bdac9_1": {
+    "author": "ci-triage",
+    "comment": "The argument list is fixed text, the java binary (JAVA or JAVA_HOME, set by the operator or by the workflow) and paths under the repository checkout and self.base (tempfile.mkdtemp); no request, no suite answer and no external text reaches the command. The tool runs on the director's machine (make oidc-conformance) and on a CI runner (assurance.yml, oidc-conformance.yml), never on a server",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_0": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_1": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_2": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_3": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_4": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_5": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_6": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_7": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_8": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_9": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_10": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_11": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "9641e64ac806d71a708eefbe1ee3e4b3_12": {
+    "author": "ci-triage",
+    "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
+    "false_positive": true,
+    "ignored_at": "2026-11-10T00:00:00Z"
+  }
+}

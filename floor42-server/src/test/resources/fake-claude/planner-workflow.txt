@@ -1,0 +1,1 @@
+text|One ticket is enough.\n\nTICKET: Describe the project\nWHY: The director needs a summary first.\nDONE WHEN: summary written\nDEPENDS ON: none\nSIZE: S\n\nWORKFLOW: Quick read: plan, approval, produce, review, accept

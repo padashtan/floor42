@@ -1,0 +1,4 @@
+
+Director's meeting: what the director told you at the table about this mission (it takes precedence over
+your own plan; address what concerns your task; your working directory is as you left it):
+{{notes}}

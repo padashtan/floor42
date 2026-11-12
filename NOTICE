@@ -1,0 +1,18 @@
+Floor42
+Copyright 2026 Christophe Madrennes
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Floor42 drives Claude Code, Anthropic's software, which is not part of this product and is
+distributed under Anthropic's own terms. Floor42 is not affiliated with, endorsed by or built
+by Anthropic or École 42.
+
+Third-party software
+
+The release zip and the Docker image redistribute these components under their own licences. The full lists, with
+versions, are in THIRD-PARTY-LICENSES.txt (in the zip) and in the two CycloneDX SBOMs published with each release.
+
+- Apache-2.0: Quarkus, Netty, SmallRye, Jackson, Agroal, Flyway, sqlite-jdbc.
+- EPL-2.0 or GPL-2.0 with the Classpath Exception: the Jakarta APIs. Vert.x: EPL-2.0 or Apache-2.0.
+- LGPL-2.1: Narayana, shipped as an unmodified separate jar that you can replace.
+- MIT, ISC, BSD: three.js, Vue, xterm.js and the other production web dependencies.

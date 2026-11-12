@@ -1,0 +1,1261 @@
+=== aDismissedAgentLeavesAndTakesNoWork
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Protect web services with a gateway", workspace=null)
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Next", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #5 2026-10-20T09:00:06Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="dehren", reason="not needed")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:05Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace=null}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Next"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 6
+witnesses = {}
+workspaces = []
+# queries
+version = 6
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace=null}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="Secure the APIs", workspace=null}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Next"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:05Z]
+checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: PLANNING -> COMPLETED is not allowed
+checkPullRequest M-1 = refused SIMULATED_MISSION: A simulated mission pushes nothing anywhere
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Next"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = refused MISSION_NOT_ACTIVE: M-1 is PLANNING
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== aTicketStartedByAnAgentWhoLeavesGoesBackToTheQueue
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Protect web services with a gateway", workspace=null)
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Validate token audience", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #5 2026-10-20T09:00:06Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #6 2026-10-20T09:00:07Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #7 2026-10-20T09:00:08Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 9
+  #8 2026-10-20T09:00:09Z SIMULATED AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 10
+  #9 2026-10-20T09:00:10Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketReleased(ticket="T-1", agent="chris")
+  #10 2026-10-20T09:00:10Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="chris", reason="not needed")
+command 11
+  #11 2026-10-20T09:00:11Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="dehren")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:11Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="dehren", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 12
+witnesses = {}
+workspaces = []
+# queries
+version = 12
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = ASSIGNED
+atWork dehren = false
+handedBackOnDismissal dehren = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="dehren", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:11Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = refused SIMULATED_MISSION: A simulated mission pushes nothing anywhere
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="dehren", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== anAgentAtWorkStaysUntilItsSessionEnds
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Protect web services with a gateway", workspace=null)
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Validate token audience", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #5 2026-10-20T09:00:06Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #6 2026-10-20T09:00:07Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #7 2026-10-20T09:00:08Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 9
+  #8 2026-10-20T09:00:09Z SIMULATED AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+command 10
+  #9 2026-10-20T09:00:10Z SIMULATED SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s1", mission="M-1", ticket="T-1", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+command 11
+  #10 2026-10-20T09:00:12Z SIMULATED SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s1", failed=false, outcome="report", turns=1, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+command 12
+  #11 2026-10-20T09:00:13Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketReleased(ticket="T-1", agent="chris")
+  #12 2026-10-20T09:00:13Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="chris", reason="too slow")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:13Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {"s1"=AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:12Z, failed=false, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="report", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:10Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=1}}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 13
+witnesses = {}
+workspaces = []
+# queries
+version = 13
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=true, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = [AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:12Z, failed=false, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="report", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:10Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:13Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = refused SIMULATED_MISSION: A simulated mission pushes nothing anywhere
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee=null, consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=TODO, title="Validate token audience"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+session s1 = Optional[AgentSession{agent="chris", capUsd=null, continuedFrom=null, costUsdBound=null, costUsdEstimated=null, endedAt=2026-10-20T09:00:12Z, failed=false, id="s1", inputTokensProvided=null, lastTokenId=null, mission="M-1", model="claude-sonnet-5-5", outcome="report", outputTokensProvided=null, runtimeVersion=null, startedAt=2026-10-20T09:00:10Z, ticket="T-1", tokenExpiresAt=null, tokenIssuer=null, turns=1}]
+modelOfSession s1 = "claude-sonnet-5-5"
+continuationRequested s1 = Optional.empty
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== onlyATicketWhoseAssigneeLeftIsReleased
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="Secure the APIs", objective="Protect web services with a gateway", workspace=null)
+command 5
+  #4 2026-10-20T09:00:05Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Validate token audience", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["criterion"], kind=WORK)
+command 6
+  #5 2026-10-20T09:00:06Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="chris")
+command 7
+  #6 2026-10-20T09:00:07Z SIMULATED AGENT:geoffrey mission=M-1 auth=null cause=null MissionPlanSubmitted(mission="M-1")
+command 8
+  #7 2026-10-20T09:00:08Z SIMULATED DIRECTOR:director mission=M-1 auth=null cause=null MissionPlanApproved(mission="M-1")
+command 9
+  #8 2026-10-20T09:00:09Z SIMULATED AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-1")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 1
+incidents = []
+interventions = []
+lastActivity = {"M-1"=2026-10-20T09:00:09Z}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {"M-1"=Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {"T-1"=Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=IN_PROGRESS, title="Validate token audience"}}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 9
+witnesses = {}
+workspaces = []
+# queries
+version = 9
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = WORKING
+atWork chris = false
+handedBackOnDismissal chris = ["T-1"]
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
+tickets M-1 = [Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=IN_PROGRESS, title="Validate token audience"}]
+actions M-1 = []
+questions M-1 = []
+sessions M-1 = []
+workspaces M-1 = []
+interventions M-1 = []
+committee M-1 = Optional.empty
+committees M-1 = []
+directorFiles M-1 = []
+pullRequests M-1 = []
+missionAssets M-1 = []
+retro M-1 = Optional.empty
+checkRuns M-1 = []
+spentUsdEstimated M-1 = 0.0
+staffingReview M-1 = Optional.empty
+budgetLeftUsd M-1 = Optional.empty
+budgetReached M-1 = false
+lastActivity M-1 = Optional[2026-10-20T09:00:09Z]
+checkCompleteMission M-1 = refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
+checkPullRequest M-1 = refused SIMULATED_MISSION: A simulated mission pushes nothing anywhere
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["criterion"], assignee="chris", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-1", kind=WORK, mission="M-1", priority=NORMAL, reviews=[], startedAt=2026-10-20T09:00:09Z, status=IN_PROGRESS, title="Validate token audience"}]
+merge T-1 = Optional.empty
+isStaffingTicket T-1 = false
+commitFor T-1 = null
+checkDirective T-1 = "T-1"
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== onlyTheDirectorStarsAndOnlyForReal
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 3
+witnesses = {}
+workspaces = []
+# queries
+version = 3
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+## fixture 2 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="dehren", reason="not needed")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 4
+witnesses = {}
+workspaces = []
+# queries
+version = 4
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=true, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDirectorHiresForARole
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="ken", displayName="Ken", role="Java developer", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #4 2026-10-20T09:00:04Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentRoleAssigned(agent="ken", workRole=DEVELOPER)
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}, "ken"=Agent{core=false, dismissed=false, displayName="Ken", effort="medium", id="ken", model="claude-sonnet-5-5", provider="anthropic", role="Java developer", skills=[], suspended=false, workRole=DEVELOPER}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 5
+witnesses = {}
+workspaces = []
+# queries
+version = 5
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="Ken", effort="medium", id="ken", model="claude-sonnet-5-5", provider="anthropic", role="Java developer", skills=[], suspended=false, workRole=DEVELOPER}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+agent ken = Optional[Agent{core=false, dismissed=false, displayName="Ken", effort="medium", id="ken", model="claude-sonnet-5-5", provider="anthropic", role="Java developer", skills=[], suspended=false, workRole=DEVELOPER}]
+statusOf ken = AVAILABLE
+atWork ken = false
+handedBackOnDismissal ken = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+=== theDirectorStarsCoreMembersAndTheStarSurvivesReplay
+## fixture 1 SIMULATED
+command 1
+  #0 2026-10-20T09:00:01Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z SIMULATED DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 3
+witnesses = {}
+workspaces = []
+# queries
+version = 3
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live
+## fixture 2 REAL
+command 1
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 2
+  #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 3
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+command 4
+  #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=- auth=null cause=null AgentMarkedCore(agent="chris")
+command 5
+  #4 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=- auth=null cause=null AgentUnmarkedCore(agent="chris")
+events not recorded by the test: 0
+### live
+# fields
+actions = {}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
+askedBackBy = {}
+askedBackNotes = {}
+askedBackRounds = {}
+checkRuns = []
+clock = 0
+committeeSeats = {}
+committees = {}
+companyWorkflows = {}
+continuations = []
+copies = {}
+defaultPermissions = {}
+destinations = {}
+directorFiles = {}
+highest = 0
+incidents = []
+interventions = []
+lastActivity = {}
+lessons = {}
+links = {}
+measureCauses = []
+meetings = {}
+merges = {}
+missionAssets = {}
+missions = {}
+nodes = {}
+notRemembered = []
+notes = {}
+notesEver = 0
+openTerminals = {}
+pinMarks = {}
+pins = {}
+planUsage = PlanUsage{readings=[]}
+projectMarks = {}
+proposals = {}
+pullRequests = []
+questions = {}
+retros = {}
+reviewRounds = {}
+rounds = {}
+runs = {}
+sandboxTools = null
+saves = {}
+sessions = {}
+settings = {}
+since = {}
+staffing = {}
+terminalsEver = 0
+tickets = {}
+uncommittedAccepted = {}
+unprovenByMission = {}
+unsafeMode = false
+verdictsByMission = {}
+version = 5
+witnesses = {}
+workspaces = []
+# queries
+version = 5
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+missions = []
+openQuestions = []
+committeeSeats = []
+sandboxTools = Optional.empty
+openRetros = []
+lessons = []
+notes = []
+openTerminals = {}
+planUsage = PlanUsage{readings=[]}
+incidents = []
+setting PARALLEL_SESSIONS = Optional.empty
+setting PLAN_LIMIT_THRESHOLD = Optional.empty
+setting RETRO_MODEL = Optional.empty
+setting AGENT_LANGUAGE = Optional.empty
+setting DIRECTOR_PROFILE = Optional.empty
+setting SESSION_BUDGET_USD = Optional.empty
+setting OFFICE_THEME = Optional.empty
+setting SHELL_SANDBOX = Optional.empty
+setting SANDBOX_NETWORK = Optional.empty
+setting ACCEPTED_STREAM_LINES = Optional.empty
+setting STALL_MINUTES = Optional.empty
+setting MISSION_BUDGET_USD = Optional.empty
+defaultPermission Bash = Optional.empty
+defaultPermission Read = Optional.empty
+defaultPermission Write = Optional.empty
+defaultPermission Edit = Optional.empty
+defaultPermission Glob = Optional.empty
+defaultPermission Grep = Optional.empty
+defaultPermission WebFetch = Optional.empty
+lessonsFor DEVELOPER = []
+lessonsFor REVIEWER = []
+lessonsFor RESEARCHER = []
+lessonsFor PLANNER = []
+lessonsFor ANALYST = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
+agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+statusOf chris = AVAILABLE
+atWork chris = false
+handedBackOnDismissal chris = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
+planLimitRisk claude-sonnet-5-5 = Optional.empty
+projectMark C:/never/worked/on = Optional.empty
+projectForgotten C:/never/worked/on = false
+### replay: same as live

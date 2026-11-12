@@ -1,0 +1,1342 @@
+{
+  "info": "The director's API of the Floor42 daemon, on loopback only (ADR-0007). Every route under /api needs the session token except /api/status: the browser sends its session cookie (and `X-Floor42-Request: 1` on every change, with its own Origin); a script sends a script token issued from the desk (System > Sessions and tokens, ADR-0044) as a bearer, limited to its scope.\n\n```\n# a script token issued from the desk, shown once (scope read, missions:write or all; at most 30 days)\ncurl -H \"Authorization: Bearer $FLOOR42_TOKEN\" http://127.0.0.1:7420/api/missions\n```\n\n`FLOOR42_DIRECTOR_TOKEN_FILE=true` (writing the director's token to `~/.floor42/session.token`) still works but is deprecated: unconfined agents can read that file. A request a proxy forwarded (`X-Forwarded-For`, `X-Forwarded-Host`, `Forwarded`) is refused with `FORWARDED`: reach a remote daemon through an SSH tunnel (docs/remote.md).\n\nIdentifiers are short and readable: missions M-1, tickets T-1, questions Q-1, lessons L-1, notes N-1; agents are named (geoffrey, chris). Every error comes back as `{\"code\": \"...\", \"message\": \"...\"}`, with a stable code: 400 when the request itself is wrong (`INVALID_ARGUMENT`, `MISSING_...`, `BAD_REQUEST` for a body that cannot be read), 401 without the session token (`UNAUTHORIZED`), 403 from another host or origin (`FORBIDDEN`), 404 when what it names does not exist (`NOT_FOUND`), 409 when the state of things refuses it (a business rule), 413 when it is too large, 503 when the journal cannot be written (`JOURNAL_UNAVAILABLE`). Every fact is recorded in the journal with its origin (REAL or SIMULATED): what the API returns is rebuilt from it.\n\n## Authentication\n\nThree schemes, applied per path group. `cookieAuth`: the browser's sign-in cookie, plus `X-Floor42-Request: 1` on every request that changes something and an `Origin` that is exactly the daemon's own. `bearerToken`: a script token with scope `read` (reads only), `missions:write` (reads, plus the MISSION_WRITES allow-list: create a mission, approve or reject it and its tickets, nudge it, send a workshop directive, answer a question that is not a permission) or `all`; it needs neither the header nor an Origin. `agentBearer`: an agent session's hook credential, accepted on `/hooks/*` and `/mcp` only and refused with 403 on `/api`. `/api/status` is open. The sign-in link request (`POST /auth/open`, outside this document) answers 429 `TOO_MANY_REQUESTS` when one was just opened.\n\n## Stability\n\nThe stable core is every route not marked `x-stability: unstable`. Unstable routes (identity, calls, demo, terminals, plugins, sandbox, backups, resume, projects, workflows, committee roles, lessons, some mission helpers, the journal helpers, `/mcp`, `/hooks/*`) may change in any release, with no notice. A change to the stable core is listed in the changelog.\n\n## Status codes\n\nEvery success is `200`, creates and deletes included: there is no `201` or `204`, by decision. Errors are the shared responses of this document, all with the `Problem` body.\n\n## Idempotency\n\n`POST /api/missions` accepts an `Idempotency-Key` header: the same request sent twice with one key creates one mission.",
+  "tags": {
+    "Journal": "The journal's health and its copies (ADR-0042): the events this version could not read, the automatic backups, and a restore prepared for the next start.",
+    "Status": "Whether Floor42 runs for real and which Claude Code it drives.",
+    "Missions": "A mission is an objective on one git repository, planned into tickets, produced by developers and checked by an independent reviewer.",
+    "Projects": "The git repositories missions can work on: those already used, a read-only folder browser to find another (W2), and making a folder without git a repository.",
+    "Tickets": "A ticket is one piece of work with acceptance criteria.",
+    "Committee": "Agents analyse a question alone, debate, and a synthesis comes to the director (ADR-0015).",
+    "Workshop": "What each agent changed in its worktree: diffs, files, the director's edits and directives, accept or reject.",
+    "Questions": "What waits for the director: permission requests, choices, retries.",
+    "Permissions": "The mission's permission table, enforced by Floor42's hook on every tool call.",
+    "Team": "Hiring, models and efforts, profiles with measured records.",
+    "Lessons": "Lessons from retrospectives: once accepted they reach later briefs.",
+    "Notes": "The director's notes: a note can become a ticket and closes with its commit.",
+    "Settings": "Company-wide settings.",
+    "Costs": "What the sessions cost, read from the journal: amounts as Claude Code estimates them, tokens as it reports them, sessions as Floor42 counts them.",
+    "Pull requests": "Pull requests on GitHub (ADR-0036), on your click only: Floor42 pushes a branch of the mission (never forced, never the default branch) and opens the pull request with your own `gh`. Floor42 never stores a GitHub token and never signs in for you. The only action of Floor42 outside your machine.",
+    "Sandbox": "Sandbox readiness (ADR-0033): the tools a project needs, those the WSL sandbox really has (measured, journaled), and the commands for you to install the missing ones. Floor42 never installs anything itself.",
+    "Deliverables": "What a mission delivered, open or closed (ADR-0037): ticket texts and reviews, files of each branch and of each worktree, viewed safely or downloaded, one at a time or as a ZIP. Never journaled.",
+    "Catalogue": "Skills and agents (W3): what is installed for Claude Code on this machine, what reaches Floor42's sessions (read from their own init line), and a curated list of what could be added. A reading from disk: nothing is journaled, nothing is installed.",
+    "Cockpit": "The journal, the event stream, the API console and the plan's usage.",
+    "Demo": "Replayed scenarios, always marked SIMULATED.",
+    "Hook": "Claude Code's PreToolUse hook: not for scripts.",
+    "Plugins": "Plugins from a marketplace, installed only on your click and confirmation (ADR-0040), either for Floor42 only (its own folder) or into your own Claude Code; and which installed skills and agents each mission's sessions receive.",
+    "Terminal": "Your own Claude Code in a terminal in the UI (ADR-0041): not an agent and not governed by Floor42. It runs with your rights and settings, with no Floor42 flag, hook or brief; only you open it, on your click, one at a time per project. Only the facts opened and closed are journaled, never what is typed or printed.",
+    "Identity": "Agent identity (IAM mode, opt-in): Keycloak issues each agent session a delegated token that Floor42 checks on every hook and MCP call. Health, settings (taking effect at the next start) and the agents' Keycloak clients. Secrets are write-only: nothing here ever returns one.",
+    "Sessions": "The director's browser sessions and script tokens (ADR-0044), in the daemon's memory only: listed without any secret, ended one by one or everywhere. A script token is shown once; the journal keeps its SHA-256."
+  },
+  "operations": {
+    "GET /api/status": {
+      "tag": "Status",
+      "summary": "Mode, runtime and build",
+      "description": "Open without a token so the mode banner shows before login. `runtime.unfamiliar` lists kinds of stream line Claude Code sent that Floor42 does not know: its protocol changed. `build` is the commit the daemon was built from (null fields for a build without a git checkout)."
+    },
+    "GET /api/missions": {
+      "tag": "Missions",
+      "summary": "List missions",
+      "description": "Every mission with its status, newest last, except the archived ones (ADR-0054). With `archived=true`, only the archived missions, restorable with `DELETE /api/missions/{id}/archived`."
+    },
+    "GET /api/missions/archivable": {
+      "tag": "Missions",
+      "summary": "Closed missions to archive",
+      "description": "The missions that can be archived now, oldest first: completed or cancelled, no session of theirs still running, their retrospective concluded. Nothing is recorded. The screen counts them before \"Archive all closed missions\"."
+    },
+    "POST /api/missions/archive": {
+      "tag": "Missions",
+      "summary": "Archive several closed missions",
+      "description": "Archives the missions named (at most 500), one `MissionArchived` event each, in one command: each is checked again, so one that changed since the list was read is left out with its refusal code (`MISSION_STILL_OPEN`, `SESSION_RUNNING`, `RETRO_UNDER_WAY`, `MISSION_ARCHIVED` when it already was, `UNKNOWN_MISSION`). Answers one outcome per mission, in the order given. Worktrees and the journal are kept.",
+      "example": {
+        "missions": ["M-3", "M-4"]
+      }
+    },
+    "GET /api/missions/{id}/retro/offer": {
+      "tag": "Missions",
+      "summary": "Can the retrospective be convened",
+      "description": "Whether the director can convene the retrospective of a closed mission that has none (ADR-0054), and why not: `RETRO_DISABLED`, `RETRO_NOT_IN_WORKFLOW`, `NO_PARTICIPANTS`, `DUPLICATE_RETRO` (it has one), `MISSION_NOT_FINISHED`, `MISSION_ARCHIVED`, `SIMULATED_MISSION`. Nothing is recorded."
+    },
+    "POST /api/missions/{id}/retro/convene": {
+      "tag": "Missions",
+      "summary": "Convene the retrospective",
+      "description": "Convenes the retrospective of a closed mission that has none, for instance one archived at once and restored: those who worked on it speak in short paid sessions. Only on this call: restoring a mission starts nothing. Refused with 409 and the offer's code; a second call gets `DUPLICATE_RETRO`."
+    },
+    "POST /api/missions/{id}/archived": {
+      "tag": "Missions",
+      "summary": "Archive a closed mission",
+      "description": "Puts a completed or cancelled mission away: it leaves the board and the mission lists, stays in the journal, and keeps its worktrees. Refused with 409 `MISSION_STILL_OPEN` while it is open, `SESSION_RUNNING` while a session of it runs, `RETRO_UNDER_WAY` while its retrospective is under way. Archiving it again records nothing."
+    },
+    "DELETE /api/missions/{id}/archived": {
+      "tag": "Missions",
+      "summary": "Restore an archived mission",
+      "description": "Brings an archived mission back to the board and the lists, its status and outcome unchanged. A mission not archived records nothing."
+    },
+    "POST /api/missions": {
+      "tag": "Missions",
+      "summary": "Propose a mission",
+      "responses": {"201": "Created (200 when the same creation is replayed)"},
+      "description": "Creates a mission in PROPOSED status on a git repository. With `plan` the planner first splits the objective into tickets you validate one by one. With `committee` (role keys from /api/committee/roles) the mission is a decision taken by a committee instead: `panel` `architecture` (default, chaired by the architect) or `idea`, a committee before a new project, chaired by a neutral moderator, that debates up to 3 rounds to agree; an idea committee may leave `repository` empty and then meets in a new empty repository. With `workflow`, the name of a company workflow (GET /api/workflows), the mission pins a copy of it with its creation; without it, Floor42's own. Nothing runs until you approve it.",
+      "example": {
+        "title": "Second-hand tools marketplace",
+        "objective": "Should we build a marketplace where neighbours lend and rent their tools? Find the solution that fits best and can really be run.",
+        "repository": "",
+        "committee": [
+          "lawyer",
+          "altruist",
+          "visionary",
+          "double",
+          "architect",
+          "security",
+          "developer",
+          "sales",
+          "novice"
+        ],
+        "plan": false,
+        "panel": "idea"
+      }
+    },
+    "GET /api/missions/{id}": {
+      "tag": "Missions",
+      "summary": "One mission in full",
+      "description": "Tickets, reviews, sessions with their measured times and estimated costs, actions and questions."
+    },
+    "POST /api/missions/{id}/approve": {
+      "tag": "Missions",
+      "summary": "Approve and start",
+      "description": "Starts a PROPOSED mission: the dispatcher hands tickets to agents from now on. A real mission needs its cap decided first: give `budgetUsd` (journaled as its budget), or `noCap: true` to choose explicitly no cap (journaled too); with neither, a budget set before is kept, and without one the approval is refused with 409 `CAP_NEEDED`. The default cap offered on screen is the `MISSION_BUDGET_USD` setting. With IAM mode on this call does not approve yet: only a browser session signed in through Keycloak may call it (any other caller: 403 `DELEGATION_NEEDS_SIGN_IN`), it records a pending approval (5 minutes, single use) and answers 202 `{redirect}`; the screen follows it, Keycloak asks for the password again, and only when that proves a fresh sign-in of the same user is the mission's delegation stored and the plan approved (a failure answers 401 `DELEGATION_STEP_UP_MISSING`, `DELEGATION_WRONG_USER`, `SIGN_IN_FAILED` and leaves the plan awaiting approval). `resources` (IAM mode, optional) names what the mission's agents may reach.",
+      "example": {
+        "budgetUsd": 5.0
+      }
+    },
+    "POST /api/missions/{id}/quarantine": {
+      "tag": "Missions",
+      "summary": "Quarantine a risky session",
+      "description": "The director's answer to a new risk raised on an agent's session of the mission (ADR-0066): chains three steps, each reported in the answer: revoke the mission's delegation (IAM mode with a live delegation only), suspend the mission, and stop the agent's process. The process is stopped whatever the earlier steps did. A second click answers all false. 409 `NO_RISK` when that agent has no new risk in the mission, 404 `NO_MISSION` for an unknown mission. One journal line (`MissionQuarantined`) records what each step did.",
+      "example": {
+        "agent": "pria"
+      }
+    },
+    "GET /api/costs": {
+      "tag": "Costs",
+      "summary": "Spending at a glance",
+      "description": "Today, this week and this month across real missions (each session in the period it ended in, in `zone`, an IANA time zone such as Europe/Paris; the daemon's zone by default; the week starts on Monday), and each mission's total with its cap. Read from the journal; nothing is recorded. Every line carries its bases: amounts `estimated by Claude Code` (its `total_cost_usd`, never a bill), tokens `provided by Claude Code`, sessions `measured by Floor42`; `sessionsWithoutCost` above zero means the amount is a lower bound."
+    },
+    "GET /api/missions/{id}/costs": {
+      "tag": "Costs",
+      "summary": "One mission's costs",
+      "description": "The mission's total and cap, then the same figures per agent and per ticket, most expensive first, with the same bases as `GET /api/costs`."
+    },
+    "POST /api/missions/{id}/reject": {
+      "tag": "Missions",
+      "summary": "Reject a proposal",
+      "description": "Refuses a PROPOSED mission; nothing has run.",
+      "example": {
+        "reason": "Wrong repository"
+      }
+    },
+    "POST /api/missions/{id}/cancel": {
+      "tag": "Missions",
+      "summary": "Cancel",
+      "description": "Stops a running mission. Open sessions are stopped with the processes they started.",
+      "example": {
+        "reason": "Priorities changed"
+      }
+    },
+    "POST /api/missions/{id}/complete": {
+      "tag": "Missions",
+      "summary": "Accept the delivery and close",
+      "description": "Closes a mission whose tickets are done; the retrospective follows. Work left uncommitted in a worktree, or a worktree Floor42 cannot read, needs `acknowledged`: the token of `GET /uncommitted` (ADR-0055). A delivery that is not proven needs `proofAcknowledged`: the token of `GET /proof/acceptance` (409 `UNPROVEN_DELIVERY` otherwise); the override is journaled (`UnprovenDeliveryAccepted`) with the completion (ADR-0058). Refused while its proof runs (409 `PROOF_RUNNING`), as a cancel is.",
+      "example": {
+        "reason": "Delivered and merged"
+      }
+    },
+    "POST /api/missions/{id}/resume": {
+      "tag": "Missions",
+      "summary": "Resume",
+      "description": "Resumes a mission held by its budget or by the plan's usage limit."
+    },
+    "PUT /api/missions/{id}/budget": {
+      "tag": "Missions",
+      "summary": "Set the budget",
+      "description": "The mission's budget in USD, compared with Claude Code's cost estimates: the next session is held once it is reached.",
+      "example": {
+        "usd": 2.0
+      }
+    },
+    "PUT /api/missions/{id}/checks": {
+      "tag": "Missions",
+      "summary": "Configure the checks",
+      "description": "The command Floor42 runs in an agent's worktree to verify a delivery. `automatic` runs it after each delivery; it runs code the agents wrote, on this machine.",
+      "example": {
+        "command": "javac -d out src/*.java && java -cp out TextToolsTest",
+        "automatic": false
+      }
+    },
+    "GET /api/missions/{id}/held": {
+      "tag": "Missions",
+      "summary": "Developers held",
+      "description": "Developers who take no new ticket while their finished changes wait for you."
+    },
+    "POST /api/missions/{id}/staffing": {
+      "tag": "Missions",
+      "summary": "Ask: reinforce the team?",
+      "description": "The planner judges from measured facts whether more developers are worth it; you then answer yes or no (ADR-0022)."
+    },
+    "GET /api/missions/{id}/retro/wait": {
+      "tag": "Missions",
+      "summary": "Retrospective waiting",
+      "description": "Whether the retrospective waits for the plan's usage window, and until when."
+    },
+    "POST /api/missions/{id}/retro/close": {
+      "tag": "Missions",
+      "summary": "Close the retrospective",
+      "description": "Closes a retrospective that waits, without its sessions."
+    },
+    "POST /api/missions/{id}/tickets/approve": {
+      "tag": "Tickets",
+      "summary": "Validate planned tickets",
+      "description": "Validates tickets the planner or an agent proposed (ADR-0017); the others keep waiting. In a graph mission (ADR-0062) the optional risks map gives the director's risk, low or high, for a node: it is final once approved.",
+      "example": {
+        "tickets": [
+          "T-27",
+          "T-28"
+        ],
+        "risks": {
+          "T-28": "high"
+        }
+      }
+    },
+    "POST /api/missions/{id}/graph/extend": {
+      "tag": "Tickets",
+      "summary": "Extend the graph",
+      "description": "Starts one paid, read-only planner session that is given the graph as it stands and proposes at most 8 new nodes, which may depend on existing nodes (ADR-0062). Nothing done is reopened; the nodes arrive as proposals to approve. Needs a token of scope all.",
+      "example": {
+        "goal": "Add the missing release notes"
+      }
+    },
+    "PUT /api/tickets/{id}": {
+      "tag": "Tickets",
+      "summary": "Edit a ticket",
+      "description": "Changes a ticket's title, description or criteria; refused (409) once work on it has started.",
+      "example": {
+        "title": "Fix wordCount on blank text",
+        "description": "wordCount returns 1 for an empty or blank text.",
+        "acceptanceCriteria": [
+          "wordCount(\"\") is 0",
+          "wordCount(\" a\\tb\\nc \") is 3"
+        ]
+      }
+    },
+    "POST /api/tickets/{id}/drop": {
+      "tag": "Tickets",
+      "summary": "Drop a ticket",
+      "description": "Cancels a ticket that has not been delivered.",
+      "example": {
+        "reason": "Covered by T-28"
+      }
+    },
+    "GET /api/committee/roles": {
+      "tag": "Committee",
+      "summary": "Seats of a committee",
+      "description": "The seats you can fill, with the lens each one judges by and the committees (`panels`) it sits on: architecture (architect, security, developer, operations, integration) or idea (moderator, lawyer, altruist, visionary, double, architect, security, developer, sales, novice). Floor42's built-in seats come first, then the seats you defined (`custom`: true)."
+    },
+    "POST /api/committee/roles": {
+      "tag": "Committee",
+      "summary": "Define a seat of your own",
+      "description": "A specialist of your own for committees, beside Floor42's seats: a first name (its key and its member's id are made from it), a title, a lens (what they judge, on what evidence: up to 2000 characters, it goes into every brief of theirs), the model and effort (default Sonnet, medium) and the committees it sits on (`architecture`, `idea`). Like every member they only read. The same name again changes the seat; the member is hired the first time a committee seats them, and can be dismissed. Refused (400 `SEAT_TAKEN`) for the name of one of Floor42's own seats, 409 `AGENT_EXISTS` for the name of another agent. Returns every seat.",
+      "example": {
+        "name": "Rosa",
+        "title": "GDPR expert",
+        "lens": "Personal data, consent, retention and the rights of the people concerned. A use of personal data without a lawful basis is a critical objection.",
+        "model": "claude-sonnet-5-5",
+        "effort": "medium",
+        "panels": [
+          "idea",
+          "architecture"
+        ]
+      }
+    },
+    "POST /api/missions/{id}/committees/{no}/send-back": {
+      "tag": "Committee",
+      "summary": "Send the decision back",
+      "description": "One more debate round in which every member sees your constraint, then a new synthesis. `no` is the committee's number in the mission, from 1 (ADR-0046).",
+      "example": {
+        "constraint": "Keep the first version free of any paid service."
+      }
+    },
+    "GET /api/missions/{id}/workshop": {
+      "tag": "Workshop",
+      "summary": "Worktrees of the mission",
+      "description": "Each agent's worktree, branch and pending changes."
+    },
+    "GET /api/missions/{id}/workshop/{agent}/diff": {
+      "tag": "Workshop",
+      "summary": "An agent's diff",
+      "description": "What the agent changed since its branch started, measured by git. With `path`, that file's diff; without it, every pending change at once, bounded (at most 500 files and 2,000,000 characters, no file above 512 KiB): `omitted` counts the changes left out."
+    },
+    "GET /api/missions/{id}/workshop/{agent}/files": {
+      "tag": "Workshop",
+      "summary": "Files of a worktree",
+      "description": "The files in the agent's worktree."
+    },
+    "GET /api/missions/{id}/workshop/{agent}/file": {
+      "tag": "Workshop",
+      "summary": "Read a file",
+      "description": "One file of the agent's worktree (query parameter `path`)."
+    },
+    "PUT /api/missions/{id}/workshop/{agent}/file": {
+      "tag": "Workshop",
+      "summary": "Edit a file yourself",
+      "description": "Writes your own version of a file in the agent's worktree (query parameter `path`). The agent is never allowed to overwrite it silently afterwards.",
+      "example": {
+        "content": "public final class TextTools {\n}\n",
+        "note": "Keep the class final"
+      }
+    },
+    "POST /api/missions/{id}/workshop/directive": {
+      "tag": "Workshop",
+      "summary": "Give a directive",
+      "description": "A directive for a ticket: it reaches the next brief of whoever works on it.",
+      "example": {
+        "ticket": "T-28",
+        "directive": "Use java.text.Normalizer to remove accents."
+      }
+    },
+    "POST /api/missions/{id}/workshop/{agent}/checks": {
+      "tag": "Workshop",
+      "summary": "Run the checks",
+      "description": "Runs the mission's check command in the agent's worktree and records the result."
+    },
+    "POST /api/missions/{id}/workshop/{agent}/accept": {
+      "tag": "Workshop",
+      "summary": "Accept the changes",
+      "description": "Commits the agent's changes on its branch with your message. With `paths`, only those pending files go in (each must be a pending change, else 409 `NOT_PENDING`); the others stay uncommitted in the worktree.",
+      "example": {
+        "message": "Fix wordCount on blank text",
+        "paths": ["src/TextTools.java"]
+      }
+    },
+    "POST /api/missions/{id}/workshop/{agent}/discard": {
+      "tag": "Workshop",
+      "summary": "Give up one change",
+      "description": "Restores a modified or deleted file to the last commit, or deletes a new file (query parameter `path`, one of the pending changes). Recorded as your own edit of the file."
+    },
+    "POST /api/missions/{id}/workshop/{agent}/reject": {
+      "tag": "Workshop",
+      "summary": "Reject the changes",
+      "description": "Discards the agent's pending changes.",
+      "example": {
+        "message": "Out of scope: README rewritten"
+      }
+    },
+    "GET /api/missions/{id}/pull-requests": {
+      "tag": "Pull requests",
+      "summary": "The mission's pull requests",
+      "description": "The pull requests Floor42 opened (or found) for the mission, with the last checks you asked GitHub for. Read from the journal: no call to GitHub."
+    },
+    "GET /api/missions/{id}/pull-requests/preview": {
+      "tag": "Pull requests",
+      "summary": "What a pull request would be",
+      "description": "For the branch of an agent's worktree (`workspace`, its work accepted in the workshop) or, without it, the project's current branch: the remote and its URL, the GitHub repository, the branch and its commit, the base (the repository's default branch, read with `gh repo view`), the title and the body Floor42 composed from the journal (objective, tickets done, reviews' verdicts, checks with their dates, decision records, who wrote what), and whether `gh` is installed and signed in (`gh auth status`). `refused` names why it cannot be opened now (`GH_MISSING`, `GH_NOT_AUTHENTICATED` with the command to run in `gh.fix`, `HEAD_IS_DEFAULT`, `NOTHING_ACCEPTED`, `NO_REMOTE`, `NOT_GITHUB`…). `existing` is a pull request already open for the branch (`gh pr list --head`). Pushes nothing."
+    },
+    "POST /api/missions/{id}/pull-requests": {
+      "tag": "Pull requests",
+      "summary": "Push the branch and open the pull request",
+      "description": "What you confirmed in the dialog: Floor42 refuses with `PREVIEW_STALE` if the remote, branch or base differ from what it would push now. It first looks for a pull request already open for the branch (outcome `FOUND`, nothing pushed); then `git push <remote> refs/heads/<branch>:refs/heads/<branch>` (never forced) and `gh pr create --head --base --title --body-file`. After an error or a timeout it looks on GitHub before answering: `FOUND` (it exists after all), `FAILED` (Floor42 looked and found none: `retry` is safe), `UNKNOWN` (Floor42 could not look: check the repository first). `pushed` says whether the branch is on the remote at its commit. Journals `PullRequestOpened` (REAL, by the director).",
+      "example": {
+        "workspace": "chris",
+        "remote": "origin",
+        "branch": "floor42/m-3-chris",
+        "base": "main",
+        "title": "Fix wordCount on blank text (M-3)",
+        "body": "> Prepared with Floor42 from its journal of mission M-3.\n\n## Objective\n\nwordCount counts no word in a blank text."
+      }
+    },
+    "POST /api/missions/{id}/pull-requests/{number}/checks": {
+      "tag": "Pull requests",
+      "summary": "Refresh the checks",
+      "description": "Reads once the checks GitHub reports on the pull request (`gh pr checks --json name,bucket,state`) and journals them as `PullRequestCheckState`. Floor42 never polls: only this click reads them."
+    },
+    "GET /api/questions": {
+      "tag": "Questions",
+      "summary": "Open questions",
+      "description": "What waits for you, oldest first, with the options you can answer."
+    },
+    "POST /api/questions/{id}/answer": {
+      "tag": "Questions",
+      "summary": "Answer",
+      "description": "Answers with one of the question's options, or free text when it has none. A permission request takes ALLOW or DENY.",
+      "example": {
+        "answer": "ALLOW"
+      }
+    },
+    "POST /api/questions/{id}/ask-back": {
+      "tag": "Questions",
+      "summary": "Ask the agent back",
+      "description": "Instead of answering an agent's question, asks it something or remarks on it: the question is withdrawn with your words, and the agent's waiting session reads them (quoted, as data: they grant no permission) and asks again or goes on. Costs one more paid turn of that agent's session, within its cap. At most 3 times per thread; never for an approval or one of Floor42's own questions. 409 `SESSION_GONE` when the session no longer waits (answer it, give a directive, or continue the session). The director's credentials only: a script token needs the scope `all`.",
+      "example": {
+        "text": "Which brand guide do you follow?"
+      }
+    },
+    "POST /api/questions/{id}/forget": {
+      "tag": "Questions",
+      "summary": "Forget a remembered answer",
+      "description": "Removes a remembered \"ask once\" answer: the next such call asks again."
+    },
+    "GET /api/missions/{id}/tools": {
+      "tag": "Permissions",
+      "summary": "Permission table",
+      "description": "One line per governed tool (Read, Glob, Grep, Write, Edit, Bash, WebFetch, WebSearch, Skill, Agent) with the decision in force, its source, and remembered answers."
+    },
+    "PUT /api/missions/{id}/tools/{tool}": {
+      "tag": "Permissions",
+      "summary": "Set one line",
+      "description": "ALLOW, ASK (once), ASK_ALWAYS or DENY. A subagent's calls follow the same table (ADR-0023).",
+      "example": {
+        "decision": "ASK"
+      }
+    },
+    "GET /api/agents": {
+      "tag": "Team",
+      "summary": "The team",
+      "description": "Every agent with its role, model, effort and status."
+    },
+    "POST /api/agents": {
+      "tag": "Team",
+      "summary": "Hire",
+      "description": "Hires an agent. `workRole` is DEVELOPER, REVIEWER or RESEARCHER; `role` is the title shown.",
+      "example": {
+        "name": "Dehren",
+        "role": "Code reviewer",
+        "workRole": "REVIEWER",
+        "model": "claude-sonnet-5-5",
+        "effort": "medium"
+      }
+    },
+    "PUT /api/agents/{id}": {
+      "tag": "Team",
+      "summary": "Change model or effort",
+      "description": "Takes effect from the agent's next session.",
+      "example": {
+        "model": "claude-haiku-5-5",
+        "effort": "low"
+      }
+    },
+    "GET /api/agents/{id}/profile": {
+      "tag": "Team",
+      "summary": "Profile",
+      "description": "The agent's measured record: tickets, time, reviews, costs."
+    },
+    "POST /api/agents/{id}/suspend": {
+      "tag": "Team",
+      "summary": "Suspend",
+      "description": "The agent takes no new work until resumed.",
+      "example": {
+        "reason": "Too many rejected reviews"
+      }
+    },
+    "POST /api/agents/{id}/resume": {
+      "tag": "Team",
+      "summary": "Resume",
+      "description": "The agent takes work again."
+    },
+    "POST /api/agents/{id}/dismiss": {
+      "tag": "Team",
+      "summary": "Dismiss",
+      "description": "The agent leaves the company; its history stays in the journal. Refused with AGENT_BUSY while it is at work (a session is open or about to start) and with AGENT_NEEDED for the two chairs, Geoffrey and Lucie. A ticket it had started goes back to the queue (TicketReleased); a delivery under review stays in review; a committee member gives up their seat (`vacant` in the committee roles).",
+      "example": {
+        "reason": "Role no longer needed"
+      }
+    },
+    "PUT /api/agents/{id}/core": {
+      "tag": "Team",
+      "summary": "Star as a core member",
+      "description": "`core: true` stars the agent as a core member, `false` takes the star away; journaled as AgentMarkedCore or AgentUnmarkedCore (real, by the director). Asking for the state the agent is already in records nothing. \"Dismiss everyone except the core members\" never lets a core member go.",
+      "example": {
+        "core": true
+      }
+    },
+    "GET /api/agents/dismiss-all-but-core": {
+      "tag": "Team",
+      "summary": "Preview: dismiss everyone except the core members",
+      "description": "Every agent on staff with its fate: LEAVES (with the tickets it had started, which would go back to the queue), STAYS (a core member) or BLOCKED (cannot leave now: `code` and `reason` are those a single dismissal would be refused with, AGENT_BUSY while at work, AGENT_NEEDED for the two chairs). Nothing is recorded."
+    },
+    "POST /api/agents/dismiss-all-but-core": {
+      "tag": "Team",
+      "summary": "Dismiss everyone except the core members",
+      "description": "Dismisses, one by one, the agents you confirmed from the preview (`agents`), each as a single dismissal and journaled as its own AgentDismissed. Each one is judged again when its turn comes: a core member is SKIPPED (CORE), one at work is REFUSED (AGENT_BUSY), never interrupted. Agents not listed are left alone. Returns the outcome per agent.",
+      "example": {
+        "agents": [
+          "ken",
+          "basile"
+        ],
+        "reason": "Keeping only the core team"
+      }
+    },
+    "GET /api/lessons": {
+      "tag": "Lessons",
+      "summary": "List lessons",
+      "description": "Proposed, accepted, rejected and retired lessons, with the mission they come from."
+    },
+    "POST /api/lessons/{id}/accept": {
+      "tag": "Lessons",
+      "summary": "Accept",
+      "description": "Accepts a proposed lesson, in your wording if you give one.",
+      "example": {
+        "text": "Declare in the plan the paths outside the workspace that the checks need."
+      }
+    },
+    "POST /api/lessons/{id}/reject": {
+      "tag": "Lessons",
+      "summary": "Reject",
+      "description": "Refuses a proposed lesson.",
+      "example": {
+        "reason": "Only true for that repository"
+      }
+    },
+    "POST /api/lessons/{id}/retire": {
+      "tag": "Lessons",
+      "summary": "Retire",
+      "description": "An accepted lesson stops reaching briefs.",
+      "example": {
+        "reason": "Obsolete since ADR-0023"
+      }
+    },
+    "GET /api/notes": {
+      "tag": "Notes",
+      "summary": "List notes",
+      "description": "Your notes, with the ticket and commit that closed them."
+    },
+    "POST /api/notes": {
+      "tag": "Notes",
+      "summary": "Add a note",
+      "description": "A note to yourself.",
+      "example": {
+        "text": "Add a kitchen to the office"
+      }
+    },
+    "PUT /api/notes/{id}": {
+      "tag": "Notes",
+      "summary": "Tick or untick",
+      "description": "Marks a note done or not.",
+      "example": {
+        "done": true
+      }
+    },
+    "DELETE /api/notes/{id}": {
+      "tag": "Notes",
+      "summary": "Remove a note",
+      "description": "Removes a note."
+    },
+    "POST /api/notes/{id}/ticket": {
+      "tag": "Notes",
+      "summary": "Make it a ticket",
+      "description": "Turns the note into a ticket of a mission.",
+      "example": {
+        "mission": "M-8"
+      }
+    },
+    "POST /api/notes/{id}/close": {
+      "tag": "Notes",
+      "summary": "Close with its commit",
+      "description": "Closes a done note into the archive with the commit that did it.",
+      "example": {
+        "commit": "c01951e"
+      }
+    },
+    "GET /api/meetings": {
+      "tag": "Meetings",
+      "summary": "List meetings",
+      "description": "Your meetings at the table (ADR-0047), newest first (`?limit=10`: the open ones and the latest closed), with each attendee's status (`IN_MEETING` once seated; `finishing` while its session ends the call under way), what you said, the table (`place`) and each round's turns of speech with their cost as Claude Code estimated it (ADR-0049)."
+    },
+    "GET /api/meetings/invitation": {
+      "tag": "Meetings",
+      "summary": "Who to call",
+      "description": "The agents working on the mission now (`?mission=M-8`): the panel ticks them."
+    },
+    "POST /api/meetings": {
+      "tag": "Meetings",
+      "summary": "Call a meeting",
+      "description": "Calls agents to the table about a mission that is not closed. Each one's next tool call is refused for the meeting (the call under way finishes, its worktree stays), and nothing new starts for it until you close. Refused for an agent who left, one on a committee in session or already in a meeting, and for a second meeting on the mission.",
+      "example": {
+        "mission": "M-8",
+        "attendees": ["chris"],
+        "agenda": "The next step",
+        "place": "CONFERENCE"
+      }
+    },
+    "POST /api/meetings/{id}/views": {
+      "tag": "Meetings",
+      "summary": "Ask for their view",
+      "description": "Paid (ADR-0049): each speaker answers once, in this order, in a short read-only session on the meeting's own ticket, once seated. `capUsd` caps what the whole meeting is charged (Claude Code's estimates, or a turn's budget when it gave none); a speaker past the cap is recorded as not heard. Refused while a round is under way and on a mission not in progress.",
+      "example": {
+        "speakers": ["dehren", "chris"],
+        "capUsd": 0.5,
+        "question": "Is it ready?"
+      }
+    },
+    "POST /api/meetings/{id}/notes": {
+      "tag": "Meetings",
+      "summary": "Say something",
+      "description": "A note to one attendee, or to all (`attendee` null), restated in their next brief; with `use` `ALSO_DIRECTIVE` it is also a directive on their ticket under way.",
+      "example": {
+        "attendee": "chris",
+        "text": "Start with the tests",
+        "use": "NOTE_ONLY"
+      }
+    },
+    "POST /api/meetings/{id}/close": {
+      "tag": "Meetings",
+      "summary": "Close the meeting",
+      "description": "The attendees go back to their work; a session stopped for the meeting is continued with `--resume` when measured safe, otherwise the next one starts fresh with the meeting in its brief."
+    },
+    "GET /api/journal/unreadable": {
+      "tag": "Journal",
+      "summary": "Events left out at startup",
+      "description": "The journal rows replay could not use, by sequence: CORRUPT (cannot be read), NEWER_VERSION (written by a newer Floor42: upgrade to read them), NOT_APPLICABLE (read, but builds on an event left out). Empty when the state is complete. The rows stay in the journal; their payload is never shown."
+    },
+    "GET /api/journal/alerts": {
+      "tag": "Journal",
+      "summary": "Journal alerts for the banner",
+      "description": "refusedRestore: a restore-pending.properties this start found in the data folder and refused (a start never restores; only the director prepares a restore, applied when the daemon stops), with the copy it named and where it was kept aside. locked: another program holds the journal file, so appends fail after SQLite's busy timeout (JOURNAL_LOCKED), since when. continuity: the journal does not continue what the last run saw (SHORTER: fewer events; DIVERGED: the last row it saw is missing or different), or nothing says what that run saw (MISSING: no record beside a journal holding events, expected once on the first start of 1.8.0; UNREADABLE: a record that cannot be read; the recorded fields are then null), with a displaced copy when the last run's stop kept the journal it held; detection only, since the record is a file of the data folder; also raised while the daemon runs when the journal stops continuing the last record. configFiles: configuration files read from outside Floor42's own files (QUARKUS_CONFIG_LOCATIONS). Null or empty when all is well."
+    },
+    "POST /api/journal/alerts/continuity/acknowledge": {
+      "tag": "Journal",
+      "summary": "Acknowledge a journal that went back in time",
+      "description": "The director has seen the continuity alert: it goes, and the record follows the journal as it is now. Until then every start reports it again. Nothing is restored or refused: to go back to the journal the last run held, restore its displaced-* copy from Settings."
+    },
+    "GET /api/backups": {
+      "tag": "Journal",
+      "summary": "List journal backups",
+      "description": "The copies of the journal (startup, daily, manual, before-restore) with size, date and event count, newest first; where they are kept, how many of each are kept, the last failure, the restore this daemon applies when it stops (in memory only), what the last stop did with one (verified against the journal), and a restore file this start refused."
+    },
+    "POST /api/backups": {
+      "tag": "Journal",
+      "summary": "Back the journal up now",
+      "description": "Takes a manual copy now (SQLite's consistent snapshot, writers carry on), then keeps the last `floor42.backup.manual-keep` of them. 409 when copies are turned off or the copy fails."
+    },
+    "PUT /api/backups/restore": {
+      "tag": "Journal",
+      "summary": "Prepare a restore",
+      "description": "Names the copy this daemon restores when it stops in order (Ctrl+C, docker compose down or restart). Kept in the daemon's memory only, never in a file: a crash forgets it, and a start never restores. During the stop, after everything else stopped writing, the current journal is copied as before-restore-*, then rewritten from this copy. Events written after the copy are no longer in the journal (they stay in the before-restore copy). 404 for an unknown name.",
+      "example": {
+        "name": "daily-2026-10-31.db"
+      }
+    },
+    "DELETE /api/backups/restore": {
+      "tag": "Journal",
+      "summary": "Cancel a prepared restore",
+      "description": "The next stop keeps the journal as it is."
+    },
+    "GET /api/settings": {
+      "tag": "Settings",
+      "summary": "List settings",
+      "description": "PARALLEL_SESSIONS, PLAN_LIMIT_THRESHOLD, RETRO_MODEL, AGENT_LANGUAGE and DIRECTOR_PROFILE (how you think, in your own words: the lens of your double on an idea committee), with their default and allowed values."
+    },
+    "PUT /api/settings/{key}": {
+      "tag": "Settings",
+      "summary": "Change a setting",
+      "description": "Changes one setting; `value` null puts the daemon's default back. Setting the value already in force records nothing.",
+      "example": {
+        "value": "3"
+      }
+    },
+    "GET /api/workflows": {
+      "tag": "Missions",
+      "summary": "List workflows",
+      "description": "Floor42's own workflow and templates (read only), the company's workflows each with its versions (the saves since its latest removal), and the planner's proposals (ADR-0050, ADR-0052). A workflow this version cannot read is listed with its reason and cannot be picked."
+    },
+    "POST /api/workflows": {
+      "tag": "Missions",
+      "summary": "Save a workflow",
+      "description": "Saves a company workflow: its name and its steps in Floor42's order (plan, approval, committee, produce, review, accept, retro), the plan step's `maxTickets` from 1 to 8. Read exactly as a mission's pinned document is read: what the reader refuses is refused with its reason. A workflow of the same name is replaced only with `replace`; `proposal` adopts the planner's proposal of that number. Missions already created keep their copy.",
+      "example": {
+        "name": "Light read",
+        "steps": [
+          { "step": "plan", "maxTickets": 3 },
+          { "step": "approval" },
+          { "step": "produce" },
+          { "step": "review" },
+          { "step": "accept" }
+        ],
+        "replace": false,
+        "proposal": null
+      }
+    },
+    "GET /api/workflows/export": {
+      "tag": "Missions",
+      "summary": "Export a workflow",
+      "description": "The company workflow of the query parameter `name` as a file to keep or share: `{\"format\":\"floor42-workflow\",\"formatVersion\":1,\"schemaVersion\":N,\"document\":{...}}`, the document as Floor42 saves it. Nothing is journaled. A workflow this version cannot read is refused (WORKFLOW_UNREADABLE), an unknown name too (UNKNOWN_WORKFLOW)."
+    },
+    "POST /api/workflows/import": {
+      "tag": "Missions",
+      "summary": "Check a workflow file",
+      "description": "Validates the text of an exported file in full and saves nothing: the file is data and never trusted. At most 64 KiB, JSON of at most 4 levels, the export format and a schema version this build reads, then the document's own rules. Answers the workflow to show the director, or every problem found as a code with the short plain key, step or number it is about (IMPORT_TOO_LARGE, IMPORT_NOT_JSON, IMPORT_UNKNOWN_KEY, IMPORT_SCHEMA_NEWER, IMPORT_STEP_UNKNOWN, IMPORT_STEP_ORDER and the others of the catalogue); the screen writes the sentences. Saving what it shows goes through `POST /api/workflows`.",
+      "example": {
+        "text": "{\"format\":\"floor42-workflow\",\"formatVersion\":1,\"schemaVersion\":1,\"document\":{\"name\":\"Light read\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}}"
+      }
+    },
+    "POST /api/workflows/remove": {
+      "tag": "Missions",
+      "summary": "Remove a workflow",
+      "description": "Removes a company workflow by its name. Missions that pinned it keep their copy.",
+      "example": {
+        "name": "Light read"
+      }
+    },
+    "POST /api/workflows/proposals/{number}/dismiss": {
+      "tag": "Missions",
+      "summary": "Dismiss a proposal",
+      "description": "Dismisses the planner's workflow proposal of this number; a closed proposal is refused (PROPOSAL_CLOSED)."
+    },
+    "GET /api/events": {
+      "tag": "Cockpit",
+      "summary": "Recent events",
+      "description": "The latest events of the journal as the event log shows them (query parameter `limit`, 40 by default): each line as a message code and its values, which the screen writes in its language; no English sentence comes with them."
+    },
+    "GET /api/journal": {
+      "tag": "Cockpit",
+      "summary": "Journal",
+      "description": "The raw journal, by sequence (query parameter `limit`, 50 by default)."
+    },
+    "GET /api/calls": {
+      "tag": "Cockpit",
+      "summary": "API console",
+      "description": "The latest calls to the API with caller, status and duration, tokens masked (query parameter `limit`, 200 by default)."
+    },
+    "GET /api/calls/{sequence}": {
+      "tag": "Cockpit",
+      "summary": "One call with its bodies",
+      "description": "The request and response bodies of one recorded call."
+    },
+    "GET /api/sessions/{id}/context": {
+      "tag": "Cockpit",
+      "summary": "A session's context in use",
+      "description": "The last reading of a live session's context, kept in memory and never journaled; `id` is the session's id as the mission lists it (`M-1:<Claude Code session id>`), 204 (no body) for a session that has not reported yet, 404 for an unknown session. `usedTokens` is measured by Claude Code: input, cache writes and cache reads of the session's last request (one reading per model message, never a sum; a subagent's lines are its own context and are left out). `windowTokens` is the model's documented window, null for a model Floor42 does not know: a share of it is an estimate, not a measurement. A headless session tells no categories (system prompt, tools, messages) and cannot be asked for `/context`. Live readings come on the WebSocket `/ws/context`, one JSON message of the same shape per new reading."
+    },
+    "GET /api/usage": {
+      "tag": "Cockpit",
+      "summary": "Plan usage",
+      "description": "The plan's 5-hour and weekly windows as Claude Code last reported them."
+    },
+    "POST /api/demo": {
+      "tag": "Demo",
+      "summary": "Run the demo",
+      "description": "Replays a recorded scenario; every event is SIMULATED."
+    },
+    "POST /api/demo/live": {
+      "tag": "Demo",
+      "summary": "Start the live demo",
+      "responses": {"202": "Accepted: the mission is running"}, "without": ["200"],
+      "description": "Replays a scenario at human pace on the scene (query parameter `paceMs`, 1500 by default); every event is SIMULATED."
+    },
+    "POST /api/demo/sample": {
+      "tag": "Demo",
+      "summary": "Prepare the sample repository",
+      "description": "Creates Floor42's throwaway sample repository in its data folder the first time (one README, one commit) and returns its path; never one of the director's (ADR-0046)."
+    },
+    "GET /api/demo/practice/{id}": {
+      "tag": "Demo",
+      "summary": "Where a guided first mission stands",
+      "description": "PLAYING while its script runs in this daemon, DONE once it reached its end, STOPPED otherwise (the daemon restarted, the plan was refused, patience ran out): a stopped rehearsal is not resumed, start a new one (ADR-0045). 404 for a mission that is not a rehearsal."
+    },
+    "POST /api/demo/practice": {
+      "tag": "Demo",
+      "summary": "Start the guided first mission",
+      "responses": {"202": "Accepted: the mission is running"}, "without": ["200"],
+      "description": "A simulated rehearsal on the sample repository: its plan awaits approval on return, then it waits for the director at each decision (a cap, an agent's question, a write). Query parameter `paceMs`, 800 by default; every event is SIMULATED, no model is called (ADR-0045).",
+      "example": {
+        "title": "My first mission",
+        "objective": "Inventory the sample and leave notes"
+      }
+    },
+    "POST /hooks/pre-tool-use": {
+      "tag": "Hook",
+      "summary": "Claude Code's PreToolUse hook",
+      "description": "Called by the agent sessions Floor42 starts, before every tool call, with the session's own token. Floor42 decides from the mission's table; a failure blocks the call (fail closed).",
+      "schema": "object",
+      "example": {
+        "session_id": "00000000-0000-4000-8000-00000000002d",
+        "hook_event_name": "PreToolUse",
+        "tool_name": "Read",
+        "tool_input": {
+          "file_path": "src/TextTools.java"
+        },
+        "cwd": "C:/Users/me/.floor42/workspaces/M-8-chris"
+      }
+    },
+    "POST /api/missions/{id}/committees/{no}/contribute": {
+      "tag": "Committee",
+      "summary": "Speak in person in your double's seat",
+      "description": "On an idea committee with your double seated, while it analyses or debates: your contribution is recorded as yours, in the current round. Said before your double, it does not speak this round; said after, yours replaces its position. `no` is the committee's number in the mission, from 1. End with the same closing lines as a member; `position` is NEW, MAINTAINED, REVISED or ADOPTED <member id>.",
+      "example": {
+        "text": "Renting between neighbours raises insurance questions first; I would start with lending only.",
+        "proposal": "Lending only for the first version, insurance studied before renting",
+        "position": "REVISED",
+        "criticalObjection": null
+      }
+    },
+    "POST /mcp": {
+      "tag": "Hook",
+      "summary": "Floor42's MCP server for agent sessions",
+      "description": "JSON-RPC over HTTP, called by the agent sessions Floor42 starts, with the session's own token (ADR-0027). Its one tool, ask_director, puts a blocking question on your desk; the session waits for your answer.",
+      "schema": "object",
+      "example": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+          "name": "ask_director",
+          "arguments": {
+            "question": "Which colour for the banner?",
+            "options": [
+              "blue",
+              "red"
+            ]
+          },
+          "_meta": {
+            "claudecode/toolUseId": "toolu_01CqNh6yXYe6d4CCpUGt9ho1"
+          }
+        }
+      }
+    },
+    "GET /mcp": {
+      "tag": "Hook",
+      "summary": "No stream from Floor42's MCP server",
+      "responses": {"405": "Refused: no stream"}, "without": ["200"],
+      "description": "Refused (405): Floor42 answers each MCP request in its own response and never opens a server-sent stream."
+    },
+    "GET /api/permissions/defaults": {
+      "tag": "Permissions",
+      "summary": "The company's default permission table",
+      "description": "What every new work mission starts from, tool by tool: your line where you set one, Floor42's built-in line otherwise. Committees keep their own table: they never write."
+    },
+    "PUT /api/permissions/defaults/{tool}": {
+      "tag": "Permissions",
+      "summary": "Set a line of the default permission table",
+      "description": "ALLOW, ASK (once), ASK_ALWAYS or DENY for new work missions; null goes back to Floor42's built-in line. Missions already created keep their own table.",
+      "example": {
+        "decision": "ASK_ALWAYS"
+      }
+    },
+    "GET /api/projects": {
+      "tag": "Projects",
+      "summary": "List projects already used",
+      "description": "Each repository real missions worked on, the ones you pinned first, then by their latest activity (`lastActivity`, the time of the newest event of one of its missions), with its newest mission (`lastMission`, `lastTitle`), whether the folder is still on disk (`exists`) and what git says of it now (branch, last commit, uncommitted files). `forgotten` marks those you took off the list (the picker leaves them out). Read only."
+    },
+    "GET /api/projects/folders": {
+      "tag": "Projects",
+      "summary": "Browse folders",
+      "description": "The sub-folders of `path` (names only, hidden ones left out, at most 400), which of them are git repositories, and what git says of `path` when it is one. Without `path`: the home folder and the drives. Never reads a file and changes nothing."
+    },
+    "POST /api/projects/folders": {
+      "tag": "Projects",
+      "summary": "Create a folder",
+      "description": "Creates one empty folder `name` in the folder `parent` and returns it as `GET /api/projects/folders` lists it. The name is one plain folder name: no separator, no `..`, no leading dot or `$`, no trailing space or dot, no name Windows reserves (CON, NUL, COM1...), at most 80 characters (`NEW_FOLDER_NAME_INVALID`, 400). The parent is judged by its real path, links and junctions followed: a share or a device path is `NEW_FOLDER_REMOTE` (400), a folder that does not exist `NEW_FOLDER_PARENT_MISSING` (404); a disk root, the home folder itself, a folder that configures a tool (.git, .claude, node_modules and the like), Floor42's data folder or a system folder, or anything inside them, is `NEW_FOLDER_PROTECTED` (400). `NEW_FOLDER_EXISTS` (409) when something of that name is there, `NEW_FOLDER_FAILED` (409) when the disk refuses. Needs the director's full scope.",
+      "example": {
+        "parent": "C:/Users/me/projects",
+        "name": "garden-planner"
+      }
+    },
+    "GET /api/projects/init": {
+      "tag": "Projects",
+      "summary": "Preview making a folder a repository",
+      "description": "What `POST /api/projects/init` would do with `path`: whether it already is a git repository and has a commit, how many files the first commit would hold (counted up to 5001), and why Floor42 would refuse (a drive root, your home folder, Floor42's own data, more than 5000 files). Changes nothing."
+    },
+    "POST /api/projects/init": {
+      "tag": "Projects",
+      "summary": "Make a folder a repository",
+      "description": "So a mission can work on a folder without git: `git init` when it is no repository, then a first commit holding the files already there (an empty commit in an empty folder), signed Floor42. `INIT_REFUSED`: 400 for a drive root, your home folder, Floor42's own data, a path that is no folder, or more than 5000 files; 409 for a repository that already has commits, or when git itself fails. Returns what git says of the folder now.",
+      "example": {
+        "path": "C:/Users/me/projects/garden-planner"
+      }
+    },
+    "GET /api/missions/{id}/archive": {
+      "tag": "Missions",
+      "summary": "Archive wall",
+      "description": "The newest commits of the mission's repository (its current branch) and, for each agent's worktree, the commits its branch holds beyond them, read from git when asked. `graph` draws both as a git graph: the heads (the director's branch first, then each agent's, with their uncommitted file counts) and up to 200 commits children first (`git log --topo-order`), each with its parents; only the mission's repository and Floor42's worktrees of the mission are read. `available` is false when the mission has no repository or git cannot read it. Changes nothing."
+    },
+    "GET /api/missions/{id}/deliverables": {
+      "tag": "Deliverables",
+      "summary": "What a mission delivered",
+      "description": "For any mission, open or closed (ADR-0037): each ticket's deliverable text with its reviews (verdict and findings); for each agent's branch the files it added, changed, renamed or deleted since its worktree was made (`committed`, with size and the last commit that touched each), its commits and whether the project's current branch holds them (`merged`: `NOTHING`, `MERGED`, `PARTIAL`, `NOT_MERGED`, `UNKNOWN`; `notInProject`), and the files its worktree holds that were never committed (`uncommitted`: `?` new, `M`/`A`/`D`/`R` changed, `!` ignored by git, only with `ignored=true`; otherwise `ignoredHidden` counts them, a folder once). Worktrees of Office's former data folder are found too (`legacy`); a worktree that is gone still lists its committed files from the repository (`worktreePresent` false). At most 500 files per list (`truncated`) and 30 commits. Also the pull requests. Read from the journal and git; nothing is changed or journaled."
+    },
+    "HEAD /api/missions/{id}/deliverables/file": {
+      "tag": "Deliverables",
+      "summary": "The headers of the same GET, without the body",
+      "description": "The type, disposition, Content-Security-Policy and `nosniff` the GET would send, and no body; the file read for the check is released before the answer leaves. Same parameters and refusals as the GET."
+    },
+    "GET /api/missions/{id}/deliverables/file": {
+      "tag": "Deliverables",
+      "summary": "View or download one delivered file",
+      "description": "One file the listing names: `agent`, `path` and `source` (`COMMITTED`: read with git at the branch tip, so it works after the worktree is gone; `WORKTREE`: a file git reports as not committed). With `download=true`: `application/octet-stream` as an attachment with a safe file name (`text/markdown; charset=UTF-8` for a `.md` or `.markdown` file). Otherwise shown: text up to 1 MB as `text/plain` (`text/markdown; charset=UTF-8` for a `.md` or `.markdown` file; HTML, SVG and scripts included: never rendered), PNG, JPEG, GIF and WebP up to 25 MB as images when their bytes say so, a PDF up to 25 MB when it starts with `%PDF-`; 413 `TOO_LARGE_TO_VIEW` above, 415 `NOT_VIEWABLE` for anything else. Every answer carries `X-Content-Type-Options: nosniff` and a `Content-Security-Policy` with `sandbox; default-src 'none'` (a PDF: `default-src 'none'; object-src 'self'; frame-ancestors 'self'`, since browsers' PDF viewers refuse a sandbox). Refused with 400: a path that leaves the worktree (`OUTSIDE_WORKSPACE`: `../`, an absolute path, a link leading out, `.git`), a link (`LINK_REFUSED`), a file the listing would not name (`NOT_A_DELIVERABLE`). 404 for an unknown mission or agent. Not journaled. `check=true` answers 200 with `{viewable, type, code, message}` and no bytes: what the viewer would get, asked before a file goes into an `<img>` or a frame, so a refusal never shows as a failed load."
+    },
+    "GET /api/missions/{id}/deliverables/zip": {
+      "tag": "Deliverables",
+      "summary": "Download everything a mission delivered",
+      "description": "One ZIP, streamed: `MANIFEST.txt` (where each file comes from: committed at a commit on a branch, or not committed and only in a worktree; what was left out and why), `tickets/T-n.md` (deliverable text and reviews), and per agent `branches/<agent>/committed/...` (read with git) and `branches/<agent>/not-committed/...` (ignored files only with `ignored=true`). Nothing outside the mission's repository and worktrees; links are never followed; at most 512 MB of files, the rest listed as left out. Not journaled."
+    },
+    "POST /api/missions/{id}/deliverables/open-folder": {
+      "tag": "Deliverables",
+      "summary": "Open a worktree in the file explorer",
+      "responses": {"204": "Done, no body"}, "without": ["200"],
+      "description": "Starts the file explorer of the machine the daemon runs on (yours) on the worktree of `agent`: `explorer.exe` on Windows, `open` on macOS, `xdg-open` elsewhere, the folder as its only argument, no shell. Only a worktree Floor42 made for this mission inside its data folder (or Office's former one) is opened: 409 `NOT_A_MISSION_WORKTREE` otherwise, `WORKTREE_GONE` when the folder is gone, `OPEN_FOLDER_UNAVAILABLE` when no explorer can start (in Docker). 204 when started. Not journaled.",
+      "example": {
+        "agent": "chris"
+      }
+    },
+    "GET /api/missions/{id}/files": {
+      "tag": "Missions",
+      "summary": "Where the director's files stand",
+      "description": "For a mission's project folder: its branch and last commit, what you put in the folder and did not commit yet (`pending`, at most 200 shown, `pendingCount` in all), and for each agent's worktree whether it already holds that last commit (`upToDate`) and whether its session runs (`atWork`). Changes nothing."
+    },
+    "POST /api/missions/{id}/files": {
+      "tag": "Missions",
+      "summary": "Give a mission files",
+      "description": "Writes the files (name and base64 content; at most 50 files and 20 MB at once) into `folder` of the mission's project (empty for its root) and commits them on your branch, under \"Director's files for M-n\". Refused with `FILES_REFUSED`: 400 for a file without a name, given twice, unreadable base64, or a path outside the project or into git's own files; 409 over an existing file; 413 above 50 files or 20 MB. The agents see them once you update their worktrees.",
+      "example": {
+        "folder": "inputs",
+        "files": [
+          {
+            "name": "notes.txt",
+            "content": "TWVldGluZyBub3Rlcw=="
+          }
+        ]
+      }
+    },
+    "GET /api/missions/{id}/files/entry": {
+      "tag": "Missions",
+      "summary": "What the viewer needs to know about one of your pending files",
+      "description": "One path that `GET /api/missions/{id}/files` lists in `pending`, as a file entry (its kind from the name, its size, whether it is a link) with the viewer's caps. Nothing else in the project is read. 400 `NOT_A_PENDING_FILE` for a committed or unknown path, `OUTSIDE_WORKSPACE` for a path that leaves the project or names `.git`; 403 `SCOPE` for a token that is not of scope `all`."
+    },
+    "HEAD /api/missions/{id}/files/file": {
+      "tag": "Missions",
+      "summary": "The headers of the same GET, without the body",
+      "description": "The type, disposition, Content-Security-Policy and `nosniff` the GET would send, and no body; the file read for the check is released before the answer leaves. Same parameters and refusals as the GET."
+    },
+    "GET /api/missions/{id}/files/file": {
+      "tag": "Missions",
+      "summary": "View or download one of your pending files",
+      "description": "The bytes of one pending path (`path`), under the same rules as a delivered file: the type comes from the bytes (an image only when its magic bytes say so, a PDF only when it starts with `%PDF-`, an SVG only as an image to put in an `<img>`), always with `nosniff` and a sandboxing Content-Security-Policy; HTML and code go out as plain text. `download=true` sends it as an attachment. 413 `TOO_LARGE_TO_VIEW` above the caps, 415 `NOT_VIEWABLE` for anything else; 400 and 403 as for `/files/entry`. `check=true` answers 200 with `{viewable, type, code, message}` and no bytes: what the viewer would get, asked before a file goes into an `<img>` or a frame, so a refusal never shows as a failed load."
+    },
+    "POST /api/missions/{id}/files/commit": {
+      "tag": "Missions",
+      "summary": "Commit what you put in the project folder",
+      "description": "Commits on your branch, under \"Director's changes for M-n\", the pending paths you confirmed (`paths`, as `GET /api/missions/{id}/files` lists them in `pending`), and only those: whatever else waits in the folder (a stray `.env`) stays out of the commit. `FILES_REFUSED`: 400 without `paths`; 409 when nothing is pending or a path is not pending (any more), and then nothing is committed.",
+      "example": {
+        "paths": [
+          "inputs/photo-notes.md"
+        ]
+      }
+    },
+    "POST /api/missions/{id}/files/update-agents": {
+      "tag": "Missions",
+      "summary": "Bring your files to the agents",
+      "description": "Merges your branch, at its last commit, into each worktree of the mission that does not hold it yet, so the agents see your files. Refused (409 `AGENT_AT_WORK`) while a session runs, and (409 `MISSION_CLOSED`) once the mission is over; the check, each merge and its record happen under one lock, so no session starts in between and no merge stays that the journal does not know. A conflict undoes that merge and is reported (`clean` false, `detail`): the agent's work is never lost. Each merge is recorded (`ProjectMerged`)."
+    },
+    "GET /api/progress": {
+      "tag": "Missions",
+      "summary": "Where every mission stands",
+      "description": "For every mission not ended: what runs now (open sessions, `SILENT` after 10 minutes without a sign), what waits for you and since when (`since`; for a question an agent asked with ask_director, `deadline` is when Floor42 withdraws it unanswered), and `stall`, the dispatcher's own reading: `STUCK` only when it would start a task now (`work`, `ticket`, `agent`) yet nothing of the mission ran or happened for the `STALL_MINUTES` setting (5 by default); otherwise `RUNNING`, `DUE` (the same, for less long), `WAITING` with the reason (`QUESTION`, `HELD_PATCH`, `COMMITTEE_DIRECTOR`, `PROPOSED`, `RESTING` until `until`, `AGENT_BUSY` on mission `elsewhere`) or `IDLE`. A stuck mission is also listed under `stuck`. Floor42's reading of its journal and worktrees, computed on each call; nothing is recorded."
+    },
+    "GET /api/catalogue": {
+      "tag": "Catalogue",
+      "summary": "Skills, agents and plugins: installed, reaching the sessions, to add",
+      "description": "Reads from disk, now: the Claude Code skills (`SKILL.md`) and custom agents (`agents/*.md`) of the user level (`~/.claude`), of the project level of the mission's repository (`mission`, optional: `.claude/skills`, `.claude/agents`), and of the installed plugins (`~/.claude/plugins/installed_plugins.json` and each plugin's `.claude-plugin/plugin.json`). Only the frontmatter is read (16 KB per file at most), nothing is executed, and a file whose real path leaves its root is listed with the problem `linkOut`, not read. Each item says whether it reaches Floor42's sessions: `AVAILABLE` or `NOT_AVAILABLE` only from a real session's `system/init` line (the mission's latest, else the latest of all), `UNKNOWN` otherwise. `launch` gives the isolating flags every session gets (`--restricted`, `--strict-mcp-config`). `suggestions` is the curated catalogue shipped with Floor42, with the date it was checked; an MCP server never reaches the sessions (`--strict-mcp-config`). Floor42 installs nothing: copy a command into your own Claude Code, then read again. Nothing is journaled."
+    },
+    "GET /api/sandbox/readiness": {
+      "tag": "Sandbox",
+      "summary": "What a project needs and what the sandbox has",
+      "description": "Reads the project's files (`project`, a folder; optional) and the checks command (`check`, optional) for the tools it needs, and compares them with the last measure of the sandbox in the journal. Nothing runs: without a measure (or since the sandbox was turned on) every state is `UNKNOWN`, never `MISSING`. `commands` are apt lines (Debian, Ubuntu) and, for a Node newer than the distribution's, the official tarball into /usr/local: for you to copy into a WSL terminal; Floor42 never runs them."
+    },
+    "GET /api/sandbox/checklist": {
+      "tag": "Sandbox",
+      "summary": "What is missing on this machine",
+      "description": "The same list as `floor42 doctor`: Claude Code (as checked at startup), git and WSL 2 (read now: `git --version`, `wsl.exe -l -v`), the sandbox's distribution, its isolation and the essential tools inside it (from the last measure in the journal; `POST /api/sandbox/readiness/probe` takes a new one). Each row is `PRESENT`, `MISSING` (required), `OPTIONAL` (absent, not required) or `UNKNOWN`, with codes the screen explains (`id`, `note`) and the command to copy. `ready` is true when every required row is present. Floor42 never runs the commands; nothing is journaled."
+    },
+    "POST /api/sandbox/readiness/probe": {
+      "tag": "Sandbox",
+      "summary": "Measure the sandbox again",
+      "description": "Runs one command in the sandbox (same namespaces and PATH as real work, in a scratch folder, 30 s at most): /etc/os-release, then for each tool `command -v` and the first line of its version. Journals `SandboxToolsProbed` (REAL, by Floor42, no project path in it) and returns the readiness. Off Windows, without WSL or the distribution, or after the limit, nothing is measured and every tool stays `UNKNOWN`. Installs nothing."
+    },
+    "POST /api/missions/{id}/nudge": {
+      "tag": "Missions",
+      "summary": "Look at a mission again",
+      "description": "Asks the dispatcher to look at the mission again, as it does after each event it knows: work that can run starts. Nothing is forced; returns the progress of every mission."
+    },
+    "GET /api/journal/summary": {
+      "tag": "Missions",
+      "summary": "While you were away",
+      "description": "What happened after journal sequence `since` (exclusive): tickets delivered, work merged (changes you accepted, branches Floor42 merged), sessions run and failed, and their cost only when Claude Code reported one (`costUsdEstimated`, an estimate; null when none was recorded). Also what waits for you now (open questions) and the missions blocked now (`STUCK` by the dispatcher's rule, or `SUSPENDED`). Simulated events are left out. At most 20000 events are read: `more` is then true and `until` says where the summary stopped. Without `since`, only the journal's latest sequence (`until`). Acknowledge by keeping `until`: nothing is recorded in the journal."
+    },
+    "GET /api/missions/{id}/replay-export/preview": {
+      "tag": "Missions",
+      "summary": "Preview a replay export",
+      "description": "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`). Builds no file; `digest` names this content for the export."
+    },
+    "POST /api/missions/{id}/replay-export": {
+      "tag": "Missions",
+      "summary": "Export a replay file",
+      "description": "The director's explicit export: one self-contained HTML file (text/html, as an attachment) that plays the mission offline in a 2D office, with a timeline, play/pause and speed, each event with its origin badge. It carries a header: generated by Floor42 version X, mission id, exported at, `events as recorded; nothing added`. `digest` must be the preview's (400 `REPLAY_NOT_PREVIEWED` without it, 409 `REPLAY_CHANGED` when the mission changed since). `language` (`en` or `fr`) and `labels` are the player's words from the screen. Never in the file: the session token, settings values, the director's file contents, whole tool outputs. Nothing is journaled; agents have no way to call it (no MCP tool, the shell guard refuses commands naming it, no token).",
+      "example": {
+        "digest": "3f5a0c9e1b2d4f6a8c0e2b4d6f8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a",
+        "language": "en",
+        "labels": {
+          "play": "Play",
+          "pause": "Pause",
+          "real": "REAL",
+          "simulated": "SIMULATED"
+        }
+      }
+    },
+    "POST /api/projects/pin": {
+      "tag": "Projects",
+      "summary": "Pin or unpin a project",
+      "description": "Pins a project real missions worked on at the top of the recent list (`pinned: true`), or unpins it. Pinning a forgotten project brings it back. Journaled as `ProjectPinned`, by the director only. `UNKNOWN_PROJECT` (404) when no real mission worked on `path`. Returns the list.",
+      "example": {
+        "path": "C:\\Users\\me\\workspace\\shop",
+        "pinned": true
+      }
+    },
+    "POST /api/projects/forget": {
+      "tag": "Projects",
+      "summary": "Forget a project",
+      "description": "Takes a project off the recent list; its missions, worktrees and files are untouched, and a new mission on it brings it back. Journaled as `ProjectForgotten`, by the director only. Returns the list.",
+      "example": {
+        "path": "C:\\Users\\me\\workspace\\shop"
+      }
+    },
+    "GET /api/resume": {
+      "tag": "Missions",
+      "summary": "What can be resumed",
+      "description": "Missions not closed (`state`: RUNNING, OPEN, SUSPENDED, INTERRUPTED, WAITING, IDLE) with what they are doing and what \"Resume\" does through an existing route (`action`: RESUME_MISSION, RETRY, RESUME_AGENTS, ANSWER, APPROVE, NUDGE, NONE); and the latest session of each agent on an open ticket that ended before its report (failed or `interrupted` by a restart), with its last tool call, its open \"Retry\" question and whether it can be continued with Claude Code's `--resume` now (`continuable`, `continuity` says why not; ADR-0038). Reading it starts nothing."
+    },
+    "POST /api/resume/session": {
+      "tag": "Missions",
+      "summary": "Resume a session's work",
+      "description": "On your click only: answers the open \"Retry\" question of the session's ticket. `mode` FRESH (default) starts a new session from the journal's brief, as \"Retry\" always did; CONTINUE first records `SessionContinuationRequested`, so the next session of that developer on that ticket runs `claude --resume <id> --fork-session` in the same worktree with the same tools, model and effort, checked again when it starts (fresh if no longer safe; the journal's `SessionContinued` says which happened). Every tool call is still decided by Floor42's hook. `NOTHING_TO_RESUME` (409) without an open \"Retry\"; `CONTINUE_UNSAFE` (409) when continuing is not safe now.",
+      "example": {
+        "session": "M-3:885ccb28-c7cb-4ff0-ae57-286455b37da3",
+        "mode": "CONTINUE"
+      }
+    },
+    "GET /api/missions/{id}/uncommitted": {
+      "tag": "Missions",
+      "summary": "Work not in a commit, before acceptance",
+      "description": "Each worktree of the mission as git answers now (ADR-0055): `CLEAN`, `DIRTY` (the files changed or never committed, 20 named, all counted) or `UNKNOWN` with a `reason` (`GIT_FAILED`, `WORKTREE_MISSING`, `NOT_A_MISSION_WORKTREE`): a git that fails is never read as clean. Build and cache artefacts are not counted. Nothing is recorded. When the mission is not clean, `POST /complete` is refused (409 `UNCOMMITTED_DELIVERABLES`) unless it carries this `token` as `acknowledged`; a measure that changed since gives another token."
+    },
+    "GET /api/missions/{id}/proof": {
+      "tag": "Missions",
+      "summary": "The delivery's proof: recipes, runs, reports, verdict",
+      "description": "Each producer's `PROVE.md` (ADR-0058), read now, with the code it is about (`head`, `changesDigest` of the work not committed, streamed, a new file over 16 MiB named by its size and time; `head` null when Floor42 cannot tell, which the acceptance asks about, never a failure): `state` `FOUND`, `MISSING` or `UNKNOWN`, its `steps` as the producer wrote them with who runs each (`runner` `FLOOR42` or `DIRECTOR`, and the `reason` a step goes to the director) and `problems` that keep a step from running (`HIDDEN_CHARACTER`: bidirectional, zero-width or control characters; never offered to copy). `lastRun` is Floor42's last journaled run (`ProofRan`), `stale` when the recipe, the commit or the uncommitted work changed since; `witnesses` and `verdict` are the director's, on the current recipe and code only. `running` and `runError` follow a run. `status`: `NO_RECIPE`, `FAILED`, `NOT_RUN` or `PASSED`. Nothing runs and nothing is recorded."
+    },
+    "GET /api/missions/{id}/proof/acceptance": {
+      "tag": "Missions",
+      "summary": "What an acceptance asks about the proof",
+      "description": "The proof state an acceptance must be told about (ADR-0058): `state` null when the delivery is proven (every Floor42 step passed on the current code and a current `PROVEN` verdict) or has no producer worktree; else `NO_RECIPE`, `FAILED`, `NOT_RUN`, `NOT_PROVEN` or `NO_VERDICT`. `POST /complete` is refused (409 `UNPROVEN_DELIVERY`) unless it carries this `token` as `proofAcknowledged`; a state that changed since gives another token. Nothing is recorded."
+    },
+    "POST /api/missions/{id}/proof/run": {
+      "tag": "Missions",
+      "summary": "Start the delivery's proof in the sandbox",
+      "description": "Starts Floor42's steps of every recipe (ADR-0058) and answers at once (`running` true); follow it with `GET /proof`. Each producer must be idle (409 `WORKTREE_BUSY`) and the mission not closing (409 `CLOSING`); they stay held until the run ends. Each worktree is copied into a folder Floor42 owns and the steps run on the copy, in the WSL sandbox with the network cut, never on the host and never in the worktree; the copy is deleted afterwards without following any link or junction in it. Files git lists that cannot be copied (links, names outside the worktree or Windows cannot hold, colliding cases) are left out and named in `skipped` with their reason; the size cap (500 MiB, 20 000 files) is checked before anything is copied. Each step stops at `floor42.proof.step-timeout-seconds`; its output keeps its last 8 000 characters; a recipe stops at its first failed step. Each run is journaled (`ProofRan`, by Floor42, with the recipe digest, the commit and the digest of the uncommitted work). Refused with 409 `SANDBOX_UNAVAILABLE`, `NOTHING_TO_RUN` or `PROOF_RUNNING`."
+    },
+    "POST /api/missions/{id}/proof/witness": {
+      "tag": "Missions",
+      "summary": "Say what your run of a step showed",
+      "description": "The director ran one of their steps (ADR-0058) and says whether it `works`, and what they `seen` when it does not (required then, 4 000 characters at most). Journaled (`ProofStepWitnessed`) with the recipe and code it is about: a later change makes it count for nothing. Carries the worktree's `target` the director read: refused (409 `PROOF_STALE`) when the recipe or the code changed since, so a report is never recorded against code the director did not see. Refused for a step Floor42 runs (409 `NOT_A_DIRECTOR_STEP`) and when the recipe or the code cannot be read (409 `PROOF_UNKNOWN`).",
+      "example": {
+        "agent": "chris",
+        "step": 2,
+        "works": false,
+        "seen": "curl: (7) Failed to connect to localhost port 8080",
+        "target": "0123456789abcdef"
+      }
+    },
+    "POST /api/missions/{id}/proof/verdict": {
+      "tag": "Missions",
+      "summary": "Give the proof's verdict",
+      "description": "The director's verdict (ADR-0058), `PROVEN` or `NOT_PROVEN`, with a `note`: journaled (`ProofVerdictGiven`) with every producer's recipe and code as they are now; a later change makes it count for nothing. Carries the view's `targets` the director read: refused (409 `PROOF_STALE`) when any recipe or code changed since. Refused (409 `PROOF_UNKNOWN`) when a recipe is missing or the code cannot be read.",
+      "example": {
+        "verdict": "PROVEN",
+        "note": "The health route answers UP",
+        "targets": "0123456789abcdef"
+      }
+    },
+    "POST /api/missions/{id}/proof/send-back": {
+      "tag": "Missions",
+      "summary": "Send a failed proof back to its producer",
+      "description": "Sends the ticket `agent` produced (its latest done work ticket) back to work in the same mission and worktree (ADR-0058), with the evidence as a directive: each step Floor42 ran that failed on the current code (command, expected result, exit code, the end of the output), each of the director's steps reported as not working with what they saw, and the director's `note` (4 000 characters at most). Its review starts again after the fix. No new ticket and no new mission. Refused with 409 `NOTHING_TO_SEND_BACK` when nothing failed and no note is given, and as a directive would be (a closed mission). Answers the ticket's id.",
+      "example": {
+        "agent": "chris",
+        "note": "docker compose up -d works, but curl localhost:8080/health answers 503"
+      }
+    },
+    "POST /api/missions/{id}/objections": {
+      "tag": "Missions",
+      "summary": "Object to the delivery",
+      "description": "The director objects at acceptance (ADR-0060): 1 to 10 `objections`, each of 1 to 4 000 characters, in one command and one journal transaction. An objection with a `ticket` (a done work ticket of the mission) reopens it with the text as a directive: its producer resumes in its own worktree, then its review and the mission's checks run again. An objection without `ticket` is new work: a work ticket the director creates (approved), with the criterion `Done as the director's objection asks: <text>`, under the mission's permission table only. The events of one round share the cause `objections-<n>`; the report groups them. The mission must wait for the acceptance (409 `NOT_AT_ACCEPTANCE`: in progress, every ticket done or dropped). Also refused: 409 `PROOF_RUNNING` while the proof runs, 409 `CLOSING` while the mission closes, 409 `AGENT_AT_WORK` while an agent works on it, 409 `NO_PRODUCTION_IN_WORKFLOW` for new work on a workflow that produces nothing, 409 `INVALID_TRANSITION` for a ticket that is not a done work ticket. A refusal records nothing. The proof of the delivery becomes stale once the code changes, and the acceptance asks again. Answers the mission.",
+      "example": {
+        "objections": [
+          {
+            "ticket": "T-1",
+            "text": "The expiry is not tested: add a test and run it"
+          },
+          {
+            "ticket": null,
+            "text": "Add a French README"
+          }
+        ]
+      }
+    },
+    "GET /api/missions/{id}/report": {
+      "tag": "Missions",
+      "summary": "End-of-mission report",
+      "description": "What the mission did and what comes next (ADR-0039), composed from the journal and git on each call; nothing is recorded or changed. Per ticket: status, producer, each review's verdict and the first line of its findings, rejections, the producer's own `VERDICT:` line, directives, sessions, time and cost. Every figure carries its `basis`: `MEASURED` (Floor42's clock and check runs, git read now), `ESTIMATED` (cost: Claude Code's estimate, not a bill; null when no session reported one), `REPORTED` (an agent's words). `outputs` lists, per worktree with its absolute path, the commits beyond the project's branch, the files not committed and the files git ignores (50 named, all counted): those are in no commit, so no merge or pull request carries them. `warnings` says so first. `next` gives each next step (CLOSE, REOPEN, PULL_REQUEST, MERGE, FOLLOW_UP, ARCHIVE) with the refusal it would meet now; `followUp` prefills a follow-up mission."
+    },
+    "GET /api/plugins": {
+      "tag": "Plugins",
+      "summary": "Marketplaces, their plugins, and what is installed where",
+      "description": "Reads from disk, now: the marketplaces your Claude Code knows (`~/.claude/plugins/known_marketplaces.json`), those Floor42's own folder knows (`<data>/claude-assets/config`), and the official ones shipped in `catalogue.json`; each listing from the newest of Claude Code's clone and the copy you last asked Floor42 to read from GitHub (`listedFrom`, `listedAt`; `none` until then). `installed` lists the plugins of both targets (`FLOOR42`, `CLAUDE`) from each `installed_plugins.json`, with their skills, agents, commands, hooks, MCP and LSP servers. `cli` is `claude --version`, asked at most once a minute. No network, nothing installed, nothing journaled."
+    },
+    "POST /api/plugins/marketplaces/{name}/refresh": {
+      "tag": "Plugins",
+      "summary": "Read a marketplace's listing from GitHub",
+      "description": "A network call, made only now: reads `https://raw.githubusercontent.com/<owner>/<repo>/HEAD/.claude-plugin/marketplace.json` (4 MB at most) and keeps it in Floor42's folder as the listing to choose from. Installing still goes through Claude Code, which reads its own copy. `NOT_GITHUB` (409) for a marketplace elsewhere, `FETCH_FAILED` (409) when it cannot be read or is no listing. Nothing journaled."
+    },
+    "POST /api/plugins/preview": {
+      "tag": "Plugins",
+      "summary": "What an install or uninstall would run",
+      "description": "Runs nothing. For `target` (`FLOOR42`: Floor42's own folder, reaching no session until you select it for a mission; `CLAUDE`: your own Claude Code) and `action` (`INSTALL`, `UNINSTALL`): the plugin's source, publisher, version, licence, contents (`known` false when its files are out of reach before an install: only what the marketplace entry declares), `warnings` (`HOOKS`, `MCP`, `LSP` run code on the machine; `CONTENTS_UNKNOWN`; `NO_LICENSE`; `YOUR_CLAUDE`; `NOT_UNTIL_SELECTED`; `CODE_NEVER_TO_AGENTS`), the exact `commands` (`claude plugin marketplace add`, `claude plugin install|uninstall ... --json`, with `CLAUDE_CONFIG_DIR` for Floor42's folder), the missions that receive something of it, and a `digest` to confirm with. `refused`: `ALREADY_INSTALLED`, `NOT_INSTALLED`, `UNKNOWN_MARKETPLACE`, `UNKNOWN_PLUGIN`, `RUNS_A_COMMAND` (a command-sourced plugin: Floor42 never accepts its command for you), `NOT_USER_SCOPE`, `CLAUDE_MISSING`.",
+      "example": {
+        "target": "FLOOR42",
+        "action": "INSTALL",
+        "plugin": "pr-review-toolkit",
+        "marketplace": "claude-plugins-official"
+      }
+    },
+    "POST /api/plugins/run": {
+      "tag": "Plugins",
+      "summary": "Run the install or uninstall you confirmed",
+      "description": "Only with the preview's `digest` (`PREVIEW_STALE`, 409, when what would run changed). Runs the commands in order with no terminal (a prompt reads end of input and refuses), stops at the first failure, then reads the installed state again: `outcome` (`INSTALLED`, `NOT_INSTALLED`, `REMOVED`, `STILL_INSTALLED`) comes from disk, never from an exit code (`commandsOk` says how the commands ended), and `steps` give each command's output. Journaled as `PluginCommandRan` (REAL, by you). One at a time (`PLUGIN_COMMAND_RUNNING`).",
+      "example": {
+        "target": "FLOOR42",
+        "action": "INSTALL",
+        "plugin": "pr-review-toolkit",
+        "marketplace": "claude-plugins-official",
+        "digest": "<from the preview>"
+      }
+    },
+    "GET /api/missions/{id}/assets": {
+      "tag": "Plugins",
+      "summary": "What the mission's sessions may receive, and what they do",
+      "description": "Every skill and agent of the plugins installed in both targets, each with its id (`<floor42|claude>:<plugin>@<marketplace>/<skill|agent>/<name>`), whether Floor42 would give it (`givable` false: `declaresHooks`, `declaresMcp`, `unreadable`, `badName`), and whether you selected it; `missing` are selected items no longer installed; `skillTool` and `agentTool` say whether the mission's table offers the tools without which they are never used. Reads disk and journal; changes nothing."
+    },
+    "PUT /api/missions/{id}/assets": {
+      "tag": "Plugins",
+      "summary": "Choose what the mission's sessions receive",
+      "description": "Replaces the choice (an empty list: nothing). Each item must be installed and givable now (`UNKNOWN_ASSET`, 404; `ASSET_NOT_GIVABLE`, 409); refused for a simulated mission or one that is over. Journaled as `MissionAssetsSelected` (REAL, by you). Sessions started afterwards get exactly these, laid out by Floor42 in the session's folder as plugins holding only the chosen skills' folders and agents' files, under a manifest Floor42 writes, passed with `--plugin-dir`: never a plugin's hooks, MCP or LSP servers.",
+      "example": {
+        "items": [
+          "floor42:pr-review-toolkit@claude-plugins-official/agent/code-reviewer"
+        ]
+      }
+    },
+    "GET /api/terminals": {
+      "tag": "Terminal",
+      "summary": "List your open terminals",
+      "description": "Whether a terminal can be opened on this machine (ConPTY on Windows 10 1809 and later, a pseudo-terminal on Linux; `reason` says why not), and the terminals open now. `costUsd` is what Claude Code last reported for its session through its status line: Claude Code's own estimate, null while it reported nothing."
+    },
+    "POST /api/terminals": {
+      "tag": "Terminal",
+      "summary": "Open your own Claude Code in a project",
+      "description": "Starts `floor42.terminal.command` (default `claude`) in the folder `project`, in a pseudo-terminal of `columns` by `rows`, with your rights. Floor42 adds no isolation flag and no hook; it passes only `--settings` with a status line that copies the figures Claude Code reports (its cost) to a file Floor42 reads, then runs your own status line command (`floor42.terminal.cost-from-status-line=false` turns that off). Its environment has none of Floor42's variables, never the director's token nor an agent's credential. Nothing is typed into it but what your browser sends through `/ws/terminal/{id}?ticket=...`: the returned `ticket` opens it once, within a minute. 409 `TERMINAL_OPEN` while a terminal is open on that folder; 400 `UNKNOWN_FOLDER`; 409 `TERMINAL_UNAVAILABLE` or `TERMINAL_FAILED`. Journals `TerminalOpened` (REAL, by the director).",
+      "example": {
+        "project": "C:/Users/me/workspace/app",
+        "columns": 120,
+        "rows": 32
+      }
+    },
+    "POST /api/terminals/{id}/attach": {
+      "tag": "Terminal",
+      "summary": "A new ticket for an open terminal",
+      "description": "For a reloaded page or a second tab: a single-use ticket for `/ws/terminal/{id}`. The screen it shows first is kept in memory only (the last 256 KB), never written anywhere."
+    },
+    "DELETE /api/terminals/{id}": {
+      "tag": "Terminal",
+      "summary": "Close a terminal",
+      "description": "Stops the program and every process it started. Journals `TerminalClosed` (REAL, by the director). A program that ends by itself is journaled `exited` by Floor42 with its exit code, and one still open when the daemon stops `interrupted`."
+    },
+    "GET /api/auth/sessions": {
+      "tag": "Sessions",
+      "summary": "List open sessions and script tokens",
+      "description": "Every browser session and script token the daemon holds, oldest first, without any secret: kind, scope, when it was opened and last used, when it expires (a script token) or ends unless used (a browser: 8 h idle, 24 h at most, `floor42.sessions.*`), its user agent and label; `current` marks the one this request came with. Nothing is journaled."
+    },
+    "DELETE /api/auth/sessions/{id}": {
+      "tag": "Sessions",
+      "summary": "End a session or revoke a script token",
+      "responses": {"204": "Done, no body"}, "without": ["200"],
+      "description": "Ends the session at once. A script token's revocation is journaled as `ApiTokenRevoked` (its SHA-256, reason `revoked`). 404 when no such session is open. Answers 204."
+    },
+    "POST /api/auth/tokens": {
+      "tag": "Sessions",
+      "summary": "Issue a script token",
+      "responses": {"201": "Created: the token, shown once"}, "without": ["200"],
+      "description": "Issues a token for a script, `scope` `read` (GET only), `missions:write` (read, plus creating a mission, approving or rejecting its plan and tickets, its directives and nudges, and answering its questions except permission questions) or `all` (also files, workshop acceptance, pull requests, budgets, permissions), valid `days` 1 to 30. The value is in this answer only (201) and never again; the journal records `ApiTokenIssued` with its SHA-256, Origin REAL, by the director. The token dies with the daemon: after a restart, issue a new one. A token used outside its scope gets 403 `SCOPE`.",
+      "example": {
+        "scope": "read",
+        "days": 7,
+        "label": "nightly report"
+      }
+    },
+    "GET /api/unsafe-mode": {
+      "tag": "Settings",
+      "summary": "Whether unsafe mode is on",
+      "description": "`on` is the director's journaled choice (ADR-0063) to let a real mission's shell run without the WSL sandbox, as the daemon's own user; off by default. `sandboxWorks` says whether the sandbox works on this machine, or is null when nothing needs it. Without a working sandbox and with unsafe mode off, a real mission does not start (`SANDBOX_REQUIRED`). Nothing is recorded."
+    },
+    "PUT /api/unsafe-mode": {
+      "tag": "Settings",
+      "summary": "Switch unsafe mode on or off",
+      "description": "Journals `UnsafeModeChanged` (origin REAL) when the state changes; the state already in force records nothing. Switching on needs a `reason` (400 `MISSING_REASON`). Refused to a script token narrower than `all` (403 `SCOPE`).",
+      "example": {
+        "on": true,
+        "reason": "WSL is not installed on this laptop"
+      }
+    },
+    "GET /api/iam/status": {
+      "tag": "Identity",
+      "summary": "IAM mode health",
+      "description": "`enabled` is the running mode (read at start); `health` is `OFF`, `UP`, `UNREACHABLE` (Keycloak does not answer) or `REFUSED_TO_START` with a `code`: `IAM_NEEDS_SANDBOX` (the WSL sandbox must be on and working), `IAM_NEEDS_PROCESS_BINDING` (no way to tell which process owns a hook's connection on this system) `IAM_VAULT_KEY_INVALID` (the vault key file is not 32 bytes; it is never replaced) or `IAM_API_CREDENTIAL_REFUSED` (Keycloak answers but refuses Floor42's `floor42-api` secret: new sessions are blocked, running ones are refused after the second miss, none is called revoked; it clears by itself once the secret is right). While IAM is on and not `UP`, no session starts. `restartNeeded` is true when saved settings differ from the running ones. `issuer` and `maxTokenHours` are the saved settings. Nothing is recorded."
+    },
+    "PUT /api/iam/secrets/{kind}": {
+      "tag": "Identity",
+      "summary": "Replace one Keycloak client secret",
+      "description": "Writes `secret` to the encrypted vault as the secret of `floor42-api` (`kind` = `api`) or `floor42-daemon` (`kind` = `daemon`); the saved settings are not touched. The Keycloak client reads the vault on each call, so no restart is needed. The secret is never returned, logged or journaled, and the API console masks it. A blank secret or another kind is refused (400).",
+      "example": {
+        "secret": "the-client-secret-from-keycloak"
+      }
+    },
+    "PUT /api/iam/settings": {
+      "tag": "Identity",
+      "summary": "Save the IAM settings",
+      "description": "Saves `enabled`, `issuer` (an http or https address) and `maxTokenHours` (clamped to 1..8) in the data folder; the mode changes at the next start (`restartNeeded` says whether the saved settings differ from the running ones). `daemonSecret` and `apiSecret` are the secrets of the Keycloak clients `floor42-daemon` and `floor42-api`: when not blank they are written to the encrypted vault, otherwise the stored ones stay. They are never returned, logged or journaled, and the API console masks them.",
+      "example": {
+        "enabled": true,
+        "issuer": "http://localhost:8180/realms/floor42",
+        "maxTokenHours": 8,
+        "daemonSecret": "",
+        "apiSecret": ""
+      }
+    },
+    "GET /api/iam/resources": {
+      "tag": "Identity",
+      "summary": "The broker's catalogue and grants",
+      "description": "The external resources agents may call through the token broker, and which agents may use which (`grants`, by agent id). Files in the data folder, not journaled. A call also needs the mission's delegation to name the resource."
+    },
+    "PUT /api/iam/resources": {
+      "tag": "Identity",
+      "summary": "Add or replace a catalogue resource",
+      "description": "`name` is `[a-z0-9-]{1,40}`; `baseUrl` is https, or http for a `local` loopback test resource; `audience` is the resource's Keycloak client; calls are limited to `methods` and `pathPrefixes`; `maxResponseBytes` is at most 1 MiB. 400 `INVALID_RESOURCE`.",
+      "example": {
+        "name": "target-keycloak",
+        "baseUrl": "https://kc.example.test",
+        "audience": "target-api",
+        "scopes": ["profile"],
+        "methods": ["GET"],
+        "pathPrefixes": ["/admin/realms/demo/users"],
+        "maxResponseBytes": 65536,
+        "local": false
+      }
+    },
+    "DELETE /api/iam/resources/{name}": {
+      "tag": "Identity",
+      "summary": "Remove a catalogue resource",
+      "description": "The resource can no longer be called; grants that name it stay inert. 404 `UNKNOWN_RESOURCE`."
+    },
+    "PUT /api/iam/agents/{id}/grants": {
+      "tag": "Identity",
+      "summary": "Set the resources an agent may use",
+      "description": "Replaces the agent's list of catalogue resource names. A call also needs the mission's delegation to name the resource. 404 `UNKNOWN_AGENT`, 400 `UNKNOWN_RESOURCE`.",
+      "example": {
+        "names": ["target-keycloak"]
+      }
+    },
+    "GET /api/iam/agents": {
+      "tag": "Identity",
+      "summary": "The agents' Keycloak clients",
+      "description": "Each agent on staff with its Keycloak client (`clientId`, `serviceAccountId`, null when none exists yet), whether Keycloak has it `enabled`, and whether Floor42 holds it `revoked` (cut off locally). 409 `IAM_OFF` when IAM mode is off; 503 `IDENTITY_UNAVAILABLE` when it is on and not `UP`."
+    },
+    "GET /api/iam/exchanges": {
+      "tag": "Identity",
+      "summary": "The exchanges between Floor42 and Keycloak",
+      "description": "The last 300 calls Floor42 made to Keycloak (token, token exchange, introspection, revocation, admin, JWKS), newest last, each with its operation, method, URL, status, duration and the form it sent with every secret masked as `•••`. Kept in memory only: a restart empties it."
+    },
+    "POST /api/iam/agents/{id}/rotate": {
+      "tag": "Identity",
+      "summary": "Rotate an agent's client secret",
+      "description": "Keycloak generates a new secret for the agent's client, which goes straight into the vault; live session tokens stay valid until they expire. 404 `UNKNOWN_AGENT`, 409 `IAM_OFF`, 503 `IDENTITY_UNAVAILABLE`."
+    },
+    "POST /api/iam/agents/{id}/revoke": {
+      "tag": "Identity",
+      "summary": "Cut an agent off",
+      "description": "Floor42 refuses the agent's hook and MCP calls at once (before Keycloak answers), then Keycloak disables its client: no new token, live ones inactive. Undone by restore. 404 `UNKNOWN_AGENT`, 409 `IAM_OFF`, 503 `IDENTITY_UNAVAILABLE`."
+    },
+    "GET /api/iam/missions/{id}/delegation": {
+      "tag": "Identity",
+      "summary": "A mission's delegation",
+      "description": "What the director delegated to this mission's agents at plan approval: when, until when, the resources, and whether it is revoked. Metadata only, never a token. 404 `NO_DELEGATION`, 409 `IAM_OFF`."
+    },
+    "GET /api/iam/missions/{id}/consent": {
+      "tag": "Identity",
+      "summary": "What approving a plan delegates",
+      "description": "The consent shown before the Approve click in IAM mode: the mission's agents act on Floor42 for the director until the date given or until the mission ends, and Keycloak asks for the password again. `resources` (comma-separated) names what the approval would grant. 400 `INVALID_RESOURCES`, 409 `IAM_OFF`."
+    },
+    "POST /api/iam/missions/{id}/delegation/revoke": {
+      "tag": "Identity",
+      "summary": "Revoke a mission's delegation",
+      "description": "Floor42 stops giving the mission a token at once, then Keycloak revokes the mission's offline token (RFC 7009) and the vault entry is deleted. If Keycloak does not answer the entry stays encrypted and the revoke is retried. Other missions are unaffected. 404 `NO_DELEGATION`, 409 `IAM_OFF`."
+    },
+    "GET /api/iam/tokens": {
+      "tag": "Identity",
+      "summary": "The agent tokens, decoded",
+      "description": "Each live session's token as decoded header and claims plus 8 characters of its signature, never the token; after a restart, the journal's issuer, expiry and jti only. `origin` is SIMULATED for the simulated issuer. 409 `IAM_OFF`."
+    },
+    "GET /api/iam/refusals": {
+      "tag": "Identity",
+      "summary": "Recent token refusals",
+      "description": "The last refusals of agent tokens (code, jti when the signature held, the launch the token named), oldest first. Kept in memory: lost at a restart. 409 `IAM_OFF`."
+    },
+    "GET /api/sessions/{launch}/trust-chain": {
+      "tag": "Identity",
+      "summary": "A session's trust chain",
+      "description": "The links from the director's sign-in to the delegation, the agent token, its bound process and the broker tokens, read from the journal; a refusal is a link with `ok` false and its code. Never a token. 404 `UNKNOWN_SESSION`, 409 `IAM_OFF`."
+    },
+    "GET /api/missions/{id}/identity-audit": {
+      "tag": "Identity",
+      "summary": "Export a mission's identity events",
+      "description": "One JSON line per identity event of the mission (application/x-ndjson, as a download): at, who, onBehalfOf, tokenId, decision ISSUED, REFUSED or EXCHANGED, reason, audience. Never a token."
+    },
+    "POST /api/iam/agents/{id}/restore": {
+      "tag": "Identity",
+      "summary": "Let an agent back in",
+      "description": "Enables the agent's Keycloak client again and lifts the local revocation. 404 `UNKNOWN_AGENT`, 409 `IAM_OFF`, 503 `IDENTITY_UNAVAILABLE`."
+    },
+    "POST /api/auth/sign-out": {
+      "tag": "Sessions",
+      "summary": "Sign this browser out",
+      "responses": {"204": "Done, no body"}, "without": ["200"],
+      "description": "Ends the session of the cookie this request carries, stops the director's terminals that session opened and clears the cookie. Terminals another signed-in session opened keep running. Refused to a script token (403 `SCOPE`): revoke it with `DELETE /api/auth/sessions/{id}`. Answers 204."
+    },
+    "POST /api/auth/sign-out-everywhere": {
+      "tag": "Sessions",
+      "summary": "Sign out everywhere",
+      "responses": {"204": "Done, no body"}, "without": ["200"],
+      "description": "Ends every browser session and script token (each token's end journaled as `ApiTokenRevoked`, reason `everywhere`) and replaces the director's token, stops every director's terminal, whichever session opened it, then clears this browser's cookie. Sign in again with a new link. Refused to a script token (403 `SCOPE`). Answers 204."
+    }
+  },
+  "nullable": {
+    "_": "Fields that are null when there is nothing to say, never a made-up 0: schema name, then its properties.",
+    "CostLine": ["usdBound"],
+    "MissionView": ["spentUsdBound"],
+    "UnsafeModeView": ["sandboxWorks"]
+  }
+}

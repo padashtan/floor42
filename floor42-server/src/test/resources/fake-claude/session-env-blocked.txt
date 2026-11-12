@@ -1,0 +1,2 @@
+tool|toolu_e1|Read|{"file_path":"README.md"}|1	# Fake project
+text|Wrote the sources; the PDFs are not rendered.\nBLOCKED BY ENVIRONMENT: a desktop browser; step: render report.pdf with tools/render.cmd

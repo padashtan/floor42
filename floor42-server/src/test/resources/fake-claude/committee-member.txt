@@ -1,0 +1,2 @@
+tool|toolu_c1|Read|{"file_path":"README.md"}|1	# Fake project
+text|Analysis: the project is small; a gateway adds one hop but centralises authentication.\nEvidence: README.md.\nPROPOSAL: Put a gateway in front of the APIs\nPOSITION: NEW\nCRITICAL OBJECTION: none

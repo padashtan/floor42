@@ -1,0 +1,1 @@
+text|Two things that do not touch each other.\n\nTICKET: Describe the project\nWHY: The director needs a summary.\nDONE WHEN: summary written\nDEPENDS ON: none\nSIZE: S\n\nTICKET: List the licenses\nWHY: Know what the code may reuse.\nDONE WHEN: licenses listed\nDEPENDS ON: none\nSIZE: S

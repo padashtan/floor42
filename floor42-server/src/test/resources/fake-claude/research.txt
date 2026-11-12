@@ -1,0 +1,2 @@
+tool|toolu_w1|WebSearch|{"query":"JUnit 4.12 support"}|JUnit 4 is in maintenance mode (https://junit.org/junit4/)
+text|JUnit 4 is in maintenance mode, only critical fixes (https://junit.org/junit4/).

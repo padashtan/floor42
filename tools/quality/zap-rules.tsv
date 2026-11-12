@@ -1,0 +1,12 @@
+# ZAP baseline rules (zap-baseline.py -c): rule id, action (IGNORE, WARN or FAIL), name and reason.
+# Tab separated. Only justified IGNOREs belong here; every other rule keeps its default (WARN). Reviewed with the
+# baseline of 2026-11-09 in docs/security-scanning.md.
+10055	IGNORE	CSP: style-src unsafe-inline (deliberate: style-src-elem allows inline style elements because xterm.js offers no nonce, inline style attributes stay refused; SecurityHeaders.java, CSS cannot run script)
+10049	IGNORE	Storable and (Non-)Cacheable Content (the hashed static assets are meant to be cached; API answers carry no-cache)
+10094	IGNORE	Base64 Disclosure (false positive: a WebGL identifier inside the bundled JavaScript)
+10096	IGNORE	Timestamp Disclosure - Unix (false positive: an integer constant inside the bundled JavaScript)
+10109	IGNORE	Modern Web Application (informational: the UI is a single-page application)
+90004	IGNORE	Cross-Origin-Embedder-Policy missing (deliberate: require-corp would bind the PDF viewer frame and the sandboxed deliverables, and nothing needs cross-origin isolation; COOP and CORP are set, SecurityHeaders.java)
+100001	IGNORE	Unexpected Content-Type (false positive: ZAP's probe paths outside /api, such as WS_FTP.INI, get the single-page application's HTML, as designed; no /api route answered HTML in the 2026-11-09 scan)
+100000	IGNORE	Client error response code (the API scan sends placeholder values, so 4xx answers are the expected result)
+90005	IGNORE	Sec-Fetch-* header missing (a request header the browser sends and ZAP's client does not: a scanner artifact)

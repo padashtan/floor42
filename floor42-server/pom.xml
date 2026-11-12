@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>dev.floor42</groupId>
+        <artifactId>floor42-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>floor42-server</artifactId>
+    <name>Floor42 :: Server</name>
+    <description>Quarkus daemon: governance, orchestration, agent runtimes, persistence, API and web UI hosting.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.floor42</groupId>
+            <artifactId>floor42-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dev.floor42</groupId>
+            <artifactId>floor42-domain</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-websockets-next</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-agroal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.jdbc</groupId>
+            <artifactId>quarkus-jdbc-sqlite</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.quinoa</groupId>
+            <artifactId>quarkus-quinoa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Coverage-guided fuzzing (docs/quality.md): regression mode in verify, real fuzzing with JAZZER_FUZZ=1. -->
+        <dependency>
+            <groupId>com.code-intelligence</groupId>
+            <artifactId>jazzer-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <!-- The @Tag("fuzz") tests (Jazzer, docs/quality.md) run apart: the agent attaches to its own JVM, which
+                         -XX:+DisableAttachMechanism forbids in the shared one. Regression mode in a normal verify (the seeds
+                         under src/test/resources); JAZZER_FUZZ=1 fuzzes for real. -->
+                    <execution>
+                        <id>fuzz</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <groups>fuzz</groups>
+                            <excludedGroups>none</excludedGroups>
+                            <argLine>@{argLine} -Xmx768m --enable-native-access=ALL-UNNAMED -Djdk.attach.allowAttachSelf=true --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Several test JVMs side by side: each boots its own Quarkus apps, on a free port (test-port=0)
+                         and a data folder of its own (${quarkus.uuid}), so the test classes share nothing. A JVM is
+                         kept for many classes (one boot per profile and fork, not per class). -Dfloor42.test.forks=1
+                         gives the sequential run back. -->
+                    <forkCount>${floor42.test.forks}</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <!-- A fork that hangs at exit is killed after this delay instead of blocking the build. -->
+                    <forkedProcessExitTimeoutInSeconds>30</forkedProcessExitTimeoutInSeconds>
+                    <groups>${floor42.test.groups}</groups>
+                    <excludedGroups>${floor42.test.excludedGroups}</excludedGroups>
+                    <!-- -Xmx${floor42.test.heap}: 6 forks x 768 MB = 4.6 GB of heap at most on a dev machine running other
+                         builds. With 2 forks (the CI) each JVM runs three times as many classes and 768 MB runs out:
+                         ci.yml sets 2g, which its 7 GB runner holds twice. -->
+                    <!-- The director's terminal calls ConPTY / the C library through the JDK's FFM API (ADR-0041). -->
+                    <!-- -Duser.timezone: the golden day (ResponseBodiesCharacterisationTest) was recorded in the director's zone, which
+                         /api/costs reports when no zone is asked: a runner in UTC must answer the same. -->
+                    <argLine>@{argLine} -Xmx${floor42.test.heap} --enable-native-access=ALL-UNNAMED ${floor42.test.noattach} -Djdk.httpclient.allowRestrictedHeaders=host -Duser.timezone=Europe/Paris --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/jdk.internal.misc=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED</argLine>
+                    <environmentVariables>
+                        <GIT_CONFIG_GLOBAL>${project.build.testOutputDirectory}/gitconfig-test</GIT_CONFIG_GLOBAL>
+                    </environmentVariables>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <!-- Quality suite (root pom, docs/quality.md). -->
+            <id>quality</id>
+            <properties>
+                <sonar.sources>src/main/java</sonar.sources>
+                <sonar.tests>src/test/java</sonar.tests>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <configuration>
+                            <targetClasses>
+                                <param>dev.floor42.server.iam.*</param>
+                                <param>dev.floor42.server.security.*</param>
+                                <param>dev.floor42.server.runtime.Sandbox*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>dev.floor42.server.iam.*Test</param>
+                                <param>dev.floor42.server.security.*Test</param>
+                                <param>dev.floor42.server.runtime.Sandbox*Test</param>
+                            </targetTests>
+                            <!-- The @QuarkusTest classes: PIT's mutation JVM does not boot a Quarkus app. -->
+                            <excludedTestClasses>
+                                <param>dev.floor42.server.iam.IdentityWatchTest</param>
+                                <param>dev.floor42.server.iam.KeycloakSignInTest</param>
+                                <param>dev.floor42.server.iam.ProcessBoundHookTest</param>
+                                <param>dev.floor42.server.iam.ResourceBrokerTest</param>
+                                <param>dev.floor42.server.iam.RevocationGuaranteesTest</param>
+                                <param>dev.floor42.server.security.BrowserRequestsTest</param>
+                                <param>dev.floor42.server.security.LocalAccessGuardTest</param>
+                                <param>dev.floor42.server.security.SessionsApiTest</param>
+                            </excludedTestClasses>
+                            <excludedGroups>
+                                <param>slow</param>
+                            </excludedGroups>
+                            <jvmArgs>
+                                <arg>--enable-native-access=ALL-UNNAMED</arg>
+                                <arg>--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
+                            </jvmArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- The commit the daemon was built from, shown in the top bar. Asked to the git command where the build
+                 runs, so a linked worktree gives its own HEAD; without a checkout (a Docker build) nothing is written. -->
+            <id>build-commit</id>
+            <activation>
+                <file>
+                    <exists>${maven.multiModuleProjectDirectory}/.git</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.6.4</version>
+                        <executions>
+                            <execution>
+                                <id>build-commit</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>git</executable>
+                                    <arguments>
+                                        <argument>log</argument>
+                                        <argument>-1</argument>
+                                        <argument>--format=commit=%h%ncommitFull=%H%ncommitTime=%cI</argument>
+                                    </arguments>
+                                    <outputFile>${project.build.outputDirectory}/build-commit.properties</outputFile>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>build-changes</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>git</executable>
+                                    <arguments>
+                                        <argument>status</argument>
+                                        <argument>--porcelain</argument>
+                                        <argument>--untracked-files=no</argument>
+                                    </arguments>
+                                    <outputFile>${project.build.outputDirectory}/build-changes.txt</outputFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

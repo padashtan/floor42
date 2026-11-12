@@ -1,0 +1,23 @@
+name: Dependency review
+
+# On a pull request: the dependencies it adds or bumps (Maven, npm, Actions, Docker) are checked against GitHub's
+# advisory database; a known vulnerability of high severity or worse fails the check. Needs the repository's
+# dependency graph (Settings, Advanced Security), on by default for a public repository; the job is skipped on a private one (the API refuses it without Advanced Security).
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    # Only in the public repository (its name holds for every event, schedule included): the private one has no Advanced Security (docs/security-scanning.md).
+    if: ${{ github.repository == 'padashtan/floor42' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: never

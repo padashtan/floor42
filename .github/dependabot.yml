@@ -1,0 +1,47 @@
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # A release must be 3 days old before a bump is proposed: a hijacked or broken one is usually yanked by then.
+    cooldown:
+      default-days: 3
+
+  - package-ecosystem: npm
+    directory: /floor42-web
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # A release must be 3 days old before a bump is proposed: a hijacked or broken one is usually yanked by then.
+    cooldown:
+      default-days: 3
+    # Node 24 until decided.
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # Actions are pinned by commit SHA with the version in a comment; Dependabot updates both.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # A release must be 3 days old before a bump is proposed: a hijacked or broken one is usually yanked by then.
+    cooldown:
+      default-days: 3
+
+  # The Dockerfile's base images, pinned by digest: the tag and the digest move together.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    # A release must be 3 days old before a bump is proposed: a hijacked or broken one is usually yanked by then.
+    cooldown:
+      default-days: 3
+    # Node 24 until decided.
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]

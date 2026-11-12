@@ -1,0 +1,4 @@
+tool|toolu_turn_write|Write|{"file_path":"turn-wrote.txt","content":"changed at the meeting"}|File created successfully
+tool|toolu_turn_bash|Bash|{"command":"git log"}|ran
+tool|toolu_turn_read|Read|{"file_path":"README.md"}|1	# Fake project
+text|I tried to change a file, which a meeting turn does not allow. I read README.md instead: it reads well.

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.e2e.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* The browser tests run in Node through Playwright, and import the scene's palette and the UI's catalogues. */
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["e2e/**/*.ts", "playwright.config.ts"]
+}

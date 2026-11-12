@@ -1,0 +1,27 @@
+# ADR-0038: Resuming work: the existing paths, and Claude Code's --resume only when measured safe
+
+Date: 2026-10-31 · Status: Accepted
+
+## Context
+The director: "in the office, the possibility to choose a project that was already opened, or to resume a session, is missing." Projects already used were offered as five names under the path field; nothing listed what could be picked up again, and the board always showed the latest active mission. A failed or interrupted session was asked about with "Retry", which always starts a fresh session from a brief built from the journal (ADR-0011): its history is lost, even when the session had done most of its work. Claude Code can continue a session (`claude -p --resume <id>`), from the transcript it keeps under `~/.claude/projects/<working directory as a slug>/<id>.jsonl`.
+
+## Options
+| Option | What it costs | Verdict |
+|---|---|---|
+| A. Keep "Retry" fresh only; list what can be resumed | Nothing new to trust; a long session's work in context is lost on every interruption | Kept as the default, and the only way when B's checks fail |
+| B. Offer `--resume` for a developer's interrupted session, only when Floor42 measures it safe, on the director's click | One launch record per session; checks against files Floor42 does not own (Claude Code's transcript); the history may hold stale facts | **Taken**, beside A |
+| C. Always resume when a session id is known | Silent changes of worktree, tools or model; an agent could edit the transcript Claude Code reloads | Rejected |
+| D. A new "resume" engine apart from the dispatcher | A second way to start sessions to keep in step with D9 | Rejected: every resume goes through the paths that exist |
+
+## Decision
+- **Recent projects.** `GET /api/projects` lists the repositories real missions worked on, pinned ones first, then by their latest activity (the newest event of one of their missions, `Company.lastActivity`), with the newest mission and whether the folder is still on disk. The director pins or unpins (`ProjectPinned`) and forgets (`ProjectForgotten`): company-wide director events, Origin REAL; a forgotten project comes back when pinned or when a new mission is created on it. The picker shows the list first; a missing folder is listed, not choosable.
+- **What can be resumed.** `GET /api/resume` reads the journal and the dispatcher's own view (`LiveMissions.stall`), and starts nothing. Each mission not closed says what "Resume" does through a route that already exists: resume the mission (`MissionResumed`), answer "Retry", resume suspended agents (`AgentAssignmentsResumed`), ask the dispatcher to look again (nudge, the same reading as `recover`), or the desk. Each agent's latest session on an open ticket that ended failed or interrupted is listed with its last tool call and its open "Retry".
+- **Continue or fresh: the director chooses, the UI says which.** `POST /api/resume/session {session, mode}` answers that session's open "Retry" (409 `NOTHING_TO_RESUME` without one). `FRESH` is what "Retry" always did. `CONTINUE` first records `SessionContinuationRequested` (director only); the dispatcher's next developer session on that ticket then runs `claude --resume <id> --fork-session` (a new id, so the journal never mixes two sessions under one record), with the brief prefixed by "the brief below is the current state and wins over your memory", and Floor42 records `SessionContinued(session, from)`.
+- **Safe means measured** (`SessionContinuity`, checked when listing, when the director clicks, and again when the session starts; any failure gives a fresh session and the reason is shown): the latest session of a developer on the ticket it carries, on a real mission in progress, ended failed or interrupted; Floor42's launch record (`launch.json` beside its transcript, written since 1.6.0: worktree, model, effort, tools, Claude Code session id) exists; the worktree is the agent's on the mission and still exists; the tools, model and effort are those the next session would get; Claude Code's transcript is in the worktree's folder of the user level Floor42's sessions use (their `CLAUDE*` variables are removed), says it ran in that worktree, and was not written more than two minutes after the session's recorded end. Reviews, plans, committees and consultations always start fresh. `floor42.claude.resume.enabled=false` turns continuing off.
+- **Permissions are not carried over.** The continued session gets Floor42's hook, its own credential and the mission's policy as they stand; every tool call is decided again. What the history holds is context, never an authorization.
+- **The board.** A "switch mission" control in the top bar and "Put on the board" in the Resume panel choose the mission shown; a view of this browser (`floor42.board.mission` in localStorage), never journaled, and it starts nothing.
+
+## Consequences
+- Sessions run before 1.6.0 have no launch record: they resume fresh only, and the panel says why.
+- Claude Code's transcript is a file the agent's shell could reach (the shell is confined only with the WSL sandbox, ADR-0028). The modification-time check catches a later edit; it is not a signature. A continued session still cannot do anything the policy does not allow.
+- Whether Claude Code keeps transcripts for `--restricted` print sessions on the director's machine is read from the file itself, not assumed: if it does not, every session resumes fresh. Not yet measured with a real session; the tests use the fake Claude Code.

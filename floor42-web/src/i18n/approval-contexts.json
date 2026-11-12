@@ -1,0 +1,30 @@
+{
+  "approvalAskAlways" : {
+    "context" : "https://example.org\nYour answer applies to this call only (setting: ask every time).",
+    "params" : {
+      "summary" : "https://example.org"
+    }
+  },
+  "approvalCommand" : {
+    "context" : "rm -rf build\nYour answer applies to this exact command from chris for the rest of this mission.",
+    "params" : {
+      "agent" : "chris",
+      "summary" : "rm -rf build"
+    }
+  },
+  "approvalEdited" : {
+    "context" : "src\\App.java\nYour answer applies to this call only: you edited src\\App.java in the workshop.",
+    "params" : {
+      "path" : "src\\App.java",
+      "summary" : "src\\App.java"
+    }
+  },
+  "approvalTool" : {
+    "context" : "notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.",
+    "params" : {
+      "agent" : "chris",
+      "summary" : "notes.txt",
+      "tool" : "Write"
+    }
+  }
+}

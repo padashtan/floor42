@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "schemathesis_version": "4.33.1",
+  "entries": [
+    {
+      "id": "d31bb4",
+      "operation": "GET /api/sessions/{id}/context",
+      "check": "status_code_conformance",
+      "failure": "UndefinedStatusCode",
+      "signature": "204",
+      "first_seen": "2026-11-10",
+      "last_seen": "2026-11-10"
+    },
+    {
+      "id": "9bccec",
+      "operation": "POST /api/workflows/import",
+      "check": "content_type_conformance",
+      "failure": "MissingContentType",
+      "signature": "",
+      "first_seen": "2026-11-10",
+      "last_seen": "2026-11-10"
+    },
+    {
+      "id": "30400e",
+      "operation": "POST /api/workflows/import",
+      "check": "response_schema_conformance",
+      "failure": "MalformedJson",
+      "signature": "JSON deserialization error",
+      "first_seen": "2026-11-10",
+      "last_seen": "2026-11-10"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability
+    url: https://github.com/padashtan/floor42/security/advisories/new
+    about: Privately, please. Never in a public issue (SECURITY.md).
+  - name: Try the online demo
+    url: https://padashtan.github.io/floor42/
+    about: A recording of the simulated mission, in your browser.

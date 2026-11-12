@@ -1,0 +1,4 @@
+.env
+keycloak/providers/*.jar
+keycloak-extensions/target/
+demo-resource/requests.log

@@ -1,0 +1,5 @@
+tool|toolu_f1|Bash|{"command":"git status"}|On branch main
+tool|toolu_f2|Read|{"file_path":"README.md"}|1	# Fake project
+tool|toolu_f3|Write|{"file_path":"notes.txt","content":"x"}|File created successfully at: notes.txt
+tool|toolu_f4|Read|{"file_path":"../../outside.txt"}|secret
+text|Report: the working tree is clean and README was read; notes.txt was decided by the mission policy.

@@ -1,0 +1,149 @@
+{
+  "alreadyAllowedCommand" : {
+    "params" : {
+      "agent" : "chris",
+      "question" : "Q-2"
+    },
+    "text" : "director already allowed this exact command from chris (Q-2)"
+  },
+  "alreadyAllowedTool" : {
+    "params" : {
+      "agent" : "chris",
+      "question" : "Q-1",
+      "tool" : "Write"
+    },
+    "text" : "director already allowed every Write request from chris (Q-1)"
+  },
+  "alreadyDeniedCommand" : {
+    "params" : {
+      "agent" : "chris",
+      "question" : "Q-3"
+    },
+    "text" : "director already denied this exact command from chris (Q-3)"
+  },
+  "alreadyDeniedTool" : {
+    "params" : {
+      "agent" : "chris",
+      "question" : "Q-1",
+      "tool" : "Write"
+    },
+    "text" : "director already denied every Write request from chris (Q-1)"
+  },
+  "defaultDeny" : {
+    "params" : { },
+    "text" : "no rule allows it (default deny)"
+  },
+  "directorAllowed" : {
+    "params" : {
+      "question" : "Q-2"
+    },
+    "text" : "director allowed it (Q-2)"
+  },
+  "directorDenied" : {
+    "params" : {
+      "question" : "Q-3"
+    },
+    "text" : "director denied it (Q-3)"
+  },
+  "fields" : {
+    "description" : {
+      "ranWithoutAuthorization" : {
+        "params" : {
+          "agent" : "chris",
+          "summary" : "curl y",
+          "tool" : "Bash"
+        },
+        "text" : "chris ran Bash without an Floor42 authorization: curl y"
+      }
+    },
+    "reason" : {
+      "missionCancelled" : {
+        "params" : { },
+        "text" : "mission cancelled"
+      },
+      "retroClosedEarly" : {
+        "params" : { },
+        "text" : "closed by the director before every turn was heard"
+      },
+      "sentBack" : {
+        "params" : { },
+        "text" : "sent back with a constraint"
+      },
+      "unauthorizedExecution" : {
+        "params" : {
+          "action" : "u2"
+        },
+        "text" : "unauthorized execution of action u2"
+      }
+    },
+    "rule" : {
+      "rule" : {
+        "params" : {
+          "agent" : "",
+          "decision" : "ALLOW",
+          "target" : "READ",
+          "ticket" : ""
+        },
+        "text" : "ALLOW READ for any agent"
+      },
+      "ruleAgent" : {
+        "params" : {
+          "agent" : "chris",
+          "decision" : "ALLOW",
+          "target" : "EXECUTE 'mvn'",
+          "ticket" : ""
+        },
+        "text" : "ALLOW EXECUTE 'mvn' for chris"
+      },
+      "ruleTicket" : {
+        "params" : {
+          "agent" : "",
+          "decision" : "ASK",
+          "target" : "Write",
+          "ticket" : "T-2"
+        },
+        "text" : "ASK Write for any agent on T-2"
+      }
+    }
+  },
+  "floor42Tools" : {
+    "params" : { },
+    "text" : "Floor42 tools are always available"
+  },
+  "missionCancelled" : {
+    "params" : { },
+    "text" : "mission cancelled"
+  },
+  "missionNotActive" : {
+    "params" : {
+      "status" : "SUSPENDED"
+    },
+    "text" : "mission is SUSPENDED"
+  },
+  "notOnTicket" : {
+    "params" : {
+      "agent" : "chris",
+      "ticket" : "T-2"
+    },
+    "text" : "chris is neither working on nor reviewing T-2"
+  },
+  "rule" : {
+    "params" : {
+      "agent" : "",
+      "decision" : "ALLOW",
+      "target" : "READ",
+      "ticket" : ""
+    },
+    "text" : "rule: ALLOW READ for any agent"
+  },
+  "ruleAgent" : {
+    "params" : {
+      "agent" : "chris",
+      "decision" : "ALLOW",
+      "target" : "EXECUTE 'mvn'",
+      "ticket" : ""
+    },
+    "text" : "rule: ALLOW EXECUTE 'mvn' for chris"
+  },
+  "uncoded" : [ "C:/secret is outside C:/ws/chris", "No such tool available: Bash", "PreToolUse hook error", "not offered", "outside the agent's worktree", "refused by Claude Code" ]
+}

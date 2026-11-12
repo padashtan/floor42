@@ -1,0 +1,3 @@
+tool|toolu_we1|Write|{"file_path":"notes.txt","content":"x"}|File created successfully at: notes.txt
+tool|toolu_we2|Edit|{"file_path":"notes.txt","old_string":"x","new_string":"y"}|The file notes.txt has been updated successfully.
+text|Report: wrote notes.txt, then edited it.

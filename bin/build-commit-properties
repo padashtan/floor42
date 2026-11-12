@@ -1,0 +1,35 @@
+#!/bin/sh
+# Writes build-commit.properties (read by /api/status, build.commit) for a build without a git checkout: the Docker
+# image's, whose build context has no .git. The commit comes from whoever runs the build, in the environment:
+#   FLOOR42_COMMIT        the full commit id, 40 hexadecimal digits (git rev-parse HEAD)
+#   FLOOR42_COMMIT_TIME   its committer time, ISO-8601 (git log -1 --format=%cI); optional
+#   FLOOR42_COMMIT_DIRTY  true when the build context had changes not in that commit, false when it had none;
+#                         anything else leaves it unknown (build.dirty null)
+# A missing or malformed commit writes nothing: /api/status then says null, never a guess.
+# Usage: bin/build-commit-properties <resources folder>
+set -eu
+out=${1:?usage: build-commit-properties <resources folder>}
+commit=${FLOOR42_COMMIT:-}
+case "$commit" in
+  "" | *[!0-9a-f]*)
+    echo "build-commit-properties: no commit id given (FLOOR42_COMMIT): /api/status will not name one" >&2
+    exit 0 ;;
+esac
+if [ "${#commit}" -ne 40 ]; then
+  echo "build-commit-properties: FLOOR42_COMMIT is not a full commit id: ignored" >&2
+  exit 0
+fi
+time=${FLOOR42_COMMIT_TIME:-}
+case "$time" in
+  *[!0-9T:+Z.-]*) echo "build-commit-properties: FLOOR42_COMMIT_TIME is not an ISO-8601 time: ignored" >&2; time= ;;
+esac
+mkdir -p "$out"
+{
+  echo "commit=$(printf '%.7s' "$commit")"
+  echo "commitFull=$commit"
+  if [ -n "$time" ]; then echo "commitTime=$time"; fi
+} > "$out/build-commit.properties"
+case "${FLOOR42_COMMIT_DIRTY:-}" in
+  true) echo "changes not in the commit, where the image was built" > "$out/build-changes.txt" ;;
+  false) : > "$out/build-changes.txt" ;;
+esac

@@ -1,0 +1,132 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# The runners of a private repository have 2 vCPUs and 7 GB: the test JVMs are set to 2 forks (-Dfloor42.test.forks, 6 by
+# default for a developer machine). With 6 forks the Quarkus start-up of a test class took 25 s on average and up to
+# 230 s (logs of the runs of 2026-11-09 and 2026-11-10), and the 30 s waits of the API tests timed out. The timeouts end
+# a job that hangs instead of leaving it for six hours.
+jobs:
+  build:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Web unit tests
+        run: npm test
+        working-directory: floor42-web
+
+      # The native Linux sandbox (ADR-0028) needs unprivileged user namespaces, which Ubuntu 24.04 restricts through
+      # AppArmor by default, and pasta for network access. Set up here so the sandbox tests run instead of skipping.
+      - name: Allow user namespaces and install pasta (sandbox tests)
+        run: |
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          sudo apt-get update
+          sudo apt-get install -y passt
+          unshare -Urm true
+
+      # Builds the web UI through Quinoa, runs every test. No test may call a paid model (ADR-0006).
+      - name: Build and test
+        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+      # SandboxEscapeTest is tagged slow, which `verify` leaves out: run it here (about two minutes). The native class
+      # SandboxNativeEscapeTest is not slow-tagged (-Pslow would filter it out): `verify` runs it on this runner, where
+      # the sysctl and passt are set up above.
+      - name: Native sandbox escape tests (slow)
+        run: >-
+          ./mvnw -B -ntp -pl floor42-server -am test -Pslow
+          -Dtest='SandboxEscapeTest' -Dsurefire.failIfNoSpecifiedTests=false
+          -Dspotless.check.skip=true -Dquarkus.quinoa=false
+
+  build-windows:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: floor42-web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: floor42-web
+
+      - name: Web unit tests
+        run: npm test
+        working-directory: floor42-web
+
+      # Same gate on Windows. The WSL sandbox tests are @Tag("slow") and skip themselves without a Debian distribution.
+      # Builds the web UI through Quinoa, runs every test. No test may call a paid model (ADR-0006).
+      - name: Build and test
+        run: ./mvnw.cmd -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+
+  secrets:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read # gitleaks-action lists the commits of a pull request (a Dependabot token has no other read)
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Dockerfile lint (docs/security-scanning.md); the image is pinned by digest, like the base images of the Dockerfile.
+  hadolint:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: hadolint
+        run: sh tools/quality/hadolint-run.sh
+
+  actionlint:
+    # Public repository on every event; the private one only when run by hand (its Actions minutes are limited).
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: actionlint
+        run: sh tools/quality/actionlint-run.sh

@@ -1,0 +1,1 @@
+text|Two tickets are independent and ready; one more developer halves the wait.\nVERDICT: HIRE\nHIRE: Ida | UI developer\nPARALLEL: 3

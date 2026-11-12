@@ -1,0 +1,2 @@
+tool|toolu_turn_read|Read|{"file_path":"README.md"}|1	# Fake project
+text|I read README.md. It says what the project is; I would add how to run the tests.

@@ -1,0 +1,18 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`the chat table > starts, joins and ends conversations as agents think, idle and get called away 1`] = `
+"pairs 1 t=1: none | moved nobody
+pairs 1 t=8: 0:a+c | moved a,c
+pairs 1 t=9: 0:a+c | moved nobody
+pairs 1 t=10: 0:a+d | moved c,d
+pairs 1 t=11: 0:b+d | moved a,d,b
+pairs 1 t=20: 0:b+d | moved nobody
+pairs 1 t=21: none | moved b,d
+pairs 2 t=1: none | moved nobody
+pairs 2 t=8: 0:a+c 1:b+- | moved a,c,b
+pairs 2 t=9: 0:a+c 1:b+d | moved d
+pairs 2 t=10: 0:a+- 1:b+d | moved c
+pairs 2 t=11: 1:b+d 0:c+- | moved a,c
+pairs 2 t=20: 1:b+d | moved c
+pairs 2 t=21: none | moved b,d"
+`;

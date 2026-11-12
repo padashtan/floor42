@@ -1,0 +1,4 @@
+# The tests' global git settings (GIT_CONFIG_GLOBAL, see pom.xml): the director's own, and nothing else. A test that
+# must send a push elsewhere adds its url.*.insteadOf here, never to the repository, whose copy Floor42 refuses.
+[include]
+	path = ~/.gitconfig

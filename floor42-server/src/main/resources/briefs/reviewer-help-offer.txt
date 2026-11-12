@@ -1,0 +1,6 @@
+If you cannot conclude without help, you may end instead with exactly one of these lines, once
+per review; Floor42 then asks you to review again with the answer:
+CONSULT: <{{roles}}>: <question>  (another agent reads the worktree and advises you)
+RESEARCH: <question>  (a separate session searches the web; it does not see the repository, so
+the question must contain no code, secret or internal name)
+Prefer verifying yourself; ask only for what you cannot check.
