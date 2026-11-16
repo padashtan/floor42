@@ -6,7 +6,7 @@ const t = CATALOGS.en
 const WORKFLOWS = PANEL_ACTIONS.find((a) => a.id === 'workflows')!
 
 
-test('the Research template reads with its task, and a copy of it is saved with the task kept', async ({ page }) => {
+test('the Research template reads with its task, and a copy of it is saved with the task kept', { tag: '@workflows' }, async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')
@@ -36,7 +36,7 @@ test('the Research template reads with its task, and a copy of it is saved with 
   await shot(page, 'workflows-tasks-saved-1280')
 })
 
-test('the director adds a task through the dialog to a copy of Review only, saves it and finds it in the library', async ({ page }) => {
+test('the director adds a task through the dialog to a copy of Review only, saves it and finds it in the library', { tag: '@workflows' }, async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

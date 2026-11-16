@@ -8,7 +8,7 @@ const t = CATALOGS.en
 const SETTINGS = PANEL_ACTIONS.find((a) => a.id === 'settings')!
 
 for (const width of [1280, 1600]) {
-  test(`each settings section opens and shows its settings at ${width} px`, async ({ page }) => {
+  test(`each settings section opens and shows its settings at ${width} px`, { tag: '@settings' }, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await useLanguage(page, 'en')
     await page.goto('/')
@@ -52,7 +52,7 @@ async function openSettings(page: Page, lang: 'en' | 'fr' = 'en') {
   return panel
 }
 
-test('the settings answer the keyboard and the search', async ({ page }) => {
+test('the settings answer the keyboard and the search', { tag: '@settings' }, async ({ page }) => {
   const panel = await openSettings(page)
   const tab = (id: string) => panel.locator(`[data-section-tab="${id}"]`)
 
@@ -97,7 +97,7 @@ test('the settings answer the keyboard and the search', async ({ page }) => {
   await expect(page.locator('.bar-nav button[data-menu="system"]')).toBeFocused()
 })
 
-test('a draft survives a change of section, and a saved value shows its default', async ({ page }) => {
+test('a draft survives a change of section, and a saved value shows its default', { tag: '@settings' }, async ({ page }) => {
   const panel = await openSettings(page)
   const row = panel.locator('[data-setting="STALL_MINUTES"]')
   await panel.locator('[data-section-tab="missions"]').click()
@@ -133,7 +133,7 @@ test('a draft survives a change of section, and a saved value shows its default'
   await expect(row.locator('select')).toHaveValue('5')
 })
 
-test('a value the daemon refuses stays typed, with the refusal beside it', async ({ page, consoleErrors }) => {
+test('a value the daemon refuses stays typed, with the refusal beside it', { tag: '@settings' }, async ({ page, consoleErrors }) => {
   const panel = await openSettings(page)
   await panel.locator('[data-section-tab="missions"]').click()
   const row = panel.locator('[data-setting="MISSION_BUDGET_USD"]')
@@ -156,7 +156,7 @@ test('a value the daemon refuses stays typed, with the refusal beside it', async
   consoleErrors.splice(0, consoleErrors.length, ...consoleErrors.filter((e) => !expected.includes(e)))
 })
 
-test('the tutorial is restarted and skipped from General', async ({ page }) => {
+test('the tutorial is restarted and skipped from General', { tag: '@settings' }, async ({ page }) => {
   const panel = await openSettings(page)
   const block = panel.locator('[data-setting="tutorial"]')
   await expect(block.locator('.name')).toHaveText(t['tutorial.title'])
@@ -169,14 +169,14 @@ test('the tutorial is restarted and skipped from General', async ({ page }) => {
   await expect(block.getByRole('button', { name: t['tutorial.skip'] })).toBeDisabled()
 })
 
-test('the settings sections become a row of tabs on a narrow screen', async ({ page }) => {
+test('the settings sections become a row of tabs on a narrow screen', { tag: '@settings' }, async ({ page }) => {
   const panel = await openSettings(page)
   await page.setViewportSize({ width: 600, height: 900 })
   await expectNarrowLayout(panel, 'settings')
   await shot(page, 'settings-narrow-600')
 })
 
-test('a French search finds a setting by an accented word', async ({ page }) => {
+test('a French search finds a setting by an accented word', { tag: '@settings' }, async ({ page }) => {
   const panel = await openSettings(page, 'fr')
   const search = panel.getByRole('searchbox', { name: CATALOGS.fr['sr.search'] })
   for (const word of ['réseau', 'RESEAU']) {

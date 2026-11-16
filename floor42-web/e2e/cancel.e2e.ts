@@ -22,7 +22,7 @@ async function openNewMission(page: Page) {
 }
 
 /** Journey 4a: what the director typed outlives the panel that another one replaced; "Clear the form" empties it. */
-test('a replaced form keeps what was typed, and the form can be cleared', async ({ page }) => {
+test('a replaced form keeps what was typed, and the form can be cleared', { tag: '@ui' }, async ({ page }) => {
   let form = await openNewMission(page)
   await form.getByPlaceholder(t['mission.fieldTitle']).fill('Kept title')
   await form.locator('label', { hasText: t['mission.letGalenPlan'] }).locator('input').uncheck()
@@ -41,7 +41,7 @@ test('a replaced form keeps what was typed, and the form can be cleared', async 
   await expect(form.getByRole('button', { name: t['ux.clearForm'] })).toHaveCount(0)
 })
 
-test('a half typed hire survives another panel taking its place, and Cancel throws it away', async ({ page }) => {
+test('a half typed hire survives another panel taking its place, and Cancel throws it away', { tag: '@ui' }, async ({ page }) => {
   await runFromMenu(page, t, action('hire'))
   const hire = page.locator('.hire-panel:not(.core-dismissal)')
   await hire.getByPlaceholder(t['hire.namePlaceholder']).fill('Ada')
@@ -56,7 +56,7 @@ test('a half typed hire survives another panel taking its place, and Cancel thro
 })
 
 /** Journey 4b: a panel that cannot load says so and offers a retry, never an empty form. */
-test('Caps shows the failure of its load and Try again brings the form', async ({ page, consoleErrors }) => {
+test('Caps shows the failure of its load and Try again brings the form', { tag: '@settings' }, async ({ page, consoleErrors }) => {
   const settings = (url: URL) => url.pathname === '/api/settings'
   await page.route(settings, (route) => route.fulfill({ status: 500, json: { code: 'BOOM', message: 'the daemon said no' } }))
   await runFromMenu(page, t, action('caps'))
@@ -74,7 +74,7 @@ test('Caps shows the failure of its load and Try again brings the form', async (
 })
 
 /** Journey 4c: Caps opened from the settings leads back to them. */
-test('Escape in Caps opened from the settings goes back to the settings, then closes them', async ({ page }) => {
+test('Escape in Caps opened from the settings goes back to the settings, then closes them', { tag: '@settings' }, async ({ page }) => {
   await runFromMenu(page, t, action('settings'))
   const settings = page.locator('.settings-panel')
   await expect(settings).toBeVisible()
@@ -122,7 +122,7 @@ async function hireOne(page: Page, name: string) {
 }
 
 /** Journey 4d: the context menu of a crew card closes on a press anywhere outside it, and not on a press inside. */
-test('the context menu closes on a press outside it', async ({ page }) => {
+test('the context menu closes on a press outside it', { tag: '@ui' }, async ({ page }) => {
   const card = await hireOne(page, 'Menu Tester')
   const menu = page.locator('.panel.menu')
   await card.click({ button: 'right' })
@@ -135,7 +135,7 @@ test('the context menu closes on a press outside it', async ({ page }) => {
 })
 
 /** Journey 4e: an agent's settings, opened from its profile, lead back to the profile. */
-test('Escape in the agent settings goes back to the profile', async ({ page }) => {
+test('Escape in the agent settings goes back to the profile', { tag: '@settings' }, async ({ page }) => {
   const card = await hireOne(page, 'Back Tester')
   await card.dblclick()
   const profile = page.locator('.profile-panel')

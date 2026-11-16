@@ -6,6 +6,10 @@ on:
   push:
     branches: [main]
     paths: ['floor42-web/**', '.github/workflows/demo.yml']
+  # The push filter above misses a force-push of main: also publish after a successful release.
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -19,7 +23,7 @@ concurrency:
 
 jobs:
   publish:
-    if: ${{ !github.event.repository.private }}
+    if: ${{ !github.event.repository.private && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-24.04
     environment:
       name: github-pages

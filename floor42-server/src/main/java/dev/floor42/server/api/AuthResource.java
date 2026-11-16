@@ -2,9 +2,9 @@ package dev.floor42.server.api;
 
 import dev.floor42.domain.Actor;
 import dev.floor42.domain.Origin;
-import dev.floor42.server.app.DirectorTerminals;
-import dev.floor42.server.app.OfficeService;
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.OfficeService;
+import dev.floor42.server.app.core.RefusedException;
+import dev.floor42.server.app.terminal.DirectorTerminals;
 import dev.floor42.server.security.LocalAccessGuard;
 import dev.floor42.server.security.SessionRegistry;
 import dev.floor42.server.security.SessionRegistry.Scope;

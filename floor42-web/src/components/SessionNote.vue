@@ -6,7 +6,7 @@ import type { IamStatusView } from '../api/identity'
 import { request } from '../api/request'
 import { dateLocale, t } from '../i18n'
 import { resetAllDrafts } from '../state/drafts'
-import { clock, ending, sessionEnd } from '../ui/sessionTime'
+import { ending, sessionEnd, when } from '../ui/sessionTime'
 import BarIcon from './BarIcon.vue'
 
 /**
@@ -38,7 +38,7 @@ const timer = window.setInterval(load, 60_000)
 onMounted(load)
 onBeforeUnmount(() => window.clearInterval(timer))
 
-const time = (ms: number) => clock(ms, dateLocale())
+const time = (ms: number) => when(ms, dateLocale(), now.value)
 const sessionEnding = computed(() => endMs.value !== null && ending(endMs.value, now.value))
 const keycloakEnding = computed(() => keycloakMs.value !== null && ending(keycloakMs.value, now.value))
 /** Signed in with Keycloak: one padlock chip with the first end to come; both ends in its tooltip. */

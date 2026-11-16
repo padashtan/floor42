@@ -179,4 +179,34 @@ class SecretMaskerTest {
                 .doesNotContain("SIGQ");
         assertThat(SecretMasker.count("a token \"x\" b")).isEqualTo(1);
     }
+
+    @Test
+    void aSignatureInAQueryStringIsMasked() {
+        String sas = "https://acct.blob.core.windows.net/c/f.txt?sv=2022-11-02&sig=AbC%2BdSIGQ&se=2026";
+        assertThat(SecretMasker.maskText(sas)).doesNotContain("SIGQ").contains("se=2026");
+        assertThat(SecretMasker.maskText("https://b.s3.test/k?X-Amz-Signature=fe12SIGQ"))
+                .doesNotContain("SIGQ");
+    }
+
+    @Test
+    void aCookieHeaderIsMasked() {
+        assertThat(SecretMasker.maskText("Cookie: session=s3SIGQ; theme=dark\nAccept: */*"))
+                .doesNotContain("SIGQ")
+                .contains("Accept: */*");
+        assertThat(SecretMasker.maskText("Set-Cookie: sid=abSIGQ; HttpOnly")).doesNotContain("SIGQ");
+    }
+
+    @Test
+    void aSecretNameWrittenUrlEncodedIsMasked() {
+        for (String in : new String[] {
+            "redirect=https%3A%2F%2Fapp.test%2Fcb%3Faccess%5Ftoken%3Dab12SIGQ",
+            "GET /cb?client%5Fsecret=ab12SIGQ",
+            "GET /cb?%74oken=ab12SIGQ",
+            "GET /cb?x=1&%73ig=ab12SIGQ",
+            "body=password%3Dab12SIGQ",
+            "%22api%5Fkey%22%3A%22ab12SIGQ%22"
+        }) {
+            assertThat(SecretMasker.maskText(in)).as(in).doesNotContain("SIGQ");
+        }
+    }
 }

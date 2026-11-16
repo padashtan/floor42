@@ -78,6 +78,9 @@ public final class ShellGuard {
         if (command.contains("session.token")) {
             return Optional.of("the command names the director's token: agents never act as the director");
         }
+        if (command.contains("proof-dossier")) {
+            return Optional.of("the command names the proof dossier: only the director exports a mission");
+        }
         if (command.contains("replay-export")) {
             return Optional.of("the command names the replay export: only the director exports a mission");
         }

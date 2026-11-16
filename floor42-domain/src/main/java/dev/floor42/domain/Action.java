@@ -29,6 +29,17 @@ public final class Action {
      */
     boolean orphaned;
 
+    /**
+     * The shell command exactly as the agent sent it, which command rules and approvals are decided on; the summary only
+     * displays it. Kept in memory, not journaled: null for a call replayed from the journal, decided on its summary.
+     */
+    transient String command;
+
+    /** What a command-prefix rule is matched against: the full command when known, else the summary. */
+    String decidedOn() {
+        return command != null ? command : summary;
+    }
+
     /** How long Claude Code last said the call had been running, in seconds; null when it never said. */
     Long runningSeconds;
 

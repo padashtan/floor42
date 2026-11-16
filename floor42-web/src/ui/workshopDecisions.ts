@@ -53,5 +53,21 @@ export function useWorkshopDecisions(d: Decisions) {
     if (v && d.path.value === path) d.clearViewer()
   }
 
-  return { unticked, picked, accept, reject, discard }
+  /** Accepts the ticked files, then discards the unticked ones, after one confirmation that names both counts. */
+  async function acceptRest() {
+    if (!d.agent.value || !d.message.value.trim() || !unticked.value.length) return
+    const dropped = d.changes.value.map((c) => c.path).filter((p) => unticked.value.includes(p))
+    const kept = picked.value
+    const message = t('ws.acceptRestConfirm', { kept: kept.length, dropped: dropped.length })
+    if (!kept.length || !dropped.length) return
+    if (!(await confirmed({ message, confirmLabel: t('ws.acceptRest'), danger: true }))) return
+    if (!(await d.act(() => workshopCall(() => api.acceptPatch(d.mission(), d.agent.value!, d.message.value.trim(), kept))))) return
+    for (const path of dropped) {
+      if (!(await d.act(() => workshopCall(() => workshopChangesApi.discard(d.mission(), d.agent.value!, path))))) break
+      if (d.path.value === path) d.clearViewer()
+    }
+    unticked.value = []
+  }
+
+  return { unticked, picked, accept, acceptRest, reject, discard }
 }

@@ -16,7 +16,7 @@ async function marks(page: Page): Promise<Record<string, { x: number; y: number 
 }
 
 /** Journey 11: the robot opens the director's terminal; the pets only show their name. Reduced motion freezes them. */
-test('a click on the robot opens the terminal; the pets show their names', async ({ page }) => {
+test('a click on the robot opens the terminal; the pets show their names', { tag: '@scene' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await useLanguage(page, 'en')
@@ -82,7 +82,7 @@ async function states(page: Page): Promise<Record<string, string>> {
 }
 
 /** Journey 11b: without reduced motion the pets walk and run, speak, and sleep curled up in their baskets. */
-test('the pets walk, speak and sleep in their baskets', async ({ page }) => {
+test('the pets walk, speak and sleep in their baskets', { tag: '@scene' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

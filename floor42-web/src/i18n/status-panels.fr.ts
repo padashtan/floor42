@@ -192,6 +192,7 @@ export const statusPanelsFr: Record<keyof typeof statusPanelsEn, string> = {
   'replayExport.nothingMasked': 'Rien n’a dû être masqué.',
   'replayExport.kind.SECRET': 'valeurs qui ressemblent à un secret : {count}',
   'replayExport.kind.PATH': 'chemins absolus locaux, remplacés par un repère : {count}',
+  'replayExport.kind.EMAIL': 'adresses e-mail, remplacées par un repère : {count}',
   'replayExport.kind.TOKEN': 'le jeton de session du démon : {count}',
   'replayExport.kind.OUTPUT_CLIPPED': 'sorties tronquées : {count}',
   'replayExport.kind.TEXT_CLIPPED': 'textes tronqués : {count}',

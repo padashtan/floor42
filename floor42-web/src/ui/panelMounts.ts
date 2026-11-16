@@ -23,6 +23,7 @@ import MeetingRoom from '../components/MeetingRoom.vue'
 import MissionEnd from '../components/MissionEnd.vue'
 import ObjectionsPanel from '../components/ObjectionsPanel.vue'
 import ProgressPanel from '../components/ProgressPanel.vue'
+import ProofDossierPanel from '../components/ProofDossierPanel.vue'
 import ProvePanel from '../components/ProvePanel.vue'
 import ResumePanel from '../components/ResumePanel.vue'
 import SandboxReadiness from '../components/SandboxReadiness.vue'
@@ -172,6 +173,8 @@ function resultPanels(c: PanelContext): PanelMount[] {
     flagged('objections', ObjectionsPanel),
     // Prove the delivery (ADR-0058), between the review and the acceptance.
     flagged('prove', ProvePanel, { props: () => ({ mission: (requestOf('prove') === proveRequest ? proveOf.value : null) ?? office.mission?.id ?? null }) }),
+    // The mission's proof dossier (ADR-0071), from the Work menu: read from the journal, masked, to download.
+    flagged('dossier', ProofDossierPanel, { props: () => ({ mission: office.mission?.id ?? null }) }),
     held('profile', AgentProfile, c.profileOf, 'agent', {
       on: {
         settings: () => (c.settingsFor.value = c.profileOf.value),
@@ -199,7 +202,7 @@ export function panelTable(c: PanelContext): PanelMount[] {
 
 /** The order Escape closes panels in, before the last one opened (state/openPanels.ts). */
 const ESCAPE_ORDER = [
-  'viewer', 'report', 'prove', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills',
+  'viewer', 'report', 'prove', 'dossier', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills',
   'requests', 'profile', 'machine', 'deliverables', 'board', 'archive', 'usage', 'console', 'callMeeting', 'meeting', 'workshop', 'desk',
 ]
 

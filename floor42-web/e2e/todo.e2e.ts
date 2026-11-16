@@ -9,7 +9,7 @@ const action = (id: string) => ACTIONS.find((a) => a.id === id)!
  * Journey: the to-do panel under the event log shows a plan that waits for approval and its button opens the board;
  * then two panels are pinned side by side, stay open when another panel opens, and Escape leaves them alone.
  */
-test('the to-do panel shows what waits and panels can be pinned', async ({ page, daemon }) => {
+test('the to-do panel shows what waits and panels can be pinned', { tag: '@office' }, async ({ page, daemon }) => {
   test.setTimeout(120_000)
   page.on('dialog', (d) => void d.accept())
   const repo = daemon.gitRepository()

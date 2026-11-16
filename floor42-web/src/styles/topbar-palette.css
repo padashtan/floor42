@@ -1,0 +1,197 @@
+/* ---- topbar-palette: the bar's menus and the command palette (Ctrl+K) ---------------------------------------- */
+.bar-dropdown {
+  position: fixed;
+  z-index: 45;
+  width: 280px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.bar-dropdown .item {
+  display: block;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  text-decoration: none;
+}
+.bar-dropdown .item:hover,
+.bar-dropdown .item:focus-visible {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+.bar-dropdown .sep {
+  border-top: 1px solid var(--line);
+  margin: 4px 0;
+}
+.palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(2, 8, 12, 0.45);
+}
+.palette {
+  top: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.palette input {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--cyan);
+  padding: 6px 8px;
+}
+.palette ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.palette li {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  column-gap: 8px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.palette li.active {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+.palette li.none {
+  color: var(--muted);
+  cursor: default;
+}
+.palette .kind {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  align-self: center;
+}
+.palette .label {
+  color: var(--cyan);
+}
+.palette .detail {
+  grid-column: 2 / 4;
+  color: var(--muted);
+  font-size: 12px;
+}
+.palette kbd {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  border: 1px solid var(--line);
+  padding: 0 4px;
+  align-self: center;
+}
+
+/* waiting-banner: what waits for the director, under the bar, above the crew (TopBar.vue sets both tops). */
+.waiting-box {
+  position: absolute;
+  top: var(--waiting-top, 54px);
+  left: 8px;
+  /* Beside the event log's column, never over it. */
+  right: 416px;
+  /* No z-index: a panel the director opens comes later in the page and covers the banner, never the other way. */
+}
+@media (max-width: 760px) {
+  .waiting-box {
+    right: 8px;
+  }
+}
+.waiting-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  align-items: center;
+  padding: 8px 14px;
+  background: rgba(96, 66, 8, 0.96);
+  border: 2px solid #f0b429;
+  color: #fff1d0;
+}
+.waiting-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.waiting-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.waiting-mark {
+  color: #f0b429;
+  font-size: 18px;
+}
+
+/* journal-resilience (ADR-0042): rows replay left out, said loudly. */
+.journal-banner {
+  position: absolute;
+  top: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 18px;
+  max-width: min(820px, calc(100vw - 48px));
+  background: rgba(90, 14, 14, 0.95);
+  border: 2px solid #ff5a4f;
+  color: #ffe9e6;
+  z-index: 30;
+}
+/* The first continuity check after an upgrade: expected once, so amber and not the alarm's red. */
+.journal-banner.notice {
+  background: rgba(96, 66, 8, 0.95);
+  border-color: #f0b429;
+  color: #fff1d0;
+}
+.journal-panel {
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, calc(100vw - 48px));
+  max-height: calc(100vh - 220px);
+  z-index: 30;
+}
+
+/* security-hardening: the Sessions and tokens panel (ADR-0044) */
+.sessions-panel {
+  /* A place of its own: without one it opened at the very top, its close button above the screen. */
+  top: 90px;
+  right: 24px;
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+  width: min(560px, 92vw);
+}
+.sessions-panel .session-row {
+  border-top: 1px solid var(--line, #333);
+  padding: 6px 0;
+}
+.sessions-panel .facts.muted {
+  opacity: 0.7;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+.sessions-panel .token-form {
+  display: grid;
+  gap: 6px;
+}
+.sessions-panel .issued-token code {
+  display: block;
+  overflow-wrap: anywhere;
+  user-select: all;
+  margin: 4px 0;
+}

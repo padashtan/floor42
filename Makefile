@@ -3,10 +3,13 @@
 
 MVNW := ./mvnw -B -ntp
 
-.PHONY: assurance oidc-conformance quality fuzz semgrep security-static trivy hadolint actionlint zap api-fuzz mutation help install build test test-fast test-slow quick gate verify release-gate e2e run doctor dev web-dev demo-tape demo-build demo-preview docker-build docker-up docker-login docker-open docker-logs docker-down clean
+.PHONY: gate-windows gate-linux gate-double gate-remote assurance oidc-conformance quality fuzz semgrep security-static trivy hadolint actionlint zap api-fuzz mutation help install build test test-fast test-slow quick gate verify release-gate e2e run doctor dev web-dev demo-tape demo-build demo-preview docker-build docker-up docker-login docker-open docker-logs docker-down clean
 
 help: ## List the tasks
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F ':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
+
+setup-git: ## Once per clone: the `ours` merge driver used by .gitattributes for generated files
+	git config merge.ours.driver true
 
 install: ## Install the web dependencies
 	cd floor42-web && npm ci
@@ -22,7 +25,7 @@ test-fast: floor42-web/node_modules/.package-lock.json ## The everyday check: we
 	cd floor42-web && npm test
 	$(MVNW) -q -pl floor42-server -am test -Dspotless.check.skip=true
 
-quick: floor42-web/node_modules/.package-lock.json ## The tests the diff touches (Java classes by name, Vitest --changed); not a gate
+quick: floor42-web/node_modules/.package-lock.json ## The tests the diff calls for, from tools/test-map.conf (feature package lots, the core set, Vitest --changed); not a gate
 	bin/floor42-quick
 
 test-slow: ## The tests tagged slow (real WSL sandbox, real timeouts), left out of verify: part of the release gate
@@ -30,6 +33,18 @@ test-slow: ## The tests tagged slow (real WSL sandbox, real timeouts), left out 
 
 release-gate: verify test-slow ## Before a release: the full gate, then the slow tests (docs/releases.md)
 	cd floor42-web && npm test
+
+gate-windows: ## The full gate on this checkout, one heavy job at a time, logs in target/gate (tools/gate; about 40 min, nothing else heavy)
+	pwsh -NoProfile -File tools/gate/gate-windows.ps1
+
+gate-linux: ## The full gate on a fresh clone of HEAD (or SHA=...) in the Linux home; from Windows through WSL Debian (tools/gate)
+	$(if $(filter Windows_NT,$(OS)),MSYS_NO_PATHCONV=1 wsl.exe -d Debian -- bash "$$(wslpath '$(CURDIR)')/tools/gate/gate-linux.sh" $(SHA),tools/gate/gate-linux.sh $(SHA))
+
+gate-double: gate-windows ## The release gate: Windows, then Linux, both must print GATE GREEN
+	$(MAKE) gate-linux
+
+gate-remote: ## The main release gate: a pii-swept snapshot of HEAD (or SHA=...) on the public branch release/vVERSION, its CI on Windows and Linux (tools/gate/remote.sh; PUSH=1 WAIT=1 to push and wait)	bash tools/gate/remote.sh $(VERSION) $(SHA)
+	bash tools/gate/remote.sh $(VERSION) $(SHA)
 
 gate: verify ## The full suite, as CI runs it: format, every Java test, then the web unit tests
 	cd floor42-web && npm test

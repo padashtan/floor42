@@ -7,6 +7,32 @@ before v1.0.0: that work is not published as versions, and the decision records 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-19
+
+### Added
+
+- Day / night mode: a third button in the help bar draws the scene by the clock (default), by day (as at noon) or by night (lit city, a truly dark office). Decor only: no event, no API call, agents and missions unchanged; the choice is kept in this browser and glides over 1.5 s (at once under reduced motion). The office's night light is darker than before, whatever the choice.
+- Before the start (ADR-0070): the new mission form names the folder's build tool, proposes a checks command (the last mission's on the project, else the build tool's default; never run) and lists blockers and warnings from `GET /api/preflight`. Create is disabled on a blocker. A required sandbox that does not work is now refused when the mission is created (`SANDBOX_REQUIRED`), not at its first session. No new event.
+- Mission proof dossier (ADR-0071): a Work menu panel and `GET /api/missions/{id}/proof-dossier` give what a mission did (agent identities, refused actions, approvals, costs, checks, deliverables, a summary of changes), every line with its source (journal with event numbers, git, Floor42 state or derived) and every figure with its basis; always masked like the replay export, downloadable as Markdown or JSON. No new event. Token claims (sub, act, scopes) are not in the journal and are listed as a limit.
+- Mission title optional in `POST /api/missions` (and in `floor42 "..."`): a blank title is the objective's first line cut on a word, one rule in `MissionTitles`.
+- Workshop: "Accept the ticked, discard the rest" accepts the ticked files and discards the others after one confirmation that names both counts.
+- Ends shown with their day when not today ("tomorrow 09:10", "12 Nov 14:32"): the top bar's session end and the delegation chip, which is also amber 30 minutes before its end.
+- IAM mode: a screen warning 30 minutes before a delegation ends and 10 minutes before an agent token ends (no journal event, nothing renewed).
+
+### Fixed
+
+- Tests: SocketSessionsTest no longer fails when a refused socket closes before its close handler is set (the client checks the socket first; a deterministic test forces that order, TerminalApiTest likewise); the seam fields of `SocketSessions` are volatile.
+
+### Security
+
+- A shell call is decided on its full command, not on its one-line summary: a command-prefix rule never allows a second line the summary flattened, and an approval covers that exact command only (compared on summaries for calls replayed from the journal).
+- The replay export masks e-mail addresses as `<email>` (a new kind, `EMAIL`, in its preview); documentation-domain and no-reply addresses stay.
+- Masking (D29) also hides query signatures (`sig=`, `X-Amz-Signature=`, `X-Goog-Signature=`), the rest of a `Cookie:` or `Set-Cookie:` line, and secret names written URL-encoded (`access%5Ftoken%3D`, `%22api%5Fkey%22%3A`, a URL encoded inside another).
+- The sandbox no longer shows the repository's git config (a remote URL with a token, credential helpers): a stand-in holding only the repository format covers it in every layout, and git gets only allow-listed settings read on the host (`core.filemode`, `core.autocrlf`, `core.ignorecase`, `core.symlinks`, `core.repositoryformatversion`, `core.bare=false`, `extensions.*`) as `GIT_CONFIG_*`.
+
+### Changed
+
+- Code organised by feature (ADR-0067) and the repository laid out for parallel work (ADR-0069); browser tests tagged by domain, a test map keyed by path (ADR-0068).
 ## [1.0.0] - 2026-11-12
 
 First public release. Floor42 is a local daemon and a browser office in which you direct AI agents on your own git

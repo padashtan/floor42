@@ -17,7 +17,9 @@ import io.restassured.config.RedirectConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.WebSocket;
 import io.vertx.core.http.WebSocketConnectOptions;
 import jakarta.inject.Inject;
 import java.net.URI;
@@ -77,24 +79,37 @@ class SocketSessionsTest {
         }
     }
 
-    Feed connect(String path, String headerName, String headerValue) throws Exception {
-        CompletableFuture<Short> closed = new CompletableFuture<>();
-        WebSocketConnectOptions o = new WebSocketConnectOptions()
+    WebSocketConnectOptions options(String path, String headerName, String headerValue) {
+        return new WebSocketConnectOptions()
                 .setHost("127.0.0.1")
                 .setPort(base.getPort())
                 .setURI(path)
                 .addHeader(headerName, headerValue)
                 .addHeader("Origin", own());
-        vertx.createWebSocketClient()
-                .connect(o)
+    }
+
+    /**
+     * Watches a socket for its close code. The daemon may close at once, and the client reads that close before this
+     * callback runs when the calling thread is late to register it: a closed socket refuses a close handler
+     * ("WebSocket is closed"), so its code is read instead. The callback runs on the event loop that reads the
+     * frames, so no close comes between the check and the handler.
+     */
+    Feed watch(Future<WebSocket> connecting) throws Exception {
+        CompletableFuture<Short> closed = new CompletableFuture<>();
+        connecting
                 .map(ws -> {
-                    ws.closeHandler(v -> closed.complete(ws.closeStatusCode()));
+                    if (ws.isClosed()) closed.complete(ws.closeStatusCode());
+                    else ws.closeHandler(v -> closed.complete(ws.closeStatusCode()));
                     return ws;
                 })
                 .toCompletionStage()
                 .toCompletableFuture()
                 .get(10, TimeUnit.SECONDS);
         return new Feed(closed);
+    }
+
+    Feed connect(String path, String headerName, String headerValue) throws Exception {
+        return watch(vertx.createWebSocketClient().connect(options(path, headerName, headerValue)));
     }
 
     Feed feed(String path, String cookie) throws Exception {
@@ -255,6 +270,23 @@ class SocketSessionsTest {
         Feed events = feed("/ws/events", issued.secret());
 
         closes(events);
+    }
+
+    /** The same window with the client's own race forced: the close is read before the test watches the socket. */
+    @Test
+    void aSocketClosedBeforeItIsWatchedStillGivesItsCloseCode() throws Exception {
+        SessionRegistry.Issued issued = sessions.openBrowser("early");
+        socketSessions.seam(() -> sessions.revoke(issued.session().id()), null);
+        Future<WebSocket> connecting = vertx.createWebSocketClient()
+                .connect(options("/ws/events", "Cookie", LocalAccessGuard.COOKIE + "=" + issued.secret()));
+        await(
+                "the close read before the socket is watched",
+                Duration.ofSeconds(2),
+                () -> connecting.succeeded() && connecting.result().isClosed());
+
+        Feed events = watch(connecting);
+
+        assertThat(events.closed().get(2, TimeUnit.SECONDS)).isEqualTo((short) SocketSessions.ENDED);
     }
 
     @Test

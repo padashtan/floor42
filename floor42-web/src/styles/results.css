@@ -1,0 +1,59 @@
+/* ---- Results, checks and budget ------------------------------------------------------------------------------------ */
+.scorecard {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.scorecard td {
+  padding: 2px 4px;
+  border-bottom: 1px solid #12323c;
+  vertical-align: top;
+}
+.scorecard .label {
+  color: var(--muted);
+  white-space: nowrap;
+}
+.scorecard .basis {
+  text-align: right;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.basis.measured {
+  color: var(--green);
+}
+.basis.estimated {
+  color: var(--amber);
+}
+.basis.reported {
+  color: var(--cyan);
+}
+.basis.unavailable {
+  color: var(--muted);
+}
+.desk-panel .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.desk-panel .row input {
+  flex: 1;
+}
+.check-run {
+  margin-top: 4px;
+}
+.check-run .passed {
+  color: var(--green);
+}
+.check-run .failed {
+  color: var(--red);
+}
+.check-run pre {
+  max-height: 160px;
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 4px;
+  margin: 2px 0 0;
+  font-size: 12px;
+  white-space: pre-wrap;
+}

@@ -1,0 +1,134 @@
+/* ---- Name tags over agents (V1) --------------------------------------------------------------------------------- */
+.name-tags {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.name-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1px 6px 2px;
+  border: 1px solid #2b6f7f;
+  background: rgba(6, 20, 26, 0.82);
+  font-size: 12px;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: #cfe9ee;
+}
+.name-tag span {
+  font-size: 12px;
+  color: #8fb3bb;
+}
+.name-tag[data-tone='work'] span {
+  color: #3fe0f0;
+}
+.name-tag[data-tone='wait'] {
+  border-color: #f0a83f;
+}
+.name-tag[data-tone='wait'] span {
+  color: #f0a83f;
+}
+.name-tag[data-tone='alert'] span {
+  color: #ff5a5a;
+}
+.name-tag[data-tone='off'] {
+  opacity: 0.6;
+}
+/* The voice just recorded at a committee or a meeting: the speaker's tag lights up. */
+.name-tag[data-speaking='1'] {
+  border-color: #ffb000;
+  box-shadow: 0 0 8px #ffb000;
+}
+
+/* ---- Crew cards say what each agent does ------------------------------------------------------------------------ */
+.crew .card .state {
+  font-size: 12px;
+  line-height: 1.1;
+  margin-top: 1px;
+}
+
+/* ---- Desk button pulses while something waits for the director ---------------------------------------------- */
+.bar-nav button.desk.waiting {
+  border-color: #f0a83f;
+  animation: waiting-pulse 1.6s ease-in-out infinite;
+}
+@keyframes waiting-pulse {
+  50% {
+    box-shadow: 0 0 0 2px rgba(240, 168, 63, 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-nav button.desk.waiting {
+    animation: none;
+  }
+}
+
+/* ---- Context menu shortcut hints, agent settings, log filters ------------------------------------------------ */
+.menu .key {
+  float: right;
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.agent-settings {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.agent-settings label {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.log .title .filters {
+  float: right;
+  display: inline-flex;
+  gap: 2px;
+}
+.log .title .filters button {
+  font-size: 12px;
+  padding: 0 5px;
+  opacity: 0.6;
+}
+.log .title .filters button.on {
+  opacity: 1;
+  border-color: #3fe0f0;
+}
+
+/* ---- Activity line in name tags, desk "locate" (V2) ------------------------------------------------------------ */
+.name-tag i.doing {
+  font-style: normal;
+  font-size: 12px;
+  color: #cfe9ee;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.name-tag i.doing:empty {
+  display: none;
+}
+.name-tag i.doing[data-tone='wait'] {
+  color: #f0a83f;
+}
+.name-tag i.doing[data-tone='alert'] {
+  color: #ff5a5a;
+}
+.question .head .locate {
+  margin-left: 6px;
+  font-size: 12px;
+  padding: 0 5px;
+}

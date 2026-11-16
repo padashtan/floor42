@@ -1,0 +1,199 @@
+/* ---- Board panel: the mission's tickets as cards (B) ------------------------------------------------------------ */
+.board-panel {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+  z-index: 20;
+  border-color: var(--cyan);
+  /* Opaque: the event log and the scene must not show through the cards. */
+  background: #071a21;
+}
+/* An open ticket: the panel widens, the board scrolls on the left and the ticket on the right, each on its own. */
+.board-panel.split {
+  width: min(1560px, calc(100vw - 32px));
+}
+.board-panel.split .board-body {
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  padding-right: 0;
+}
+.board-panel.split .board-main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding-right: 8px;
+}
+.board-panel.split .ticket-detail {
+  flex: 0 0 min(460px, 40%);
+  margin-top: 0;
+  overflow: auto;
+}
+.board-panel.split .columns {
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+}
+@media (max-width: 900px) {
+  .board-panel.split .board-body {
+    flex-direction: column;
+    overflow: auto;
+  }
+  .board-panel.split .board-main {
+    overflow: visible;
+  }
+  .board-panel.split .ticket-detail {
+    order: -1;
+    flex: none;
+    max-height: 55vh;
+  }
+}
+.board-panel .columns {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 6px;
+}
+@media (max-width: 900px) {
+  .board-panel .columns {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+  }
+}
+.board-panel .column {
+  background: rgba(4, 16, 22, 0.6);
+  border: 1px solid #12323c;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 120px;
+}
+.board-panel .column.proposed {
+  border-color: #6b4a1c;
+}
+.board-panel .column-head {
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.board-panel .column.proposed .column-head {
+  color: var(--amber);
+}
+.board-panel .count-chip {
+  display: inline-block;
+  min-width: 16px;
+  padding: 0 4px;
+  margin-left: 4px;
+  text-align: center;
+  background: #12323c;
+  color: var(--text);
+}
+.board-panel .empty-col {
+  color: var(--muted);
+  text-align: center;
+}
+.ticket-card {
+  background: #0b2530;
+  border: 1px solid #1d4a57;
+  border-left: 3px solid var(--cyan);
+  padding: 5px 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.column.proposed .ticket-card {
+  border-left-color: var(--amber);
+  border-style: dashed solid dashed solid;
+}
+.column.done .ticket-card {
+  border-left-color: var(--green);
+  opacity: 0.85;
+}
+.ticket-card:hover,
+.ticket-card.selected {
+  border-color: var(--cyan);
+  background: #0f3140;
+}
+.ticket-card.waiting {
+  box-shadow: 0 0 0 1px var(--amber);
+}
+.ticket-card .card-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ticket-card .card-title {
+  margin: 3px 0;
+  line-height: 1.25;
+  color: var(--text);
+}
+.ticket-card .card-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.ticket-card .avatar {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* The agent's colour darkened (BoardPanel.vue), so the white initial reads at 4.5:1 whatever the colour. */
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+.ticket-card .blocked {
+  color: var(--amber);
+}
+.verdict {
+  font-size: 12px;
+  padding: 0 4px;
+  border: 1px solid currentColor;
+  text-transform: lowercase;
+}
+.verdict.validated {
+  color: var(--green);
+}
+.verdict.validated_with_reservations {
+  color: #b9e36a;
+}
+.verdict.rejected {
+  color: #ff5a5a;
+}
+.verdict.unverifiable,
+.verdict.waits {
+  color: var(--amber);
+}
+.ticket-detail {
+  margin-top: 8px;
+  border: 1px solid #1d4a57;
+  padding: 8px;
+  background: rgba(4, 16, 22, 0.8);
+}
+.ticket-detail .detail-head {
+  color: var(--muted);
+}
+.ticket-detail .detail-title {
+  font-size: 14px;
+  margin: 4px 0;
+  color: var(--text);
+}
+.ticket-detail .criteria {
+  margin: 2px 0 4px;
+  padding-left: 18px;
+}
+.ticket-detail .deliverable {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 240px;
+  overflow: auto;
+  background: #061016;
+  padding: 6px;
+  font-size: 12px;
+}

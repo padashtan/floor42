@@ -12,6 +12,9 @@ permissions:
 jobs:
   e2e:
     runs-on: ubuntu-24.04
+    # A hosted runner draws the 3D scene in software: on 2026-11-16 41 of 77 journeys timed out after 87 minutes.
+    # The gate is the developer machine's run (docs/releases.md); this run is information only, cut at 30 minutes.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -39,6 +42,10 @@ jobs:
       - name: Browser journeys
         run: npm run e2e
         working-directory: floor42-web
+        env:
+          # The hosted runner draws the scene in software: with 3 workers (the developer machine's best value) the daemons
+          # and browsers starve each other and journeys time out (38 of 77 on 2026-11-16). 2 was green for v1.0.0.
+          FLOOR42_E2E_WORKERS: 2
 
       - name: Keep the screenshots and the report
         if: ${{ !cancelled() }}

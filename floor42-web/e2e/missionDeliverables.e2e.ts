@@ -67,7 +67,7 @@ const naturalWidth = (img: Locator) => img.evaluate((e) => (e as HTMLImageElemen
  * opened from the workshop, the focus back on the opener each time; then the delivery accepted and its documents found
  * in `<project>/deliverables/<mission>/`.
  */
-test('a mission delivers into its folder, and its files open in the viewer', async ({ page, daemon }) => {
+test('a mission delivers into its folder, and its files open in the viewer', { tag: '@delivery' }, async ({ page, daemon }) => {
   test.setTimeout(240_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   const repo = daemon.gitRepository()
@@ -111,7 +111,7 @@ test('a mission delivers into its folder, and its files open in the viewer', asy
       await page.request.post(`/api/questions/${q.id}/answer`, { headers, data: { answer: 'ALLOW' } })
     }
     expect(m.tickets.map((x) => x.status)).toEqual(m.tickets.map(() => 'DONE'))
-  }).toPass({ timeout: 120_000, intervals: [1_000] })
+  }).toPass({ timeout: 120_000, intervals: [250] })
 
   // What the agent left in its worktree, beside the fake's notes.txt.
   const listing = await (await page.request.get(`/api/missions/${id}/deliverables`)).json()

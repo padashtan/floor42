@@ -15,8 +15,9 @@ interface Mission {
  * workshop, finds the file among the deliverables and reads it, reads the end-of-mission report, then accepts the
  * delivery and sees the mission closed.
  */
-test('a mission goes from the desk to its end', async ({ page, daemon }) => {
-  test.setTimeout(240_000)
+test('a mission goes from the desk to its end', { tag: '@tickets' }, async ({ page, daemon }) => {
+  // Under 240 s on Windows; 354 s measured headless on WSL (software WebGL, 4 to 6 s per action): a ceiling, not a wait.
+  test.setTimeout(480_000)
   page.on('dialog', (d) => void d.accept())
   const repo = daemon.gitRepository()
   await page.setViewportSize({ width: 1600, height: 900 })
@@ -65,9 +66,11 @@ test('a mission goes from the desk to its end', async ({ page, daemon }) => {
   await expect(async () => {
     const card = desk.locator('.question').first()
     if (await card.count()) {
-      const question = (await card.locator('.head b').first().innerText()).trim()
+      // An answered card can leave between count() and the next call: bounded, so toPass retries instead of waiting
+      // until the test's end (no actionTimeout; the window is wide on a slow, software-rendered Linux browser).
+      const question = (await card.locator('.head b').first().innerText({ timeout: 2_000 })).trim()
       if (asked === 0) await shot(page, '2-mission-03-question')
-      await card.getByRole('button', { name: t['option.ALLOW'], exact: true }).click()
+      await card.getByRole('button', { name: t['option.ALLOW'], exact: true }).click({ timeout: 5_000 })
       asked++
       // Answered: its toast ("Answer") leaves at once, not 12 s later.
       await expect(page.locator('.toasts .toast', { hasText: `${question} ` })).toHaveCount(0, { timeout: 3_000 })
@@ -75,7 +78,7 @@ test('a mission goes from the desk to its end', async ({ page, daemon }) => {
     const m = await mission()
     expect(m.tickets.length).toBeGreaterThan(0)
     expect(m.tickets.map((x) => x.status)).toEqual(m.tickets.map(() => 'DONE'))
-  }).toPass({ timeout: 120_000, intervals: [1_000] })
+  }).toPass({ timeout: 120_000, intervals: [250] })
   test.info().annotations.push({ type: 'questions allowed', description: String(asked) })
   await page.keyboard.press('Escape')
   await expect(desk).toHaveCount(0)

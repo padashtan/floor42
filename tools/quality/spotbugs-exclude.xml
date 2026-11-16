@@ -21,13 +21,13 @@
     </Match>
     <Match>
         <!-- Remote URLs: every quantifier is bounded by a character that cannot repeat it (/ : @). -->
-        <Class name="dev.floor42.server.app.PullRequestGit"/>
+        <Class name="dev.floor42.server.app.delivery.PullRequestGit"/>
         <Method name="&lt;clinit&gt;"/>
         <Bug pattern="REDOS"/>
     </Match>
     <Match>
         <!-- Lines are squeezed (blank runs cut to 32) before the patterns run, so no run of blanks can be explored. -->
-        <Class name="dev.floor42.server.app.ReviewClaims"/>
+        <Class name="dev.floor42.server.app.session.ReviewClaims"/>
         <Method name="&lt;clinit&gt;"/>
         <Bug pattern="REDOS"/>
     </Match>
@@ -61,13 +61,13 @@
     <Match>
         <!-- The folder comes from Claude Code's own registry file, which the director's tool writes; it is read only,
              and a plugin path from a listing is checked beneath the clone (localPluginDir). -->
-        <Class name="dev.floor42.server.app.MarketplaceStore"/>
+        <Class name="dev.floor42.server.app.asset.MarketplaceStore"/>
         <Method name="~markets|refresh"/>
         <Bug pattern="PATH_TRAVERSAL_IN"/>
     </Match>
     <Match>
         <!-- The scratch file is named by Floor42 inside its own proofs folder. -->
-        <Class name="dev.floor42.server.app.ProofSnapshot"/>
+        <Class name="dev.floor42.server.app.delivery.ProofSnapshot"/>
         <Method name="scratch"/>
         <Bug pattern="PATH_TRAVERSAL_IN"/>
     </Match>
@@ -75,7 +75,7 @@
     <!-- COMMAND_INJECTION: every process is started from an argument list, never through a shell. -->
     <Match>
         <!-- The checks' command is the director's recipe, run in the sandbox: running it is the feature. -->
-        <Class name="dev.floor42.server.app.BoundedProcess"/>
+        <Class name="dev.floor42.server.app.core.BoundedProcess"/>
         <Method name="builder"/>
         <Bug pattern="COMMAND_INJECTION"/>
     </Match>
@@ -87,7 +87,7 @@
     </Match>
     <Match>
         <!-- The folder is an absolute path given to the explorer as its only argument. -->
-        <Class name="dev.floor42.server.app.Deliverables"/>
+        <Class name="dev.floor42.server.app.delivery.Deliverables"/>
         <Method name="launchExplorer"/>
         <Bug pattern="COMMAND_INJECTION"/>
     </Match>
@@ -127,7 +127,7 @@
 
     <!-- UNSAFE_HASH_EQUALS: digests of git objects and files, not secrets; a timing leak reveals nothing. -->
     <Match>
-        <Class name="dev.floor42.server.app.Workshop"/>
+        <Class name="dev.floor42.server.app.mission.Workshop"/>
         <Method name="undo"/>
         <Bug pattern="UNSAFE_HASH_EQUALS"/>
     </Match>
@@ -153,82 +153,82 @@
          empty path. Each path here is a file under the data or project folder, an absolute path, or an entry listed
          from a directory, so none is one; docs/quality.md ("Correctness triage"). -->
     <Match>
-        <Class name="dev.floor42.server.api.ProjectsResource"/>
+        <Class name="dev.floor42.server.api.workspace.ProjectsResource"/>
         <Method name="~folders|lambda\$folders\$\d+|visibleFolder|lambda\$visibleFolder\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.BlobSource"/>
+        <Class name="dev.floor42.server.app.delivery.BlobSource"/>
         <Method name="~onDisk|lambda\$onDisk\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.ClaudeAssets"/>
+        <Class name="dev.floor42.server.app.asset.ClaudeAssets"/>
         <Method name="~agents|lambda\$agents\$\d+|list|lambda\$list\$\d+|skills|lambda\$skills\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.DirectorFiles"/>
+        <Class name="dev.floor42.server.app.delivery.DirectorFiles"/>
         <Method name="~writeAll|lambda\$writeAll\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.DocumentWriter"/>
+        <Class name="dev.floor42.server.app.delivery.DocumentWriter"/>
         <Method name="~place|lambda\$place\$\d+|refusal|lambda\$refusal\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.ManifestReader"/>
+        <Class name="dev.floor42.server.app.asset.ManifestReader"/>
         <Method name="~contents|lambda\$contents\$\d+|mdStems|lambda\$mdStems\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.MarketplaceStore"/>
+        <Class name="dev.floor42.server.app.asset.MarketplaceStore"/>
         <Method name="~refresh|lambda\$refresh\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.MissionAssets"/>
+        <Class name="dev.floor42.server.app.asset.MissionAssets"/>
         <Method name="~copyFile|lambda\$copyFile\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.ProofCopyRules"/>
+        <Class name="dev.floor42.server.app.delivery.ProofCopyRules"/>
         <Method name="~sizeOf|lambda\$sizeOf\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.ProofSnapshot"/>
+        <Class name="dev.floor42.server.app.delivery.ProofSnapshot"/>
         <Method name="~clean|lambda\$clean\$\d+|copy|lambda\$copy\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.SampleRepository"/>
+        <Class name="dev.floor42.server.app.demo.SampleRepository"/>
         <Method name="~redirected|lambda\$redirected\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.SampleWrites"/>
+        <Class name="dev.floor42.server.app.demo.SampleWrites"/>
         <Method name="~write|lambda\$write\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.SessionContinuity"/>
+        <Class name="dev.floor42.server.app.session.SessionContinuity"/>
         <Method name="~transcript|lambda\$transcript\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.Workshop"/>
+        <Class name="dev.floor42.server.app.mission.Workshop"/>
         <Method name="~reject|lambda\$reject\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.WorkshopFiles"/>
+        <Class name="dev.floor42.server.app.mission.WorkshopFiles"/>
         <Method name="~write|lambda\$write\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
     <Match>
-        <Class name="dev.floor42.server.app.Workspaces"/>
+        <Class name="dev.floor42.server.app.workspace.Workspaces"/>
         <Method name="~list|lambda\$list\$\d+"/>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
     </Match>
@@ -380,7 +380,7 @@
     </Match>
     <Match>
         <!-- The first bytes of a checked file: a bounded preview, read once, never written after the check. -->
-        <Class name="dev.floor42.server.app.Delivered$Blob"/>
+        <Class name="dev.floor42.server.app.delivery.Delivered$Blob"/>
         <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
     </Match>
     <Match>

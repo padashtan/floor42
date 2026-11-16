@@ -1,0 +1,161 @@
+/* ---- Context gauge (W18): measured tokens, a share estimated against the documented window ------------------- */
+.card .ctx-bar,
+.context-gauge .ctx-track {
+  width: 100%;
+  height: 3px;
+  margin-top: 2px;
+  background: rgba(111, 141, 150, 0.25);
+  overflow: hidden;
+}
+.context-gauge .ctx-track {
+  height: 6px;
+  margin: 4px 0;
+}
+.ctx-bar .ctx-fill,
+.ctx-track .ctx-fill {
+  height: 100%;
+  background: var(--green);
+}
+.ctx-bar.medium .ctx-fill,
+.ctx-track.medium .ctx-fill {
+  background: var(--amber);
+}
+.ctx-bar.high .ctx-fill,
+.ctx-track.high .ctx-fill {
+  background: var(--red);
+}
+/* No known window: no share is drawn, only a dashed track. */
+.ctx-bar.unknown,
+.ctx-track.unknown {
+  background: repeating-linear-gradient(90deg, #6f8d96 0 4px, transparent 4px 8px);
+  opacity: 0.6;
+}
+.context-gauge {
+  margin-bottom: 8px;
+}
+/* Pull requests (ADR-0036): a full row of the workshop's footer, and the confirmation dialog above everything. */
+.workshop-actions .pull-requests {
+  grid-column: 1 / -1;
+}
+.pull-requests .pr-line {
+  border-top: 1px solid #12323c;
+  padding-top: 4px;
+}
+.pull-requests a {
+  color: var(--cyan);
+}
+.pull-requests .pr-checks.failed,
+.pull-requests .pr-check-list .fail,
+.pull-requests .pr-check-list .cancel {
+  color: #ff8a7a;
+}
+.pull-requests .pr-check-list {
+  margin: 2px 0 0 18px;
+  padding: 0;
+  font-size: 13px;
+}
+.pull-requests .pr-check-list .pass {
+  color: #7be0a0;
+}
+.pull-requests .pr-outcome.failed,
+.pull-requests .pr-outcome.unknown {
+  color: #ffc46b;
+}
+.pr-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.pr-dialog-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(860px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 14px 16px;
+  background: #071a21;
+  border: 2px solid var(--cyan);
+}
+.pr-dialog-box .title {
+  font-weight: 700;
+  font-size: 15px;
+}
+.pr-dialog-box textarea {
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  min-height: 220px;
+}
+.pr-facts th {
+  text-align: left;
+  padding-right: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pr-gh {
+  padding: 6px 8px;
+  border: 1px solid #ffc46b;
+}
+
+/* core-members */
+.core-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0 4px;
+}
+.core-toggle.on {
+  color: var(--amber);
+}
+/* The director's own terminal (ADR-0041) */
+.director-terminal {
+  top: 80px;
+  left: 24px;
+  width: min(980px, calc(100vw - 48px));
+  height: min(620px, calc(100vh - 140px));
+  display: flex;
+  flex-direction: column;
+  z-index: 25;
+}
+.terminal-warning {
+  margin: 4px 0 6px;
+  padding: 4px 8px;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  font-weight: bold;
+}
+.terminal-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.terminal-bar .facts {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 40%;
+}
+.terminal-cost {
+  margin-left: auto;
+  color: var(--cyan);
+}
+.terminal-screen {
+  flex: 1;
+  min-height: 120px;
+  background: #0b0f14;
+  padding: 4px;
+  overflow: hidden;
+}
+.terminal-line {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

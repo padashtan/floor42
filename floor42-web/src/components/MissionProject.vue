@@ -4,7 +4,7 @@ import type { InitPreview } from '../api/types'
 import { t } from '../i18n'
 import { namedPaths } from '../ui/missionForm'
 import ProjectPicker from './ProjectPicker.vue'
-import SandboxReadiness from './SandboxReadiness.vue'
+import PreflightCard from './PreflightCard.vue'
 
 /**
  * The project of a new mission, with its two explicit choices made before the folder: work on a repository that
@@ -13,6 +13,8 @@ import SandboxReadiness from './SandboxReadiness.vue'
 const repository = defineModel<string>('repository', { required: true })
 const preview = defineModel<InitPreview | null>('preview', { required: true })
 const kind = defineModel<'existing' | 'new'>('kind', { required: true })
+const checks = defineModel<string>('checks', { required: true })
+const blocked = defineModel<string>('blocked', { default: '' })
 const props = defineProps<{ objective: string; optional: boolean }>()
 
 /** True when creating the mission would initialise the chosen folder as a new repository. */
@@ -31,7 +33,7 @@ const missing = computed(() => (creates.value && (preview.value?.files ?? 0) ===
       :placeholder="t(kind === 'new' ? 'mission.fieldNewFolder' : props.optional ? 'mission.fieldRepositoryOptional' : 'mission.fieldRepository')"
       :required="!props.optional"
     />
-    <SandboxReadiness v-if="repository" :project="repository" />
+    <PreflightCard v-if="repository" v-model:checks="checks" v-model:blocked="blocked" :project="repository" />
     <div v-if="missing.length" class="warn notice missing-files">{{ t('mission.pathsMissing', { files: missing.join(', ') }) }}</div>
   </fieldset>
 </template>

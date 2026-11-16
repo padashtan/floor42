@@ -1,0 +1,173 @@
+/* ---- Remote today: a small video-call strip of the agents drawn at their home desk (decor) ---------------------- */
+.remote-strip {
+  top: 156px;
+  left: 8px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+.remote-strip .title .fold {
+  margin-left: auto;
+  border: none;
+  background: none;
+}
+.remote-strip .count {
+  font-size: 12px;
+  color: var(--amber);
+}
+.remote-strip .tiles {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.remote-strip .tile {
+  position: relative;
+  width: 128px;
+  padding: 0;
+  margin: 0;
+  border: 2px solid var(--line);
+  background: #071a21;
+  cursor: pointer;
+}
+.remote-strip .tile[data-state='typing'] {
+  border-color: var(--cyan);
+}
+.remote-strip canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+}
+.remote-strip .tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1px 4px;
+  font-size: 10px;
+  line-height: 1.2;
+  text-align: left;
+  background: rgba(7, 26, 33, 0.82);
+  color: var(--text);
+}
+.remote-strip .tag i {
+  font-style: normal;
+  color: var(--muted);
+}
+.pet-sound.remote-days {
+  margin-left: 6px;
+}
+@media (max-width: 760px) {
+  .remote-strip .tile {
+    width: 96px;
+  }
+  .hud:has(> .panel.framed) > .remote-strip,
+  .hud:has(> .panel.workshop) > .remote-strip,
+  .hud:has(> .selection) > .remote-strip {
+    display: none;
+  }
+}
+
+/* How long this browser session, the Keycloak sign-in and the mission's delegation still hold; amber in the last 5 min. */
+.session-time {
+  margin: 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.session-time.ending {
+  color: #ffb84d;
+  font-weight: 700;
+}
+/* How this browser is signed in, as one padlock chip: closed (Keycloak, with the first end to come) or open. */
+.id-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 6px;
+  padding: 2px 8px;
+  border: 1px solid var(--line, #3a5a6a);
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--cyan, #5fd4e6);
+  text-decoration: none;
+}
+.id-chip .session-time {
+  margin: 0;
+}
+.id-chip.ending,
+.id-chip.ending .session-time {
+  border-color: #ffb84d;
+  color: #ffb84d;
+}
+.id-chip.warn {
+  border-color: var(--amber, #ffb84d);
+  color: var(--amber, #ffb84d);
+  cursor: pointer;
+}
+.id-chip.warn:hover {
+  background: rgba(255, 184, 77, 0.12);
+}
+/* The sign-in card in IAM mode: Keycloak as the one clear way in. */
+.login .keycloak-sign-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 10px;
+  padding: 10px 16px;
+  border: 1px solid var(--amber, #ffb84d);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--amber, #ffb84d);
+  text-decoration: none;
+}
+.login .keycloak-sign-in:hover,
+.login .keycloak-sign-in:focus-visible {
+  background: rgba(255, 184, 77, 0.14);
+}
+.session-toast {
+  position: fixed;
+  top: 96px;
+  right: 24px;
+  z-index: 50;
+  max-width: 360px;
+  padding: 10px 14px;
+  background: rgba(70, 48, 8, 0.96);
+  border: 2px solid #ffb84d;
+  color: #ffe9c2;
+}
+.after-archive-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.after-archive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.after-archive-row button.action {
+  margin: 0;
+  flex: none;
+}
+
+/* IAM endings stack under the session toast, never over it. */
+.iam-toasts {
+  position: fixed;
+  top: 170px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.iam-toasts .session-toast {
+  position: static;
+}

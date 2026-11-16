@@ -1,0 +1,296 @@
+/* ---- Engineering workshop ---------------------------------------------------------------------------------------- */
+.workshop {
+  top: calc(64px + var(--banner-h, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1180px, calc(100vw - 32px));
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  border-color: var(--cyan);
+}
+.workshop-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 10px;
+}
+.workshop-side {
+  overflow: auto;
+  border-right: 1px solid #12323c;
+  padding-right: 8px;
+}
+.workshop-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+.change-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.change-line input[type='checkbox'] {
+  flex: none;
+}
+.change-line .discard {
+  flex: none;
+  margin-left: 8px;
+}
+.picked-count {
+  margin: 6px 0;
+}
+.file-row {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+  align-items: center;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+}
+.file-row.on,
+.file-row:hover {
+  background: #0f3540;
+}
+.file-row .name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.file-row .status {
+  width: 14px;
+  font-weight: 700;
+}
+.status.added {
+  color: var(--green);
+}
+.status.deleted {
+  color: var(--red);
+}
+.status.modified,
+.status.renamed {
+  color: var(--amber);
+}
+.file-row .mine {
+  color: var(--amber);
+  font-size: 12px;
+}
+.counts .plus {
+  color: var(--green);
+  margin-left: 4px;
+}
+.counts .minus {
+  color: var(--red);
+  margin-left: 4px;
+}
+.file-list {
+  max-height: 220px;
+  overflow: auto;
+}
+.filter {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 2px 0 4px;
+}
+button.link {
+  border: none;
+  background: none;
+  color: var(--cyan);
+  padding: 0 4px;
+}
+.trace {
+  font-size: 12px;
+  margin: 2px 0;
+  color: var(--text);
+}
+.trace .when {
+  color: var(--muted);
+  margin-right: 4px;
+}
+.viewer-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+.tabs button.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.workshop .code {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #050c10;
+  border: 1px solid #12323c;
+  padding: 6px;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+}
+.workshop .code pre {
+  margin: 0;
+  white-space: pre;
+}
+.code .line {
+  white-space: pre;
+}
+.line.add {
+  color: var(--green);
+  background: rgba(111, 227, 106, 0.08);
+}
+.line.remove {
+  color: var(--red);
+  background: rgba(255, 75, 62, 0.08);
+}
+.line.hunk {
+  color: var(--cyan);
+}
+.line.meta {
+  color: var(--muted);
+}
+.editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.editor textarea {
+  flex: 1;
+  resize: none;
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 12px;
+  background: #050c10;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.editor .row,
+.workshop-actions .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.editor .row input {
+  flex: 1;
+}
+.workshop-actions {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #12323c;
+  margin-top: 8px;
+  padding-top: 4px;
+}
+.workshop-actions textarea,
+.workshop-actions input,
+.workshop-actions select {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* The decision footer: always in view under the files (it never scrolls), each decision in its own box, large
+   readable buttons, accepting filled in the recommended colour. */
+.workshop .workshop-actions {
+  flex: none;
+  margin: 10px -10px -6px;
+  padding: 10px;
+  border-top: 2px solid var(--line);
+  background: #050f14;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+.workshop-actions .footer-why {
+  grid-column: 1 / -1;
+}
+.workshop-actions .block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #1d4a57;
+  background: #071a21;
+}
+.workshop-actions .block .sub {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.workshop-actions textarea,
+.workshop-actions input,
+.workshop-actions select {
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  padding: 5px 8px;
+}
+.workshop-actions button.action {
+  align-self: flex-start;
+  margin: 0;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  background: #0f3540;
+  border: 1px solid var(--cyan);
+  color: var(--text);
+}
+.workshop-actions button.action.recommended {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1205;
+}
+.workshop-actions button.action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+@media (max-width: 760px) {
+  .workshop-body,
+  .workshop-actions {
+    grid-template-columns: 1fr;
+  }
+  .workshop-body {
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+/* The viewer's Diff/File/Edit buttons are not the desk's tabs: no underline bar, and a long path wraps beside them. */
+.viewer-head .tabs {
+  flex: none;
+  flex-wrap: nowrap;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.viewer-head .viewer-path {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.workshop .code.fill-host {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+/* A terminal that fills its container: one scrollbar, the terminal's, instead of two nested ones. */
+.terminal.fill {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.terminal.fill .terminal-body {
+  flex: 1;
+  min-height: 0;
+  height: auto !important;
+  resize: none;
+}

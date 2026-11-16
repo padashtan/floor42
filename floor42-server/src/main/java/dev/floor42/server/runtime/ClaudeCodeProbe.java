@@ -21,7 +21,8 @@ import org.jboss.logging.Logger;
 @ApplicationScoped
 public class ClaudeCodeProbe {
 
-    public record Availability(boolean available, String version, String reason) {}
+    /** @param code why it is unavailable, for the UI to translate: notChecked, noAnswer, unexpectedAnswer, tooOld, notFound, interrupted; null when available */
+    public record Availability(boolean available, String version, String reason, String code) {}
 
     static final int[] MINIMUM = {2, 1, 295};
     private static final Logger LOG = Logger.getLogger(ClaudeCodeProbe.class);
@@ -30,7 +31,7 @@ public class ClaudeCodeProbe {
     @Inject
     ClaudeCodeConfig config;
 
-    private volatile Availability availability = new Availability(false, null, "not checked yet");
+    private volatile Availability availability = new Availability(false, null, "not checked yet", "notChecked");
 
     /** A kind of stream line Floor42 does not know, with the shape of its first occurrence (keys and types only). */
     public record UnfamiliarLine(String kind, String shape) {}
@@ -92,23 +93,25 @@ public class ClaudeCodeProbe {
             Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
             if (!p.waitFor(20, TimeUnit.SECONDS)) {
                 p.destroyForcibly();
-                return new Availability(false, null, "claude --version did not answer");
+                return new Availability(false, null, "claude --version did not answer", "noAnswer");
             }
             String out = new String(p.getInputStream().readAllBytes(), StandardCharsets.UTF_8).strip();
             Matcher m = VERSION.matcher(out);
-            if (p.exitValue() != 0 || !m.find()) return new Availability(false, null, "unexpected answer: " + out);
+            if (p.exitValue() != 0 || !m.find())
+                return new Availability(false, null, "unexpected answer: " + out, "unexpectedAnswer");
             int[] v = {Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3))};
             if (compare(v, MINIMUM) < 0) {
-                return new Availability(false, m.group(), "Claude Code " + m.group() + " is older than 2.1.295");
+                return new Availability(
+                        false, m.group(), "Claude Code " + m.group() + " is older than 2.1.295", "tooOld");
             }
-            return new Availability(true, m.group(), null);
+            return new Availability(true, m.group(), null, null);
         } catch (IOException e) {
             // Handled: the availability says why claude cannot run
-            return new Availability(false, null, "claude not found: " + e.getMessage());
+            return new Availability(false, null, "claude not found: " + e.getMessage(), "notFound");
         } catch (InterruptedException e) {
             // Handled: the interrupt is kept for the caller; the availability says so
             Thread.currentThread().interrupt();
-            return new Availability(false, null, "interrupted");
+            return new Availability(false, null, "interrupted", "interrupted");
         }
     }
 

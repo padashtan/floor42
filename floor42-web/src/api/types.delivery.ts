@@ -19,7 +19,7 @@ export interface ContextReading {
 
 /** Replay export (ADR-0035): how many replacements of one kind the file needed. */
 export interface MaskCount {
-  kind: 'SECRET' | 'PATH' | 'TOKEN' | 'OUTPUT_CLIPPED' | 'TEXT_CLIPPED' | 'SETTING_VALUE' | 'DIRECTOR_FILE'
+  kind: 'SECRET' | 'PATH' | 'EMAIL' | 'TOKEN' | 'OUTPUT_CLIPPED' | 'TEXT_CLIPPED' | 'SETTING_VALUE' | 'DIRECTOR_FILE'
   count: number
 }
 

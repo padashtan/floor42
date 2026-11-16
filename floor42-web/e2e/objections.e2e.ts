@@ -16,7 +16,7 @@ interface Mission {
  * sends it: the ticket goes back to work in the same mission with the text as a directive, is done again after its
  * review, and the delivery block asks for the acceptance again.
  */
-test('an objection at acceptance sends the producer back to work in the same mission', async ({ page, daemon }) => {
+test('an objection at acceptance sends the producer back to work in the same mission', { tag: '@delivery' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })
@@ -40,7 +40,7 @@ test('an objection at acceptance sends the producer back to work in the same mis
   }
   await expect.poll(async () => (await mission()).status).toBe('AWAITING_APPROVAL')
   expect((await page.request.post(`/api/missions/${id}/approve`, { headers, data: { noCap: true } })).status()).toBe(200)
-  await expect(delivered).toPass({ timeout: 120_000, intervals: [1_000] })
+  await expect(delivered).toPass({ timeout: 120_000, intervals: [250] })
 
   await page.evaluate((m) => localStorage.setItem('floor42.board.mission', m), id)
   await page.reload()
@@ -83,7 +83,7 @@ test('an objection at acceptance sends the producer back to work in the same mis
     .poll(async () => (await mission()).tickets.find((x) => x.id === ticket)?.directives ?? [])
     .toEqual(['Also write the French notes'])
   await expect.poll(async () => (await mission()).tickets.length).toBe(1)
-  await expect(delivered).toPass({ timeout: 120_000, intervals: [1_000] })
+  await expect(delivered).toPass({ timeout: 120_000, intervals: [250] })
   await expect(board.locator('.delivery')).toContainText(t['board.deliveryAccept'])
   await shot(page, '14-objections-03-delivered-again')
 

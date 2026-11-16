@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test'
 import { type Action, ACTIONS, type Group } from '../src/ui/actions'
-import type { Catalog } from './fixtures'
+import { type Catalog, installBlocker } from './fixtures'
 
 /**
  * The panel each action of the bar opens (ui/actions.ts). A new action without an entry here fails the panels journey,
@@ -18,6 +18,7 @@ export const PANEL_OF: Record<string, string> = {
   workflows: '.workflows-panel',
   deliverables: '.deliverables-panel',
   prove: '.prove-panel',
+  dossier: '.dossier-panel',
   archive: '.archive-panel',
   tutorial: '.tutorial-card',
   hire: '.hire-panel:not(.core-dismissal)',
@@ -47,6 +48,28 @@ export function openMenuPanel(page: Page): Locator {
 /** An action's entry in its open menu, by its label in the page's language. */
 export function menuItem(page: Page, t: Catalog, a: Action): Locator {
   return openMenuPanel(page).locator('[role="menuitem"]', { hasText: t[a.label] }).first()
+}
+
+/**
+ * The entries of the open menu that are missing, hidden or covered, in one round trip: for each action the first entry
+ * with its label, scrolled into view, then what the browser hits at its centre. Empty when every entry is clickable.
+ */
+export async function menuProblems(page: Page, t: Catalog, items: readonly Action[]): Promise<string[]> {
+  await installBlocker(page)
+  const wanted = items.map((a) => ({ id: a.id, label: t[a.label] }))
+  return openMenuPanel(page).evaluate((menu, wanted) => {
+    const blockerOf = (window as unknown as { __blockerOf: (el: Element) => string | null }).__blockerOf
+    const entries = [...menu.querySelectorAll('[role="menuitem"]')]
+    return wanted.flatMap(({ id, label }) => {
+      const el = entries.find((e) => (e.textContent ?? '').includes(label))
+      if (!el) return [`${id} (missing)`]
+      el.scrollIntoView({ block: 'nearest' })
+      const r = el.getBoundingClientRect()
+      if (r.width === 0 || r.height === 0) return [`${id} (not visible)`]
+      const by = blockerOf(el)
+      return by === null ? [] : [`${id} (${by})`]
+    })
+  }, wanted)
 }
 
 /** Runs an action through its menu: open the menu, click the entry. */

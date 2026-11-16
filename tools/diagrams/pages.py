@@ -337,13 +337,16 @@ def modules(root):
         ("apiIsALeaf", ["nothing outside api..", "depends on api.."]),
         ("securityIsIndependent", ["security.. may not depend on", "domain.., app.., journal.."]),
         ("domainClassesDoNotExtendDomainClasses", ["composition, not inheritance:", "DOMAIN_SUBCLASSES_ALLOWED is empty"]),
-        ("threadsStartOnlyInTheScheduler", ["threads start in app.MissionScheduler", "and the classes of THREADS_ALLOWED"]),
+        ("threadsStartOnlyInTheScheduler", ["threads start in app.core.MissionScheduler", "and the classes of THREADS_ALLOWED"]),
+        ("appContextsFollowTheirGraph", ["each app context uses only", "the contexts APP_CONTEXTS lists (ADR-0067)"]),
+        ("apiContextsFollowTheirGraph", ["each api context uses api and", "the contexts API_CONTEXTS lists"]),
+        ("appContextsAreFreeOfCycles", ["no cycle between the contexts", "of app, nor between those of api"]),
         ("scene/boundaries.test.ts", ["Vitest: floor42-web/src/scene imports", "no vue, pinia, ../ui, ../components"]),
     ]
     items = [B(f"r{k}", t, s, "check") for k, (t, s) in enumerate(rules)]
     p3 = Page("3 ArchitectureTest rules", "The module boundaries the build enforces",
               "ArchUnit rules of floor42-server/.../ArchitectureTest.java, and one Vitest rule for the web app.",
-              items, [["r0", "r1", "r2"], ["r3", "r4", "r5"], ["r6", "r7", "r8"]])
+              items, [["r0", "r1", "r2"], ["r3", "r4", "r5"], ["r6", "r7", "r9"], ["r10", "r11", "r8"]])
     worder = ["App.vue, main.ts", "components", "ui", "state", "api", "i18n", "scene", "demo", "src/*.ts"]
     p4 = matrix("4 Web imports", "Which folder of floor42-web/src imports which (test files left out)",
                 "Each cell counts import statements from the row's folder to the column's; the scene imports types only.",

@@ -73,6 +73,14 @@ class ToolPathFormsTest {
     }
 
     @Test
+    void aShellCallIsDecidedOnItsCommandAsSentNotOnItsSummary() {
+        assertThat(ToolCatalog.command("Bash", JSON.valueToTree(Map.of("command", "ls\nrm -rf build"))))
+                .isEqualTo("ls\nrm -rf build");
+        assertThat(ToolCatalog.command("Read", JSON.valueToTree(Map.of("file_path", "a.txt"))))
+                .isNull();
+    }
+
+    @Test
     void aShellCommandIsNeverShownRelativeToTheWorktree() {
         // "<worktree>/git status" runs another program than "git status": the rule and the director must see the first.
         assertThat(summary("Bash", Map.of("command", "C:/w/git status"), "C:/w"))

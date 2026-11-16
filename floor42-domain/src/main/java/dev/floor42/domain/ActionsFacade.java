@@ -65,9 +65,28 @@ public final class ActionsFacade {
             String tool,
             String summary,
             String confinementViolation) {
+        return request(ctx, id, missionId, ticketId, agentId, category, tool, summary, null, confinementViolation);
+    }
+
+    /**
+     * As above, with the shell command exactly as the agent sent it ({@code command}, null for other tools): rules and
+     * approvals decide on it, the summary only displays it.
+     */
+    public List<EventEnvelope> request(
+            CommandContext ctx,
+            ActionId id,
+            MissionId missionId,
+            TicketId ticketId,
+            AgentId agentId,
+            ActionCategory category,
+            String tool,
+            String summary,
+            String command,
+            String confinementViolation) {
         return actionLog.request(
                 ctx,
                 new ActionRequested(id, missionId, ticketId, agentId, category, tool, summary),
+                command,
                 confinementViolation);
     }
 

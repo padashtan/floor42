@@ -19,9 +19,11 @@ export default defineConfig({
   testDir: './e2e',
   testMatch: '**/*.e2e.ts',
   outputDir: './e2e-results/artifacts',
-  // One daemon per worker (a data folder of its own), and the journeys of a file share that company. Two workers cut
-  // the run from 7.4 to 4.7 minutes, 40 of 40 green; FLOOR42_E2E_WORKERS=1 gives the single daemon, in file order, back.
-  workers: Number(process.env.FLOOR42_E2E_WORKERS ?? 2),
+  // One daemon per worker (a data folder of its own), and the journeys of a file share that company. FLOOR42_E2E_WORKERS=1
+  // gives the single daemon, in file order, back. Measured on Windows (16 cores, 32 GB, the Java suite running beside),
+  // 67 tests: 2 workers 10.0 min, 3 workers 7.4 min, 4 workers 7.4 min with a journey failing under the load (the
+  // scene is drawn in software, so the workers fight for the CPU): 3 is the best stable value.
+  workers: Number(process.env.FLOOR42_E2E_WORKERS ?? 3),
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 0,

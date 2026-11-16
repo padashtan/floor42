@@ -610,5 +610,17 @@
     "comment": "Constant file names under the private folder this process made with tempfile.mkdtemp (self.base); no request, no suite answer and no external text reaches the path",
     "false_positive": true,
     "ignored_at": "2026-11-10T00:00:00Z"
+  },
+  "f1178bb286d3d12291b0c622f832f194_0": {
+    "author": "floor42",
+    "comment": "Not HTML sanitization: inert() escapes agent text for Markdown (entities for < > &, backslashes for Markdown signs); the dossier is never rendered as HTML by Floor42. Tested in proofDossier.test.ts",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "6df17dbe0090aea6fd79c6453d233554_0": {
+    "author": "floor42",
+    "comment": "Compares the set of tool names offered to a session, not a secret: no timing attack applies",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
   }
 }

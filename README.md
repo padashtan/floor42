@@ -173,7 +173,7 @@ Deleting a data folder deletes your journal and the missions' worktrees: copy `b
 ## Why it's different
 
 - **Governance by code, not by prompt.** Every tool call of every agent goes through Floor42's fail-closed hooks
-  ([`HookResource`](floor42-server/src/main/java/dev/floor42/server/api/HookResource.java),
+  ([`HookResource`](floor42-server/src/main/java/dev/floor42/server/api/gateway/HookResource.java),
   [`HookRegistry`](floor42-server/src/main/java/dev/floor42/server/runtime/HookRegistry.java)) and the mission's
   permission table ([`PermissionPolicy`](floor42-domain/src/main/java/dev/floor42/domain/PermissionPolicy.java)).
   Shell commands that touch Floor42 itself, push or call `gh` are denied whatever the table says
@@ -193,8 +193,8 @@ Deleting a data folder deletes your journal and the missions' worktrees: copy `b
 - **A real engineering process.** Nothing runs before you approve the plan; architecture committees debate and you
   rule ([`Committee`](floor42-domain/src/main/java/dev/floor42/domain/Committee.java)); every delivery is reviewed by
   another agent; a pull request leaves only on your click
-  ([`PullRequests`](floor42-server/src/main/java/dev/floor42/server/app/PullRequests.java)); deliverables are listed
-  with their origin ([`Deliverables`](floor42-server/src/main/java/dev/floor42/server/app/Deliverables.java)). The
+  ([`PullRequests`](floor42-server/src/main/java/dev/floor42/server/app/delivery/PullRequests.java)); deliverables are listed
+  with their origin ([`Deliverables`](floor42-server/src/main/java/dev/floor42/server/app/delivery/Deliverables.java)). The
   module boundaries are tested
   ([`ArchitectureTest`](floor42-server/src/test/java/dev/floor42/server/ArchitectureTest.java)), and the tests drive a
   [fake Claude Code](floor42-server/src/test/resources/fake-claude/FakeClaude.java): no test calls a paid model.

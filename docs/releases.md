@@ -38,6 +38,12 @@ sessions that wait for a real silence or reset timeout). They run with `./mvnw -
 developer machine `make release-gate` (= `verify`, `test-slow`, Vitest), in CI the "Slow tests" step of `release.yml`.
 The WSL tests skip themselves on Linux CI, so run `make test-slow` on Windows before tagging.
 
+The whole local gate is scripted in `tools/gate/`: `make gate-windows` (verify, slow tests, package, browser journeys,
+one at a time, logs in `target/gate/`), `make gate-linux` (the same on a fresh clone of HEAD or `SHA=...` in the WSL
+home), `make gate-double` (both). Each ends with `GATE GREEN|RED <host> <sha> <minutes>` and lists the failing classes;
+`tools/gate/triage.sh <TestClass>` reruns one alone three times (REAL, NEW-FLAKE or KNOWN-FLAKE). Tag only after two
+green lines.
+
 ## What a release holds
 
 | File | What it is |

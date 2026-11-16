@@ -34,7 +34,7 @@ async function setTheme(page: Page, theme: ThemeId): Promise<void> {
   throw new Error(`the office never turned to ${theme}`)
 }
 
-test('the heap over many changes of decade (a measurement)', async ({ page }) => {
+test('the heap over many changes of decade (a measurement)', { tag: '@scene' }, async ({ page }) => {
   test.skip(CHANGES === 0, 'a measurement: FLOOR42_HEAP_RUN=<changes> runs it')
   test.setTimeout(CHANGES * 15_000 + 60_000)
   await page.setViewportSize({ width: 1280, height: 720 })
@@ -78,7 +78,7 @@ test('the heap over many changes of decade (a measurement)', async ({ page }) =>
 const ISOLATED = Number(process.env.FLOOR42_HEAP_ISOLATED ?? 0)
 const SNAP = Number(process.env.FLOOR42_HEAP_SNAP ?? 0)
 
-test('the heap over many changes of decade, no DevTools (a measurement)', async ({ page }) => {
+test('the heap over many changes of decade, no DevTools (a measurement)', { tag: '@scene' }, async ({ page }) => {
   test.skip(ISOLATED === 0, 'a measurement: FLOOR42_HEAP_ISOLATED=<changes> runs it')
   test.setTimeout(ISOLATED * 15_000 + 300_000)
   await page.route('**/*', async (route) => {

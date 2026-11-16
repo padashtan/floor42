@@ -48,7 +48,7 @@ Start here. The security view of one agent, end to end, from `iam/`, `security/`
 |---|---|---|
 | 1 Maven modules | `floor42-domain` (JDK only), `floor42-server`, `floor42-web`. | The web app speaks HTTP and WebSocket only. |
 | 2 Server imports | How many import lines each server package has towards the others and the domain. | A matrix counted from the sources at build time: the row imports the column. |
-| 3 ArchitectureTest rules | The eight ArchUnit rules and the scene boundary test. | One box per rule, named as in the test. |
+| 3 ArchitectureTest rules | The ArchUnit rules (layers, then the feature contexts of ADR-0067) and the scene boundary test. | One box per rule, named as in the test. |
 | 4 Web imports | The same matrix for the folders of `floor42-web/src`. | The row imports the column; tests left out. |
 
 ### 03-event-model
@@ -143,7 +143,7 @@ deletes by trigger. See `floor42-server/src/main/resources/db/migration/V1__even
 
 **One writer.** Every command goes through `OfficeService.execute`, which is synchronized: the domain checks the
 command, emits its events, the journal stores them, then subscribers hear about them. If the append fails, the
-company is rebuilt from what is stored. See `floor42-server/src/main/java/dev/floor42/server/app/OfficeService.java`.
+company is rebuilt from what is stored. See `floor42-server/src/main/java/dev/floor42/server/app/core/OfficeService.java`.
 
 **Provenance on every event.** `EventEnvelope` refuses an event without its `Origin` (REAL or SIMULATED) and its
 actor (director, agent, system); the column `origin` has a CHECK constraint. A demo can never pass for real work.
@@ -156,7 +156,7 @@ reloads views through REST on every WebSocket connection. See
 
 **Quarantine and continuity of the journal.** A row that cannot be read (corrupt, or written by a newer version) is
 left out and listed, not fatal; a journal swapped or truncated between two runs raises an alarm at start. See
-`floor42-server/src/main/java/dev/floor42/server/app/JournalReplay.java` and
+`floor42-server/src/main/java/dev/floor42/server/app/core/JournalReplay.java` and
 `floor42-server/src/main/java/dev/floor42/server/journal/JournalContinuity.java` (ADR-0042, ADR-0044).
 
 **Readers before writers.** A new event type ships in a release that can also read it, and the test pins the list of
@@ -167,7 +167,7 @@ types an older release knows, so rolling back stays possible. See
 `block`: if Floor42 does not answer, the tool does not run. A call the director has not decided in time is denied. A
 tool that ran without authorization raises an incident and suspends the mission. See `writeSettings` in
 `floor42-server/src/main/java/dev/floor42/server/runtime/ClaudeCodeRuntime.java` and
-`floor42-server/src/main/java/dev/floor42/server/api/HookResource.java`.
+`floor42-server/src/main/java/dev/floor42/server/api/gateway/HookResource.java`.
 
 **Policy in code, not in prompts.** The permission table (ALLOW, ASK, ASK_ALWAYS, DENY) is evaluated by the domain on
 every call; the brief only tells the agent what the code will enforce anyway. File tools are kept in the worktree by
@@ -196,7 +196,8 @@ journal keeps a token's `jti` or a SHA-256, never the token; text leaving the ma
 
 **Module boundaries checked by the build.** The domain depends on the JDK only; runtime and journal may not reach the
 application; nothing but the API depends on the API; security does not depend on business state; threads start only
-in `MissionScheduler` and a justified list. See
+in `MissionScheduler` and a justified list; inside `app` and `api`, each feature context uses only the contexts its
+line in `APP_CONTEXTS` or `API_CONTEXTS` lists, with no cycle (ADR-0067). See
 `floor42-server/src/test/java/dev/floor42/server/ArchitectureTest.java`, and for the web app
 `floor42-web/src/scene/boundaries.test.ts`.
 

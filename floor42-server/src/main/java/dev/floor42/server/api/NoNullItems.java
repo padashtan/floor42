@@ -16,4 +16,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.RECORD_COMPONENT, ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
 @JacksonAnnotationsInside
 @JsonSetter(contentNulls = Nulls.FAIL)
-@interface NoNullItems {}
+public @interface NoNullItems {}

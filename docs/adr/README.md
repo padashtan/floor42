@@ -74,3 +74,8 @@ revisit) and the evidence in the code are in [`2026-11-06-review.md`](2026-11-06
 | [0064](0064-agent-identity-keycloak.md) | Agents get a Keycloak identity, delegated per mission, with a token broker for external resources | Accepted (v1.0.0) |
 | [0065](0065-container-broker.md) | Containers for missions through a per-mission broker, reached with an exchanged token | Proposed |
 | [0066](0066-session-risk-detection.md) | Session risk v1: detection, alerts and a quarantine the director applies | Accepted (v1.0.0) |
+| [0067](0067-feature-packages.md) | Feature packages in `app` and `api`, their dependencies checked by ArchUnit | Accepted |
+| [0068](0068-test-map.md) | A test map keyed by path, kept honest by a gate and an escape survey | Proposed |
+| [0069](0069-repository-layout-for-parallel-work.md) | A repository laid out for parallel work by several agents: one subject, one place | Accepted |
+| [0070](0070-repository-profile-and-preflight.md) | A repository profile and a preflight before a real mission; the sandbox refusal moves to creation | Accepted (v1.1) |
+| [0071](0071-mission-proof-dossier.md) | The mission proof dossier: facts from the journal with their source, always masked, no claim the journal does not hold | Accepted |

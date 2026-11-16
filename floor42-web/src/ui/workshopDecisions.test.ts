@@ -4,8 +4,11 @@ import type { ChangeView, WorkshopView } from '../api/types'
 import { useWorkshopDecisions } from './workshopDecisions'
 
 vi.mock('../state/confirm', () => ({ confirmed: async () => true }))
+const acceptPatch = vi.hoisted(() => vi.fn<(m: string, a: string, msg: string, paths?: string[]) => Promise<object>>(async () => ({})))
+vi.mock('../api/client', () => ({ api: { acceptPatch } }))
 vi.mock('../state/office', () => ({ workshopCall: (run: () => unknown) => run() }))
-vi.mock('../api/workshopChanges', () => ({ workshopChangesApi: { discard: async () => ({}) } }))
+const discardCall = vi.hoisted(() => vi.fn<(m: string, a: string, p: string) => Promise<object>>(async () => ({})))
+vi.mock('../api/workshopChanges', () => ({ workshopChangesApi: { discard: discardCall } }))
 
 const change = (path: string): ChangeView => ({ path, status: 'MODIFIED', added: 1, removed: 0 })
 
@@ -43,5 +46,21 @@ describe('the workshop decisions', () => {
     expect(cleared).not.toHaveBeenCalled()
     await d.discard('README.md')
     expect(cleared).toHaveBeenCalledTimes(1)
+  })
+
+  it('accepts the ticked files, then discards the unticked ones, in one step', async () => {
+    const { d } = setup()
+    d.unticked.value = ['b.txt']
+    await d.acceptRest()
+    expect(acceptPatch).toHaveBeenCalledWith('M-1', 'a', 'm', ['README.md'])
+    expect(discardCall).toHaveBeenCalledWith('M-1', 'a', 'b.txt')
+    expect(d.unticked.value).toEqual([])
+  })
+
+  it('does nothing when every file is ticked', async () => {
+    acceptPatch.mockClear()
+    const { d } = setup()
+    await d.acceptRest()
+    expect(acceptPatch).not.toHaveBeenCalled()
   })
 })

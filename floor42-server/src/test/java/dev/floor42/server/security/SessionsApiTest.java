@@ -14,7 +14,7 @@ import dev.floor42.domain.QuestionStatus;
 import dev.floor42.domain.event.EventEnvelope;
 import dev.floor42.domain.event.TerminalEvent.ApiTokenIssued;
 import dev.floor42.domain.event.TerminalEvent.ApiTokenRevoked;
-import dev.floor42.server.app.OfficeService;
+import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.journal.Journal;
 import io.quarkus.test.common.http.TestHTTPResource;
 import io.quarkus.test.junit.QuarkusTest;

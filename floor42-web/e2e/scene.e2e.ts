@@ -111,7 +111,7 @@ async function zoom(page: Page, direction: 1 | -1): Promise<void> {
 /** The live stats of every context the page made so far, oldest first. */
 const glStats = (page: Page) => page.evaluate(() => (window as unknown as { __glStats: GlCount[] }).__glStats)
 
-test('each decade draws its office, and a change of decade frees the scene it replaces', async ({ page }) => {
+test('each decade draws its office, and a change of decade frees the scene it replaces', { tag: '@scene' }, async ({ page }) => {
   test.setTimeout(360_000)
   const label = process.env.FLOOR42_SCENE_LABEL ?? 'current'
   const folder = join(RESULTS, 'scene', label)

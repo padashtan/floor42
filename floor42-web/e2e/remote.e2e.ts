@@ -14,7 +14,7 @@ interface Agent {
  * data only). The strip shows a webcam tile for each with the recorded state, their chairs in the office stay empty and
  * signed, a click on a tile selects the agent, the director's switch turns the decor off.
  */
-test('agents drawn remote today show in the webcam strip and not at their desks', async ({ page, daemon }) => {
+test('agents drawn remote today show in the webcam strip and not at their desks', { tag: '@office' }, async ({ page, daemon }) => {
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
@@ -23,7 +23,10 @@ test('agents drawn remote today show in the webcam strip and not at their desks'
   const mission = (await created.json()).id as string
   const real = (await (await page.request.get('/api/agents')).json()) as Agent[]
   const [a, b] = real.slice(0, 2).map((x) => x.id)
-  await page.addInitScript((ids) => localStorage.setItem('floor42.remote.force', ids), `${a},${b}`)
+  await page.addInitScript((ids) => {
+    localStorage.setItem('floor42.remoteDays', '1')
+    localStorage.setItem('floor42.remote.force', ids)
+  }, `${a},${b}`)
   await page.route(/\/api\/agents$/, async (route) => {
     const all = (await (await route.fetch()).json()) as Agent[]
     await route.fulfill({ json: all.map((x) => (x.id === a ? { ...x, status: 'EXECUTING' } : x.id === b ? { ...x, status: 'REVIEWING' } : x)) })

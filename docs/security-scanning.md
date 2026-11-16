@@ -227,6 +227,13 @@ the reason given below, which is each time the check in the code.
 | `js/incomplete-sanitization` | 11 | `floor42-web/src/i18n/events.test.ts` | The test built a regex from a translation key and escaped only the dot. It now escapes every regex character | the test itself |
 | `js/unvalidated-dynamic-method-call` | 12 | `tools/demo/hero.mjs` | The answer of the local headless Chrome named a callback in a `Map`; the script now calls it only when it is a function it registered | `node --check` |
 
+### Re-raised by the 1.1.0 package move
+
+Code by feature (ADR-0067) moved the classes, and code scanning keys an alert by its file path: the same sinks came
+back as new alerts in 1.1.0. `java/path-injection` 91 to 113 are the cases of the paths table below (same classes,
+same checks), `java/relative-path-command` 115 to 127 are the test sources of 59 to 76. `java/log-injection` in
+`ProofDossierResource` (new in 1.1.0) is fixed: the mission id goes through `LogSafe.of`.
+
 ### Justified: command lines
 
 | Rule | Alerts | Where | Why it is safe |

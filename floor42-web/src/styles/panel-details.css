@@ -1,0 +1,290 @@
+/* ---- Workshop: what it is for -------------------------------------------------------------------------------- */
+.workshop-help {
+  border: 1px solid #1d4a57;
+  background: #06141a;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+.workshop-help summary {
+  color: var(--cyan);
+  cursor: pointer;
+}
+.workshop-help ol {
+  margin: 6px 0;
+  padding-left: 20px;
+  line-height: 1.5;
+}
+.selection {
+  width: 440px;
+}
+/* The help strip starts after the selection panel: it ran under it below 1920 px (seen by the browser tests). */
+.help {
+  /* 8 px from the edge, the panel's 440 px with its padding (2 × 10) and border (2 × 2), then a gap of 8 px. */
+  left: calc(8px + 440px + 24px + 8px);
+}
+
+/* ---- Board: delivery and timing ------------------------------------------------------------------------------ */
+.board-panel .delivery {
+  border: 2px solid var(--green);
+  background: #071d14;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+.board-panel .delivery.done {
+  border-color: var(--line);
+  background: #071a21;
+}
+.board-panel .delivery-head {
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.board-panel .delivery.done .delivery-head {
+  color: var(--cyan);
+}
+.board-panel .delivery-facts {
+  margin: 4px 0;
+}
+.board-panel .delivery .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.board-panel .delivery .row input {
+  flex: 1;
+  min-width: 220px;
+  font-size: 14px;
+  padding: 5px 8px;
+}
+.board-panel .clock {
+  color: var(--muted);
+}
+.board-panel .clock.running {
+  color: var(--cyan);
+}
+.board-panel .timing {
+  margin: 6px 0 8px;
+  padding: 6px 8px;
+  border: 1px solid #12323c;
+  background: #06141a;
+}
+.board-panel .review {
+  margin: 8px 0;
+}
+
+/* ---- One tool call of an agent ------------------------------------------------------------------------------ */
+.exec-card {
+  --kind: var(--muted);
+  border: 1px solid #12323c;
+  border-left: 4px solid var(--kind);
+  padding: 8px 10px;
+  margin: 8px 0;
+  background: #06141a;
+}
+.exec-card.read {
+  --kind: #58a6ff;
+}
+.exec-card.search {
+  --kind: #a78bfa;
+}
+.exec-card.write {
+  --kind: var(--green);
+}
+.exec-card.shell {
+  --kind: var(--amber);
+}
+.exec-card.web {
+  --kind: #f472b6;
+}
+.exec-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.exec-kind {
+  color: #061015;
+  background: var(--kind);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+}
+.exec-tool {
+  color: var(--kind);
+  font-weight: 700;
+}
+.exec-summary {
+  color: #f1f7f9;
+  font-size: 13.5px;
+  overflow-wrap: anywhere;
+}
+.exec-meta {
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.exec-meta b {
+  color: var(--text);
+}
+.exec-basis {
+  font-size: 12px;
+  color: var(--muted);
+}
+button.link {
+  background: none;
+  border: none;
+  color: var(--cyan);
+  padding: 2px 0;
+  text-decoration: underline;
+}
+
+/* Panels move by their title bar and resize from their corner (ui/panels.ts): double click the title to put a panel
+   back as it opens. */
+.hud > .panel > .title {
+  cursor: move;
+  user-select: none;
+}
+.hud > .panel.dragging {
+  opacity: 0.92;
+  box-shadow: 0 0 0 2px var(--cyan);
+}
+
+/* Menus, toasts and tooltips stand above every panel. */
+.menu,
+.toasts,
+.tooltip {
+  z-index: 40;
+}
+
+/* ---- Agent profile: its terminal ------------------------------------------------------------------------------ */
+.profile-terminal {
+  margin: 8px 0;
+}
+.profile-terminal summary {
+  cursor: pointer;
+}
+.profile-terminal .terminal-filter {
+  width: 100%;
+  margin: 4px 0 6px;
+}
+.profile-panel {
+  width: 560px;
+}
+
+/* ---- API console: a call opened with its bodies -------------------------------------------------------------- */
+.api-console .call {
+  cursor: pointer;
+}
+.api-console .call:hover,
+.api-console .call.opened {
+  background: #0d2630;
+}
+.api-console .call-detail {
+  border-left: 2px solid var(--cyan);
+  margin: 2px 0 8px 12px;
+  padding: 4px 8px;
+}
+
+/* ---- Notes: archive ------------------------------------------------------------------------------------------ */
+.note .note-id,
+.note-archive .note-id {
+  color: var(--cyan);
+  font-family: var(--mono, monospace);
+  margin-right: 6px;
+}
+.note-archive {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+.note-archive th,
+.note-archive td {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 6px;
+  border-bottom: 1px solid #16323c;
+}
+.note-archive code.commit {
+  user-select: all;
+  color: #9fe870;
+}
+
+/* ---- Board: reinforce the team; meeting room: a retrospective that waits ------------------------------------- */
+.board-panel .title .reinforce {
+  margin-left: 12px;
+}
+.board-panel .title .reinforce.urgent {
+  border-color: var(--amber, #ffb000);
+  color: var(--amber, #ffb000);
+}
+.retro-wait {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+/* ---- Board: a developer held until the director accepts its finished changes ---------------------------------- */
+.board-panel .held {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 4px 0 8px;
+}
+
+/* ---- Panels the director resized: the content fills the panel and scrolls inside ------------------------------ */
+.hud > .panel > .resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  z-index: 2;
+  background: linear-gradient(135deg, transparent 0 50%, var(--line) 50% 60%, transparent 60% 70%, var(--line) 70% 80%, transparent 80%);
+  opacity: 0.7;
+}
+.hud > .panel > .resize-handle:hover {
+  opacity: 1;
+  background: linear-gradient(135deg, transparent 0 50%, var(--cyan) 50% 60%, transparent 60% 70%, var(--cyan) 70% 80%, transparent 80%);
+}
+.hud > .panel.sized {
+  /* The stored size is the panel's outer size (offsetWidth): padding and border stay inside it. */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  /* Not hidden: the close button sits outside the frame. The content blocks scroll instead. */
+  overflow: visible;
+}
+.hud > .panel.sized > :not(.title):not(.resize-handle) {
+  max-height: none;
+  min-height: 0;
+  flex: 0 1 auto;
+  overflow: auto;
+}
+.hud > .panel.sized .panel-scroll {
+  max-height: none;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- Idea committee: the director speaking in person in their double's seat ------------------------------------ */
+.meeting .by-director {
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  padding: 0 4px;
+  margin-left: 4px;
+  font-size: 12px;
+}
+.meeting .in-person {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}

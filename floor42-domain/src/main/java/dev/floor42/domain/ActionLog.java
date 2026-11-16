@@ -93,7 +93,8 @@ final class ActionLog {
      * Floor42 decides at once: allowed or denied by the mission policy, or turned into an approval question. A call that
      * leaves the agent's workspace ({@code confinementViolation}, checked by the runtime) is denied before any rule.
      */
-    List<EventEnvelope> request(CommandContext ctx, ActionRequested asked, String confinementViolation) {
+    List<EventEnvelope> request(
+            CommandContext ctx, ActionRequested asked, String command, String confinementViolation) {
         ActionId id = asked.action();
         Mission m = view.missionFor(ctx, asked.mission());
         view.existingAgent(asked.agent());
@@ -109,7 +110,9 @@ final class ActionLog {
                 Refusal.UNKNOWN_TICKET,
                 asked.ticket() + " is not part of " + asked.mission());
         Recorder office = view.record(ctx, asked.mission()).emit(asked).as(Actor.system());
-        return decide(office, m, t, actions.get(id), confinementViolation);
+        Action a = actions.get(id);
+        a.command = command;
+        return decide(office, m, t, a, confinementViolation);
     }
 
     private List<EventEnvelope> decide(Recorder office, Mission m, Ticket t, Action a, String confinementViolation) {
@@ -127,7 +130,7 @@ final class ActionLog {
 
     private List<EventEnvelope> byPolicy(Recorder office, Mission m, Action a) {
         PermissionPolicy.Evaluation eval =
-                m.policy().evaluate(a.agent(), a.ticket(), a.category(), a.tool(), a.summary());
+                m.policy().evaluate(a.agent(), a.ticket(), a.category(), a.tool(), a.decidedOn());
         if (eval.rule() == null && a.category() == ActionCategory.FLOOR42) {
             return office.authorize(a.id(), DecisionBasis.floor42Tools(), "policy:" + m.id());
         }

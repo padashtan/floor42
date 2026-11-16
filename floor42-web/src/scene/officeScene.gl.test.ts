@@ -70,6 +70,19 @@ describe('a change of decade gives the GPU back everything the replaced scene to
     expect(browser.contexts[0].counts).toEqual(RENDERER_OWN)
   })
 
+  it('night choice lights the city at noon, and the day choice puts it out', { timeout: 60_000 }, () => {
+    const browser = fakeBrowser()
+    const scene = new OfficeScene(browser.canvas(), undefined, QUIET, '2000s')
+    const lit = (scene as unknown as { city: { lit: THREE.MeshBasicMaterial[] } }).city.lit
+    scene.setDayNight('night')
+    browser.frames(60) // more than the 1.5 s glide at 30 fps
+    expect(lit[0].color.r).toBeCloseTo(0.55)
+    scene.setDayNight('day')
+    browser.frames(60)
+    expect(lit[0].color.r).toBeCloseTo(1)
+    scene.dispose()
+  })
+
   it('the city alone frees all it uploaded: its graph and its cache', () => {
     const browser = fakeBrowser()
     const renderer = new THREE.WebGLRenderer({ canvas: browser.canvas(), antialias: false })

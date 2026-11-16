@@ -24,7 +24,7 @@ interface Mission {
  * and the board draws it too. Then the graph is extended by one planner session, and a node reopened after its
  * dependent was done marks that dependent "to recheck" (increment 2).
  */
-test('the director creates a graph mission and sees the graph at the approval and on the board', async ({ page, daemon }) => {
+test('the director creates a graph mission and sees the graph at the approval and on the board', { tag: '@tickets' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   page.on('dialog', (d) => void d.accept())
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
@@ -124,7 +124,7 @@ test('the director creates a graph mission and sees the graph at the approval an
         }
         return nodes.every((n) => m.tickets.find((x) => x.id === n.id)?.status === 'DONE')
       },
-      { timeout: 120_000, intervals: [1_000] },
+      { timeout: 120_000, intervals: [250] },
     )
     .toBe(true)
   const sandbox = (await mission()).tickets.find((x) => x.id === nodes[0].id)!.node!

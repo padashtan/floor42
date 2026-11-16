@@ -1,6 +1,6 @@
 package dev.floor42.server.api;
 
-import dev.floor42.server.app.DirectorTerminals;
+import dev.floor42.server.app.terminal.DirectorTerminals;
 import dev.floor42.server.security.LocalAccessGuard;
 import dev.floor42.server.security.SessionRegistry;
 import dev.floor42.server.security.SessionToken;
@@ -45,8 +45,8 @@ public class SocketSessions {
 
     private final Map<String, Bound> bound = new ConcurrentHashMap<>();
     private ScheduledExecutorService sweeper;
-    private Runnable beforeBind;
-    private Runnable duringSweep;
+    private volatile Runnable beforeBind;
+    private volatile Runnable duringSweep;
 
     void start(@Observes StartupEvent ignored) {
         sweeper = Executors.newSingleThreadScheduledExecutor(r -> {

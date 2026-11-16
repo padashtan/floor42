@@ -59,7 +59,7 @@ async function settingsFrame(page: Page) {
   return settingsBox
 }
 
-test('the sandbox panel lists its sections, filled', async ({ page }) => {
+test('the sandbox panel lists its sections, filled', { tag: '@settings' }, async ({ page }) => {
   await seedSandbox(page)
   await reloadClean(page)
   const panel = await sections(page, '.sandbox-panel', 'sandbox', ['machine', 'tools', 'install', 'environment'])
@@ -72,7 +72,7 @@ test('the sandbox panel lists its sections, filled', async ({ page }) => {
   await expect(panel).toHaveCount(0)
 })
 
-test('the skills panel lists its sections, filled', async ({ page }) => {
+test('the skills panel lists its sections, filled', { tag: '@plugins' }, async ({ page }) => {
   await seedSkills(page)
   await reloadClean(page)
   const panel = await sections(page, '.skills-panel', 'skills', ['installed', 'sessions', 'plugins', 'suggestions'])
@@ -85,7 +85,7 @@ test('the skills panel lists its sections, filled', async ({ page }) => {
   await expect(panel).toHaveCount(0)
 })
 
-test('the meeting room shows a recorded committee, its debate newest first', async ({ page, daemon }) => {
+test('the meeting room shows a recorded committee, its debate newest first', { tag: '@meetings' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url, 'Idempotency-Key': 'sidebar-journey-2' }
   const roles: { key: string }[] = await (await page.request.get('/api/committee/roles')).json()
@@ -119,7 +119,7 @@ test('the meeting room shows a recorded committee, its debate newest first', asy
   await shot(page, 'panels-sidebar-meeting-debate-read')
 })
 
-test('the end-of-mission report, filled', async ({ page, daemon }) => {
+test('the end-of-mission report, filled', { tag: '@reports' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url, 'Idempotency-Key': 'sidebar-journey-3' }
   const created = await page.request.post('/api/missions', {

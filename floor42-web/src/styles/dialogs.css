@@ -1,0 +1,48 @@
+/* ---- The page's confirmation (ConfirmDialog.vue): above everything, the page behind it out of reach ----------- */
+.confirm-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 9, 12, 0.6);
+}
+.confirm-dialog {
+  position: static;
+  width: min(460px, calc(100vw - 32px));
+  box-sizing: border-box;
+  padding: 16px 20px;
+  background: #071a21;
+}
+.confirm-message {
+  margin: 0 0 12px;
+  max-width: 70ch;
+}
+.confirm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+.confirm-field input {
+  font: inherit;
+}
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.confirm-actions button.action {
+  margin: 0;
+  padding: 4px 14px;
+}
+button.danger {
+  border-color: var(--red);
+  color: #ffd9d6;
+}
+button.danger:hover:not(:disabled) {
+  background: #3a1210;
+  border-color: var(--red);
+}
