@@ -33,7 +33,17 @@ public sealed interface RuntimeEvent {
     record AgentText(String text) implements RuntimeEvent {}
 
     /** The session's identity token was obtained (IAM mode): who issued it, until when, its jti. Never the token. */
-    record TokenIssued(String issuer, java.time.Instant expiresAt, String jti) implements RuntimeEvent {}
+    record TokenIssued(String issuer, java.time.Instant expiresAt, String jti, TokenClaims claims)
+            implements RuntimeEvent {
+        public TokenIssued(String issuer, java.time.Instant expiresAt, String jti) {
+            this(issuer, expiresAt, jti, TokenClaims.NONE);
+        }
+    }
+
+    /** What the verified token said of itself (ADR-0074): ids and scope names, never the token. */
+    record TokenClaims(String subject, String authorizedParty, String actor, java.util.List<String> scopes) {
+        public static final TokenClaims NONE = new TokenClaims(null, null, null, null);
+    }
 
     /**
      * A line or block of the runtime's stream Floor42 does not know: the protocol changed. What it carries is not

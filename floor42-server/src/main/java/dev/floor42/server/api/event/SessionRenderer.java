@@ -74,13 +74,23 @@ final class SessionRenderer implements EventRenderer<SessionEvent> {
                 .build();
     }
 
-    /** The token itself is never in the event: its id, who issued it and when it stops. */
+    /**
+     * The token itself is never in the event: its id, who issued it, when it stops and, from ADR-0074, the claims it
+     * carried. A row written before has none: its line is the old sentence.
+     */
     private static EventLine token(Company c, AgentTokenIssued e) {
-        return session(simulated(c, e.session()) ? "simulated" : null, e.session(), e.agent(), e.ticket())
+        boolean claims = e.subject() != null;
+        String variant =
+                simulated(c, e.session()) ? (claims ? "simulated.claims" : "simulated") : claims ? "claims" : null;
+        EventLine.Builder line = session(variant, e.session(), e.agent(), e.ticket())
                 .param("tokenId", e.tokenId())
                 .param("issuer", e.issuer())
-                .param("expiresAt", e.expiresAt())
-                .build();
+                .param("expiresAt", e.expiresAt());
+        if (claims)
+            line.param("subject", e.subject())
+                    .param("actor", e.actor() == null ? "-" : e.actor())
+                    .param("scopes", e.scopes() == null ? "-" : e.scopes());
+        return line.build();
     }
 
     /** The cost is the runtime's own estimate, written once for every language; absent when it gave none. */

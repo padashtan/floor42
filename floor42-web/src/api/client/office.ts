@@ -8,6 +8,7 @@ import type {
   LessonView,
   RoleView,
   NewSeatRequest,
+  Standup,
   Status,
 } from '../types'
 import type { QuarantineView } from '../identity'
@@ -16,6 +17,8 @@ import { request } from '../request'
 export const officeApi = {
   status: () => request<Status>('GET', '/api/status'),
   agents: () => request<AgentView[]>('GET', '/api/agents'),
+  /** The 9 o'clock standup (ADR-0078), the days counted in the browser's time zone. */
+  standup: (zone: string) => request<Standup>('GET', `/api/standup?zone=${encodeURIComponent(zone)}`),
   notes: () => request<NoteView[]>('GET', '/api/notes'),
   lessons: () => request<LessonView[]>('GET', '/api/lessons'),
   acceptLesson: (id: string, text: string) =>

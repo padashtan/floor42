@@ -39,6 +39,8 @@ export const ACTIONS: readonly Action[] = [
   { id: 'deliverables', group: 'work', label: 'deliverables.top', title: 'deliverables.topTitle' },
   { id: 'prove', group: 'work', label: 'prove.top', title: 'prove.topTitle' },
   { id: 'dossier', group: 'work', label: 'dossier.top', title: 'dossier.topTitle' },
+  { id: 'oversight', group: 'work', label: 'oversight.top', title: 'oversight.topTitle' },
+  { id: 'standup', group: 'work', label: 'standup.top', title: 'standup.topTitle' },
   { id: 'archive', group: 'work', label: 'palette.a.archive', title: 'palette.t.archive' },
   { id: 'tutorial', group: 'work', label: 'tutorial.top', title: 'tutorial.topTitle' },
   { id: 'hire', group: 'team', label: 'top.hire', title: 'top.hireTitle' },
@@ -52,6 +54,7 @@ export const ACTIONS: readonly Action[] = [
   { id: 'terminal', group: 'system', label: 'top.terminal', title: 'top.terminalTitle' },
   { id: 'sessions', group: 'system', label: 'sessions.top', title: 'sessions.topTitle' },
   { id: 'identities', group: 'system', label: 'idn.top', title: 'idn.topTitle' },
+  { id: 'mcp', group: 'system', label: 'mcp.top', title: 'mcp.topTitle' },
   { id: 'usage', group: 'system', label: 'palette.a.usage', title: 'palette.t.usage', key: 'U' },
   { id: 'settings', group: 'system', label: 'top.settings', title: 'top.settingsTitle' },
 ]

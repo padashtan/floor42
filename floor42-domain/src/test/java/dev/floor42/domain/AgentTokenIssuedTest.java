@@ -14,6 +14,33 @@ class AgentTokenIssuedTest {
     final Instant expires = Instant.parse("2026-10-20T16:00:00Z");
 
     @Test
+    void theClaimsAreRecordedNeverTheToken() {
+        MissionId m = f.runningMission();
+        TicketId t = f.firstTicket(m);
+        f.record(f.company.sessions().start(f.system(), "s1", t, CHRIS, "claude-sonnet-5-5", null));
+        f.record(f.company
+                .sessions()
+                .tokenIssued(
+                        f.system(),
+                        "s1",
+                        "urn:x",
+                        expires,
+                        "jti-1",
+                        "7f3c9a10-1111-2222-3333-444455556666",
+                        "floor42-agent-chris",
+                        "floor42-agent-chris",
+                        java.util.List.of("openid", "profile")));
+
+        AgentTokenIssued e = (AgentTokenIssued) f.journal.getLast().event();
+        assertThat(e.subject()).isEqualTo("7f3c9a10-1111-2222-3333-444455556666");
+        assertThat(e.authorizedParty()).isEqualTo("floor42-agent-chris");
+        assertThat(e.actor()).isEqualTo("floor42-agent-chris");
+        assertThat(e.scopes()).containsExactly("openid", "profile");
+        // a JWT is three parts joined by two dots: no recorded text may look like one
+        assertThat(e.toString()).doesNotContainPattern("[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.");
+    }
+
+    @Test
     void tokenIssuedNeedsAnOpenSessionAndKeepsTheJti() {
         MissionId m = f.runningMission();
         TicketId t = f.firstTicket(m);

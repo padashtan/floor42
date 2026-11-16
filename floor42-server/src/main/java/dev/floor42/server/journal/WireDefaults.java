@@ -55,10 +55,26 @@ final class WireDefaults {
         Double costUsdBound();
     }
 
+    /** An identity token's claims are written only when the token had them (ADR-0074): a row without stays as before. */
+    interface TokenClaims {
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String subject();
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String authorizedParty();
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String actor();
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        java.util.List<String> scopes();
+    }
+
     static JsonMapper.Builder apply(JsonMapper.Builder builder) {
         builder.addMixIn(PermissionRule.class, RuleTicket.class);
         builder.addMixIn(SessionEvent.AgentSessionStarted.class, SessionCap.class);
         builder.addMixIn(SessionEvent.AgentSessionEnded.class, SessionBound.class);
+        builder.addMixIn(SessionEvent.AgentTokenIssued.class, TokenClaims.class);
         DomainEvents.types().values().stream()
                 .filter(CommitteeEvent.class::isAssignableFrom)
                 .forEach(type -> builder.addMixIn(type, CommitteeNumber.class));

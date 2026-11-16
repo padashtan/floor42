@@ -67,7 +67,7 @@ test('a mission goes from the desk to its end', { tag: '@tickets' }, async ({ pa
     const card = desk.locator('.question').first()
     if (await card.count()) {
       // An answered card can leave between count() and the next call: bounded, so toPass retries instead of waiting
-      // until the test's end (no actionTimeout; the window is wide on a slow, software-rendered Linux browser).
+      // until the test's end (the config's 20 s actionTimeout is too wide for a retry loop).
       const question = (await card.locator('.head b').first().innerText({ timeout: 2_000 })).trim()
       if (asked === 0) await shot(page, '2-mission-03-question')
       await card.getByRole('button', { name: t['option.ALLOW'], exact: true }).click({ timeout: 5_000 })

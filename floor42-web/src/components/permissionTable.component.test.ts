@@ -71,4 +71,20 @@ describe('the mission permission table', () => {
     await table.findAll('button.radio.on')[0].trigger('click')
     expect(setToolDecision).toHaveBeenCalledWith('Write', 'DENY')
   })
+
+  it('names the external MCP tool in words, in both languages, and asks by default', () => {
+    const mcp: ToolSettingView = {
+      ...write,
+      tool: 'mcp__floor42__call_mcp',
+      category: 'NETWORK',
+      decision: 'ASK',
+      rules: [],
+    }
+    office.state.toolSettings = [mcp]
+    expect(mount(PermissionTable).text()).toContain('External MCP tools')
+    expect(mount(PermissionTable).find('b').attributes('title')).toContain('short-lived token')
+    expect(mount(PermissionTable).find('button.radio.on.ask').exists()).toBe(true)
+    setLang('fr')
+    expect(mount(PermissionTable).text()).toContain('Outils MCP externes')
+  })
 })

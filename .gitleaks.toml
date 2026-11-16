@@ -31,3 +31,8 @@ targetRules = ["aws-access-token"]
 description = "curl -u takes shell variables filled by openssl rand"
 paths = ['''(^|/)iam/byo-keycloak-check\.sh$''']
 targetRules = ["curl-auth-user"]
+
+[[allowlists]]
+description = "curl header with a fake key: the masking test needs this exact shape"
+paths = ['''(^|/)floor42-server/src/test/java/dev/floor42/server/app/delivery/OversightComposerTest\.java$''']
+targetRules = ["curl-auth-header"]

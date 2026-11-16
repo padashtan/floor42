@@ -21,6 +21,7 @@ import dev.floor42.server.app.mission.CommitteeRoles;
 import dev.floor42.server.app.mission.LiveMissions;
 import dev.floor42.server.iam.IamSettings;
 import dev.floor42.server.security.LocalAccessGuard;
+import dev.floor42.server.security.ScriptTokensInIam;
 import dev.floor42.server.security.SessionRegistry;
 import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import jakarta.ws.rs.Consumes;
@@ -198,6 +199,7 @@ public class MissionsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createMission(NewMission request, @HeaderParam("Idempotency-Key") String key) {
         requireValid(request);
+        refuseExtrasToAScriptInIam(request);
         refuseAFolderToANarrowScope(request.deliverTo());
         if (blank(key)) {
             return Response.status(Response.Status.CREATED)
@@ -209,6 +211,25 @@ public class MissionsResource {
         return Response.status(done.replayed() ? Response.Status.OK : Response.Status.CREATED)
                 .entity(missionView(office, done.mission()))
                 .build();
+    }
+
+    /**
+     * In IAM mode a script token proposes a mission with what {@code bin/floor42} and the MCP tool send (objective,
+     * repository, title); a committee, a planner, a workflow, a destination or the graph mode are the director's choice.
+     */
+    private void refuseExtrasToAScriptInIam(NewMission r) {
+        boolean extras = r.committee() != null
+                || r.plan() != null
+                || r.panel() != null
+                || r.workflow() != null
+                || r.deliverTo() != null
+                || r.mode() != null;
+        boolean script = LocalAccessGuard.sessionOf(request.getCurrent())
+                .filter(s -> s.kind() == SessionRegistry.Kind.SCRIPT)
+                .isPresent();
+        if (extras && script && iam.enabled()) {
+            throw new RefusedException(403, ScriptTokensInIam.REFUSED, ScriptTokensInIam.MESSAGE);
+        }
     }
 
     private static void requireValid(NewMission request) {

@@ -99,6 +99,8 @@ final class BriefPermissions {
         return switch (tool) {
             case "Skill" -> " (loads one of the skills listed to you)";
             case "Agent" -> " (a subagent's own calls follow this same table)";
+            case ToolCatalog.CALL_MCP ->
+                " (runs a tool of an external MCP server the director declared; list_mcp_tools names them)";
             default -> "";
         };
     }

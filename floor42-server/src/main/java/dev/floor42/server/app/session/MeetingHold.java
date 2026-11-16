@@ -181,6 +181,11 @@ public final class MeetingHold implements Governor {
     }
 
     @Override
+    public boolean authorized(String toolUseId, String tool) {
+        return inner.authorized(toolUseId, tool);
+    }
+
+    @Override
     public void refuse(ToolRequested call, String detail) {
         inner.refuse(call, detail);
     }

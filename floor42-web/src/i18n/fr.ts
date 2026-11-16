@@ -13,8 +13,11 @@ import { meetingVoicesFr } from './meeting-voices.fr'
 import { librariesFr } from './libraries.fr'
 import { proofFr } from './proof.fr'
 import { dossierFr } from './dossier.fr'
+import { oversightFr } from './oversight.fr'
 import { remoteFr } from './remote.fr'
 import { missionFormFr } from './missionForm.fr'
+import { mcpFr } from './mcp.fr'
+import { standupFr } from './standup.fr'
 
 export const fr: Record<keyof typeof en, string> = {
   ...shellFr,
@@ -29,6 +32,9 @@ export const fr: Record<keyof typeof en, string> = {
   ...librariesFr,
   ...proofFr,
   ...dossierFr,
+  ...oversightFr,
   ...remoteFr,
   ...missionFormFr,
+  ...mcpFr,
+  ...standupFr,
 }

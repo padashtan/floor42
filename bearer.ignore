@@ -622,5 +622,47 @@
     "comment": "Compares the set of tool names offered to a session, not a secret: no timing attack applies",
     "false_positive": true,
     "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "6ee9f67f8da0055d486ceafbb3a08076_0": {
+    "author": "floor42",
+    "comment": "Constant name of a failure code (CHECKPOINT_KEY), no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "9880ab13a5ad4ffdea7d0720b6914adf_0": {
+    "author": "floor42",
+    "comment": "scalarText/scalar take constant SQL text; the only concatenated value is a long sequence number, no user input",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "9880ab13a5ad4ffdea7d0720b6914adf_1": {
+    "author": "floor42",
+    "comment": "scalarText/scalar take constant SQL text; the only concatenated value is a long sequence number, no user input",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "9165f653575b313b32a120665e763109_0": {
+    "author": "floor42",
+    "comment": "scalar takes constant SQL text; the only concatenated value is a long sequence number, no user input",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "0944d00bb0ad77c0ca7e3bab84b85f78_0": {
+    "author": "floor42",
+    "comment": "Compares the stored SHA-256 of a tool description with a fresh one (rug-pull check on public data), not a secret: no timing attack applies",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "d63448a8b65f529217f0f470aa9e0103_0": {
+    "author": "floor42",
+    "comment": "Compares hashes of journal rows kept in the local database, not a secret presented by a remote caller",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "d63448a8b65f529217f0f470aa9e0103_1": {
+    "author": "floor42",
+    "comment": "Compares hashes of journal rows kept in the local database, not a secret presented by a remote caller",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
   }
 }

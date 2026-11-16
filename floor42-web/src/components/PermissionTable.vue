@@ -59,7 +59,7 @@ async function choose(tool: string, decision: ToolDecision) {
       <template v-for="row in office.toolSettings" :key="row.tool">
         <tr>
           <td class="tool">
-            <b>{{ row.tool }}</b>
+            <b :title="tr(`perm.hint.${row.tool}`, '')">{{ tr(`perm.label.${row.tool}`, row.tool) }}</b>
             <span class="category">{{ tr(`category.${row.category}`, row.category.toLowerCase()) }}</span>
           </td>
           <td v-for="c in COLUMNS" :key="c.decision" class="choice">

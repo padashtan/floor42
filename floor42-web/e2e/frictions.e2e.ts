@@ -116,7 +116,7 @@ test('the director accepts two files of three and discards the third', { tag: '@
   await desk.locator('.tabs button', { hasText: t['desk.toDecide'] }).click()
   await expect(async () => {
     const card = desk.locator('.question').first()
-    if (await card.count()) await card.getByRole('button', { name: t['option.ALLOW'], exact: true }).click()
+    if (await card.count()) await card.getByRole('button', { name: t['option.ALLOW'], exact: true }).click({ timeout: 5_000 })
     const m = await mission()
     expect(m.tickets.length).toBeGreaterThan(0)
     expect(m.tickets.map((x) => x.status)).toEqual(m.tickets.map(() => 'DONE'))

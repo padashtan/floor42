@@ -10,6 +10,7 @@ import dev.floor42.domain.Workspace;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.app.workspace.BuildArtefacts;
 import dev.floor42.server.app.workspace.MissionBranch;
+import dev.floor42.server.app.workspace.signing.AgentSigning;
 import dev.floor42.server.runtime.ConfinedPath;
 import dev.floor42.server.runtime.Confinement;
 import dev.floor42.server.runtime.Git;
@@ -54,6 +55,10 @@ public class Workshop {
     private final Path dataDir;
     /** The agent of a workspace is held while the director commits in it: the dispatcher gives it nothing meanwhile. */
     private final AgentReservations reservations;
+
+    /** Signs the accept commit with the agent's key (ADR-0077); null in tests that never reach a commit. */
+    @Inject
+    AgentSigning signing;
 
     @Inject
     public Workshop(
@@ -320,15 +325,8 @@ public class Workshop {
                 git(w, "add", "--all");
                 gitOn(w, leftOut, "reset", "--quiet");
             }
-            List<String> commit = new ArrayList<>(identity(w));
-            commit.addAll(List.of(
-                    "commit",
-                    "--quiet",
-                    "-m",
-                    message,
-                    "-m",
-                    "Accepted by the director in Floor42 (" + mission + ")."));
-            git(w, commit.toArray(String[]::new));
+            List<String> signingArgs = signing == null ? List.of() : signing.signArgs(w.agent());
+            WorkshopCommit.run(a -> git(w, a), identity(w), signingArgs, mission, message, w.path());
             return head(w);
         } catch (RuntimeException e) {
             // Handled: unstaged, then passed on

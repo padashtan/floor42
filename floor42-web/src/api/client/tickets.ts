@@ -20,6 +20,8 @@ export const ticketsApi = {
     request<MissionView>('PUT', `/api/tickets/${encodeURIComponent(ticket)}`, { title, description, acceptanceCriteria }),
   dropTicket: (ticket: string, reason: string) =>
     request<MissionView>('POST', `/api/tickets/${encodeURIComponent(ticket)}/drop`, { reason }),
+  /** The tickets as a Jira import file: a plain download link, the session cookie rides along. */
+  ticketsCsvUrl: (mission: string) => `/api/missions/${encodeURIComponent(mission)}/tickets.csv`,
   workshop: (mission: string) => request<WorkshopView>('GET', `${workshopPath(mission)}`),
   workshopFiles: (mission: string, agent: string) =>
     request<string[]>('GET', `${workshopPath(mission)}/${encodeURIComponent(agent)}/files`),

@@ -22,7 +22,13 @@ final class ReplayEvents {
             Company c, EventEnvelope e, int seq, ReplaySanitizer clean, Set<String> agents) {
         EventView v = EventView.of(c, e);
         // The file is read without Floor42's screen.
-        String text = dev.floor42.server.api.event.EnglishLines.of(v.code(), v.params());
+        var params = v.params();
+        if (params.containsKey("subject")) {
+            // ADR-0074: the journal holds the whole subject, a file that leaves the machine only its start
+            params = new java.util.HashMap<>(params);
+            params.put("subject", ReplaySanitizer.shortSubject(params.get("subject")));
+        }
+        String text = dev.floor42.server.api.event.EnglishLines.of(v.code(), params);
         String output = null;
         ReplayExports.Cost cost = null;
         switch (e.event()) {

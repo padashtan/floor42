@@ -33,6 +33,12 @@ public final class StreamJsonParser {
         return SecretMasker.mask(node).toString();
     }
 
+    /** Floor42 tools whose answer carries an external party's text. */
+    private static final Set<String> FIRST_LINE_ONLY = Set.of(
+            FLOOR42_TOOL_PREFIX + "call_resource",
+            FLOOR42_TOOL_PREFIX + "call_mcp",
+            FLOOR42_TOOL_PREFIX + "list_mcp_tools");
+
     private final ObjectMapper json;
     /** Tool name by tool-use id until its result arrives: some results are journaled in part only. */
     private final java.util.Map<String, String> pending = new java.util.concurrent.ConcurrentHashMap<>();
@@ -128,8 +134,10 @@ public final class StreamJsonParser {
                 boolean error = block.path("is_error").asBoolean(false);
                 String output = text(block.path("content"));
                 String id = block.path("tool_use_id").asText();
-                // A brokered resource's body is the resource's data, not Floor42's record: only the first line is kept.
-                if ((FLOOR42_TOOL_PREFIX + "call_resource").equals(pending.remove(id)) && !error)
+                // A brokered resource's body, a remote MCP server's answer or its tool descriptions are not Floor42's
+                // record: only the first line is kept.
+                String tool = pending.remove(id);
+                if (tool != null && FIRST_LINE_ONLY.contains(tool) && !error)
                     output = output.lines().findFirst().orElse("");
                 out.add(new ToolCompleted(id, error, error && isRefusal(output), output));
             } else if (!type.equals("text")) {

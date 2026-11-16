@@ -41,6 +41,47 @@ class EventViewTest {
     }
 
     @Test
+    void theSubjectIsShortenedInTheReplayExport() {
+        String sub = "7f3c9a10-1111-2222-3333-444455556666";
+        var issued = new dev.floor42.domain.event.SessionEvent.AgentTokenIssued(
+                "L1",
+                new dev.floor42.domain.AgentId("ada"),
+                new MissionId("M-1"),
+                new TicketId("T-1"),
+                "http://kc",
+                "2026-11-13T18:00:00Z",
+                "jti-1",
+                sub,
+                "floor42-agent-ada",
+                "floor42-agent-ada",
+                List.of("openid"));
+        var view = EventView.of(EMPTY, envelope(issued));
+        // the journal's own line holds the whole subject
+        assertThat(view.code()).isEqualTo("AgentTokenIssued.claims");
+        assertThat(view.params()).containsEntry("subject", sub);
+        var part = ReplayEvents.part(
+                EMPTY,
+                envelope(issued),
+                1,
+                new dev.floor42.server.security.ReplaySanitizer("t", Map.of()),
+                new java.util.HashSet<>());
+        assertThat(part.text()).contains("on behalf of 7f3c9a10…").doesNotContain(sub);
+    }
+
+    @Test
+    void aTokenWithoutClaimsKeepsTheOldLine() {
+        var old = new dev.floor42.domain.event.SessionEvent.AgentTokenIssued(
+                "L1",
+                new dev.floor42.domain.AgentId("ada"),
+                new MissionId("M-1"),
+                new TicketId("T-1"),
+                "http://kc",
+                "2026-11-13T18:00:00Z",
+                "jti-1");
+        assertThat(EventView.of(EMPTY, envelope(old)).code()).isEqualTo("AgentTokenIssued");
+    }
+
+    @Test
     void theCodeNamesTheVariantWhenTheSentenceChanges() {
         assertThat(EventView.of(EMPTY, envelope(new NoteChecked("N-1", true))).code())
                 .isEqualTo("NoteChecked.done");

@@ -2,6 +2,7 @@
 // exactly the fields of the server's view, as recorded in openapi.json (kept current by the server's
 // OpenApiContractTest). When they differ, the type check fails and names the fields in question.
 import type * as I from './identity'
+import type * as M from './mcp'
 import type * as O from './objections'
 import type * as P from './proof'
 import type * as T from './types'
@@ -223,4 +224,12 @@ export type Contract = [
   Agree<Mismatch<I.ResourceCatalogueView, 'ResourceCatalogueView'>>,
   Agree<Mismatch<I.GrantsRequest, 'GrantsRequest'>>,
   Agree<Mismatch<T.ProofDossier, 'ProofDossier'>>,
+  Agree<Mismatch<T.OversightReport, 'OversightReport'>>,
+  Agree<Mismatch<T.Standup, 'Standup'>>,
+  Agree<Mismatch<T.AgentStandup, 'AgentStandup'>>,
+  // StandupLine is not checked: four server records are called Line and openapi.json keeps one schema of that name.
+  Agree<Mismatch<M.McpToolView, 'McpTool'>>,
+  Agree<Mismatch<M.McpServerView, 'McpServer'>>,
+  Agree<Mismatch<M.McpServerList, 'McpServersView'>>,
+  // McpTryResult has no schema of its own in openapi.json (the try route answers an object): not checked here.
 ]

@@ -107,6 +107,7 @@ class ArchitectureTest {
             Map.entry("demo", Set.of("core", "workspace", "session")),
             Map.entry("terminal", Set.of("core")),
             Map.entry("cost", Set.of("core")),
+            Map.entry("office", Set.of()),
             Map.entry(
                     "boot",
                     Set.of(
@@ -140,7 +141,7 @@ class ArchitectureTest {
             Map.entry("demo", Set.of()),
             Map.entry("console", Set.of()),
             Map.entry("iam", Set.of()),
-            Map.entry("gateway", Set.of()),
+            Map.entry("gateway", Set.of("mission", "cost")),
             Map.entry("office", Set.of()));
 
     /** The context of a class under {@code root}: the first package segment below it, "" for the root itself. */

@@ -55,7 +55,10 @@ public sealed interface SessionEvent extends DomainEvent {
 
     /**
      * The runtime obtained the session's identity token (IAM mode, ADR to come): who the token names, never the token.
-     * {@code expiresAt} is an ISO-8601 instant, {@code tokenId} the token's {@code jti}.
+     * {@code expiresAt} is an ISO-8601 instant, {@code tokenId} the token's {@code jti}. ADR-0074: from 1.2 the claims
+     * the verified token carried are recorded too ({@code sub}, {@code azp}, {@code act.client_id}, {@code scope} split
+     * and sorted); null in a row written before, and for a claim the token lacked. {@code subject} is an opaque id, never
+     * a name or an e-mail address.
      */
     record AgentTokenIssued(
             String session,
@@ -64,8 +67,28 @@ public sealed interface SessionEvent extends DomainEvent {
             TicketId ticket,
             String issuer,
             String expiresAt,
-            String tokenId)
-            implements SessionEvent {}
+            String tokenId,
+            String subject,
+            String authorizedParty,
+            String actor,
+            java.util.List<String> scopes)
+            implements SessionEvent {
+        public AgentTokenIssued {
+            scopes = scopes == null ? null : java.util.List.copyOf(scopes);
+        }
+
+        /** An event with no claims, as every row written before ADR-0074. */
+        public AgentTokenIssued(
+                String session,
+                AgentId agent,
+                MissionId mission,
+                TicketId ticket,
+                String issuer,
+                String expiresAt,
+                String tokenId) {
+            this(session, agent, mission, ticket, issuer, expiresAt, tokenId, null, null, null, null);
+        }
+    }
 
     /**
      * The session's risk went up (ADR-0066): codes and ids only, never what the agent wrote or read. {@code windowStart}

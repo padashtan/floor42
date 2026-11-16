@@ -43,7 +43,7 @@ test('a probing session shows in To do and the director quarantines it', { tag: 
   const banner = page.locator('[data-testid="waiting-banner"]')
   await expect(banner).toBeVisible()
   const more = banner.locator('.waiting-more')
-  if (await more.count()) await more.click()
+  if (await more.count()) await more.click({ timeout: 5_000 })
   await expect(banner.locator('.waiting-row', { hasText: id }).filter({ hasText: 'three refusals in five minutes' })).toHaveCount(1)
   await shot(page, '17-session-risk-01-todo-row')
 

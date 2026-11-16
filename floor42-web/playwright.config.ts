@@ -31,6 +31,9 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   reporter: [['list'], ['html', { outputFolder: './e2e-results/report', open: 'never' }]],
   use: {
+    // Every action (click, fill...) fails after 20 s instead of waiting for the test's 120 s: a vanished element shows fast.
+    // FLOOR42_E2E_ACTION_TIMEOUT (ms) overrides it, e.g. on a slow software-rendered Linux browser.
+    actionTimeout: Number(process.env.FLOOR42_E2E_ACTION_TIMEOUT ?? 20_000),
     channel,
     launchOptions: {
       ...(executablePath ? { executablePath } : {}),

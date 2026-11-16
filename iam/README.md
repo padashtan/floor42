@@ -272,6 +272,37 @@ answers who acts for whom, `GET /notes` answers a prompt injection; every reques
 `iam/demo-resource/requests.log`). Catalogue it with `PUT /api/iam/resources`:
 `{"name":"demo","baseUrl":"http://127.0.0.1:7499","audience":"demo-resource","scopes":["demo-resource-audience"],"methods":["GET"],"pathPrefixes":["/claims","/notes"],"maxResponseBytes":65536,"local":true}`.
 
+### Broker call to a remote MCP server (ADR-0072)
+
+A remote MCP server is a catalogue resource plus the path of its endpoint (`PUT /api/iam/mcp-servers`). The director
+refreshes its tools (`POST /api/iam/mcp-servers/{resource}/tools/refresh`, with an agent and a mission: that agent's
+token, on the director's behalf) and ticks the ones agents may call (`PUT .../tools`). Each tool is pinned by the
+SHA-256 of its name, description and schema: a changed one is unticked. The agent sees two Floor42 tools,
+`list_mcp_tools` (the ticked tools, a local read) and `call_mcp(server, tool, arguments)` (NETWORK, built-in line ASK).
+
+```mermaid
+sequenceDiagram
+  participant C as Claude Code
+  participant F as Floor42 daemon
+  participant K as Keycloak
+  participant S as Remote MCP server
+  C->>F: MCP call_mcp(server, tool, arguments) with the session token
+  F->>F: pre-tool-use checks (table, token, process), server declared, grant, tool ticked
+  F->>K: token exchange for the server's audience
+  F->>S: initialize (Bearer, no redirect, size cap, timeout)
+  S-->>F: result, Mcp-Session-Id
+  F->>K: token exchange again (one per HTTP request)
+  F->>S: notifications/initialized (202)
+  F->>K: token exchange again
+  F->>S: tools/call (Bearer, session id, protocol version)
+  S-->>F: result (JSON or event stream)
+  F-->>C: first line, then the text quoted as untrusted data
+```
+
+Limits: one handshake per call (three exchanges), no session close, the first page of `tools/list` only;
+who ticked which tool is not in the journal (ADR-0072 point 8). To try it: `java iam/demo-resource/DemoMcp.java`
+(127.0.0.1:7498, `/mcp`), catalogue it as a `local` resource with `POST` and the prefix `/mcp`, declare it, refresh, tick `echo`.
+
 ## The session token's claims
 
 | Claim | Value | Checked by Floor42 |

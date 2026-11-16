@@ -151,6 +151,41 @@ class EventCodecTest {
         assertThat(codec.encode(started)).doesNotContain("capUsd");
     }
 
+    /**
+     * ADR-0074: a row written before the claims reads with four nulls and is written back unchanged (so a rollback
+     * binary reads it); a row with claims carries them, and an older binary sets that one row aside (NEWER_VERSION).
+     */
+    @Test
+    void aRowWrittenBeforeTheClaimsStillReads() {
+        String v11 = "{\"session\":\"L1\",\"agent\":\"ada\",\"mission\":\"M-1\",\"ticket\":\"T-1\","
+                + "\"issuer\":\"http://kc\",\"expiresAt\":\"2026-11-13T18:00:00Z\",\"tokenId\":\"jti-1\"}";
+        SessionEvent.AgentTokenIssued old = (SessionEvent.AgentTokenIssued) codec.decode("AgentTokenIssued", v11);
+        assertThat(old.subject()).isNull();
+        assertThat(old.authorizedParty()).isNull();
+        assertThat(old.actor()).isNull();
+        assertThat(old.scopes()).isNull();
+        assertThat(codec.encode(old)).isEqualTo(v11);
+    }
+
+    @Test
+    void aNewRowRoundTrips() {
+        var issued = new SessionEvent.AgentTokenIssued(
+                "L1",
+                new AgentId("ada"),
+                new dev.floor42.domain.MissionId("M-1"),
+                new dev.floor42.domain.TicketId("T-1"),
+                "http://kc",
+                "2026-11-13T18:00:00Z",
+                "jti-1",
+                "7f3c9a10-1111-2222-3333-444455556666",
+                "floor42-agent-ada",
+                "floor42-agent-ada",
+                List.of("openid", "profile"));
+        String json = codec.encode(issued);
+        assertThat(json).contains("\"subject\":\"7f3c9a10-1111-2222-3333-444455556666\"");
+        assertThat(codec.decode("AgentTokenIssued", json)).isEqualTo(issued);
+    }
+
     @Test
     void committeeEventsStoredBeforeNumbersExistedReadAsTheFirstCommittee() {
         DomainEvent convened = codec.decode(

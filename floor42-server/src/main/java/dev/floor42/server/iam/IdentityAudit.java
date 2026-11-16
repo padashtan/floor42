@@ -10,6 +10,7 @@ import dev.floor42.domain.event.ActionEvent.ActionExecuted;
 import dev.floor42.domain.event.ActionEvent.ActionRequested;
 import dev.floor42.domain.event.EventEnvelope;
 import dev.floor42.domain.event.SessionEvent.AgentTokenIssued;
+import dev.floor42.server.security.ReplaySanitizer;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,10 @@ public final class IdentityAudit {
 
     private IdentityAudit() {}
 
-    /** {@code decision} is ISSUED, REFUSED or EXCHANGED. */
+    /**
+     * {@code decision} is ISSUED, REFUSED or EXCHANGED. The four claims (ADR-0074) are those the journal holds of an
+     * ISSUED token, {@code subject} shortened for the export; null for the other decisions and for an older row.
+     */
     public record Line(
             Instant at,
             String who,
@@ -48,7 +52,11 @@ public final class IdentityAudit {
             String decision,
             String reason,
             String audience,
-            String eventId) {}
+            String eventId,
+            String subject,
+            String authorizedParty,
+            String actor,
+            List<String> scopes) {}
 
     public enum Kind {
         DIRECTOR_SIGN_IN,
@@ -112,8 +120,7 @@ public final class IdentityAudit {
         if (e.event() instanceof AgentTokenIssued t) {
             if (!t.mission().equals(mission)) return Optional.empty();
             lastJti.put(t.agent(), t.tokenId());
-            return Optional.of(
-                    line(e, t.agent(), t.tokenId(), "ISSUED", "issuer " + t.issuer(), AgentTokenVerifier.AUDIENCE));
+            return Optional.of(issued(e, t));
         }
         ActionRequested r = switch (e.event()) {
             case ActionDenied d -> asked.get(d.action());
@@ -131,9 +138,39 @@ public final class IdentityAudit {
                 .map(m -> line(e, r.agent(), jti, "EXCHANGED", "broker call, status " + m.group(1), m.group(3)));
     }
 
+    /** An ISSUED line with the claims the journal holds (ADR-0074); the subject shortened, as in every export. */
+    private static Line issued(EventEnvelope e, AgentTokenIssued t) {
+        Line l = line(e, t.agent(), t.tokenId(), "ISSUED", "issuer " + t.issuer(), AgentTokenVerifier.AUDIENCE);
+        return new Line(
+                l.at(),
+                l.who(),
+                l.onBehalfOf(),
+                l.tokenId(),
+                l.decision(),
+                l.reason(),
+                l.audience(),
+                l.eventId(),
+                ReplaySanitizer.shortSubject(t.subject()),
+                t.authorizedParty(),
+                t.actor(),
+                t.scopes());
+    }
+
     private static Line line(
             EventEnvelope e, AgentId agent, String jti, String decision, String reason, String audience) {
-        return new Line(e.occurredAt(), who(agent), "director", jti, decision, reason, audience, e.eventId());
+        return new Line(
+                e.occurredAt(),
+                who(agent),
+                "director",
+                jti,
+                decision,
+                reason,
+                audience,
+                e.eventId(),
+                null,
+                null,
+                null,
+                null);
     }
 
     /** One JSON object per line. */
@@ -148,6 +185,10 @@ public final class IdentityAudit {
             m.put("decision", l.decision());
             m.put("reason", l.reason());
             m.put("audience", l.audience());
+            m.put("subject", l.subject());
+            m.put("authorizedParty", l.authorizedParty());
+            m.put("actor", l.actor());
+            m.put("scopes", l.scopes());
             try {
                 sb.append(JSON.writeValueAsString(m)).append('\n');
             } catch (JsonProcessingException e) {

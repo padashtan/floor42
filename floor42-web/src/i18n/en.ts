@@ -12,8 +12,11 @@ import { meetingVoicesEn } from './meeting-voices.en'
 import { librariesEn } from './libraries.en'
 import { proofEn } from './proof.en'
 import { dossierEn } from './dossier.en'
+import { oversightEn } from './oversight.en'
 import { remoteEn } from './remote.en'
 import { missionFormEn } from './missionForm.en'
+import { mcpEn } from './mcp.en'
+import { standupEn } from './standup.en'
 
 export const en = {
   ...shellEn,
@@ -28,6 +31,9 @@ export const en = {
   ...librariesEn,
   ...proofEn,
   ...dossierEn,
+  ...oversightEn,
   ...remoteEn,
   ...missionFormEn,
+  ...mcpEn,
+  ...standupEn,
 } as const

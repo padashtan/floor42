@@ -164,7 +164,7 @@ class DelegationApiTest extends ApiTestBase {
                 .post("/api/missions/" + id + "/approve")
                 .then()
                 .statusCode(403)
-                .body("code", equalTo("DELEGATION_NEEDS_SIGN_IN"));
+                .body("code", equalTo("IAM_SCRIPT_TOKEN_REFUSED"));
         assertThat(status(id)).isEqualTo("AWAITING_APPROVAL");
     }
 

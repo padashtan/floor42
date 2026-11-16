@@ -42,6 +42,7 @@ Paths below are relative to `floor42-server/src/main/java/dev/floor42/server/` u
 | Boundary | What crosses it | What guards it |
 |---|---|---|
 | (1) Browser to daemon | API and WebSocket calls | Loopback bind, Host and Origin checks, request header, single-use sign-in, CSP (`security/LocalAccessGuard.java`, ADR-0007, ADR-0034, ADR-0044). |
+| (1b) A model of the director's to the desk | `POST /api/mcp` tool calls with a script token | Script token only, scope per tool, no approval whatever the scope, agent text in the untrusted envelope (`api/gateway/DirectorMcpResource.java`, ADR-0073). A model holding a write token can still create missions and answer open questions: use `read` first. |
 | (2) Daemon to agent session | A launched Claude Code process; its hook and MCP calls come back | Per-session credential, fail-closed hooks, in IAM mode the Keycloak token and the process binding (`runtime/HookRegistry.java`, `iam/IamSessions.java`). |
 | (3) Agent session to its shell | Shell commands | The WSL sandbox, mandatory for real missions (ADR-0028, ADR-0063). Without it: text checks only (`runtime/ShellGuard.java`). |
 | (4) Daemon to Keycloak | Token exchange, introspection, JWKS | Local verification on every call; a check every 60 s (`iam/IdentityWatch.java`). |

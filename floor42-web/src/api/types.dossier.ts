@@ -41,6 +41,11 @@ export interface DossierIdentity {
   issuer: string
   expiresAt: string
   jti: string
+  /** The claims the journal recorded (ADR-0074); absent for a session older than v1.2. `subject` is shortened. */
+  subject?: string | null
+  authorizedParty?: string | null
+  actor?: string | null
+  scopes?: string[] | null
   derived: string[]
   ref: DossierRef
 }
@@ -119,12 +124,22 @@ export interface DossierCheck {
   ref: DossierRef
 }
 
+/** What git said of an accepted commit's signature when the dossier was built (ADR-0077). */
+export interface DossierSignature {
+  status: 'VERIFIED' | 'NOT_SIGNED' | 'BAD_SIGNATURE' | 'UNKNOWN_KEY' | 'UNCHECKABLE'
+  /** The agent whose key signed, when VERIFIED. */
+  agent?: string | null
+  /** The agent's key was retired since (revoked or dismissed); the signature still verifies. */
+  retired: boolean
+}
+
 export interface DossierDelivery {
   at: string
   kind: string
   text?: string | null
   commit?: string | null
   files?: number | null
+  signature?: DossierSignature | null
   ref: DossierRef
 }
 

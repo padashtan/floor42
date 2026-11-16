@@ -73,6 +73,10 @@ public record ProofDossier(
             String issuer,
             String expiresAt,
             String jti,
+            String subject,
+            String authorizedParty,
+            String actor,
+            List<String> scopes,
             List<String> derived,
             Ref ref) {}
 
@@ -136,7 +140,15 @@ public record ProofDossier(
             Ref ref) {}
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record DeliveryFact(String at, String kind, String text, String commit, Integer files, Ref ref) {}
+    public record DeliveryFact(
+            String at, String kind, String text, String commit, Integer files, SignatureFact signature, Ref ref) {}
+
+    /**
+     * What git says now of an accepted commit's signature (ADR-0077): VERIFIED, NOT_SIGNED, BAD_SIGNATURE, UNKNOWN_KEY
+     * or UNCHECKABLE. {@code agent} is set when VERIFIED; {@code retired} when that agent's key was retired since.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public record SignatureFact(String status, String agent, boolean retired) {}
 
     /** {@code uncommitted} paths read from git now; {@code commits} beyond the project branch (-1 when git cannot count). */
     public record DiffFact(String agent, String branch, boolean readable, int commits, int uncommitted, Ref ref) {}

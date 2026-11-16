@@ -4344,6 +4344,21 @@
 == GET /api/resume -> 200
 {
   "missions" : [ {
+    "action" : "NONE",
+    "doing" : "T-24",
+    "doingStatus" : "IN_PROGRESS",
+    "doingTitle" : "Badge in",
+    "id" : "M-11",
+    "lastActivity" : "2026-10-20T18:29:00Z",
+    "openQuestions" : 0,
+    "origin" : "SIMULATED",
+    "retryQuestion" : null,
+    "state" : "IDLE",
+    "status" : "IN_PROGRESS",
+    "suspendedAgents" : [ ],
+    "title" : "Badge",
+    "workspace" : null
+  }, {
     "action" : "NUDGE",
     "doing" : "T-19",
     "doingStatus" : "IN_PROGRESS",
@@ -4358,21 +4373,6 @@
     "suspendedAgents" : [ ],
     "title" : "Release",
     "workspace" : "C:/repo/app"
-  }, {
-    "action" : "NONE",
-    "doing" : "T-24",
-    "doingStatus" : "IN_PROGRESS",
-    "doingTitle" : "Badge in",
-    "id" : "M-11",
-    "lastActivity" : "2026-10-20T18:21:00Z",
-    "openQuestions" : 0,
-    "origin" : "SIMULATED",
-    "retryQuestion" : null,
-    "state" : "IDLE",
-    "status" : "IN_PROGRESS",
-    "suspendedAgents" : [ ],
-    "title" : "Badge",
-    "workspace" : null
   }, {
     "action" : "NONE",
     "doing" : null,
@@ -4487,7 +4487,7 @@
     "type" : "Mission"
   } ],
   "detailsTruncated" : true,
-  "digest" : "86959c8e3b0e31601ad397068c68533192adce18412ed982fb1118f25ed8cc0e",
+  "digest" : "e83c2c623738986e207bffc31ae331811b40c21ca60f0ff66bc8b7bc8a3f95c4",
   "events" : 246,
   "masked" : [ {
     "count" : 5,

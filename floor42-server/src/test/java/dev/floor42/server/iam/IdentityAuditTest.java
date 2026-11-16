@@ -62,6 +62,32 @@ class IdentityAuditTest {
                             true)));
 
     @Test
+    void theAuditExportCarriesTheClaims() {
+        var withClaims = new AgentTokenIssued(
+                "L1",
+                ADA,
+                M,
+                T,
+                "http://kc/realms/floor42",
+                "2026-11-05T18:00:00Z",
+                "jti-1",
+                "7f3c9a10-1111-2222-3333-444455556666",
+                "floor42-agent-ada",
+                "floor42-agent-ada",
+                List.of("openid", "profile"));
+        var lines = IdentityAudit.lines(M, List.of(env(1, withClaims)));
+        assertThat(lines.getFirst().subject()).isEqualTo("7f3c9a10…");
+        String row = IdentityAudit.ndjson(lines);
+        assertThat(row)
+                .contains(
+                        "\"subject\":\"7f3c9a10…\"",
+                        "\"actor\":\"floor42-agent-ada\"",
+                        "\"scopes\":[\"openid\",\"profile\"]")
+                .doesNotContain("1111-2222");
+        assertThat(IdentityAudit.lines(M, journal).getFirst().subject()).isNull();
+    }
+
+    @Test
     void exportsIssuedRefusedAndExchangedLines() {
         var lines = IdentityAudit.lines(M, journal);
         assertThat(lines).extracting(IdentityAudit.Line::decision).containsExactly("ISSUED", "REFUSED", "EXCHANGED");

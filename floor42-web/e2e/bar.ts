@@ -19,6 +19,8 @@ export const PANEL_OF: Record<string, string> = {
   deliverables: '.deliverables-panel',
   prove: '.prove-panel',
   dossier: '.dossier-panel',
+  oversight: '.oversight-panel',
+  standup: '.standup-panel',
   archive: '.archive-panel',
   tutorial: '.tutorial-card',
   hire: '.hire-panel:not(.core-dismissal)',
@@ -31,6 +33,7 @@ export const PANEL_OF: Record<string, string> = {
   terminal: '.director-terminal',
   sessions: '.sessions-panel',
   identities: '.identities-panel',
+  mcp: '.mcp-panel',
   usage: '.panel.usage',
   settings: '.settings-panel',
 }

@@ -130,6 +130,11 @@ final class SampleWrites implements Governor {
     }
 
     @Override
+    public boolean authorized(String toolUseId, String tool) {
+        return governor.authorized(toolUseId, tool);
+    }
+
+    @Override
     public void refuse(ToolRequested call, String detail) {
         governor.refuse(call, detail);
     }

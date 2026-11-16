@@ -29,7 +29,8 @@ import org.jboss.logging.Logger;
 /**
  * After a restart, the director's last answer to a held or failed step is honoured again: the journal says what was
  * decided, and no session has started since. "Wait for the reset" waits again; "Retry" and a raised budget resume now
- * (D9). A session the previous daemon left open is recorded as interrupted, and the director is asked.
+ * (D9). A session the previous daemon left open is recorded as interrupted, and the director is asked; what else the
+ * stop left (a call without outcome, a dead approval, unexplained changes) is recorded once by {@link Reconciliation}.
  */
 @ApplicationScoped
 public class MissionRecovery {
@@ -44,6 +45,7 @@ public class MissionRecovery {
     private final dev.floor42.server.runtime.CostCap costCap;
     private final dev.floor42.server.runtime.UnnamedLaunches unnamed;
     private final Workspaces workspaces;
+    private final Reconciliation reconciliation;
 
     @Inject
     MissionRecovery(
@@ -54,7 +56,9 @@ public class MissionRecovery {
             Staffing staffing,
             dev.floor42.server.runtime.CostCap costCap,
             dev.floor42.server.runtime.UnnamedLaunches unnamed,
-            Workspaces workspaces) {
+            Workspaces workspaces,
+            Reconciliation reconciliation) {
+        this.reconciliation = reconciliation;
         this.workspaces = workspaces;
         this.unnamed = unnamed;
         this.staffing = staffing;
@@ -81,10 +85,12 @@ public class MissionRecovery {
         missions(MissionStatus.SUSPENDED).forEach(m -> {
             clearStaleLocks(m);
             closeInterruptedSessions(m);
+            reconciliation.reconcile(m);
         });
         for (MissionId m : missions(MissionStatus.IN_PROGRESS)) {
             clearStaleLocks(m);
             closeInterruptedSessions(m);
+            reconciliation.reconcile(m);
             Question q = office.query(c -> lastResumingAnswer(c, m));
             if (q == null) {
                 dispatcher.produce(m);

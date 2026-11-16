@@ -217,6 +217,9 @@ button.link {
 .board-panel .title .reinforce {
   margin-left: 12px;
 }
+.board-panel .title .jira-export {
+  margin-left: 24px;
+}
 .board-panel .title .reinforce.urgent {
   border-color: var(--amber, #ffb000);
   color: var(--amber, #ffb000);

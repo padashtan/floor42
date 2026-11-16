@@ -99,6 +99,8 @@ export const missionsFr: Record<keyof typeof missionsEn, string> = {
   'perm.title': 'Permissions des outils',
   'perm.none': 'Aucune mission en cours.',
   'perm.tool': 'Outil',
+  'perm.label.mcp__floor42__call_mcp': 'Outils MCP externes',
+  'perm.hint.mcp__floor42__call_mcp': 'Appelle un outil d’un serveur MCP déclaré, avec le jeton court de l’agent',
   'perm.ALLOW': 'Auto',
   'perm.ALLOW.hint': 'L’agent utilise l’outil sans demander',
   'perm.ASK': 'Demander une fois',

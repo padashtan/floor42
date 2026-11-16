@@ -141,7 +141,11 @@ public final class Action {
             "METHOD_NOT_ALLOWED",
             "HOST_NOT_ALLOWED",
             "SCHEME_NOT_ALLOWED",
-            "IDENTITY_REFUSED");
+            "IDENTITY_REFUSED",
+            "MCP_SERVER_UNKNOWN",
+            "MCP_TOOL_NOT_ALLOWED",
+            "INVALID_ARGUMENTS",
+            "NOT_AUTHORIZED");
 
     /**
      * IDENTITY_REFUSED is Floor42's own decision (mission completed, delegation revoked); IDENTITY_UNAVAILABLE is the
@@ -161,8 +165,9 @@ public final class Action {
      */
     public boolean refused() {
         if (stage == ActionStage.DENIED) return true;
-        if (stage != ActionStage.FAILED || category != ActionCategory.FLOOR42 || !tool.endsWith("call_resource"))
-            return false;
+        boolean brokered = category == ActionCategory.FLOOR42 && tool.endsWith("call_resource");
+        // call_mcp is NETWORK (the table), its refusals are Floor42's like call_resource's
+        if (stage != ActionStage.FAILED || !(brokered || tool.endsWith("call_mcp"))) return false;
         int colon = result == null ? -1 : result.indexOf(':');
         if (colon <= 0) return false;
         String code = result.substring(0, colon);
