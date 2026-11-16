@@ -42,7 +42,7 @@ export const librariesEn = {
   'checklist.note.notWindows': 'only on Windows',
   'checklist.note.notMeasured': 'not measured yet',
   'checklist.note.probeFailed': 'the sandbox could not run',
-  'checklist.note.userns': 'the system refuses unprivileged user namespaces (Ubuntu: kernel.apparmor_restrict_unprivileged_userns=1): run the command below to allow unshare in a dedicated AppArmor profile',
+  'checklist.note.userns': 'the system refuses unprivileged user namespaces (Ubuntu: kernel.apparmor_restrict_unprivileged_userns=1): run the command below, or allow unshare in an AppArmor profile',
   'checklist.note.hiddenTool': 'install it system-wide, or with sdkman, nvm, pyenv, asdf, fnm, uv or mise, to use it in the sandbox',
   'checklist.copy': 'Copy',
   'checklist.copied': 'Copied',

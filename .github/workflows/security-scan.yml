@@ -21,8 +21,6 @@ permissions:
 
 jobs:
   semgrep:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -39,8 +37,6 @@ jobs:
           retention-days: 30
 
   trivy:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -80,8 +76,7 @@ jobs:
   # A nightly only: the ZAP scans need the daemon packaged, like the browser journeys, and adds minutes to a release
   # that Trivy and the journeys already gate.
   zap:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ (!inputs.release) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !inputs.release }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -121,8 +116,7 @@ jobs:
 
   # A nightly only, like ZAP: it needs the packaged daemon. Fails on a failure the baseline does not list.
   api-fuzz:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ (!inputs.release) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ !inputs.release }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

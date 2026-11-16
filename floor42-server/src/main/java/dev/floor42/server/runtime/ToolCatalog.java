@@ -34,7 +34,7 @@ public final class ToolCatalog {
     }
 
     /**
-     * The summary is what command-prefix rules match and what the director reads. Paths are shown relative to the
+     * The summary is what the director reads; a shell call is decided on its full {@link #command}. Paths are shown relative to the
      * agent's working directory when they are inside it.
      */
     public static String summary(String tool, JsonNode input, String workdir) {
@@ -64,6 +64,11 @@ public final class ToolCatalog {
         if (c == ActionCategory.READ || c == ActionCategory.WRITE)
             s = Objects.requireNonNullElse(inside(s, workdir), s);
         return StreamJsonParser.abbreviate(s, 300);
+    }
+
+    /** A shell call's command exactly as sent, which rules and approvals decide on; null for any other tool. */
+    public static String command(String tool, JsonNode input) {
+        return category(tool) == ActionCategory.EXECUTE ? input.path("command").asText() : null;
     }
 
     /**

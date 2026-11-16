@@ -111,7 +111,7 @@ class DockerAccessTest {
     void theMachineChecklistHasADockerRowNotMeasuredSinceTheStart() {
         var c = MachineChecklist.of(
                 true,
-                new ClaudeCodeProbe.Availability(true, "2.1.300", null),
+                new ClaudeCodeProbe.Availability(true, "2.1.300", null, null),
                 "git version 2.51",
                 new HostChecks.Wsl(true, Map.of("Debian", 2)),
                 "Debian",

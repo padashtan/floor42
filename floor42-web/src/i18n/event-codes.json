@@ -110,11 +110,11 @@
     }
   },
   "AgentHired" : {
-    "line" : "Galen joins as Planner (claude-sonnet-5-5)",
+    "line" : "Geoffrey joins as Planner (claude-sonnet-5-5)",
     "params" : [ "agent", "displayName", "effort", "model", "provider", "role", "skills" ],
     "sample" : {
-      "agent" : "galen",
-      "displayName" : "Galen",
+      "agent" : "geoffrey",
+      "displayName" : "Geoffrey",
       "effort" : "medium",
       "model" : "claude-sonnet-5-5",
       "provider" : "anthropic",
@@ -158,10 +158,10 @@
     }
   },
   "AgentRoleAssigned" : {
-    "line" : "galen works as planner",
+    "line" : "geoffrey works as planner",
     "params" : [ "agent", "workRole" ],
     "sample" : {
-      "agent" : "galen",
+      "agent" : "geoffrey",
       "workRole" : "PLANNER"
     }
   },
@@ -246,10 +246,10 @@
     }
   },
   "AgentSessionStarted" : {
-    "line" : "galen opens a session on T-1 (claude-sonnet-5-5)",
+    "line" : "geoffrey opens a session on T-1 (claude-sonnet-5-5)",
     "params" : [ "agent", "mission", "model", "runtimeVersion", "session", "ticket" ],
     "sample" : {
-      "agent" : "galen",
+      "agent" : "geoffrey",
       "mission" : "M-1",
       "model" : "claude-sonnet-5-5",
       "runtimeVersion" : "2.1.0",
@@ -612,13 +612,13 @@
     }
   },
   "CommitteeContributed.analysis" : {
-    "line" : "galen analysed: Gateway",
+    "line" : "geoffrey analysed: Gateway",
     "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
     "sample" : {
       "byDirector" : "",
       "criticalObjection" : "",
       "kind" : "ANALYSIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "mission" : "M-2",
       "position" : "NEW",
       "proposal" : "Gateway",
@@ -644,13 +644,13 @@
     }
   },
   "CommitteeContributed.rebuttal" : {
-    "line" : "galen answered in round 2: Gateway",
+    "line" : "geoffrey answered in round 2: Gateway",
     "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
     "sample" : {
       "byDirector" : "",
       "criticalObjection" : "",
       "kind" : "REBUTTAL",
-      "member" : "galen",
+      "member" : "geoffrey",
       "mission" : "M-2",
       "position" : "MAINTAINED",
       "proposal" : "Gateway",
@@ -668,7 +668,7 @@
       "kind" : "REBUTTAL",
       "member" : "chris",
       "mission" : "M-3",
-      "position" : "ADOPTED darius",
+      "position" : "ADOPTED dehren",
       "proposal" : "",
       "questions" : "",
       "round" : "2",
@@ -676,13 +676,13 @@
     }
   },
   "CommitteeContributed.synthesis" : {
-    "line" : "galen wrote the decision record: Adopt a gateway",
+    "line" : "geoffrey wrote the decision record: Adopt a gateway",
     "params" : [ "byDirector", "criticalObjection", "kind", "member", "mission", "position", "proposal", "questions", "round", "text" ],
     "sample" : {
       "byDirector" : "",
       "criticalObjection" : "",
       "kind" : "SYNTHESIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "mission" : "M-2",
       "position" : "",
       "proposal" : "Adopt a gateway",
@@ -708,12 +708,12 @@
     }
   },
   "CommitteeConvened" : {
-    "line" : "Committee convened on M-2: galen, darius, chris",
+    "line" : "Committee convened on M-2: geoffrey, dehren, chris",
     "params" : [ "directorSeat", "maxDebateRounds", "members", "mission", "moderated", "panel", "roles", "ticket", "topic" ],
     "sample" : {
       "directorSeat" : "",
       "maxDebateRounds" : "1",
-      "members" : "galen, darius, chris",
+      "members" : "geoffrey, dehren, chris",
       "mission" : "M-2",
       "moderated" : "false",
       "panel" : "architecture",
@@ -758,11 +758,11 @@
     }
   },
   "ConsultationAnswered.agent" : {
-    "line" : "galen answers the consultation on T-4",
+    "line" : "geoffrey answers the consultation on T-4",
     "params" : [ "answer", "by", "ticket" ],
     "sample" : {
       "answer" : "Check the audience too",
-      "by" : "galen",
+      "by" : "geoffrey",
       "ticket" : "T-4"
     }
   },
@@ -776,23 +776,23 @@
     }
   },
   "ConsultationRequested.consult" : {
-    "line" : "darius consults the security on T-4: Is the token check enough?",
+    "line" : "dehren consults the security on T-4: Is the token check enough?",
     "params" : [ "kind", "question", "reviewer", "role", "ticket" ],
     "sample" : {
       "kind" : "CONSULT",
       "question" : "Is the token check enough?",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "role" : "security",
       "ticket" : "T-4"
     }
   },
   "ConsultationRequested.research" : {
-    "line" : "darius asks for a web research on T-4: RFC 7519 audience?",
+    "line" : "dehren asks for a web research on T-4: RFC 7519 audience?",
     "params" : [ "kind", "question", "reviewer", "role", "ticket" ],
     "sample" : {
       "kind" : "RESEARCH",
       "question" : "RFC 7519 audience?",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "role" : "",
       "ticket" : "T-4"
     }
@@ -894,7 +894,7 @@
       "audience" : "",
       "lesson" : "L-2",
       "mission" : "M-1",
-      "proposedBy" : "galen",
+      "proposedBy" : "geoffrey",
       "text" : "Say what was not verified"
     }
   },
@@ -905,7 +905,7 @@
       "audience" : "DEVELOPER",
       "lesson" : "L-1",
       "mission" : "M-1",
-      "proposedBy" : "galen",
+      "proposedBy" : "geoffrey",
       "text" : "Write the test first"
     }
   },
@@ -936,20 +936,20 @@
     }
   },
   "MeetingCalled.agenda" : {
-    "line" : "Director called chris, darius to the table about M-5 (MT-1): Where we go next",
+    "line" : "Director called chris, dehren to the table about M-5 (MT-1): Where we go next",
     "params" : [ "agenda", "attendees", "meeting", "mission" ],
     "sample" : {
       "agenda" : "Where we go next",
-      "attendees" : "chris, darius",
+      "attendees" : "chris, dehren",
       "meeting" : "MT-1",
       "mission" : "M-5"
     }
   },
   "MeetingClosed" : {
-    "line" : "Director closed MT-1 about M-5: chris, darius go back to work",
+    "line" : "Director closed MT-1 about M-5: chris, dehren go back to work",
     "params" : [ "attendees", "meeting", "mission" ],
     "sample" : {
-      "attendees" : "chris, darius",
+      "attendees" : "chris, dehren",
       "meeting" : "MT-1",
       "mission" : "M-5"
     }
@@ -981,10 +981,10 @@
     }
   },
   "MeetingTurnTaken.heard" : {
-    "line" : "darius, at MT-2: Tighten it",
+    "line" : "dehren, at MT-2: Tighten it",
     "params" : [ "agent", "meeting", "text" ],
     "sample" : {
-      "agent" : "darius",
+      "agent" : "dehren",
       "meeting" : "MT-2",
       "text" : "Tighten it"
     }
@@ -999,13 +999,13 @@
     }
   },
   "MeetingViewsAsked" : {
-    "line" : "Director asked darius, chris for their view at MT-2 (round 1, cap 0.5 USD estimated)",
+    "line" : "Director asked dehren, chris for their view at MT-2 (round 1, cap 0.5 USD estimated)",
     "params" : [ "cap", "meeting", "round", "speakers" ],
     "sample" : {
       "cap" : "0.5",
       "meeting" : "MT-2",
       "round" : "1",
-      "speakers" : "darius, chris"
+      "speakers" : "dehren, chris"
     }
   },
   "MissionArchived" : {
@@ -1641,32 +1641,32 @@
     }
   },
   "RetroOpened" : {
-    "line" : "Retrospective of M-1 at the table: galen, chris, darius; galen chairs",
+    "line" : "Retrospective of M-1 at the table: geoffrey, chris, dehren; geoffrey chairs",
     "params" : [ "chair", "mission", "participants", "ticket" ],
     "sample" : {
-      "chair" : "galen",
+      "chair" : "geoffrey",
       "mission" : "M-1",
-      "participants" : "galen, chris, darius",
+      "participants" : "geoffrey, chris, dehren",
       "ticket" : "T-12"
     }
   },
   "RetroSkipped" : {
-    "line" : "darius did not speak in the retrospective of M-1: usage window",
+    "line" : "dehren did not speak in the retrospective of M-1: usage window",
     "params" : [ "agent", "mission", "reason" ],
     "sample" : {
-      "agent" : "darius",
+      "agent" : "dehren",
       "mission" : "M-1",
       "reason" : "usage window"
     }
   },
   "ReviewItemsRecorded" : {
-    "line" : "Review of T-21 by darius: 1 reservation(s) tied to a criterion, 3 note(s)",
+    "line" : "Review of T-21 by dehren: 1 reservation(s) tied to a criterion, 3 note(s)",
     "params" : [ "declared", "notes", "reservations", "reviewer", "ticket" ],
     "sample" : {
       "declared" : "VALIDATED_WITH_RESERVATIONS",
       "notes" : "3",
       "reservations" : "1",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "ticket" : "T-21"
     }
   },
@@ -1785,11 +1785,11 @@
     }
   },
   "StaffingReviewRequested" : {
-    "line" : "Director asked galen whether to reinforce the team of M-1",
+    "line" : "Director asked geoffrey whether to reinforce the team of M-1",
     "params" : [ "mission", "planner", "ticket" ],
     "sample" : {
       "mission" : "M-1",
-      "planner" : "galen",
+      "planner" : "geoffrey",
       "ticket" : "T-7"
     }
   },
@@ -1869,10 +1869,10 @@
     }
   },
   "TicketAssigned" : {
-    "line" : "T-1 assigned to galen",
+    "line" : "T-1 assigned to geoffrey",
     "params" : [ "agent", "ticket" ],
     "sample" : {
-      "agent" : "galen",
+      "agent" : "geoffrey",
       "ticket" : "T-1"
     }
   },
@@ -1942,19 +1942,19 @@
     }
   },
   "TicketReviewed" : {
-    "line" : "darius reviewed T-4: rejected",
+    "line" : "dehren reviewed T-4: rejected",
     "params" : [ "reviewer", "ticket", "verdict" ],
     "sample" : {
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "ticket" : "T-4",
       "verdict" : "REJECTED"
     }
   },
   "TicketStarted" : {
-    "line" : "galen starts T-1",
+    "line" : "geoffrey starts T-1",
     "params" : [ "assignee", "ticket" ],
     "sample" : {
-      "assignee" : "galen",
+      "assignee" : "geoffrey",
       "ticket" : "T-1"
     }
   },

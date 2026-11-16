@@ -53,7 +53,7 @@ async function shelf(page: Page, name: string) {
   await style.evaluate((n) => (n as Element).remove())
 }
 
-test('the library opens from the bar and from the bookcase, and a pick fills the new mission form', async ({ page, daemon }) => {
+test('the library opens from the bar and from the bookcase, and a pick fills the new mission form', { tag: '@plugins' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')

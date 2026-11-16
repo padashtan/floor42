@@ -23,9 +23,6 @@ public final class Confinement {
     /** Inside the worktree, but able to change what runs later outside the agent's control: git, Claude Code, MCP. */
     private static final Set<String> PROTECTED = Set.of(".git", ".claude", ".mcp.json");
 
-    /** An 8.3 short name ("GIT~1"). Searched with find(): linear in the name, whatever an agent writes in it. */
-    private static final java.util.regex.Pattern SHORT_NAME = java.util.regex.Pattern.compile("~\\d");
-
     private Confinement() {}
 
     /**
@@ -182,7 +179,7 @@ public final class Confinement {
     private static Optional<String> protectedName(String raw, Path written, Path real) {
         for (Path segment : written) {
             String name = segment.toString();
-            if (name.contains(":") || SHORT_NAME.matcher(name).find()) {
+            if (name.contains(":") || name.matches(".*~\\d.*")) {
                 return Optional.of(raw + " is not a plain file name: " + name);
             }
             if (PROTECTED.contains(plain(name))) {
@@ -201,9 +198,6 @@ public final class Confinement {
 
     /** The name as Windows reads it: case ignored, trailing dots and spaces dropped. */
     private static String plain(String name) {
-        // A loop, not the regex "[. ]+$": that one is quadratic on a long run of spaces an agent can write.
-        int end = name.length();
-        while (end > 0 && (name.charAt(end - 1) == '.' || name.charAt(end - 1) == ' ')) end--;
-        return name.substring(0, end).toLowerCase(Locale.ROOT);
+        return name.toLowerCase(Locale.ROOT).replaceAll("[. ]+$", "");
     }
 }

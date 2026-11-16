@@ -1,6 +1,6 @@
 == GET /api/missions -> 200
 [ {
-  "agents" : [ "darius", "galen", "chris" ],
+  "agents" : [ "dehren", "geoffrey", "chris" ],
   "archived" : false,
   "id" : "M-2",
   "openQuestions" : 0,
@@ -10,7 +10,7 @@
   "ticketsDone" : 1,
   "title" : "Gateway?"
 }, {
-  "agents" : [ "galen" ],
+  "agents" : [ "geoffrey" ],
   "archived" : false,
   "id" : "M-3",
   "openQuestions" : 0,
@@ -50,7 +50,7 @@
   "ticketsDone" : 0,
   "title" : "Release"
 }, {
-  "agents" : [ "galen" ],
+  "agents" : [ "geoffrey" ],
   "archived" : false,
   "id" : "M-7",
   "openQuestions" : 0,
@@ -60,7 +60,7 @@
   "ticketsDone" : 0,
   "title" : "Pinned"
 }, {
-  "agents" : [ "chris", "darius" ],
+  "agents" : [ "chris", "dehren" ],
   "archived" : false,
   "id" : "M-8",
   "openQuestions" : 0,
@@ -868,7 +868,7 @@
     "causeBy" : null,
     "causeCode" : null,
     "causeParams" : null,
-    "context" : "darius: Cannot run the browser",
+    "context" : "dehren: Cannot run the browser",
     "contextCode" : null,
     "contextParams" : null,
     "criticality" : "HIGH",
@@ -879,7 +879,7 @@
     "phraseCode" : "reviewUnverifiable",
     "phraseParams" : {
       "findings" : "Cannot run the browser",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "ticket" : "T-4"
     },
     "recommendation" : null,
@@ -903,7 +903,7 @@
     "causeBy" : null,
     "causeCode" : null,
     "causeParams" : null,
-    "context" : "darius: Still cannot",
+    "context" : "dehren: Still cannot",
     "contextCode" : null,
     "contextParams" : null,
     "criticality" : "HIGH",
@@ -914,7 +914,7 @@
     "phraseCode" : "reviewUnverifiable",
     "phraseParams" : {
       "findings" : "Still cannot",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "ticket" : "T-4"
     },
     "recommendation" : null,
@@ -938,7 +938,7 @@
     "causeBy" : null,
     "causeCode" : null,
     "causeParams" : null,
-    "context" : "darius: No browser",
+    "context" : "dehren: No browser",
     "contextCode" : null,
     "contextParams" : null,
     "criticality" : "HIGH",
@@ -949,7 +949,7 @@
     "phraseCode" : "reviewUnverifiable",
     "phraseParams" : {
       "findings" : "No browser",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "ticket" : "T-4"
     },
     "recommendation" : null,
@@ -968,7 +968,7 @@
       "text" : null
     },
     "askedAt" : "2026-10-20T13:20:00Z",
-    "askedBy" : "galen",
+    "askedBy" : "geoffrey",
     "blocking" : false,
     "causeBy" : null,
     "causeCode" : null,
@@ -1001,7 +1001,7 @@
       "text" : null
     },
     "askedAt" : "2026-10-20T13:26:00Z",
-    "askedBy" : "galen",
+    "askedBy" : "geoffrey",
     "blocking" : false,
     "causeBy" : null,
     "causeCode" : null,
@@ -1195,7 +1195,7 @@
     "writesNow" : null
   } ],
   "retro" : {
-    "chair" : "galen",
+    "chair" : "geoffrey",
     "concluded" : true,
     "conclusions" : [ "Keep tests first" ],
     "contributions" : [ {
@@ -1206,14 +1206,14 @@
       "wentBadly" : [ ],
       "wentWell" : [ "Tests first" ]
     }, {
-      "agent" : "darius",
+      "agent" : "dehren",
       "at" : "2026-10-20T14:29:00Z",
       "skipped" : "usage window",
       "text" : null,
       "wentBadly" : [ ],
       "wentWell" : [ ]
     }, {
-      "agent" : "galen",
+      "agent" : "geoffrey",
       "at" : "2026-10-20T14:31:00Z",
       "skipped" : null,
       "text" : "Mostly fine",
@@ -1226,7 +1226,7 @@
       "id" : "L-1",
       "mission" : "M-1",
       "proposedAt" : "2026-10-20T14:34:00Z",
-      "proposedBy" : "galen",
+      "proposedBy" : "geoffrey",
       "reason" : "Obvious now",
       "status" : "RETIRED",
       "text" : "Write the test first"
@@ -1235,7 +1235,7 @@
       "id" : "L-2",
       "mission" : "M-1",
       "proposedAt" : "2026-10-20T14:34:00Z",
-      "proposedBy" : "galen",
+      "proposedBy" : "geoffrey",
       "reason" : null,
       "status" : "ACCEPTED",
       "text" : "Say what you did not verify"
@@ -1244,12 +1244,12 @@
       "id" : "L-3",
       "mission" : "M-1",
       "proposedAt" : "2026-10-20T14:34:00Z",
-      "proposedBy" : "galen",
+      "proposedBy" : "geoffrey",
       "reason" : "rejected by the director",
       "status" : "REJECTED",
       "text" : "Run the browser"
     } ],
-    "participants" : [ "galen", "chris", "darius" ],
+    "participants" : [ "geoffrey", "chris", "dehren" ],
     "pending" : [ ],
     "reason" : null,
     "text" : "We shipped",
@@ -1327,7 +1327,7 @@
     "value" : "2"
   } ],
   "sessions" : [ {
-    "agent" : "galen",
+    "agent" : "geoffrey",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.1,
     "endedAt" : "2026-10-20T10:00:00Z",
@@ -1387,7 +1387,7 @@
     "ticket" : "T-4",
     "turns" : 5
   }, {
-    "agent" : "darius",
+    "agent" : "dehren",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.3,
     "endedAt" : "2026-10-20T12:15:00Z",
@@ -1439,7 +1439,7 @@
   "status" : "COMPLETED",
   "tickets" : [ {
     "acceptanceCriteria" : [ "A plan" ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : "2026-10-20T09:26:00Z",
     "deliverable" : null,
@@ -1505,10 +1505,10 @@
     "assignee" : "chris",
     "consultations" : [ {
       "answer" : "Check the audience too",
-      "answeredBy" : "galen",
+      "answeredBy" : "geoffrey",
       "kind" : "CONSULT",
       "question" : "Is the token check enough?",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "role" : "security",
       "round" : 0
     }, {
@@ -1516,7 +1516,7 @@
       "answeredBy" : null,
       "kind" : "RESEARCH",
       "question" : "RFC 7519 audience?",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "role" : null,
       "round" : 1
     } ],
@@ -1534,22 +1534,22 @@
     "reviews" : [ {
       "findings" : "No audience check",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "REJECTED"
     }, {
       "findings" : "Cannot run the browser",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "findings" : "Still cannot",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "findings" : "No browser",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     } ],
     "startedAt" : "2026-10-20T10:23:00Z",
@@ -1575,7 +1575,7 @@
     "reviews" : [ {
       "findings" : "Fine, no test for expiry",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED_WITH_RESERVATIONS"
     } ],
     "startedAt" : "2026-10-20T12:26:00Z",
@@ -1606,7 +1606,7 @@
     "waitingFor" : null
   }, {
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : "2026-10-20T13:16:00Z",
     "deliverable" : "Two more developers",
@@ -1627,7 +1627,7 @@
     "waitingFor" : null
   }, {
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : "2026-10-20T13:23:00Z",
     "deliverable" : "No measure yet",
@@ -1648,7 +1648,7 @@
     "waitingFor" : null
   }, {
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : "2026-10-20T13:25:00Z",
     "deliverable" : "Not worth it",
@@ -1685,7 +1685,7 @@
     "reviews" : [ {
       "findings" : "Fast",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED"
     } ],
     "startedAt" : "2026-10-20T13:52:00Z",
@@ -1716,7 +1716,7 @@
     "waitingFor" : null
   }, {
     "acceptanceCriteria" : [ "Every participant speaks from the facts of the journal", "The chair proposes lessons; only the director makes them binding" ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : null,
     "deliverable" : null,
@@ -1824,7 +1824,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "ANALYSIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : "NEW",
       "proposal" : "Gateway",
       "questions" : [ "Which SLA?", "Which budget?" ],
@@ -1836,7 +1836,7 @@
       "byDirector" : false,
       "criticalObjection" : "Tokens are not checked per API",
       "kind" : "ANALYSIS",
-      "member" : "darius",
+      "member" : "dehren",
       "position" : "NEW",
       "proposal" : "Gateway with mTLS",
       "questions" : [ ],
@@ -1860,7 +1860,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : "MAINTAINED",
       "proposal" : "Gateway",
       "questions" : [ ],
@@ -1872,7 +1872,7 @@
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
-      "member" : "darius",
+      "member" : "dehren",
       "position" : "MAINTAINED",
       "proposal" : "Gateway with mTLS",
       "questions" : [ ],
@@ -1896,7 +1896,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : null,
       "proposal" : "Adopt a gateway",
       "questions" : [ ],
@@ -1908,7 +1908,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : "MAINTAINED",
       "proposal" : "Gateway",
       "questions" : [ "Which vendor?" ],
@@ -1920,7 +1920,7 @@
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
-      "member" : "darius",
+      "member" : "dehren",
       "position" : "MAINTAINED",
       "proposal" : "Gateway with mTLS",
       "questions" : [ ],
@@ -1944,7 +1944,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : null,
       "proposal" : null,
       "questions" : [ ],
@@ -1956,7 +1956,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : "MAINTAINED",
       "proposal" : "Gateway",
       "questions" : [ ],
@@ -1968,8 +1968,8 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
-      "member" : "darius",
-      "position" : "ADOPTED galen",
+      "member" : "dehren",
+      "position" : "ADOPTED geoffrey",
       "proposal" : "Gateway with mTLS",
       "questions" : [ ],
       "role" : "Security",
@@ -1992,7 +1992,7 @@
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
-      "member" : "galen",
+      "member" : "geoffrey",
       "position" : null,
       "proposal" : "On-prem gateway",
       "questions" : [ ],
@@ -2005,12 +2005,12 @@
     "implement" : true,
     "maxDebateRounds" : 1,
     "members" : [ {
-      "agent" : "galen",
+      "agent" : "geoffrey",
       "chair" : true,
       "pending" : false,
       "role" : "Architect"
     }, {
-      "agent" : "darius",
+      "agent" : "dehren",
       "chair" : false,
       "pending" : false,
       "role" : "Security"
@@ -2153,7 +2153,7 @@
     "causeBy" : null,
     "causeCode" : null,
     "causeParams" : null,
-    "context" : "Recommendation: (not stated: read the record)\nCritical objections still standing (a majority cannot remove them):\n- darius (Security): Tokens still not checked",
+    "context" : "Recommendation: (not stated: read the record)\nCritical objections still standing (a majority cannot remove them):\n- dehren (Security): Tokens still not checked",
     "contextCode" : null,
     "contextParams" : null,
     "criticality" : "HIGH",
@@ -2317,7 +2317,7 @@
     "value" : "0"
   } ],
   "sessions" : [ {
-    "agent" : "darius",
+    "agent" : "dehren",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
     "endedAt" : "2026-10-20T14:58:00Z",
@@ -2332,7 +2332,7 @@
     "ticket" : "T-13",
     "turns" : 2
   }, {
-    "agent" : "galen",
+    "agent" : "geoffrey",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
     "endedAt" : "2026-10-20T15:00:00Z",
@@ -2354,7 +2354,7 @@
   "status" : "CANCELLED",
   "tickets" : [ {
     "acceptanceCriteria" : [ ],
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "consultations" : [ ],
     "createdAt" : "2026-10-20T14:46:00Z",
     "deliverable" : null,
@@ -2449,9 +2449,9 @@
   "atWork" : false,
   "core" : false,
   "effort" : "medium",
-  "id" : "galen",
+  "id" : "geoffrey",
   "model" : "claude-sonnet-5-5",
-  "name" : "Galen",
+  "name" : "Geoffrey",
   "provider" : "anthropic",
   "role" : "Planner",
   "status" : "ASSIGNED",
@@ -2475,9 +2475,9 @@
   "atWork" : false,
   "core" : true,
   "effort" : null,
-  "id" : "darius",
+  "id" : "dehren",
   "model" : "claude-opus-5-5",
-  "name" : "Darius",
+  "name" : "Dehren",
   "provider" : "anthropic",
   "role" : "Reviewer",
   "status" : "AVAILABLE",
@@ -2691,7 +2691,7 @@
     "workMs" : 0
   } ]
 }
-== GET /api/agents/darius/profile -> 200
+== GET /api/agents/dehren/profile -> 200
 {
   "duties" : [ "Reviews deliverables it did not produce, reading only; may consult a colleague or ask for web research" ],
   "effort" : null,
@@ -2716,10 +2716,10 @@
     "text" : "About 0.160 USD per session (0.3200 USD over 2)"
   } ],
   "focus" : null,
-  "id" : "darius",
+  "id" : "dehren",
   "model" : "claude-opus-5-5",
   "modelTrait" : "Most capable for long, hard reasoning; the most expensive per session",
-  "name" : "Darius",
+  "name" : "Dehren",
   "provider" : "anthropic",
   "record" : {
     "actions" : { },
@@ -2748,7 +2748,7 @@
   "suspended" : false,
   "tickets" : [ ]
 }
-== GET /api/agents/galen/profile -> 200
+== GET /api/agents/geoffrey/profile -> 200
 {
   "duties" : [ "Plans a mission into tickets you approve (one read-only session)", "Sits on committees (read only)" ],
   "effort" : "medium",
@@ -2764,10 +2764,10 @@
     "text" : "About 0.060 USD per session (0.1200 USD over 2)"
   } ],
   "focus" : "Structure, boundaries and coupling, fitness for the stated objective, cost of change, simplicity; on a new project, the global architecture as a whole.",
-  "id" : "galen",
+  "id" : "geoffrey",
   "model" : "claude-sonnet-5-5",
   "modelTrait" : "Balance of capability, speed and cost; the usual choice for coding work",
-  "name" : "Galen",
+  "name" : "Geoffrey",
   "provider" : "anthropic",
   "record" : {
     "actions" : { },
@@ -3126,7 +3126,7 @@
   "readAt" : "<masked>",
   "repository" : "C:/repo/app",
   "retro" : {
-    "chair" : "galen",
+    "chair" : "geoffrey",
     "conclusions" : [ "Keep tests first" ],
     "lessons" : [ {
       "audience" : "DEVELOPER",
@@ -3177,7 +3177,7 @@
     "failedSessions" : 0,
     "id" : "T-1",
     "kind" : "WORK",
-    "producer" : "galen",
+    "producer" : "geoffrey",
     "producerVerdict" : null,
     "rejections" : 0,
     "reopenRefused" : "M-1 is COMPLETED",
@@ -3293,19 +3293,19 @@
     "reopenTo" : null,
     "reviews" : [ {
       "firstLine" : "No audience check",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "REJECTED"
     }, {
       "firstLine" : "Cannot run the browser",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "firstLine" : "Still cannot",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "firstLine" : "No browser",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     } ],
     "sessions" : 4,
@@ -3345,7 +3345,7 @@
     "reopenTo" : null,
     "reviews" : [ {
       "firstLine" : "Fine, no test for expiry",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED_WITH_RESERVATIONS"
     } ],
     "sessions" : 0,
@@ -3413,7 +3413,7 @@
     "failedSessions" : 0,
     "id" : "T-7",
     "kind" : "STAFFING",
-    "producer" : "galen",
+    "producer" : "geoffrey",
     "producerVerdict" : null,
     "rejections" : 0,
     "reopenRefused" : "M-1 is COMPLETED",
@@ -3449,7 +3449,7 @@
     "failedSessions" : 0,
     "id" : "T-8",
     "kind" : "STAFFING",
-    "producer" : "galen",
+    "producer" : "geoffrey",
     "producerVerdict" : null,
     "rejections" : 0,
     "reopenRefused" : "M-1 is COMPLETED",
@@ -3485,7 +3485,7 @@
     "failedSessions" : 0,
     "id" : "T-9",
     "kind" : "STAFFING",
-    "producer" : "galen",
+    "producer" : "geoffrey",
     "producerVerdict" : null,
     "rejections" : 0,
     "reopenRefused" : "M-1 is COMPLETED",
@@ -3529,7 +3529,7 @@
     "reopenTo" : null,
     "reviews" : [ {
       "firstLine" : "Fast",
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED"
     } ],
     "sessions" : 0,
@@ -3597,7 +3597,7 @@
     "failedSessions" : 0,
     "id" : "T-12",
     "kind" : "RETRO",
-    "producer" : "galen",
+    "producer" : "geoffrey",
     "producerVerdict" : null,
     "rejections" : 0,
     "reopenRefused" : null,
@@ -3655,7 +3655,7 @@
     "text" : null,
     "ticket" : null
   }, {
-    "agent" : "darius",
+    "agent" : "dehren",
     "code" : "REVIEW_UNVERIFIABLE",
     "count" : null,
     "path" : null,
@@ -3732,7 +3732,7 @@
   "repository" : "C:/repo/app",
   "status" : "COMPLETED",
   "tickets" : [ {
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "deliverable" : null,
     "id" : "T-1",
     "reviews" : [ ],
@@ -3762,22 +3762,22 @@
     "reviews" : [ {
       "findings" : "No audience check",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "REJECTED"
     }, {
       "findings" : "Cannot run the browser",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "findings" : "Still cannot",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     }, {
       "findings" : "No browser",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "UNVERIFIABLE"
     } ],
     "status" : "DONE",
@@ -3790,7 +3790,7 @@
     "reviews" : [ {
       "findings" : "Fine, no test for expiry",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED_WITH_RESERVATIONS"
     } ],
     "status" : "CANCELLED",
@@ -3805,7 +3805,7 @@
     "title" : "Profile page",
     "verdict" : null
   }, {
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "deliverable" : "Two more developers",
     "id" : "T-7",
     "reviews" : [ ],
@@ -3813,7 +3813,7 @@
     "title" : "Staffing: should the team be reinforced?",
     "verdict" : null
   }, {
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "deliverable" : "No measure yet",
     "id" : "T-8",
     "reviews" : [ ],
@@ -3821,7 +3821,7 @@
     "title" : "Staffing: should the team be reinforced?",
     "verdict" : null
   }, {
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "deliverable" : "Not worth it",
     "id" : "T-9",
     "reviews" : [ ],
@@ -3835,7 +3835,7 @@
     "reviews" : [ {
       "findings" : "Fast",
       "items" : null,
-      "reviewer" : "darius",
+      "reviewer" : "dehren",
       "verdict" : "VALIDATED"
     } ],
     "status" : "DONE",
@@ -3850,7 +3850,7 @@
     "title" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…",
     "verdict" : null
   }, {
-    "assignee" : "galen",
+    "assignee" : "geoffrey",
     "deliverable" : null,
     "id" : "T-12",
     "reviews" : [ ],
@@ -4168,8 +4168,8 @@
   }, {
     "costBasis" : "estimated by Claude Code",
     "inputTokens" : 900,
-    "key" : "darius",
-    "name" : "Darius",
+    "key" : "dehren",
+    "name" : "Dehren",
     "outputTokens" : 100,
     "sessions" : 1,
     "sessionsBasis" : "measured by Floor42",
@@ -4181,8 +4181,8 @@
   }, {
     "costBasis" : "estimated by Claude Code",
     "inputTokens" : 1000,
-    "key" : "galen",
-    "name" : "Galen",
+    "key" : "geoffrey",
+    "name" : "Geoffrey",
     "outputTokens" : 200,
     "sessions" : 1,
     "sessionsBasis" : "measured by Floor42",
@@ -4438,7 +4438,7 @@
 }
 == GET /api/missions/M-1/replay-export/preview -> 200
 {
-  "agents" : [ "Galen", "Chris", "Ken", "Darius" ],
+  "agents" : [ "Geoffrey", "Chris", "Ken", "Dehren" ],
   "costs" : 6,
   "details" : [ {
     "event" : 41,
@@ -4487,7 +4487,7 @@
     "type" : "Mission"
   } ],
   "detailsTruncated" : true,
-  "digest" : "86959c8e3b0e31601ad397068c68533192adce18412ed982fb1118f25ed8cc0e",
+  "digest" : "52e2029ab35b2ed957f62bb68e9d714c1c8a9dfd1ba1f88431dd5e2b3f9087b1",
   "events" : 246,
   "masked" : [ {
     "count" : 5,
@@ -4528,7 +4528,7 @@
   "id" : "L-1",
   "mission" : "M-1",
   "proposedAt" : "2026-10-20T14:34:00Z",
-  "proposedBy" : "galen",
+  "proposedBy" : "geoffrey",
   "reason" : "Obvious now",
   "status" : "RETIRED",
   "text" : "Write the test first"
@@ -4537,7 +4537,7 @@
   "id" : "L-2",
   "mission" : "M-1",
   "proposedAt" : "2026-10-20T14:34:00Z",
-  "proposedBy" : "galen",
+  "proposedBy" : "geoffrey",
   "reason" : null,
   "status" : "ACCEPTED",
   "text" : "Say what you did not verify"
@@ -4546,7 +4546,7 @@
   "id" : "L-3",
   "mission" : "M-1",
   "proposedAt" : "2026-10-20T14:34:00Z",
-  "proposedBy" : "galen",
+  "proposedBy" : "geoffrey",
   "reason" : "rejected by the director",
   "status" : "REJECTED",
   "text" : "Run the browser"

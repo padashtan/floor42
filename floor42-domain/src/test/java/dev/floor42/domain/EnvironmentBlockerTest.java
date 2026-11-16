@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
@@ -64,7 +64,7 @@ class EnvironmentBlockerTest {
         f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.REJECTED,
                         "render.cmd has a syntax error\nVERDICT: REJECTED"));
@@ -79,7 +79,7 @@ class EnvironmentBlockerTest {
 
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.UNVERIFIABLE, "The review session failed: exit code 3"));
+                .review(f.agent(DEHREN), t, ReviewVerdict.UNVERIFIABLE, "The review session failed: exit code 3"));
 
         Question q = f.company.desk().open().getFirst();
         assertThat(q.phrase().code()).isEqualTo("reviewUnverifiable");
@@ -90,7 +90,7 @@ class EnvironmentBlockerTest {
     void aRejectionOfABlockedReportAsksTheDirectorInsteadOfReopening() {
         TicketId t = submitted(REPORT);
 
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, ONLY));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, ONLY));
 
         assertThat(status(t)).isEqualTo(TicketStatus.IN_REVIEW);
         Question q = f.company.desk().open().getFirst();
@@ -117,7 +117,7 @@ class EnvironmentBlockerTest {
     void dockerBlockedSaysTheSandboxCannotReachTheDaemonAndOffersNoInstall() {
         TicketId t = submitted("Wrote the Dockerfile.\nBLOCKED BY ENVIRONMENT: Docker; step: docker build -t app .\n");
 
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, ONLY));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, ONLY));
 
         Question q = f.company.desk().open().getFirst();
         assertThat(q.phrase().code()).isEqualTo("environmentBlockedDocker");
@@ -157,7 +157,7 @@ class EnvironmentBlockerTest {
         f.record(f.company.desk().answer(f.director(), docker.id(), "I do the step myself"));
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "Wrote the notes."));
 
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, "notes.md is empty"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, "notes.md is empty"));
 
         assertThat(status(t)).isEqualTo(TicketStatus.IN_PROGRESS);
         assertThat(f.company.desk().open()).isEmpty();
@@ -170,7 +170,7 @@ class EnvironmentBlockerTest {
 
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.UNVERIFIABLE, "cannot render\nENVIRONMENT ONLY: yes"));
+                .review(f.agent(DEHREN), t, ReviewVerdict.UNVERIFIABLE, "cannot render\nENVIRONMENT ONLY: yes"));
 
         Question q = f.company.desk().open().getFirst();
         assertThat(q.phrase().code()).isEqualTo("environmentBlocked");
@@ -190,7 +190,7 @@ class EnvironmentBlockerTest {
     void aReportWithoutTheMarkerIsStillSentBack() {
         TicketId t = submitted("PARTIAL: the PDFs are not rendered.");
 
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, "PDFs missing"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, "PDFs missing"));
 
         assertThat(status(t)).isEqualTo(TicketStatus.IN_PROGRESS);
         assertThat(f.company.desk().open()).isEmpty();
@@ -201,7 +201,7 @@ class EnvironmentBlockerTest {
         MissionId m = g.runningMission();
         TicketId t = g.firstTicket(m);
         g.record(g.company.tickets().submitForReview(g.agent(CHRIS), t, REPORT));
-        g.record(g.company.tickets().review(g.agent(DARIUS), t, ReviewVerdict.REJECTED, ONLY));
+        g.record(g.company.tickets().review(g.agent(DEHREN), t, ReviewVerdict.REJECTED, ONLY));
         Question q = g.company.desk().open().getFirst();
         var rules = java.util.List.copyOf(
                 g.company.missions().find(m).orElseThrow().policy().rules());

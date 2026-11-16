@@ -1,0 +1,496 @@
+:root {
+  --bg: #070f14;
+  --panel: rgba(8, 22, 30, 0.93);
+  --line: #2a7f8f;
+  --text: #cfe6ec;
+  --muted: #86a5af;
+  --cyan: #3fe0f0;
+  --amber: #f2a93b;
+  --red: #ff4b3e;
+  --green: #6fe36a;
+  color-scheme: dark;
+  font-family: 'Bahnschrift', 'Arial Narrow', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+}
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+/* One thin scrollbar everywhere, in the decade's colours: the frame line for the thumb, the accent on hover. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--line);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--cyan);
+}
+canvas.view {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  /* Above the name tags that follow the agents: panels always win. */
+  z-index: 2;
+}
+.hud > *,
+.hud .crew > * {
+  pointer-events: auto;
+}
+.panel {
+  position: absolute;
+  background: var(--panel);
+  border: 2px solid var(--line);
+  box-shadow: inset 0 0 0 1px #0b2a33;
+  padding: 6px 10px;
+  /* Long paths, hashes and commands break inside the frame instead of pushing it wider. */
+  overflow-wrap: break-word;
+}
+.panel code {
+  overflow-wrap: anywhere;
+}
+.title {
+  color: var(--cyan);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sub {
+  color: var(--cyan);
+  margin: 8px 0 2px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hint,
+.empty {
+  color: var(--muted);
+}
+code,
+pre {
+  font-family: 'Cascadia Mono', Consolas, monospace;
+  font-size: 13px;
+}
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 4px 0;
+  color: var(--muted);
+}
+button {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+button:hover:not(:disabled) {
+  border-color: var(--cyan);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button.action {
+  padding: 3px 10px;
+  margin: 4px 6px 0 0;
+}
+button.recommended {
+  border-color: var(--amber);
+}
+button.close {
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-size: 16px;
+  line-height: 1;
+}
+.ok {
+  color: var(--green);
+}
+.warn {
+  color: var(--amber);
+}
+.bad {
+  color: var(--red);
+}
+
+/* top bar */
+.brand {
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.brand b {
+  color: var(--cyan);
+  letter-spacing: 0.25em;
+  font-size: 16px;
+}
+.badge {
+  color: #1a1205;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+.badge.sim {
+  background: var(--amber);
+}
+.badge.real {
+  background: var(--red);
+  color: #fff;
+}
+.badge.ready {
+  background: var(--green);
+}
+.badge.off {
+  background: var(--muted);
+}
+.badge.build {
+  background: none;
+  color: var(--muted);
+  font-weight: 400;
+  font-family: ui-monospace, monospace;
+}
+.stream.live {
+  color: var(--green);
+}
+.stream.connecting,
+.stream.reconnecting {
+  color: var(--amber);
+}
+.brand {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+/* The bar's buttons never shrink nor scroll: the badges give way (ui/topBarLayout.ts checks the numbers). */
+.bar-nav {
+  display: flex;
+  gap: 4px;
+  flex: none;
+}
+.bar-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  flex: none;
+  white-space: nowrap;
+}
+.brand > b,
+.brand > .stream {
+  flex: none;
+}
+/* Measured numbers (quota gauges, spend) keep their full width: the other badges give way (ui/topBarLayout.ts). */
+.brand > .measure {
+  flex: none;
+  white-space: nowrap;
+}
+.brand > .sign-out {
+  flex: none;
+  white-space: nowrap;
+}
+/* ui/topBarLayout.ts (COMPACT_UPTO, COMPACT_BAND_END, HINT_HIDDEN_UPTO): the direct buttons show their icon alone up to
+   1504 px and, with the log beside the bar, from 1701 to 1912 px (label in the tooltip and for screen readers); elsewhere
+   the label sits beside the icon. Where the labels show and the bar is tight (up to 2106 px) the session-time hint gives
+   way: its text stays in the Sessions panel. */
+@media (max-width: 1504px), (min-width: 1701px) and (max-width: 1912px) {
+  .bar-nav .direct-label.keyed {
+    display: none;
+  }
+}
+@media (min-width: 1505px) and (max-width: 1700px), (min-width: 1913px) and (max-width: 2106px) {
+  .brand > .session-time {
+    display: none;
+  }
+}
+.brand > .shrink {
+  flex: 0 1 auto;
+  min-width: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Wider than 1700 px the log sits in the top right corner: the bar stops before it. */
+@media (min-width: 1701px) {
+  .brand {
+    max-width: calc(100vw - 424px);
+  }
+}
+.count {
+  background: var(--amber);
+  color: #1a1205;
+  padding: 0 5px;
+  font-weight: 700;
+}
+.crew {
+  position: absolute;
+  top: 54px;
+  left: 8px;
+  display: flex;
+  gap: 6px;
+}
+.card {
+  width: 74px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: var(--panel);
+  border-width: 2px;
+}
+.face {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #071015;
+}
+.card .name {
+  color: var(--cyan);
+  font-weight: 700;
+}
+.card .bar {
+  width: 100%;
+  height: 4px;
+}
+
+/* event log */
+.log {
+  top: 8px;
+  right: 8px;
+  width: 400px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  max-height: 45vh;
+  /* Long lines wrap: the last ones were cut off below the frame with no way to read them. */
+  overflow-y: auto;
+}
+.log .line > :last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.log .line {
+  display: flex;
+  gap: 6px;
+  padding: 2px 0;
+  border-top: 1px solid #12323c;
+}
+.log .line.clickable {
+  cursor: pointer;
+}
+.log .line.important {
+  color: #ffe0b0;
+}
+.log .time {
+  color: var(--muted);
+  min-width: 56px;
+}
+.origin.sim {
+  color: var(--amber);
+}
+.origin.real {
+  color: var(--red);
+}
+
+/* selection */
+.selection {
+  bottom: 8px;
+  left: 8px;
+  width: 380px;
+  max-height: 46vh;
+  overflow: auto;
+}
+.selection table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.selection td {
+  padding: 2px 4px;
+  border-top: 1px solid #12323c;
+  vertical-align: top;
+}
+.selection td:first-child {
+  color: var(--muted);
+  width: 90px;
+}
+.selection .row {
+  padding: 3px 0;
+  border-top: 1px solid #12323c;
+}
+.selection .basis {
+  color: var(--muted);
+  font-size: 12px;
+}
+.selection .result {
+  max-height: 60px;
+  overflow: auto;
+}
+
+/* director's desk */
+.desk-panel {
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(820px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  border-color: var(--amber);
+}
+.question {
+  border: 1px solid #12323c;
+  padding: 6px;
+  margin: 4px 0;
+}
+.question.blocking {
+  border-left: 3px solid var(--amber);
+}
+.question.focused {
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+.question .head {
+  color: var(--muted);
+  font-size: 12px;
+}
+.question .subject {
+  font-size: 14px;
+  margin: 3px 0;
+}
+.question .context {
+  color: var(--muted);
+}
+.question .subject,
+.question .context {
+  overflow-wrap: anywhere;
+}
+.question .free-answer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+.question .free-answer textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.question .free-answer button {
+  align-self: flex-end;
+}
+.question .free-answer button.link {
+  align-self: flex-start;
+}
+
+/* menus, toasts, help */
+.menu {
+  min-width: 220px;
+  padding: 4px 0;
+}
+.menu .item {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.menu .item:hover:not(.disabled),
+.menu .item:focus-visible {
+  background: #12323c;
+  outline: 1px solid var(--cyan);
+  outline-offset: -1px;
+}
+/* A destructive action reads differently from the others (colour and a mark, not colour alone). */
+.menu .item.danger {
+  color: #ff8a80;
+  border-top: 1px solid #5b2a28;
+}
+.menu .item.danger::before {
+  content: '! ';
+  font-weight: 700;
+}
+.menu .item.disabled {
+  color: var(--muted);
+  cursor: default;
+}
+.menu .why {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.toasts {
+  position: absolute;
+  top: 120px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 400px;
+  margin-top: 45vh;
+}
+.toast {
+  position: static;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border-color: var(--amber);
+}
+.toast > span {
+  flex: 1;
+  min-width: 0;
+}
+.help {
+  bottom: 8px;
+  right: 8px;
+  color: var(--muted);
+}
+.help b {
+  color: var(--text);
+  font-weight: 400;
+}
+.fps {
+  color: var(--cyan);
+}
+.pet-sound {
+  margin-top: 4px;
+  padding: 0 6px;
+  font-size: 11px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+.pet-sound[aria-pressed='true'] {
+  color: var(--text);
+}

@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,7 +21,7 @@ class MissionEndTest {
     private TicketId done(MissionId m) {
         TicketId t = f.firstTicket(m);
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "report"));
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.VALIDATED, "ok"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.VALIDATED, "ok"));
         return t;
     }
 

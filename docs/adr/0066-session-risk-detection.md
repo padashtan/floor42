@@ -1,6 +1,6 @@
 # ADR-0066: Session risk v1: detection, alerts and a quarantine the director applies
 
-Date: 2026-11-09 · Status: Accepted 2026-11-12 (implemented in v1.0.0). One new event type,
+Date: 2026-11-09 · Status: Proposed (draft; becomes Accepted when the implementation lands). One new event type,
 `SessionRiskRaised`, approved by the director on 2026-11-06.
 
 ## Context

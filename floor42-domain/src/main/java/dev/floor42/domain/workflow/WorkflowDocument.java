@@ -40,12 +40,8 @@ public final class WorkflowDocument {
      */
     public static final int WRITES = 4;
 
-    /**
-     * The release that first shipped each version's reader. "internal" marks a release of the private development, before
-     * the public numbering started again at 1.0.0: all four readers are in the first public release.
-     */
-    public static final Map<Integer, String> READER_SHIPPED =
-            Map.of(1, "internal 1.9.0", 2, "internal 1.14.0", 3, "internal 1.15.0", 4, "internal 1.16.0");
+    /** The release that first shipped each version's reader. */
+    public static final Map<Integer, String> READER_SHIPPED = Map.of(1, "1.9.0", 2, "1.14.0", 3, "1.15.0", 4, "1.16.0");
 
     static final int MAX_TICKETS = 8;
 

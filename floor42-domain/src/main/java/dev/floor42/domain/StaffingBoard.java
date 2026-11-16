@@ -46,7 +46,7 @@ final class StaffingBoard {
         requireDirector(ctx);
         Mission m = view.missionFor(ctx, mission);
         require(m.status == MissionStatus.IN_PROGRESS, Refusal.MISSION_NOT_ACTIVE, mission + " is " + m.status);
-        // Floor42 names its planner (Galen); the domain only checks he is still in the company.
+        // Floor42 names its planner (Geoffrey); the domain only checks he is still in the company.
         require(!view.existingAgent(planner).dismissed, Refusal.AGENT_DISMISSED, planner + " has left the company");
         staffingReview(mission)
                 .ifPresent(r -> require(

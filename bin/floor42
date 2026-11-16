@@ -46,7 +46,7 @@ if [ "${1:-}" = doctor ]; then
   else
     cp="$BUILD/app/*:$BUILD/lib/boot/*:$BUILD/lib/main/*"
   fi
-  exec "$java_bin" --enable-native-access=ALL-UNNAMED -Djava.util.logging.manager=org.jboss.logmanager.LogManager -cp "$cp" dev.floor42.server.runtime.Doctor
+  exec "$java_bin" -Djava.util.logging.manager=org.jboss.logmanager.LogManager -cp "$cp" dev.floor42.server.runtime.Doctor
 fi
 
 if ! daemon_up; then
@@ -60,10 +60,7 @@ if ! daemon_up; then
   java_bin=$(find_java)
   echo "Starting the Floor42 daemon..."
   # No dynamic attach: a process of your user could otherwise load code into the daemon (SECURITY.md).
-  # The background subshell gets stdin from /dev/null and stdout/stderr in the log: else its subshell keeps the
-  # caller's descriptors and an ssh call without a TTY, or a pipe, never returns while the daemon lives.
-  [ ! -f "$DATA_DIR/daemon.log" ] || mv -f "$DATA_DIR/daemon.log" "$DATA_DIR/daemon.prev.log"
-  (cd "$DATA_DIR" && exec nohup "$java_bin" -XX:+DisableAttachMechanism --enable-native-access=ALL-UNNAMED -Djdk.httpclient.allowRestrictedHeaders=host -jar "$APP_DIR/quarkus-run.jar") < /dev/null >> "$DATA_DIR/daemon.log" 2>&1 &
+  (cd "$DATA_DIR" && { [ -f daemon.log ] && mv -f daemon.log daemon.prev.log; :; } && nohup "$java_bin" -XX:+DisableAttachMechanism -Djdk.httpclient.allowRestrictedHeaders=host -jar "$APP_DIR/quarkus-run.jar" >> daemon.log 2>&1 &)
   for _ in $(seq 1 80); do daemon_up && break; sleep 0.5; done
   daemon_up || { echo "The daemon did not start: see $DATA_DIR/daemon.log" >&2; exit 1; }
 fi
@@ -83,12 +80,10 @@ if [ $# -gt 0 ]; then
   fi
   text="$*"
   repository=$(git rev-parse --show-toplevel 2>/dev/null) || { echo 'Run floor42 "..." inside a git repository.' >&2; exit 1; }
-  title="${text:0:60}"
-  body=$(python3 -c 'import json,sys; print(json.dumps({"title": sys.argv[1], "objective": sys.argv[2], "repository": sys.argv[3]}))' \
-    "$title" "$text" "$repository")
-  # The daemon's answer is data: kept in a variable and parsed, never piped into an interpreter.
-  answer=$(curl -fsS -X POST "$BASE/api/missions" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' -d "$body")
-  python3 -c 'import json,sys; m=json.loads(sys.argv[1]); print(f"Mission {m[\"id\"]} proposed on {m[\"workspace\"]}.")' "$answer"
+  body=$(python3 -c 'import json,sys; print(json.dumps({"objective": sys.argv[1], "repository": sys.argv[2]}))' \
+    "$text" "$repository")
+  curl -fsS -X POST "$BASE/api/missions" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' -d "$body" \
+    | python3 -c 'import json,sys; m=json.load(sys.stdin); print(f"Mission {m[\"id\"]} proposed on {m[\"workspace\"]}.")'
   echo "Review its plan and permissions in your desk (press D), then approve it."
 fi
 

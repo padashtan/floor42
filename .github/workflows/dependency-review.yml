@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   dependency-review:
-    # Only in the public repository (its name holds for every event, schedule included): a copy without Advanced Security cannot upload (docs/security-scanning.md).
+    # Only in the public repository (its name holds for every event, schedule included): the private one has no Advanced Security (docs/security-scanning.md).
     if: ${{ github.repository == 'padashtan/floor42' }}
     runs-on: ubuntu-24.04
     steps:

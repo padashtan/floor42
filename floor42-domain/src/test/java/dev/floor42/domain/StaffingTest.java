@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -19,19 +19,19 @@ class StaffingTest {
 
     @Test
     void thePlannerReviewsOnItsOwnTicketAndTheDirectorIsAskedYesOrNo() {
-        f.record(f.company.staff().requestStaffingReview(f.director(), m, GALEN));
+        f.record(f.company.staff().requestStaffingReview(f.director(), m, GEOFFREY));
         StaffingReview review = f.company.staff().staffingReview(m).orElseThrow();
         Ticket ticket = f.company.tickets().find(review.ticket()).orElseThrow();
-        assertThat(ticket.assignee()).isEqualTo(GALEN);
+        assertThat(ticket.assignee()).isEqualTo(GEOFFREY);
         assertThat(ticket.status()).isEqualTo(TicketStatus.IN_PROGRESS);
         assertThat(f.company.staff().isStaffingTicket(review.ticket())).isTrue();
-        assertThatThrownBy(() -> f.company.staff().requestStaffingReview(f.director(), m, GALEN))
+        assertThatThrownBy(() -> f.company.staff().requestStaffingReview(f.director(), m, GEOFFREY))
                 .hasMessageContaining("already reviewing");
 
         List<EventEnvelope> events = f.record(f.company
                 .staff()
                 .adviseStaffing(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         m,
                         "Four tickets are independent; two more developers halve the wait.\nVERDICT: HIRE",
                         true,
@@ -56,9 +56,9 @@ class StaffingTest {
 
     @Test
     void onlyTheDirectorAsksAndOnlyThePlannerAdvises() {
-        assertThatThrownBy(() -> f.company.staff().requestStaffingReview(f.agent(CHRIS), m, GALEN))
+        assertThatThrownBy(() -> f.company.staff().requestStaffingReview(f.agent(CHRIS), m, GEOFFREY))
                 .isInstanceOf(DomainException.class);
-        f.record(f.company.staff().requestStaffingReview(f.director(), m, GALEN));
+        f.record(f.company.staff().requestStaffingReview(f.director(), m, GEOFFREY));
         assertThatThrownBy(() ->
                         f.company.staff().adviseStaffing(f.agent(CHRIS), m, "hire me", true, List.of(), null, null))
                 .isInstanceOf(DomainException.class);
@@ -66,11 +66,11 @@ class StaffingTest {
 
     @Test
     void noOneToHireAsksNothing() {
-        f.record(f.company.staff().requestStaffingReview(f.director(), m, GALEN));
+        f.record(f.company.staff().requestStaffingReview(f.director(), m, GEOFFREY));
 
         List<EventEnvelope> events = f.record(f.company
                 .staff()
-                .adviseStaffing(f.agent(GALEN), m, "One ticket left: no one to add.", false, List.of(), null, null));
+                .adviseStaffing(f.agent(GEOFFREY), m, "One ticket left: no one to add.", false, List.of(), null, null));
 
         assertThat(events).extracting(EventEnvelope::type).containsExactly("StaffingAdvised");
     }

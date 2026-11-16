@@ -194,7 +194,7 @@ export const missionsEn = {
   // Mission control
   'mission.onBoard': 'Mission on the board',
   'mission.none': 'No mission yet. Start one in the "New mission" tab.',
-  'mission.galenPlans': 'Galen plans first (one read-only session); you then approve each ticket he proposes:',
+  'mission.geoffreyPlans': 'Geoffrey plans first (one read-only session); you then approve each ticket he proposes:',
   'mission.officePlan': 'Plan proposed by Floor42:',
   'mission.checkPermissions': 'Check the Permissions tab, then:',
   'mission.approvePlan': 'Approve the plan',
@@ -209,8 +209,8 @@ export const missionsEn = {
   'mission.fieldTitle': 'Title, e.g. Inventory of the build',
   'mission.fieldObjective': 'Objective: what should the agents find out or deliver?',
   'mission.fieldRepository': 'Git repository path, e.g. C:\\work\\my-project',
-  'mission.letGalenPlan':
-    'let Galen plan: he splits the objective into tickets (one read-only session), you approve each one before work starts',
+  'mission.letGeoffreyPlan':
+    'let Geoffrey plan: he splits the objective into tickets (one read-only session), you approve each one before work starts',
   'mission.withCommittee':
     'convene an architecture committee first (read only; you rule on its decision before any change)',
   'mission.alwaysChairs': 'always, chairs',
@@ -219,7 +219,7 @@ export const missionsEn = {
   'mission.fieldIdea': 'Your idea: what would the project be, for whom, and what worries you?',
   'mission.fieldRepositoryOptional': 'Git repository path, optional: empty for a project that does not exist yet',
   'mission.alwaysModerates': 'always, moderates without taking sides',
-  'mission.ideaHow': 'Each of the {seats} members analyses alone, then they debate (up to 3 rounds) until they agree; the moderator writes the record and you decide. About (members × 4) + 1 sessions at most; Galen on Opus costs the most.',
+  'mission.ideaHow': 'Each of the {seats} members analyses alone, then they debate (up to 3 rounds) until they agree; the moderator writes the record and you decide. About (members × 4) + 1 sessions at most; Geoffrey on Opus costs the most.',
   'meeting.agreement': 'Agreement measured from their closing lines: everyone stands behind {member}',
   'meeting.noAgreement': 'No agreement yet after {rounds} debate round(s) of {max}',
   'meeting.byDirector': 'written by you in person',

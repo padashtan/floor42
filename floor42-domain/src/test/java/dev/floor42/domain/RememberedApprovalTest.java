@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -123,13 +123,13 @@ class RememberedApprovalTest {
         request("a1", CHRIS, ActionCategory.WRITE, "Write", "notes.txt");
         answerOpen("ALLOW");
 
-        request("a2", GALEN, ActionCategory.WRITE, "Write", "plan.md");
+        request("a2", GEOFFREY, ActionCategory.WRITE, "Write", "plan.md");
 
         assertThat(stage("a2")).isEqualTo(ActionStage.REQUESTED);
         assertThat(f.company.desk().open())
                 .singleElement()
                 .extracting(Question::askedBy)
-                .isEqualTo(GALEN);
+                .isEqualTo(GEOFFREY);
     }
 
     @Test
@@ -317,7 +317,7 @@ class RememberedApprovalTest {
 
     @Test
     void onlyTheAskingAgentsEarlierRefusalCanBeLiftedAndNothingIsRecordedOtherwise() {
-        request("a1", GALEN, ActionCategory.WRITE, "Write", "plan.md");
+        request("a1", GEOFFREY, ActionCategory.WRITE, "Write", "plan.md");
         answerOpen("DENY");
         agentAsks("What now?", "Retry", "Give up");
         int before = f.journal.size();

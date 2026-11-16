@@ -11,8 +11,8 @@ class ApprovalScopeTest {
     @Test
     void theFourSentencesAreReadBackAsTheirCodes() {
         assertThat(ApprovalScope.read(ApprovalScope.context(
-                        "git status", ApprovalScope.COMMAND + "darius" + ApprovalScope.FOR_THE_MISSION)))
-                .contains(new Phrase(ApprovalScope.CODE_COMMAND, Map.of("summary", "git status", "agent", "darius")));
+                        "git status", ApprovalScope.COMMAND + "dehren" + ApprovalScope.FOR_THE_MISSION)))
+                .contains(new Phrase(ApprovalScope.CODE_COMMAND, Map.of("summary", "git status", "agent", "dehren")));
         assertThat(
                         ApprovalScope.read(
                                 "src/App.java\nYour answer applies to every Write request from chris for the rest of this mission."))
@@ -32,7 +32,7 @@ class ApprovalScopeTest {
     void anyOtherTextHasNoCode() {
         assertThat(ApprovalScope.read(null)).isEmpty();
         assertThat(ApprovalScope.read("an agent wrote this.")).isEmpty();
-        assertThat(ApprovalScope.read("ls\nYour answer applies to this exact command from darius."))
+        assertThat(ApprovalScope.read("ls\nYour answer applies to this exact command from dehren."))
                 .isEmpty();
         assertThat(ApprovalScope.read("ls\nYour answer applies to everything for the rest of this mission."))
                 .isEmpty();

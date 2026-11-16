@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 /** What is missing on this machine: required rows decide the exit code, sandbox tools are optional. */
 class MachineChecklistTest {
 
-    static final ClaudeCodeProbe.Availability CLAUDE = new ClaudeCodeProbe.Availability(true, "2.1.300", null);
+    static final ClaudeCodeProbe.Availability CLAUDE = new ClaudeCodeProbe.Availability(true, "2.1.300", null, null);
 
     static Map<String, Integer> distros(String name, int version) {
         Map<String, Integer> m = new LinkedHashMap<>();
@@ -77,7 +77,8 @@ class MachineChecklistTest {
     void anOldClaudeCodeIsMissingAndUpdated() {
         var c = MachineChecklist.of(
                 false,
-                new ClaudeCodeProbe.Availability(false, "2.1.100", "Claude Code 2.1.100 is older than 2.1.295"),
+                new ClaudeCodeProbe.Availability(
+                        false, "2.1.100", "Claude Code 2.1.100 is older than 2.1.295", "tooOld"),
                 "git version 2.47",
                 new HostChecks.Wsl(false, Map.of()),
                 "Debian",
@@ -92,7 +93,8 @@ class MachineChecklistTest {
     void claudeNotFoundIsACodeNeverTheServersEnglish() {
         var c = MachineChecklist.of(
                 true,
-                new ClaudeCodeProbe.Availability(false, null, "claude not found: Cannot run program \"claude\""),
+                new ClaudeCodeProbe.Availability(
+                        false, null, "claude not found: Cannot run program \"claude\"", "notFound"),
                 "git version 2.51",
                 new HostChecks.Wsl(true, distros("Debian", 2)),
                 "Debian",

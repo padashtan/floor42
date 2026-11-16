@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -154,7 +154,8 @@ class ActionGovernanceTest {
 
         f.record(f.company
                 .actions()
-                .request(f.agent(GALEN), new ActionId("a1"), m, t, GALEN, ActionCategory.READ, "Read", "pom.xml"));
+                .request(
+                        f.agent(GEOFFREY), new ActionId("a1"), m, t, GEOFFREY, ActionCategory.READ, "Read", "pom.xml"));
 
         assertThat(action("a1").stage()).isEqualTo(ActionStage.DENIED);
     }
@@ -288,7 +289,7 @@ class ActionGovernanceTest {
                 .extracting("code")
                 .isEqualTo("SELF_CONFIRMATION");
 
-        f.record(f.company.actions().confirm(f.agent(DARIUS), new ActionId("a1"), "re-ran: 48 tests green"));
+        f.record(f.company.actions().confirm(f.agent(DEHREN), new ActionId("a1"), "re-ran: 48 tests green"));
         assertThat(action("a1").stage()).isEqualTo(ActionStage.CONFIRMED);
     }
 

@@ -3,10 +3,10 @@
 Date: 2026-10-21 · Status: Accepted. The director chose: tickets in parallel; hiring by role with the model to choose; the night message gives the reset time measured by Claude Code. Supersedes "one ticket at a time" in ADR-0017.
 
 ## Context
-Up to now one developer (Chris) and one reviewer (Darius) were wired in the code, and a mission ran one ticket at a time. The director wants to hire agents to go faster, to see each one at its own desk, to see them come in and leave, and to see the office close when the plan's quota is spent.
+Up to now one developer (Chris) and one reviewer (Dehren) were wired in the code, and a mission ran one ticket at a time. The director wants to hire agents to go faster, to see each one at its own desk, to see them come in and leave, and to see the office close when the plan's quota is spent.
 
 ## Decision
-- **Work roles.** An agent is hired for a role: `DEVELOPER`, `REVIEWER` or `RESEARCHER` (events `AgentHired` and `AgentRoleAssigned`). `PLANNER` stays Galen's role. What each role may do is enforced by code, not by the brief:
+- **Work roles.** An agent is hired for a role: `DEVELOPER`, `REVIEWER` or `RESEARCHER` (events `AgentHired` and `AgentRoleAssigned`). `PLANNER` stays Geoffrey's role. What each role may do is enforced by code, not by the brief:
   - A reviewer gets read-only tools, and rules naming it deny writing, the shell and the network before every review.
   - A developer works in its own git worktree.
   Staff hired before roles existed keep the role Office always gave them (`Staff.roleOf`).

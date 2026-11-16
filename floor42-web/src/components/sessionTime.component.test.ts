@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { ending, sessionEnd } from '../ui/sessionTime'
+import { ending, sessionEnd, when } from '../ui/sessionTime'
 import DelegationUntil from './DelegationUntil.vue'
 import SessionNote from './SessionNote.vue'
 
@@ -88,5 +88,35 @@ describe('session time', () => {
     const none = mount(DelegationUntil, { props: { mission: 'M-2' } })
     await flushPromises()
     expect(none.find('.session-time').exists()).toBe(false)
+  })
+
+  it('when: today gives the time only, tomorrow says tomorrow, later gives day, month and time', () => {
+    const at = (days: number) => new Date(2026, 10, 5 + days, 14, 32).getTime()
+    const now = new Date(2026, 10, 5, 10, 0).getTime()
+    expect(when(at(0), 'en', now)).toMatch(/^02:32\s?PM$/)
+    expect(when(at(1), 'en', now)).toMatch(/^tomorrow 02:32\s?PM$/)
+    expect(when(at(7), 'en', now)).toMatch(/^Nov 12 02:32\s?PM$/)
+  })
+
+  it('the delegation chip of a 30-day delegation shows its date, not a bare time', async () => {
+    request.mockImplementation(async (_m: string, path: string) =>
+      path.endsWith('/status') ? { enabled: true } : { mission: 'M-1', expiresAt: iso(30 * 24 * 60), revoked: false },
+    )
+    const w = mount(DelegationUntil, { props: { mission: 'M-1' } })
+    await flushPromises()
+    expect(w.find('.session-time').text()).toMatch(/Dec \d+/)
+  })
+
+  it('the delegation chip turns amber 30 minutes before the end', async () => {
+    const chip = async (minutes: number) => {
+      request.mockImplementation(async (_m: string, path: string) =>
+        path.endsWith('/status') ? { enabled: true } : { mission: 'M-1', expiresAt: iso(minutes), revoked: false },
+      )
+      const w = mount(DelegationUntil, { props: { mission: 'M-1' } })
+      await flushPromises()
+      return w.find('.session-time').classes('ending')
+    }
+    expect(await chip(31)).toBe(false)
+    expect(await chip(29)).toBe(true)
   })
 })

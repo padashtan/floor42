@@ -5,7 +5,7 @@ their shell commands run inside it and reach only the folder you mount, never th
 container they run as the daemon's own user: see "What the container changes" for what they can still reach there.
 
 This guide uses Docker Engine inside a WSL 2 distribution (Debian or Ubuntu); Docker Desktop is not needed. On Linux,
-skip step 1's WSL specifics. Fedora: install Docker Engine from Docker's repository ([docs.docker.com/engine/install/fedora](https://docs.docker.com/engine/install/fedora/)) instead of step 1. `make` and `git` are needed only for `make docker-up` and to clone the repository (`sudo dnf install make git`); `docker build` and `docker run` need neither.
+skip step 1's WSL specifics.
 
 ## 1. Docker Engine in WSL
 
@@ -42,7 +42,7 @@ export FLOOR42_PROJECTS=$HOME/code    # your repositories live under this folder
 make docker-up                       # or: bin/floor42-docker up
 ```
 
-The first build takes about 12 minutes on a 2-core machine (measured: 700 s for the `floor42` target, without Claude Code). The office then opens in your Windows browser on `http://127.0.0.1:7420`
+The first build takes a few minutes. The office then opens in your Windows browser on `http://127.0.0.1:7420`
 (WSL forwards the port to Windows). The daemon is published on the loopback interface only.
 
 Without signing in to Claude Code, everything works except real agents, which cannot work until you sign in
@@ -63,7 +63,7 @@ make docker-login                    # runs claude inside the container: follow 
 The sign-in stays in the `office-home` volume with Floor42's data, across restarts and upgrades. Floor42 uses your own
 Claude account; nothing is sent anywhere else.
 
-The volume and the container's home (`/home/office`) kept their names when Office became Floor42 (before v1.0.0): an image
+The volume and the container's home (`/home/office`) kept their names when Office became Floor42 (1.5.0): an image
 built before keeps its sign-in, and the worktrees in the volume keep the absolute paths git knows them by. The data
 folder inside becomes `/home/office/.floor42`; on its first start the new image copies the journal from
 `/home/office/.office`, which stays as it was. The service is now called `floor42` (`docker compose logs floor42`) and
@@ -84,7 +84,7 @@ without opening a browser. With Keycloak sign-in (IAM mode), keep the published 
 another port registered in the realm): the daemon builds the `redirect_uri` from the port it listens on, and the realm
 lists only `127.0.0.1` and `localhost` on 7420 and 7421 (`[::1]` is not listed). A remapped `FLOOR42_PORT` fails at the
 sign-in unless `http://127.0.0.1:<port>/auth/callback` and the `localhost` twin are added to the `floor42-desk` client's valid
-redirect URIs. The director's sign-in lives in the daemon's memory: after each start, `make docker-open` signs the browser in again with a single-use link the daemon prints on the container's output, read from the host. Agents inside the container cannot read that output: the daemon makes itself non-dumpable at start, so its `/proc/1/fd` is refused to them (ADR-0044).
+redirect URIs. The director's sign-in lives in the daemon's memory: after each start, `make docker-open` signs the browser in again with a single-use link the daemon prints on the container's output, read from the host. Agents inside the container cannot read that output: the daemon makes itself non-dumpable at start, so its `/proc/1/fd` is refused to them (ADR-0044; before 1.6.0 they could).
 
 ## What is in the image
 
@@ -120,15 +120,6 @@ Open `http://127.0.0.1:7420` and ask to sign in: the single-use link is printed 
 without `make` uses the published image too (`FLOOR42_IMAGE` names another one), and builds it locally only when it
 cannot be pulled.
 
-To build the published image yourself from a source checkout, while `ghcr.io/padashtan/floor42` cannot be pulled (it
-answers `denied` until the repository is public): `docker build --target floor42 -t floor42:local .`, then
-`docker run -p 127.0.0.1:7420:7420 floor42:local` (measured, 700 s on 2 vCPU).
-
-**SELinux (Fedora, RHEL).** Docker CE does not enable SELinux for containers by default, so the mounted projects folder
-needs no label: measured on Fedora 45 with Docker 29.9.3 (`docker info` lists no `selinux` security option; reading and
-creating files under the mount worked, no denial). With a daemon started with `--selinux-enabled`, or with Podman, the
-mount most likely needs `:z` (`compose.yaml` mounts without it); not measured.
-
 ## What the container changes
 
 - The container is the confinement for what an agent's shell can reach: files outside `FLOOR42_PROJECTS` and the
@@ -150,20 +141,20 @@ and running permission checks as uid 1000 beside the daemon (Docker Engine 29.9.
 
 | What | Reachable by an agent's shell | Why |
 |---|---|---|
-| The sign-in link on the daemon's output (`/proc/1/fd/1`) and its environment (`/proc/1/environ`) | **No** | The daemon calls `prctl(PR_SET_DUMPABLE, 0)` at start: its `/proc` entries belong to root. `FLOOR42_PROCESS_NON_DUMPABLE=false` turns it off (for `jcmd`) and gives them back |
+| The sign-in link on the daemon's output (`/proc/1/fd/1`) and its environment (`/proc/1/environ`) | **No** since 1.6.0 (yes before) | The daemon calls `prctl(PR_SET_DUMPABLE, 0)` at start: its `/proc` entries belong to root. `FLOOR42_PROCESS_NON_DUMPABLE=false` turns it off (for `jcmd`) and gives them back |
 | Floor42's journal (`/home/office/.floor42/floor42.db`) | **Yes, writable** | Same uid. A row written there takes effect at the next start. Floor42 rebuilds no credential from it (script tokens live in memory), but forged permissions or approvals would count |
 | Claude Code's sign-in (`/home/office/.claude`) | **Yes, readable** | Agents are Claude Code: they need it |
 | The director's token, browser sessions, script tokens | No | In the daemon's memory only; the journal holds only a token's SHA-256 |
-| The daemon's files (`/opt/floor42`, the jar and its libraries) | **No** | Owned by root, directories 0755 and files 0644; only the `office-home` volume is writable by uid 1000 |
-| The daemon's configuration at its next start | **No** | The daemon runs from `/opt/floor42`, root-owned; `/home/office/.env` and `/home/office/config/` are not read. A `.env` or `config/` found in the working directory refuses the start (`ConfigGuard`) |
-| A restore marker read at the next start | **No** | A start never restores; a planted `restore-pending.properties` is refused and shown in a red banner (docs/backups.md) |
-| Rolling the journal back by moving an older copy over `floor42.db`, then a restart | **Yes, but detected** | The file is theirs to replace (D16). The stop keeps the journal it still held as `displaced-*`; the next start finds fewer events than the last run saw, or a different last event, and shows a red banner until you acknowledge it. Detection, not prevention: the record it compares with (`journal-continuity.properties`) is a file they could rewrite too |
-| Loading code into the running daemon through the JVM's attach mechanism | **No** | `-XX:+DisableAttachMechanism` in the image's entry point: `/tmp/.attach_pid1` plus `SIGQUIT` no longer opens `/tmp/.java_pid1`. `/api/status` reports `process.attachDisabled` as the JVM says it |
+| The daemon's files (`/opt/floor42`, the jar and its libraries) | **No** since 1.8.0 (writable before) | Owned by root, directories 0755 and files 0644; only the `office-home` volume is writable by uid 1000 |
+| The daemon's configuration at its next start | **No** since 1.8.0 (yes before) | The daemon runs from `/opt/floor42`, root-owned; `/home/office/.env` and `/home/office/config/` are not read. A `.env` or `config/` found in the working directory refuses the start (`ConfigGuard`) |
+| A restore marker read at the next start | **No** since 1.8.0 (yes before) | A start never restores; a planted `restore-pending.properties` is refused and shown in a red banner (docs/backups.md) |
+| Rolling the journal back by moving an older copy over `floor42.db`, then a restart | **Yes, but detected** since 1.8.0 (silent before) | The file is theirs to replace (D16). The stop keeps the journal it still held as `displaced-*`; the next start finds fewer events than the last run saw, or a different last event, and shows a red banner until you acknowledge it. Detection, not prevention: the record it compares with (`journal-continuity.properties`) is a file they could rewrite too |
+| Loading code into the running daemon through the JVM's attach mechanism | **No** since 1.8.0 (yes before) | `-XX:+DisableAttachMechanism` in the image's entry point: `/tmp/.attach_pid1` plus `SIGQUIT` no longer opens `/tmp/.java_pid1`. `/api/status` reports `process.attachDisabled` as the JVM says it |
 
-### What an agent could change at the daemon's next start, without these defences (checked on 2026-11-01)
+### What an agent could change at the daemon's next start, before 1.8.0 (checked on 2026-11-01)
 
 Agents can stop the daemon: `kill -TERM 1` as uid 1000, and `restart: unless-stopped` starts it again. Checked on an
-image of a private build that predates v1.0.0 and had none of the defences in the table above, run with a throwaway volume (Docker Engine 29.9.2, WSL Debian), each
+image of 1.7.0, built from the release commit and run with a throwaway volume (Docker Engine 29.9.2, WSL Debian), each
 step run as uid 1000 beside the daemon:
 
 - **Journal rollback.** `restore-pending.properties` written in `/home/office/.floor42` naming an older startup copy,
@@ -176,14 +167,14 @@ step run as uid 1000 beside the daemon:
 - **The application.** `/opt/floor42` was copied `--chown=floor42`: uid 1000 could overwrite `quarkus-run.jar` and add a
   jar to `lib/main`.
 
-The same checks on the first image built with these defences: the planted marker is refused, the journal unchanged and the banner shown; a planted
+The same checks on the 1.8.0 image: the planted marker is refused, the journal unchanged and the banner shown; a planted
 `.env` or `config/` in `/home/office` is not read (the daemon stays non-dumpable, `/api/status` says
 `"process":{"nonDumpableRequested":true,"nonDumpable":true}`); a container forced to run from `/home/office`
 (`-w /home/office`) with a planted `.env` exits with "Floor42 refuses to start"; nothing under `/opt/floor42` is writable
 by uid 1000; a restore prepared from Settings is applied by `docker restart` ("Journal restored" from the shutdown
 thread) and reported at the next start.
 
-A counter-check of that first hardened image (2026-11-01) found four more, each shown in a container, then closed or made
+A counter-check of that first 1.8.0 image (2026-11-01) found four more, each shown in a container, then closed or made
 visible:
 
 - **Attach.** As uid 1000, `touch /tmp/.attach_pid1; kill -QUIT 1` made the daemon create `/tmp/.java_pid1`, the JVM's

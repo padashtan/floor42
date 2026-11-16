@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -31,20 +31,25 @@ class DecisionWorkflowTest {
                                 .event())
                 .mission();
         TicketId ticket = f.ticket(m, "Decide: Gateway?");
-        f.record(f.company.tickets().assign(f.director(), ticket, GALEN));
+        f.record(f.company.tickets().assign(f.director(), ticket, GEOFFREY));
         f.record(f.company
                 .committees()
                 .convene(
-                        f.director(), m, ticket, "Gateway?", List.of(GALEN, DARIUS), List.of("Architect", "Security")));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+                        f.director(),
+                        m,
+                        ticket,
+                        "Gateway?",
+                        List.of(GEOFFREY, DEHREN),
+                        List.of("Architect", "Security")));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
-        f.record(f.company.tickets().start(f.agent(GALEN), ticket));
+        f.record(f.company.tickets().start(f.agent(GEOFFREY), ticket));
         for (Committee.Kind kind : List.of(Committee.Kind.ANALYSIS, Committee.Kind.REBUTTAL)) {
-            say(m, GALEN, kind);
-            say(m, DARIUS, kind);
+            say(m, GEOFFREY, kind);
+            say(m, DEHREN, kind);
         }
-        say(m, GALEN, Committee.Kind.SYNTHESIS);
+        say(m, GEOFFREY, Committee.Kind.SYNTHESIS);
         return f.company.desk().open().stream()
                 .filter(q -> q.kind() == QuestionKind.COMMITTEE_ARBITRATION)
                 .findFirst()

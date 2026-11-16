@@ -114,8 +114,7 @@ describe('the default notes the interface records', () => {
   })
 
   // t('key'), tt("key"), t(`key`): any translation function, any quote.
-  const literal = (key: string) => key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const translates = (key: string) => new RegExp(`\\bt{1,2}\\(\\s*['"\`]${literal(key)}['"\`]`)
+  const translates = (key: string) => new RegExp(`\\bt{1,2}\\(\\s*['"\`]${key.replace(/\./g, '\\.')}['"\`]`)
 
   it('are never sent in the screen language by a component', () => {
     expect(Object.keys(sources).length).toBeGreaterThan(50)
@@ -150,8 +149,8 @@ describe('the default notes the interface records', () => {
 describe('event lines', () => {
   it('are written in the screen language from the server code and values', () => {
     setLang('fr')
-    expect(eventText('TicketReviewed', { reviewer: 'darius', ticket: 'T-4', verdict: 'REJECTED' }, 'x')).toContain(
-      'darius a relu T-4',
+    expect(eventText('TicketReviewed', { reviewer: 'dehren', ticket: 'T-4', verdict: 'REJECTED' }, 'x')).toContain(
+      'dehren a relu T-4',
     )
   })
 

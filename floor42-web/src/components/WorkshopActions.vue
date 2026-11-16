@@ -16,7 +16,7 @@ defineProps<{
   atWork: string[];
   accepted: boolean;
 }>();
-const emit = defineEmits<{ send: []; accept: []; reject: [] }>();
+const emit = defineEmits<{ send: []; accept: []; acceptRest: []; reject: [] }>();
 const ticket = defineModel<string | null>("ticket", { required: true });
 const directive = defineModel<string>("directive", { required: true });
 const message = defineModel<string>("message", { required: true });
@@ -61,6 +61,15 @@ const reason = defineModel<string>("reason", { required: true });
         @click="emit('accept')"
       >
         {{ t("ws.commitOn", { branch: workspace?.branch ?? "" }) }}
+      </button>
+      <button
+        v-if="picked > 0 && picked < pending"
+        class="action accept-rest"
+        :disabled="busy || atWork.length > 0 || !message.trim()"
+        :title="why([atWork.length > 0, t('why.agentAtWork')], [!message.trim(), t('why.needMessage')])"
+        @click="emit('acceptRest')"
+      >
+        {{ t("ws.acceptRest") }}
       </button>
       <div v-if="pending > 0" class="hint picked-count">{{ t("ws.pickedCount", { picked, total: pending }) }}</div>
       <div class="hint">{{ t("ws.untouched") }}</div>

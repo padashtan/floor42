@@ -21,7 +21,7 @@ const write: ToolSettingView = {
   lineBy: 'COMMITTEE_TABLE',
   rules: [
     { code: 'ruleTicket', params: { decision: 'ASK', target: 'Write', agent: '', ticket: 'T-2' }, by: 'FLOOR42' },
-    { code: 'ruleAgent', params: { decision: 'DENY', target: 'WRITE', agent: 'darius', ticket: '' }, by: 'FLOOR42' },
+    { code: 'ruleAgent', params: { decision: 'DENY', target: 'WRITE', agent: 'dehren', ticket: '' }, by: 'FLOOR42' },
   ],
 }
 
@@ -33,7 +33,7 @@ describe('the mission permission table', () => {
     const text = mount(PermissionTable).text()
     expect(text).toContain('committee table')
     expect(text).toContain('Rule beyond this line: Ask once Write for any agent on T-2 (set by Floor42)')
-    expect(text).toContain('Rule beyond this line: Forbidden WRITE for darius (set by Floor42)')
+    expect(text).toContain('Rule beyond this line: Forbidden WRITE for dehren (set by Floor42)')
     expect(text).toContain('Committee table: read only, independent of your defaults.')
   })
 

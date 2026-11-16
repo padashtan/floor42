@@ -36,17 +36,59 @@ public final class SecretMasker {
             + "|(?<scheme>(?i:bearer|basic)\\s+[A-Za-z0-9._~+/=-]{8,})"
             + "|(?<url>://[^:@/\\s]+:)"
             // A key (its quote may close first), a separator, then the value.
-            + "|(?<key>(?i:pass(?:word)?|passwd|pwd|secret|token|api[-_]?key)[\"']?(?:\\s*[=:]\\s*|\\s+))"
+            // Its name may be URL-encoded, any character of it, a quote as %22, "=" and ":" as %3D and %3A (D29).
+            + "|(?<key>(?i:"
+            + encoded("password", "pass", "passwd", "pwd", "secret", "token", "api_key", "api-key", "apikey")
+            + ")(?:[\"']|%22)?(?:\\s*[=:]\\s*|\\s+|%3[dDaA](?:%22)?))"
             // These words are common in plain text: a = or : must follow, and for authorization a scheme word or a long
             // token.
             + "|(?<authz>(?i:authorization)[\"']?\\s*[=:]\\s*(?=[\"']?(?:(?i:bearer|basic|token|digest|negotiate|ntlm"
             + "|api[-_]?key|aws4-hmac-sha256)\\s|\\S{16})))"
             + "|(?<auth>(?i:auth|credentials?)[\"']?\\s*[=:]\\s*)"
-            // A secret query parameter: the head is the empty place right after its name.
-            + "|(?<query>(?i:(?<=(?:[?&]|&amp;)(?:token|auth|code|key|secret|password|access_token|refresh_token|id_token"
-            + "|client_secret|api[-_]?key)=)))"
+            // A cookie header: the rest of its line, every cookie of it.
+            + "|(?<cookie>(?i:(?:set-)?cookie)[\"']?\\s*:\\s*)"
+            // A secret query parameter: the head is the empty place right after its name. A URL encoded inside another
+            // writes "?", "&" and "=" as %3F, %26 and %3D.
+            + "|(?<query>(?i:(?<=(?:[?&]|&amp;|%3[fF]|%26)"
+            + encoded(
+                    "token",
+                    "auth",
+                    "code",
+                    "key",
+                    "secret",
+                    "password",
+                    "access_token",
+                    "refresh_token",
+                    "id_token",
+                    "client_secret",
+                    "api_key",
+                    "api-key",
+                    "apikey",
+                    "sig",
+                    "signature",
+                    "x-amz-signature",
+                    "x-goog-signature")
+            + "(?:=|%3[dD]))))"
             + "|(?<hex>(?<![A-Za-z0-9_])[0-9a-fA-F]{24,}(?![A-Za-z0-9_]))"
             + "|(?<run>[A-Za-z0-9+/_=-]{32,})");
+
+    /**
+     * The names as alternatives, each character also URL-encoded ({@code %74oken} is {@code token}). Read in a
+     * case-insensitive group, so {@code %6f} and {@code %6F} are both an encoded {@code o}.
+     */
+    private static String encoded(String... names) {
+        StringBuilder p = new StringBuilder("(?:");
+        for (int n = 0; n < names.length; n++) {
+            if (n > 0) p.append('|');
+            for (char c : names[n].toCharArray()) {
+                p.append("(?:").append(c == '-' ? "\\-" : String.valueOf(c));
+                p.append(String.format("|%%%02x", (int) Character.toLowerCase(c)));
+                if (Character.isLetter(c)) p.append(String.format("|%%%02x", (int) Character.toUpperCase(c)));
+                p.append(')');
+            }
+        }
+        return p.append(')').toString();
+    }
 
     /** A scheme word that may stand between a key and its value. */
     private static final Pattern SCHEME =
@@ -115,7 +157,7 @@ public final class SecretMasker {
             }
         } else if (m.group("key") != null || m.group("auth") != null) {
             end = valueEnd(s, m.end(), true, false);
-        } else if (m.group("authz") != null) {
+        } else if (m.group("authz") != null || m.group("cookie") != null) {
             end = valueEnd(s, m.end(), false, true);
         } else if (m.group("query") != null) {
             int i = m.end();

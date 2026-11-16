@@ -125,7 +125,7 @@ export const tutorialEn = {
     'Say in a sentence what the mission should achieve, then start the practice mission. A recorded session plays: no model is called.',
   'tutorial.plan.title': 'Read the plan and its tickets',
   'tutorial.plan.body':
-    'Galen, the architect, split the objective into tickets, each with its assignee. Nothing starts before you approve: read it in the Mission tab.',
+    'Geoffrey, the architect, split the objective into tickets, each with its assignee. Nothing starts before you approve: read it in the Mission tab.',
   'tutorial.permissions.title': 'The permission table',
   'tutorial.permissions.body':
     'Each tool is allowed automatically, asked once, asked every time or denied; Floor42’s hooks enforce it, not the agent’s goodwill. Read it in the Permissions tab.',

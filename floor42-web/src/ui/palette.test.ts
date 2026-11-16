@@ -15,7 +15,7 @@ const items = paletteItems({
     { id: 'room-compute', name: 'Compute' },
   ],
   agents: [
-    { id: 'a-galen', name: 'Galen', role: 'planner' },
+    { id: 'a-geoffrey', name: 'Geoffrey', role: 'planner' },
     { id: 'a-chris', name: 'Chris', role: 'developer' },
   ],
   missions: [
@@ -48,8 +48,8 @@ describe('command palette', () => {
   })
 
   it('finds an agent by name, to open the profile', () => {
-    const [first] = searchPalette(items, 'gale')
-    expect(first).toMatchObject({ kind: 'agent', id: 'a-galen' })
+    const [first] = searchPalette(items, 'geof')
+    expect(first).toMatchObject({ kind: 'agent', id: 'a-geoffrey' })
     expect(first.detail).toBe('planner: open the profile')
   })
 

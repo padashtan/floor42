@@ -10,8 +10,7 @@ public interface Identifier {
     String value();
 
     static String check(String value, String kind) {
-        // "." and ".." are the format's only names for another folder: an id is used as a file or folder name.
-        if (value == null || !FORMAT.matcher(value).matches() || value.chars().allMatch(c -> c == '.')) {
+        if (value == null || !FORMAT.matcher(value).matches()) {
             throw new InvalidIdentifierException("Invalid " + kind + " id: " + value);
         }
         return value;

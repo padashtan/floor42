@@ -46,13 +46,15 @@ const checks = toRef(drafts.mission, 'checks')
 const kind = ref<'existing' | 'new'>('existing')
 /** Set when the chosen folder has no git (or no commit yet): creating the mission initialises it first. */
 const initPreview = ref<InitPreview | null>(null)
+/** The preflight's reason while a blocker stands (Claude Code missing, the sandbox required and not working), else ''. */
+const preflightBlocked = ref('')
 /** Creating the mission would initialise the folder; a folder meant as an existing project must not be made one by surprise. */
 const creating = computed(() => !!initPreview.value && !initPreview.value.refused)
 const mismatch = computed(() => creating.value && kind.value === 'existing')
 /** No committee, an architecture committee, or an idea committee before a new project. */
 const panel = toRef(drafts.mission, 'panel') as Ref<'none' | CommitteePanel>
 const withCommittee = computed(() => panel.value !== 'none')
-const letGalenPlan = toRef(drafts.mission, 'letGalenPlan')
+const letGeoffreyPlan = toRef(drafts.mission, 'letGeoffreyPlan')
 /** The company workflow the new mission pins (ADR-0050); null for Floor42's own. */
 const workflow = ref<string | null>(null)
 const mode = ref<'loop' | 'graph'>('loop')
@@ -93,7 +95,7 @@ async function propose(): Promise<boolean> {
     }
   }
   const committee = withCommittee.value ? seated.value : []
-  const plan = !withCommittee.value && letGalenPlan.value
+  const plan = !withCommittee.value && letGeoffreyPlan.value
   const fields = [title.value, objective.value, repository.value] as const
   const key = missionKeys.keyFor([...fields, committee, plan, panel.value, workflow.value, deliverTo.value, mode.value])
   const committeeKind = panel.value === 'idea' ? 'idea' : 'architecture'
@@ -147,7 +149,7 @@ async function run(action: () => Promise<boolean>, reset = false) {
       <span v-if="cost !== null && mission.origin === 'REAL'"> · {{ t('board.cost', { usd: cost.toFixed(4) }) }}</span>
     </div>
     <div v-if="awaiting" class="plan">
-      {{ mission.tickets[0]?.kind === 'PLANNING' ? t('mission.galenPlans') : t('mission.officePlan') }}
+      {{ mission.tickets[0]?.kind === 'PLANNING' ? t('mission.geoffreyPlans') : t('mission.officePlan') }}
       <div v-for="x in mission.tickets" :key="x.id">— {{ x.id }} {{ x.title }} ({{ x.assignee ?? t('board.unassigned') }})</div>
       <div v-if="tasksAdded(mission.workflow)" class="hint tasks-added">{{ t('workflows.task.approvalCount', tasksAdded(mission.workflow)!) }}</div>
       <div v-if="checksAdded(mission.workflow, mission.tickets)" class="hint checks-added">{{ t('workflows.chk.approvalCount', checksAdded(mission.workflow, mission.tickets)!) }}</div>
@@ -215,6 +217,8 @@ async function run(action: () => Promise<boolean>, reset = false) {
       v-model:repository="repository"
       v-model:preview="initPreview"
       v-model:kind="kind"
+      v-model:checks="checks"
+      v-model:blocked="preflightBlocked"
       :objective="objective"
       :optional="panel === 'idea'"
     />
@@ -228,8 +232,8 @@ async function run(action: () => Promise<boolean>, reset = false) {
     </label>
     <div id="home-hint" class="hint">{{ deliverTo.trim() ? t('home.hint') : t('home.none') }}</div>
     <WorkflowPicker v-model="workflow" />
-    <label v-if="!withCommittee" class="hint"><input v-model="letGalenPlan" type="checkbox" /> {{ t('mission.letGalenPlan') }}</label>
-    <TeamMode v-if="!withCommittee" v-model="mode" :plan="letGalenPlan" />
+    <label v-if="!withCommittee" class="hint"><input v-model="letGeoffreyPlan" type="checkbox" /> {{ t('mission.letGeoffreyPlan') }}</label>
+    <TeamMode v-if="!withCommittee" v-model="mode" :plan="letGeoffreyPlan" />
     <MissionCommittee v-model:panel="panel" v-model:seated="seated" />
     <div v-if="mismatch" class="warn notice">{{ t('mission.notRepository') }}</div>
     <div v-else-if="creating" class="warn notice new-project">{{ t('mission.willCreate', { folder: initPreview!.path }) }}</div>
@@ -237,11 +241,12 @@ async function run(action: () => Promise<boolean>, reset = false) {
       <button
         class="action"
         type="submit"
-        :disabled="busy || !!initPreview?.refused || mismatch || (withCommittee && seated.length < (panel === 'idea' ? 2 : 1))"
+        :disabled="busy || !!initPreview?.refused || mismatch || !!preflightBlocked || (withCommittee && seated.length < (panel === 'idea' ? 2 : 1))"
         :title="
           why(
             [!!initPreview?.refused, t('why.initRefused')],
             [mismatch, t('mission.notRepository')],
+            [!!preflightBlocked, preflightBlocked],
             [withCommittee && seated.length < (panel === 'idea' ? 2 : 1), t('why.seats', { count: panel === 'idea' ? 2 : 1 })],
           )
         "

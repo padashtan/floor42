@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest. Floor42 has one maintainer and v1.0.0 is its first public release; please open an issue to discuss a change before writing code.
+Thanks for your interest. Floor42 is at a very early stage; please open an issue to discuss a change before writing code.
 
 ## License and sign-off
 

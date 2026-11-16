@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.floor42.domain.event.EventEnvelope;
@@ -26,7 +26,7 @@ class ObjectionsTest {
 
     private void finish(TicketId t) {
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "report"));
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.VALIDATED, "ok"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.VALIDATED, "ok"));
     }
 
     private String code(Runnable r) {

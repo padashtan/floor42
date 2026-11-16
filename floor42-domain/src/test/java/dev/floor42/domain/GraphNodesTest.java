@@ -63,7 +63,7 @@ class GraphNodesTest {
     TicketId proposed(MissionId m, String description, List<String> criteria, TicketId... after) {
         List<EventEnvelope> events = f.record(f.company
                 .tickets()
-                .create(f.agent(Fixture.GALEN), m, "Node", description, Priority.NORMAL, List.of(after), criteria));
+                .create(f.agent(Fixture.GEOFFREY), m, "Node", description, Priority.NORMAL, List.of(after), criteria));
         return ((TicketCreated) events.getFirst().event()).ticket();
     }
 
@@ -72,7 +72,7 @@ class GraphNodesTest {
     }
 
     void start(MissionId m, TicketId... nodes) {
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
         for (TicketId t : nodes) {
@@ -86,7 +86,7 @@ class GraphNodesTest {
                 .progress(f.company, f.company.tickets().find(t).orElseThrow())
                 .map(CheckProgress::at)
                 .orElse(null);
-        f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, v, "f", List.of(), at));
+        f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, v, "f", List.of(), at));
     }
 
     void submit(TicketId t) {
@@ -316,13 +316,13 @@ class GraphNodesTest {
                         List.of("c"),
                         TicketKind.PLANNING));
         TicketId planning = f.company.tickets().of(m).getLast().id();
-        f.record(f.company.tickets().assign(f.system(), planning, Fixture.GALEN));
-        f.record(f.company.tickets().start(f.agent(Fixture.GALEN), planning));
+        f.record(f.company.tickets().assign(f.system(), planning, Fixture.GEOFFREY));
+        f.record(f.company.tickets().start(f.agent(Fixture.GEOFFREY), planning));
 
         List<EventEnvelope> out = f.record(f.company
                 .tickets()
                 .propose(
-                        f.agent(Fixture.GALEN),
+                        f.agent(Fixture.GEOFFREY),
                         planning,
                         Fixture.CHRIS,
                         List.of(new ProposedTicket("More", "d", List.of("c"), List.of(), List.of(a)))));
@@ -335,7 +335,7 @@ class GraphNodesTest {
         assertThatThrownBy(() -> f.company
                         .tickets()
                         .propose(
-                                f.agent(Fixture.GALEN),
+                                f.agent(Fixture.GEOFFREY),
                                 planning2,
                                 Fixture.CHRIS,
                                 List.of(new ProposedTicket(

@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -32,7 +32,7 @@ class VerificationAndBudgetTest {
                 .mission();
         TicketId ticket = f.ticket(id, "Deliver: Fix the build");
         f.record(f.company.tickets().assign(f.director(), ticket, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), id));
         f.record(f.company.verification().setBudget(f.director(), id, null));
         f.record(f.company.missions().approvePlan(f.director(), id));
         f.record(f.company.tickets().start(f.agent(CHRIS), ticket));
@@ -285,7 +285,7 @@ class VerificationAndBudgetTest {
                         .event())
                 .mission();
         f.record(f.company.tickets().assign(f.director(), f.ticket(id, "Write"), CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), id));
         return id;
     }
 
@@ -325,7 +325,7 @@ class VerificationAndBudgetTest {
         Fixture sim = new Fixture();
         MissionId id = sim.mission();
         sim.record(sim.company.tickets().assign(sim.director(), sim.ticket(id, "Play"), CHRIS));
-        sim.record(sim.company.missions().submitPlan(sim.agent(GALEN), id));
+        sim.record(sim.company.missions().submitPlan(sim.agent(GEOFFREY), id));
 
         sim.record(sim.company.missions().approvePlan(sim.director(), id));
 

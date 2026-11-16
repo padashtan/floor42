@@ -138,7 +138,7 @@ describe('mission board', () => {
     const cols = boardColumns([
       { ...t('T-1', 'DONE'), assignee: 'chris' },
       { ...t('T-2', 'TODO'), assignee: null },
-      { ...t('T-3', 'CANCELLED'), assignee: 'darius' },
+      { ...t('T-3', 'CANCELLED'), assignee: 'dehren' },
     ])
     expect(cols.assignees).toEqual({ 'T-1': 'chris' })
   })

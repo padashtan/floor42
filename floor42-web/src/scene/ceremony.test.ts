@@ -42,9 +42,9 @@ describe('the end-of-mission ceremony', () => {
       ],
       sessions: [
         { agent: 'bobi', startedAt: '2026-10-20T09:49:02Z' },
-        { agent: 'galen', startedAt: '2026-10-20T09:40:38Z' },
+        { agent: 'geoffrey', startedAt: '2026-10-20T09:40:38Z' },
       ],
     })
-    expect(who).toEqual(['galen', 'bobi', 'lucie', 'margaret-2'])
+    expect(who).toEqual(['geoffrey', 'bobi', 'lucie', 'margaret-2'])
   })
 })

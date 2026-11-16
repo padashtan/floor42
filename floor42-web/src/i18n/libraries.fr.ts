@@ -44,7 +44,7 @@ export const librariesFr: Record<keyof typeof librariesEn, string> = {
   'checklist.note.notWindows': 'seulement sous Windows',
   'checklist.note.notMeasured': 'pas encore mesuré',
   'checklist.note.probeFailed': 'le bac à sable n’a pas pu s’exécuter',
-  'checklist.note.userns': 'le système refuse les espaces de noms utilisateur sans privilège (Ubuntu : kernel.apparmor_restrict_unprivileged_userns=1) : lancez la commande ci-dessous pour autoriser unshare dans un profil AppArmor dédié',
+  'checklist.note.userns': 'le système refuse les espaces de noms utilisateur sans privilège (Ubuntu : kernel.apparmor_restrict_unprivileged_userns=1) : lancez la commande ci-dessous, ou autorisez unshare dans un profil AppArmor',
   'checklist.note.hiddenTool': 'installez-le au niveau du système, ou avec sdkman, nvm, pyenv, asdf, fnm, uv ou mise, pour l’utiliser dans le bac à sable',
   'checklist.copy': 'Copier',
   'checklist.copied': 'Copié',

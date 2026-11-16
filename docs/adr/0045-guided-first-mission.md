@@ -30,7 +30,7 @@ would call a paid model and touch one of the director's repositories.
 - **The sample** (`SampleRepository`): `<data>/tutorial/sample-repository`, one README (the one the recorded session
   read) and one commit, created on the director's click (`POST /api/demo/sample`). Each rehearsal works in its own
   worktree; the sample itself never changes.
-- **The scenario** (`PracticeScenario`, `POST /api/demo/practice`): Galen's plan (two tickets, the permission table
+- **The scenario** (`PracticeScenario`, `POST /api/demo/practice`): Geoffrey's plan (two tickets, the permission table
   of a read-and-note mission) awaits approval on return; then it waits for the director's approval with its cap, asks a
   blocking question through the agents' ask_director path (`MissionGovernor.askDirector`), replays the recorded session
   `inventory-with-notes` under the mission's governance, and lets reviews close both tickets. `SampleWrites` applies a

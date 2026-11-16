@@ -1,0 +1,83 @@
+/* ---- Jokes of idle agents: decoration from a fixed list, set apart from the journal's activity line ------------- */
+.name-tag q.joke {
+  display: block;
+  max-width: 220px;
+  margin-top: 2px;
+  padding: 2px 6px;
+  font-style: italic;
+  font-size: 12px;
+  color: #1b2a30;
+  background: #f4efe2;
+  border-radius: 8px;
+  white-space: normal;
+}
+.name-tag q.joke:empty {
+  display: none;
+}
+.name-tag q.joke::before,
+.name-tag q.joke::after {
+  content: '';
+}
+
+/* ---- Themes: one decade each (OFFICE_THEME). The 1990s are the original look above. -------------------------- */
+:root[data-theme='1980s'] {
+  --bg: #12051f;
+  --panel: rgba(24, 6, 40, 0.94);
+  --line: #ff3fd2;
+  --text: #f6e6ff;
+  --muted: #a487c4;
+  --cyan: #29f6ff;
+  --amber: #ffd319;
+  font-family: 'Courier New', 'Cascadia Mono', monospace;
+}
+:root[data-theme='1980s'] .panel {
+  text-shadow: 0 0 4px rgba(255, 63, 210, 0.45);
+}
+:root[data-theme='2000s'] {
+  --bg: #9fd6f2;
+  --panel: rgba(18, 52, 86, 0.9);
+  --line: #6ccff6;
+  --text: #f2f8fc;
+  --muted: #a9c6dc;
+  --cyan: #8fe3ff;
+  --amber: #ffcf5a;
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+}
+:root[data-theme='2000s'] .panel {
+  border-radius: 10px;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 40%);
+}
+:root[data-theme='2020s'] {
+  --bg: #e9ece4;
+  --panel: rgba(38, 46, 40, 0.92);
+  --line: #8aa68a;
+  --text: #f1f2ec;
+  --muted: #a7b2a3;
+  --cyan: #9fd8b8;
+  --amber: #f2cc8f;
+  --red: #e07a5f;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+:root[data-theme='2020s'] .panel {
+  border-radius: 14px;
+}
+:root[data-theme='2020s'] canvas.view {
+  image-rendering: auto;
+}
+
+/* The thinking agent's own words (AgentRemarked), quoted as said: unlike jokes and reactions, these are real. */
+.name-tag q.said {
+  display: block;
+  max-width: 260px;
+  margin-top: 2px;
+  padding: 3px 7px;
+  font-size: 12px;
+  color: #10242a;
+  background: #ffffff;
+  border: 2px solid var(--cyan);
+  border-radius: 10px;
+  white-space: normal;
+}
+.name-tag q.said:empty {
+  display: none;
+}

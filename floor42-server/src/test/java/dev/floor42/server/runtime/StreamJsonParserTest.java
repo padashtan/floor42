@@ -95,17 +95,17 @@ class StreamJsonParserTest {
 
     @Test
     void usageWindowsAreReadFromARateLimitEvent() {
-        // The shape recorded from Claude Code 2.1.304; the readings are neutral values.
+        // As recorded from Claude Code 2.1.304 on 2026-10-20.
         String line = "{\"type\":\"rate_limit_event\",\"rate_limit_info\":{\"status\":\"allowed\",\"resetsAt\""
-                + ":1790000000,\"rateLimitType\":\"five_hour\",\"overageStatus\":\"rejected\",\"isUsingOverage\""
-                + ":false,\"unifiedWindows\":{\"five_hour\":{\"utilization\":0.8,\"resetsAt\":1790000000},"
-                + "\"seven_day\":{\"utilization\":0.25,\"resetsAt\":1790400000}}},\"session_id\":\"s\"}";
+                + ":1792517400,\"rateLimitType\":\"five_hour\",\"overageStatus\":\"rejected\",\"isUsingOverage\""
+                + ":false,\"unifiedWindows\":{\"five_hour\":{\"utilization\":0.81,\"resetsAt\":1792517400},"
+                + "\"seven_day\":{\"utilization\":0.24,\"resetsAt\":1792976400}}},\"session_id\":\"s\"}";
 
         assertThat(parser.parse(line))
                 .singleElement()
                 .isEqualTo(new RuntimeEvent.PlanUsageReported(List.of(
-                        new RuntimeEvent.UsageWindow("five_hour", 0.8, 1790000000L, "allowed"),
-                        new RuntimeEvent.UsageWindow("seven_day", 0.25, 1790400000L, null))));
+                        new RuntimeEvent.UsageWindow("five_hour", 0.81, 1792517400L, "allowed"),
+                        new RuntimeEvent.UsageWindow("seven_day", 0.24, 1792976400L, null))));
     }
 
     static List<String> lines(String name) throws IOException {

@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -32,7 +32,7 @@ class TicketWorkflowTest {
         TicketId t = f.ticket(m, "Second task");
         f.record(f.company.tickets().assign(f.director(), t, CHRIS));
 
-        assertThatThrownBy(() -> f.company.tickets().start(f.agent(GALEN), t))
+        assertThatThrownBy(() -> f.company.tickets().start(f.agent(GEOFFREY), t))
                 .extracting("code")
                 .isEqualTo("NOT_ASSIGNEE");
     }
@@ -43,7 +43,7 @@ class TicketWorkflowTest {
         TicketId first = f.ticket(m, "Analyse");
         TicketId second = f.ticket(m, "Implement", first);
         f.record(f.company.tickets().assign(f.director(), second, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
 
         assertThatThrownBy(() -> f.company.tickets().start(f.agent(CHRIS), second))
@@ -59,7 +59,7 @@ class TicketWorkflowTest {
 
         assertThatThrownBy(() -> f.company
                         .tickets()
-                        .create(f.agent(GALEN), m2, "x", "", Priority.LOW, List.of(other), List.of()))
+                        .create(f.agent(GEOFFREY), m2, "x", "", Priority.LOW, List.of(other), List.of()))
                 .extracting("code")
                 .isEqualTo("UNKNOWN_DEPENDENCY");
     }
@@ -94,7 +94,7 @@ class TicketWorkflowTest {
 
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, "audience not checked on refresh"));
+                .review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, "audience not checked on refresh"));
 
         Ticket ticket = f.company.tickets().find(t).orElseThrow();
         assertThat(ticket.status()).isEqualTo(TicketStatus.IN_PROGRESS);
@@ -110,7 +110,7 @@ class TicketWorkflowTest {
         TicketId t = f.firstTicket(m);
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "patch"));
 
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.UNVERIFIABLE, "no test environment"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.UNVERIFIABLE, "no test environment"));
 
         Question q = f.company.desk().open().getFirst();
         assertThat(q.kind()).isEqualTo(QuestionKind.REVIEW_ESCALATION);

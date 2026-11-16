@@ -29,12 +29,6 @@ public final class NativeChecks {
 
     static final String SYSCTL = "sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0";
 
-    /** The narrow fix first (one profile for unshare only), the machine-wide sysctl as a weaker alternative. */
-    static final String APPARMOR_PROFILE =
-            "echo 'profile floor42-unshare /usr/bin/unshare flags=(unconfined) { userns, }'"
-                    + " | sudo tee /etc/apparmor.d/floor42-unshare"
-                    + " && sudo apparmor_parser -r /etc/apparmor.d/floor42-unshare";
-
     public static Facts measure() {
         Facts f = measure(SandboxHost.linux(SandboxHost.current()), System.getenv("PATH"), Path.of("/proc/sys"));
         if (!f.applies()) return f;
@@ -58,7 +52,7 @@ public final class NativeChecks {
         String why = null;
         if ("1".equals(read(sys.resolve("kernel/apparmor_restrict_unprivileged_userns")))) {
             why = "AppArmor refuses unprivileged user namespaces here (kernel.apparmor_restrict_unprivileged_userns=1,"
-                    + " the Ubuntu 23.10+ default): allow unshare in a dedicated AppArmor profile (the command below), or, weaker, set the sysctl to 0";
+                    + " the Ubuntu 23.10+ default): either set it to 0, or allow unshare in an AppArmor profile";
         } else if ("0".equals(read(sys.resolve("kernel/unprivileged_userns_clone")))) {
             why = "the kernel refuses unprivileged user namespaces (kernel.unprivileged_userns_clone=0)";
         } else if ("0".equals(read(sys.resolve("user/max_user_namespaces")))) {
@@ -105,8 +99,7 @@ public final class NativeChecks {
                 r.version(),
                 "userns",
                 f.usernsRestriction(),
-                APPARMOR_PROFILE + "  # weaker alternative, for the whole machine: " + SYSCTL
-                        + " (persist it in /etc/sysctl.d/)",
+                SYSCTL + " (persist it in /etc/sysctl.d/)",
                 r.measuredAt());
     }
 

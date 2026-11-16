@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -34,7 +34,7 @@ class WorkshopTest {
                 .mission();
         TicketId ticket = f.ticket(id, "Deliver: Contributor guide");
         f.record(f.company.tickets().assign(f.director(), ticket, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), id));
         f.record(f.company.verification().setBudget(f.director(), id, null));
         f.record(f.company.missions().approvePlan(f.director(), id));
         f.record(f.company.tickets().start(f.agent(CHRIS), ticket));
@@ -59,7 +59,7 @@ class WorkshopTest {
         assertThat(w.baseCommit()).isEqualTo("abc123");
         assertThatThrownBy(() -> f.company.workshop().prepareWorkspace(f.system(), m, CHRIS, "x", "y", "z"))
                 .hasMessageContaining("already has a workspace");
-        assertThatThrownBy(() -> f.company.workshop().prepareWorkspace(f.director(), m, DARIUS, "x", "y", "z"))
+        assertThatThrownBy(() -> f.company.workshop().prepareWorkspace(f.director(), m, DEHREN, "x", "y", "z"))
                 .hasMessageContaining("Only Floor42");
     }
 
@@ -93,7 +93,7 @@ class WorkshopTest {
     @Test
     void aDirectiveReopensADoneTicketAndIsKeptForEveryLaterBrief() {
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "Report"));
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.VALIDATED, "fine"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.VALIDATED, "fine"));
         assertThat(f.company.tickets().find(t).orElseThrow().status()).isEqualTo(TicketStatus.DONE);
 
         f.record(f.company.workshop().giveDirective(f.director(), t, "Mention that mvn compile must run first"));
@@ -140,7 +140,7 @@ class WorkshopTest {
                                 Intervention.Kind.PATCH_REJECTED, "patches/M-1-chris-2.patch"));
         assertThatThrownBy(() -> f.company.workshop().acceptPatch(f.director(), m, CHRIS, "c1", "msg", List.of()))
                 .hasMessageContaining("Nothing to accept");
-        assertThatThrownBy(() -> f.company.workshop().acceptPatch(f.director(), m, DARIUS, "c1", "msg", List.of("a")))
+        assertThatThrownBy(() -> f.company.workshop().acceptPatch(f.director(), m, DEHREN, "c1", "msg", List.of("a")))
                 .hasMessageContaining("no workspace");
     }
 

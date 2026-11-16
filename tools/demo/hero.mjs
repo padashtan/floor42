@@ -50,8 +50,7 @@ let id = 0
 const pending = new Map()
 ws.addEventListener('message', (m) => {
   const msg = JSON.parse(m.data)
-  const answered = pending.get(msg.id)
-  if (typeof answered === 'function') answered(msg)
+  pending.get(msg.id)?.(msg)
   pending.delete(msg.id)
 })
 const send = (method, params = {}) =>

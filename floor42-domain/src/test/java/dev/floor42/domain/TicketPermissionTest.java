@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,7 +33,7 @@ class TicketPermissionTest {
                         PermissionRule.forTicket(implementation, "Write", ActionCategory.WRITE, Decision.ASK)));
         f.record(f.company
                 .missions()
-                .addPermission(f.director(), m, new PermissionRule(DARIUS, ActionCategory.WRITE, null, Decision.DENY)));
+                .addPermission(f.director(), m, new PermissionRule(DEHREN, ActionCategory.WRITE, null, Decision.DENY)));
         PermissionPolicy policy = f.company.missions().find(m).orElseThrow().policy();
 
         assertThat(policy.evaluate(CHRIS, implementation, ActionCategory.WRITE, "Write", "a.txt")
@@ -47,7 +47,7 @@ class TicketPermissionTest {
                         .decision())
                 .as("outside any ticket")
                 .isEqualTo(Decision.DENY);
-        assertThat(policy.evaluate(DARIUS, implementation, ActionCategory.WRITE, "Write", "a.txt")
+        assertThat(policy.evaluate(DEHREN, implementation, ActionCategory.WRITE, "Write", "a.txt")
                         .decision())
                 .as("a rule naming the agent outranks the ticket's")
                 .isEqualTo(Decision.DENY);
@@ -106,7 +106,7 @@ class TicketPermissionTest {
                             m,
                             PermissionRule.forTicket(implementation, tool, ActionCategory.WRITE, Decision.ASK)));
         }
-        PermissionRule reviewer = new PermissionRule(DARIUS, ActionCategory.WRITE, null, Decision.DENY);
+        PermissionRule reviewer = new PermissionRule(DEHREN, ActionCategory.WRITE, null, Decision.DENY);
         f.record(f.company.missions().addPermission(f.system(), m, reviewer));
 
         f.record(
@@ -133,7 +133,7 @@ class TicketPermissionTest {
                 .contains(
                         PermissionRule.forTicket(implementation, "Edit", ActionCategory.WRITE, Decision.ASK), reviewer)
                 .doesNotContain(PermissionRule.forTicket(implementation, "Write", ActionCategory.WRITE, Decision.ASK));
-        assertThat(policy.evaluate(DARIUS, implementation, ActionCategory.WRITE, "Write", "a.txt")
+        assertThat(policy.evaluate(DEHREN, implementation, ActionCategory.WRITE, "Write", "a.txt")
                         .decision())
                 .isEqualTo(Decision.DENY);
     }
@@ -192,7 +192,7 @@ class TicketPermissionTest {
         f.ticket(m, "Decide: the gateway");
         f.record(f.company.missions().setToolPermission(f.director(), m, "Write", ActionCategory.WRITE, Decision.DENY));
         f.record(f.company.missions().setToolPermission(f.director(), m, "Edit", ActionCategory.WRITE, Decision.DENY));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().setToolPermission(f.director(), m, "Edit", ActionCategory.WRITE, Decision.ALLOW));
         Mission mission = f.company.missions().find(m).orElseThrow();
 

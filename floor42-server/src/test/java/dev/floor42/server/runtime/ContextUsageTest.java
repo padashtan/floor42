@@ -39,7 +39,7 @@ class ContextUsageTest {
 
         assertThat(usages).hasSize(7);
         assertThat(usages)
-                .filteredOn(u -> u.messageId().equals("msg_01s3dErO7Qyyolqz7MbHiOpJ"))
+                .filteredOn(u -> u.messageId().equals("msg_011CgH4vKj7X81isqCzZk3yF"))
                 .extracting(ContextUsage::usedTokens)
                 .containsExactly(9_898L, 9_898L, 9_898L, 9_898L);
 
@@ -68,7 +68,7 @@ class ContextUsageTest {
 
         assertThat(usages)
                 .extracting(ContextUsage::messageId)
-                .containsExactly("msg_01TQXg4fdGzuew1U6NXUaCk3", "msg_01pFPjmmumSx8sB22q4TNhmg");
+                .containsExactly("msg_011CgWnjviArZQV5kH1rWNX6", "msg_011CgWnkjFNy8B49PBKudfmg");
         assertThat(usages).extracting(ContextUsage::usedTokens).containsExactly(10_649L, 11_296L);
     }
 

@@ -50,7 +50,7 @@ if ($Objective -and $Objective.Count -eq 1 -and $Objective[0] -eq 'doctor') {
     if (-not (Test-Path (Join-Path $lib 'quarkus-run.jar'))) { throw 'No build found: run ./mvnw package first.' }
     $lib = (Resolve-Path $lib).Path
     $java = Find-Java
-    & $java '--enable-native-access=ALL-UNNAMED' '-Djava.util.logging.manager=org.jboss.logmanager.LogManager' -cp "$lib\app\*;$lib\lib\boot\*;$lib\lib\main\*" dev.floor42.server.runtime.Doctor
+    & $java '-Djava.util.logging.manager=org.jboss.logmanager.LogManager' -cp "$lib\app\*;$lib\lib\boot\*;$lib\lib\main\*" dev.floor42.server.runtime.Doctor
     exit $LASTEXITCODE
 }
 
@@ -71,7 +71,7 @@ if (-not (Test-Daemon)) {
     # The previous run's console output (a crash) survives this start: one generation kept.
     foreach ($n in 'daemon', 'daemon.err') { $f = Join-Path $DataDir "$n.log"; if (Test-Path $f) { Move-Item -Force $f (Join-Path $DataDir "$n.prev.log") } }
     # No dynamic attach (jcmd, agents): it does not stop a same-user process from reading memory on Windows (SECURITY.md).
-    Start-Process -FilePath $java -ArgumentList @('-XX:+DisableAttachMechanism', '--enable-native-access=ALL-UNNAMED', '-Djdk.httpclient.allowRestrictedHeaders=host', '-jar', $appJar) -WorkingDirectory $DataDir -WindowStyle Hidden `
+    Start-Process -FilePath $java -ArgumentList @('-XX:+DisableAttachMechanism', '-Djdk.httpclient.allowRestrictedHeaders=host', '-jar', $appJar) -WorkingDirectory $DataDir -WindowStyle Hidden `
         -RedirectStandardOutput (Join-Path $DataDir 'daemon.log') -RedirectStandardError (Join-Path $DataDir 'daemon.err.log')
     $deadline = (Get-Date).AddSeconds(40)
     while (-not (Test-Daemon)) {
@@ -96,8 +96,7 @@ if ($Objective) {
     $ErrorActionPreference = 'Continue' # same 5.1 behaviour for git's stderr outside a repository
     $repository = (git rev-parse --show-toplevel 2>$null)
     if (-not $repository) { throw 'Run floor42 "..." from inside a git repository: agents work on it.' }
-    $title = if ($text.Length -gt 60) { $text.Substring(0, 57) + '...' } else { $text }
-    $body = @{ title = $title; objective = $text; repository = (Resolve-Path $repository).Path } | ConvertTo-Json
+    $body = @{ objective = $text; repository = (Resolve-Path $repository).Path } | ConvertTo-Json
     $mission = Invoke-RestMethod "$Base/api/missions" -Method Post -ContentType 'application/json' -Body $body `
         -Headers @{ Authorization = "Bearer $token" }
     Write-Host "Mission $($mission.id) proposed on $($mission.workspace)."

@@ -27,19 +27,19 @@ export class OfficeLights {
     for (const p of this.lights.points) p.visible = !on
   }
 
-  mood(night: boolean, clock = new Date()): void {
+  mood(night: boolean, hour: number): void {
     const { hemi, key, points } = this.lights
     if (night) {
       hemi.intensity = 0.35
       key.intensity = 0.2
       return
     }
-    const { warmth, level } = daylight(clock.getHours() + clock.getMinutes() / 60)
+    const { warmth, level } = daylight(hour)
     hemi.intensity = 1.9 * level
-    key.intensity = 2.4 * (1 - 0.25 * warmth)
+    key.intensity = 2.4 * (1 - 0.25 * warmth) * level * level
     hemi.color.copy(this.base.sky).lerp(DUSK_SKY, 0.35 * warmth)
     hemi.groundColor.copy(this.base.ground).lerp(DUSK_GROUND, 0.3 * warmth)
     key.color.copy(this.base.sun).lerp(DUSK_SUN, 0.55 * warmth)
-    points.forEach((p, i) => (p.intensity = this.base.points[i] * (1 + 0.3 * warmth)))
+    points.forEach((p, i) => (p.intensity = this.base.points[i] * (1 + 0.3 * warmth + 0.8 * (1 - level / (1 - 0.18 * warmth)))))
   }
 }

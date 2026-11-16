@@ -21,9 +21,6 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
-      # TypeScript 7 (the native compiler): typescript-eslint does not accept it yet (docs/V2_IDEAS.md).
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
 
   # Actions are pinned by commit SHA with the version in a comment; Dependabot updates both.
   - package-ecosystem: github-actions
@@ -48,13 +45,3 @@ updates:
     ignore:
       - dependency-name: "node"
         update-types: ["version-update:semver-major"]
-
-  # Keycloak's image for IAM mode, pinned by digest too. A minor bump needs the mapper jar rebuilt (iam/README.md).
-  - package-ecosystem: docker
-    directory: /iam/keycloak
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 2
-    # A release must be 3 days old before a bump is proposed: a hijacked or broken one is usually yanked by then.
-    cooldown:
-      default-days: 3

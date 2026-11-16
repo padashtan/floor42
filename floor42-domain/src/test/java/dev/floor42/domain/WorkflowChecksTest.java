@@ -44,7 +44,7 @@ class WorkflowChecksTest {
         MissionId m = ((MissionCreated) created.getFirst().event()).mission();
         t = f.ticket(m, "Work");
         f.record(f.company.tickets().assign(f.director(), t, Fixture.CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
         f.record(f.company.tickets().start(f.agent(Fixture.CHRIS), t));
@@ -72,7 +72,7 @@ class WorkflowChecksTest {
     }
 
     List<String> verdict(ReviewVerdict v, StepAt at) {
-        return f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, v, "findings", List.of(), at)).stream()
+        return f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, v, "findings", List.of(), at)).stream()
                 .map(e -> e.event().getClass().getSimpleName())
                 // The review's sorted items follow every verdict given with claims (ADR-0053): not what is tested.
                 .filter(name -> !name.equals("ReviewItemsRecorded"))
@@ -137,7 +137,9 @@ class WorkflowChecksTest {
 
         // Reopened and submitted again while a check ran: its verdict belongs to a submission that is gone.
         StepAt check = at();
-        f.record(f.company.tickets().review(f.agent(Fixture.GALEN), t, ReviewVerdict.REJECTED, "no", List.of(), check));
+        f.record(f.company
+                .tickets()
+                .review(f.agent(Fixture.GEOFFREY), t, ReviewVerdict.REJECTED, "no", List.of(), check));
         submit();
         assertThat(code(() -> verdict(ReviewVerdict.VALIDATED, check))).isEqualTo("STEP_MOVED_ON");
         assertThat(at()).isEqualTo(new StepAt(2, 0));
@@ -250,11 +252,11 @@ class WorkflowChecksTest {
         List<ReviewClaim> claims = List.of(
                 ReviewClaim.reservation("C1", "the findings name no file", "name each file"),
                 ReviewClaim.reservation("C2", "the code is slow", "cache it"));
-        f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, ReviewVerdict.VALIDATED, "ok", claims, at()));
+        f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, ReviewVerdict.VALIDATED, "ok", claims, at()));
         dev.floor42.domain.event.TicketEvent.ReviewItemsRecorded items = itemsOf(f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(Fixture.DARIUS),
+                        f.agent(Fixture.DEHREN),
                         t,
                         ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                         "findings",
@@ -279,7 +281,7 @@ class WorkflowChecksTest {
     void aMissionWithoutChecksKeepsTodaysReviewWithoutAPosition() {
         submittedUnder(Workflow.BUILT_IN);
         assertThat(interpreter.progress(f.company, ticket())).isEmpty();
-        assertThat(f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, ReviewVerdict.VALIDATED, "ok")))
+        assertThat(f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, ReviewVerdict.VALIDATED, "ok")))
                 .extracting(e -> e.event().getClass().getSimpleName())
                 .containsExactly("TicketReviewed", "TicketCompleted");
     }

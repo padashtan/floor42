@@ -99,7 +99,7 @@ export const shellEn = {
   'settings.SESSION_BUDGET_USD': 'Most one session may spend (USD)',
   'settings.SESSION_BUDGET_USD.hint': 'See the Caps panel.',
   'settings.SHELL_SANDBOX': 'Where shell commands and checks run',
-  'settings.SHELL_SANDBOX.hint': 'off: on this machine as is, the agent’s commands can reach anything your account can. wsl: in the sandbox (WSL2 on Windows, a Linux namespace on Linux), they see only their worktree; the tools they use must be installed in the sandbox. Real missions always use the sandbox unless unsafe mode is on. If the sandbox stops working, no shell command runs (fail closed).',
+  'settings.SHELL_SANDBOX.hint': 'off: on this machine as is, the agent’s commands can reach anything your account can. wsl: isolated in WSL2, they see only their worktree; the tools they use must be installed in the WSL distribution. If the sandbox stops working, no shell command runs (fail closed).',
   'settings.SANDBOX_NETWORK': 'Network in the sandbox',
   'settings.SANDBOX_NETWORK.hint': 'off: no network at all inside the sandbox. on: commands may download (builds fetching dependencies).',
   'settings.OFFICE_THEME': 'Look of the office',

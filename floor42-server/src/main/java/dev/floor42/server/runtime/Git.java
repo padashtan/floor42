@@ -89,8 +89,6 @@ public class Git {
 
     /** The full hash {@code revision} names in {@code dir}; empty when it names nothing there. */
     public Optional<String> resolve(Path dir, String revision) {
-        // A revision is never read as an option of git's: one that looks like an option names nothing.
-        if (revision == null || revision.startsWith("-")) return Optional.empty();
         return outIfOk(dir, "rev-parse", "--verify", "--quiet", revision).map(String::strip);
     }
 

@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -32,7 +32,7 @@ class RehearsalTest {
                                 .event())
                 .mission();
         f.record(f.company.tickets().assign(f.director(), f.ticket(m, "Inspect"), CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         return m;
     }
 
@@ -51,7 +51,7 @@ class RehearsalTest {
                 .isEqualTo("ORIGIN_MISMATCH");
         assertThatThrownBy(() -> f.company.missions().createRehearsal(f.director(), "First", "Notes", " "))
                 .isInstanceOf(DomainException.class);
-        assertThatThrownBy(() -> f.company.missions().createRehearsal(f.agent(GALEN), "First", "Notes", SAMPLE))
+        assertThatThrownBy(() -> f.company.missions().createRehearsal(f.agent(GEOFFREY), "First", "Notes", SAMPLE))
                 .extracting("code")
                 .isEqualTo("DIRECTOR_ONLY");
     }
@@ -88,7 +88,7 @@ class RehearsalTest {
     void theDemoOnNoRepositoryStillNeedsNoCap() {
         MissionId m = f.mission();
         f.record(f.company.tickets().assign(f.director(), f.ticket(m, "Inspect"), CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
         assertThat(f.company.missions().find(m).orElseThrow().status()).isEqualTo(MissionStatus.IN_PROGRESS);
     }

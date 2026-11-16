@@ -6,7 +6,7 @@ import { CATALOGS, expect, shot, test, useLanguage } from './fixtures'
 const t = CATALOGS.en
 const WORKFLOWS = PANEL_ACTIONS.find((a) => a.id === 'workflows')!
 
-test('the director edits a workflow on the timeline, sees problems under the rows, and saving lists it', async ({ page }) => {
+test('the director edits a workflow on the timeline, sees problems under the rows, and saving lists it', { tag: '@workflows' }, async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')
@@ -71,7 +71,7 @@ test('the director edits a workflow on the timeline, sees problems under the row
   await shot(page, 'workflows-edit-600')
 })
 
-test('the French panel writes the import problems and the timeline editor problem in French', async ({ page }) => {
+test('the French panel writes the import problems and the timeline editor problem in French', { tag: '@workflows' }, async ({ page }) => {
   const fr = CATALOGS.fr
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'fr')
@@ -93,7 +93,7 @@ test('the French panel writes the import problems and the timeline editor proble
   await shot(page, 'workflows-edit-problem-fr-1280')
 })
 
-test('the library: start from a template, derive versions and restore, export, import, and a bad file by code', async ({ page }) => {
+test('the library: start from a template, derive versions and restore, export, import, and a bad file by code', { tag: '@workflows' }, async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')
@@ -176,7 +176,7 @@ test('the library: start from a template, derive versions and restore, export, i
   await expect(library.getByRole('button', { name: 'Bad' })).toHaveCount(0)
 })
 
-test('the director defines a check in its dialog and saves the workflow with it', async ({ page }) => {
+test('the director defines a check in its dialog and saves the workflow with it', { tag: '@workflows' }, async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

@@ -48,7 +48,7 @@ The director wants the team to learn from each mission. When a mission ends, the
 - A retrospective costs n + 1 short sessions on a light model, n being the number of participants. It goes through the same journal, hooks and usage readings as any session.
 - Lessons accumulate only with the director's consent, and retiring one removes it from later briefs.
 - Verified with the fake Claude Code:
-  - `RetroApiTest` runs a mission to its end, closes it, and checks that Chris and Darius speak and Darius concludes, on three haiku sessions on the retrospective's ticket.
+  - `RetroApiTest` runs a mission to its end, closes it, and checks that Chris and Dehren speak and Dehren concludes, on three haiku sessions on the retrospective's ticket.
   - Two lessons are proposed. The accepted one, reworded, appears in the developer's brief and not in the reviewer's; the rejected one appears nowhere.
   - `RetroTest` covers the domain rules: who may take part, one turn each, the lesson cap, the director's validation, and replay.
 - Checked on screen with the fake Claude Code: the participants sit at the table with the status "in the retrospective"; the meeting room shows what each one said, the conclusion and the proposed lessons; the desk lists the lessons to validate. Not yet verified with a real Claude Code session.

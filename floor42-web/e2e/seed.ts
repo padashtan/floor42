@@ -35,13 +35,13 @@ const say = (
 })
 
 export const CONTRIBUTIONS: ContributionView[] = [
-  say('Galen', 'Software architect', 1, 'ANALYSIS', 1, 'Keep SQLite, add a read replica later', '## Analysis\n\nSQLite already holds the journal. A second store doubles the failure modes for no measured gain.', 'SQLITE'),
+  say('Geoffrey', 'Software architect', 1, 'ANALYSIS', 1, 'Keep SQLite, add a read replica later', '## Analysis\n\nSQLite already holds the journal. A second store doubles the failure modes for no measured gain.', 'SQLITE'),
   say('Nora', 'Security specialist', 1, 'ANALYSIS', 2, 'Encrypt the file at rest', '## Analysis\n\nThe file holds approvals. It must not be readable by another user of the machine.', 'SQLITE', 'The journal file is world readable on some systems.'),
   say('Chris', 'Senior developer', 1, 'ANALYSIS', 3, 'Move to PostgreSQL now', '## Analysis\n\nPostgreSQL gives real concurrency; the migration is cheaper now than after release.', 'POSTGRES'),
-  say('Galen', 'Software architect', 2, 'REBUTTAL', 5, 'SQLite, with the file mode fixed', '## Rebuttal\n\nNo concurrency problem was measured. The file mode is a bug to fix, not a reason to change the store.', 'SQLITE'),
+  say('Geoffrey', 'Software architect', 2, 'REBUTTAL', 5, 'SQLite, with the file mode fixed', '## Rebuttal\n\nNo concurrency problem was measured. The file mode is a bug to fix, not a reason to change the store.', 'SQLITE'),
   say('Nora', 'Security specialist', 2, 'REBUTTAL', 6, 'SQLite once the file mode is fixed', '## Rebuttal\n\nI withdraw the encryption request if the mode is 0600.', 'SQLITE'),
   say('Chris', 'Senior developer', 2, 'REBUTTAL', 7, 'SQLite for now, revisit at 10 users', '## Rebuttal\n\nAccepted on the condition that the trigger to revisit is written down.', 'SQLITE'),
-  say('Galen', 'Software architect', 2, 'SYNTHESIS', 9, 'Adopt SQLite; fix the file mode; revisit at 10 concurrent users', '## Decision record\n\nAdopt SQLite. The journal file is created with mode 0600. Revisit when ten users write at once.'),
+  say('Geoffrey', 'Software architect', 2, 'SYNTHESIS', 9, 'Adopt SQLite; fix the file mode; revisit at 10 concurrent users', '## Decision record\n\nAdopt SQLite. The journal file is created with mode 0600. Revisit when ten users write at once.'),
 ]
 
 export function seededCommittee(directorSeat: string | null): CommitteeView {
@@ -51,7 +51,7 @@ export function seededCommittee(directorSeat: string | null): CommitteeView {
     stage: 'DEBATE',
     round: 2,
     members: [
-      { agent: 'Galen', role: 'Software architect', chair: true, pending: false },
+      { agent: 'Geoffrey', role: 'Software architect', chair: true, pending: false },
       { agent: 'Nora', role: 'Security specialist', chair: false, pending: false },
       { agent: 'Chris', role: 'Senior developer', chair: false, pending: true },
     ],
@@ -116,8 +116,8 @@ export async function seedReport(page: Page, mission: string): Promise<void> {
       r.reviews = { reviews: 5, validated: 3, withReservations: 1, rejected: 1, unverifiable: 0 }
       for (const [i, x] of r.tickets.entries()) {
         x.reviews = [
-          { reviewer: 'Darius', verdict: 'REJECTED', firstLine: 'The test for the empty list is missing.' },
-          { reviewer: 'Darius', verdict: i % 2 ? 'VALIDATED_WITH_RESERVATIONS' : 'VALIDATED', firstLine: 'The empty list is now covered.' },
+          { reviewer: 'Dehren', verdict: 'REJECTED', firstLine: 'The test for the empty list is missing.' },
+          { reviewer: 'Dehren', verdict: i % 2 ? 'VALIDATED_WITH_RESERVATIONS' : 'VALIDATED', firstLine: 'The empty list is now covered.' },
         ]
       }
     }),

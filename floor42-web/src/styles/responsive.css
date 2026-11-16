@@ -1,0 +1,156 @@
+/* ---- Narrow screens (UI audit F1, F2, F3, F16, F24) ---------------------------------------------------------------- */
+/* Whatever the width, no framed panel is wider than the window, and the toasts and the sign-in card neither. */
+.panel.framed,
+.panel.workshop {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+.toasts {
+  max-width: calc(100vw - 16px);
+}
+.login {
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+}
+/* The crew sits under the bar, whatever height the bar has (TopBar.vue measures it). */
+.crew {
+  top: var(--crew-top, 54px);
+  flex-wrap: wrap;
+  max-width: calc(100vw - 16px);
+}
+@media (max-width: 760px) {
+  /* The bar wraps instead of leaving buttons off screen: every menu stays reachable. */
+  .brand {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  .brand > .shrink {
+    max-width: 100%;
+  }
+  /* The panels start under the wrapped bar, which would otherwise hide the menu that opened them. */
+  .hud > .panel.framed,
+  .hud > .workshop,
+  .hud > .meeting,
+  .hud > .api-console,
+  .hud > .usage,
+  .hud > .director-terminal {
+    top: calc(var(--crew-top, 54px) + 8px);
+  }
+  .bar-nav {
+    flex-wrap: wrap;
+  }
+  /* The close button sits inside the corner of the frame, where the window cannot cut it. */
+  .panel > .title > button.close {
+    top: 4px;
+    right: 4px;
+  }
+  .panel.framed > .title,
+  .panel.workshop > .title {
+    padding-right: 34px;
+  }
+  .panel.framed {
+    padding: 12px 12px 12px;
+  }
+  /* The keyboard help is of no use here, and the log gives way to the panel in front of it. */
+  .help {
+    display: none;
+  }
+  .log {
+    top: auto;
+    bottom: 8px;
+    right: 8px;
+    max-height: 22vh;
+    z-index: 1;
+  }
+  .hud:has(> .panel.framed) > .log,
+  .hud:has(> .panel.workshop) > .log,
+  .hud:has(> .selection) > .log {
+    display: none;
+  }
+  .toasts {
+    top: auto;
+    bottom: 8px;
+    margin-top: 0;
+    width: calc(100vw - 16px);
+  }
+  /* The settings sections wrap instead of scrolling sideways out of sight. */
+  .sectioned-nav {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+/* Targets of at least 24 px (F20), lines of a readable length (F23), no overflow in the sessions form (F27). */
+button:not(.link):not(.card):not(.tab),
+select,
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']) {
+  min-height: 24px;
+}
+button:not(.link) {
+  min-width: 24px;
+}
+button.link,
+a.button,
+details > summary {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+details > summary {
+  display: list-item;
+}
+.log .title .filters button {
+  padding: 2px 8px;
+}
+.help {
+  max-width: min(110ch, calc(100vw - 16px));
+}
+.hint {
+  max-width: 100ch;
+}
+.sessions-panel .token-form > *,
+.sessions-panel form > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.git-graph .scroll {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.sessions-panel button.action + button.action {
+  margin-left: 8px;
+}
+
+/* An empty meeting room is a small panel with its one action, not a screen-sized frame (F11). */
+.meeting.meeting-empty {
+  height: auto;
+  width: min(520px, calc(100vw - 32px));
+}
+
+/*
+ * A panel takes the focus when it opens (ui/onePanel.ts). Opened from the keyboard, its frame shows where the focus is;
+ * opened with the mouse, no ring (the browser's :focus-visible rule).
+ */
+.hud > .panel:focus {
+  outline: none;
+}
+.hud > .panel:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+}
+
+/* The workshop: its help folded by default, the files always get room, the body is opaque (F5, F17). */
+.panel.workshop {
+  background: #071a21;
+}
+.workshop-body {
+  min-height: 200px;
+}
+.workshop .workshop-actions {
+  max-height: 40%;
+  overflow-y: auto;
+}
+.workshop-help:not([open]) {
+  margin-bottom: 4px;
+}

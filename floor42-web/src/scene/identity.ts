@@ -4,7 +4,7 @@
 const UNIFORMS = [0x2f6fd0, 0x3f9f4a, 0xd0752a, 0x9b4fd0, 0xc94a6a, 0x2aa7a0]
 
 /** The first staff keep the colours they always had; anyone else gets one from their id, the same everywhere. */
-const FIRST: Record<string, number> = { chris: 0, darius: 1, galen: 2 }
+const FIRST: Record<string, number> = { chris: 0, dehren: 1, geoffrey: 2 }
 
 /** A stable index for an agent: the same on every screen and after a reload, whoever joins or leaves. */
 export function lookOf(agentId: string): number {

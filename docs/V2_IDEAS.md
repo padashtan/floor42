@@ -21,6 +21,7 @@ simplest solution. Planned features are not debt.
   revisit); the sandbox can read the worktree's `.git/config`; a command approval is matched on its summary, not on a
   hash of the full command; the journal stays in rollback mode (WAL and an explicit fsync on the continuity record
   would harden a power cut). `contract.ts` compares the names of the fields of a view, not their types.
+- **Docs to align.** ADR-0066 is still "Proposed"; the `[1.16.0]` heading of the CHANGELOG is empty.
 - **Static analysis.** Sonar's parser skips `TaskSelection.java` (it uses the unnamed pattern `_`): its findings are
   not seen until the file is rewritten or the parser is updated.
 
@@ -31,14 +32,10 @@ simplest solution. Planned features are not debt.
 - Lowering `max-token-hours` leaves existing Keycloak clients at their old lifespan, so IAM sessions may fail to start.
 - The single-use `toolUseId` set (`McpResource`) is never cleared, only bounded at 10,000.
 
-### Open friction from the 2026-11 pilot (status not verified)
+### Open friction from the 2026-11 pilot
 
-- Suggest a mission title from the objective's first line.
-- Offer the checks command in the mission creation form.
-- Abandon a mission from the board, not only from the desk; a cancelled mission's board should say so.
-- No check should start after `MissionCancelled`.
-- Show the director's own session time (browser session limits; Keycloak sign-in and delegation expiry in IAM mode).
-- Accept part of a delivery (partial accept) in the workshop.
+- Accept part of a file (hunks) in the workshop; whole files are done (accept the ticked).
+
 - Reviewers are read-only (D15, ADR-0046), so a review never reruns a test: only Floor42's checks and the delivery proof do.
 
 ### Planned features never built
@@ -57,11 +54,11 @@ Each one is a proposal to weigh against real campaigns, in rough order of value.
 - **Adversarial security lab.** A reproducible suite that tries to bypass the controls: injected instructions in
   files and test output, paths outside the worktree, symlinks, indirect shell commands, late or duplicated signals,
   credentials in logs. Deterministic, on the fake runtime.
-- **Repository profiles and preflight.** Per project: build and test commands, reference branch, prerequisites,
+- **Repository profiles and preflight.** Built in v1.1, derived only (ADR-0070): build tool, proposed checks and a preflight before the click. Still open: an editable saved profile, reference branch, sensitive paths. Per project: build and test commands, reference branch, prerequisites,
   sensitive paths; a preflight that shows blockers and warnings before a real mission starts.
 - **Governed delivery.** Accepted patch to pull request to CI evidence to release, with evidence tied to the exact
   commit and marked stale when the branch moves; merge and release only on explicit authorization.
-- **Exportable evidence package.** A mission dossier (objective, decisions, commits, commands and exit codes, review
+- **Exportable evidence package (built, v1.1: ADR-0071).** A mission dossier (objective, decisions, commits, commands and exit codes, review
   verdict, limits) in Markdown or JSON, redacted by default, each metric labelled measured, computed or estimated.
 - **Agent and workflow benchmark.** Representative tasks with known answers, to test whether a workflow or a model
   choice improves the outcome; real-model runs opt-in and capped.

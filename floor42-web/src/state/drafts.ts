@@ -12,7 +12,7 @@ export interface MissionDraft {
   checks: string
   /** No committee, an architecture committee or an idea committee. */
   panel: 'none' | 'architecture' | 'idea'
-  letGalenPlan: boolean
+  letGeoffreyPlan: boolean
   seated: string[]
   /** Where the accepted deliverables are copied (ADR-0051): inside the project, or an absolute folder; blank: none. */
   deliverTo: string
@@ -46,7 +46,7 @@ const emptyMission = (): MissionDraft => ({
   repository: '',
   checks: '',
   panel: 'none',
-  letGalenPlan: true,
+  letGeoffreyPlan: true,
   seated: ['security', 'developer'].filter((k) => !vacantSeats.value.includes(k)),
   deliverTo: DEFAULT_DELIVER_TO,
 })
@@ -61,7 +61,7 @@ const emptyMeeting = (): MeetingDraft => ({ agenda: '', text: '' })
 
 export const drafts = reactive({ mission: emptyMission(), hire: emptyHire(), meeting: emptyMeeting() })
 
-/** Back to a blank form, every field including the choices (the committee, "let Galen plan"). */
+/** Back to a blank form, every field including the choices (the committee, "let Geoffrey plan"). */
 export const resetMissionDraft = (): void => void Object.assign(drafts.mission, emptyMission())
 export const resetHireDraft = (): void => void Object.assign(drafts.hire, emptyHire())
 export const resetMeetingDraft = (): void => void Object.assign(drafts.meeting, emptyMeeting())
@@ -82,7 +82,7 @@ export const missionDrafted = (m: MissionDraft = drafts.mission): boolean => {
   return (
     filled(m.title, m.objective, m.repository, m.checks) ||
     m.panel !== blank.panel ||
-    m.letGalenPlan !== blank.letGalenPlan ||
+    m.letGeoffreyPlan !== blank.letGeoffreyPlan ||
     m.deliverTo !== blank.deliverTo ||
     !same(m.seated, blank.seated)
   )

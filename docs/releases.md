@@ -1,8 +1,7 @@
 # Releases: what is published and how to verify it
 
 A release is cut by pushing a tag `vX.Y.Z` (`.github/workflows/release.yml`). The tag's commit must set that version in
-`pom.xml` and have a `## [X.Y.Z]` section in `CHANGELOG.md`. Set the same version in `floor42-web/package.json` by hand: the
-workflow does not check it.
+`pom.xml` and have a `## [X.Y.Z]` section in `CHANGELOG.md`.
 
 ## The chain
 
@@ -27,7 +26,7 @@ Three settings live on GitHub, not in the repository. Set them before announcing
 - Pages: source **GitHub Actions**, for the demo (`demo.yml`).
 - Security: **private vulnerability reporting** switched on (`SECURITY.md` and the issue template send reporters there).
 
-A version with a hyphen (`1.1.0-rc.1`) is a prerelease: a GitHub prerelease, and the image keeps its own tag: `:latest`
+A version with a hyphen (`1.9.0-rc.1`) is a prerelease: a GitHub prerelease, and the image keeps its own tag: `:latest`
 moves only for a final version.
 
 ## The slow tests
@@ -37,6 +36,12 @@ sessions that wait for a real silence or reset timeout). They run with `./mvnw -
 -Dspotless.check.skip=true -Dquarkus.quinoa=false` (`make test-slow`), and only them. A release needs both: on a
 developer machine `make release-gate` (= `verify`, `test-slow`, Vitest), in CI the "Slow tests" step of `release.yml`.
 The WSL tests skip themselves on Linux CI, so run `make test-slow` on Windows before tagging.
+
+The whole local gate is scripted in `tools/gate/`: `make gate-windows` (verify, slow tests, package, browser journeys,
+one at a time, logs in `target/gate/`), `make gate-linux` (the same on a fresh clone of HEAD or `SHA=...` in the WSL
+home), `make gate-double` (both). Each ends with `GATE GREEN|RED <host> <sha> <minutes>` and lists the failing classes;
+`tools/gate/triage.sh <TestClass>` reruns one alone three times (REAL, NEW-FLAKE or KNOWN-FLAKE). Tag only after two
+green lines.
 
 ## What a release holds
 

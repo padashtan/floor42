@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -71,7 +71,7 @@ class AgentSessionTest {
                 .isEqualTo("MISSION_NOT_ACTIVE");
 
         MissionId m = f.runningMission();
-        assertThatThrownBy(() -> f.company.sessions().start(f.system(), "s1", f.firstTicket(m), DARIUS, "model", null))
+        assertThatThrownBy(() -> f.company.sessions().start(f.system(), "s1", f.firstTicket(m), DEHREN, "model", null))
                 .extracting("code")
                 .isEqualTo("NOT_ON_TICKET");
     }
@@ -82,9 +82,9 @@ class AgentSessionTest {
         TicketId t = f.firstTicket(m);
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "report"));
 
-        f.record(f.company.sessions().start(f.system(), "r1", t, DARIUS, "claude-haiku-5-5", null));
+        f.record(f.company.sessions().start(f.system(), "r1", t, DEHREN, "claude-haiku-5-5", null));
 
-        assertThat(f.company.queries().statusOf(DARIUS)).isEqualTo(AgentStatus.REVIEWING);
+        assertThat(f.company.queries().statusOf(DEHREN)).isEqualTo(AgentStatus.REVIEWING);
     }
 
     @Test

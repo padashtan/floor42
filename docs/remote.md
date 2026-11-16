@@ -6,13 +6,12 @@ workstation you reach over the network), bring its port to your own loopback thr
 
 ## The supported way: an SSH tunnel
 
-On the remote machine, start Floor42 (`floor42`, or `bin/floor42`). With no browser to open, the launcher writes the
-single-use sign-in link to `~/.floor42/sign-in-link` (valid 60 seconds; the file is gone once it expired, and running
-`floor42` again writes a new one). Measured on Ubuntu 24.04.
+On the remote machine, start Floor42 with the sign-in link printed on its output rather than opened in a browser it
+does not have:
 
-With `FLOOR42_SIGN_IN_DELIVERY=stdout` no file is written and the launcher prints no link: the daemon's output goes to
-`~/.floor42/daemon.log`, so read the link there with `grep 'auth?code' ~/.floor42/daemon.log | tail -1`. With Docker,
-see below.
+```bash
+FLOOR42_SIGN_IN_DELIVERY=stdout bin/floor42          # or Docker, below
+```
 
 On your own machine, forward your local port 7420 to the remote daemon's loopback:
 
@@ -20,9 +19,8 @@ On your own machine, forward your local port 7420 to the remote daemon's loopbac
 ssh -N -L 7420:127.0.0.1:7420 you@remote-host
 ```
 
-Then open the link from `~/.floor42/sign-in-link` (read it on the remote host with `cat`), or ask for a new one
-(`curl -X POST http://127.0.0.1:7420/auth/open` through the tunnel answers `202`, or the login panel's button) and open
-the link the remote daemon wrote, in your browser, as `http://127.0.0.1:7420/auth?code=...`. The
+Then ask for a sign-in link (`curl -X POST http://127.0.0.1:7420/auth/open` through the tunnel, or the login panel's
+button) and open the link the remote daemon printed, in your browser, as `http://127.0.0.1:7420/auth?code=...`. The
 link is single use and valid 60 seconds. Your browser talks to `127.0.0.1:7420`: Host and Origin are loopback names, the
 cookie stays `HttpOnly` and `SameSite=Strict`, and the traffic between the machines is SSH's.
 

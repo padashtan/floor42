@@ -38,6 +38,7 @@ export const ACTIONS: readonly Action[] = [
   { id: 'workflows', group: 'work', label: 'workflows.top', title: 'workflows.topTitle' },
   { id: 'deliverables', group: 'work', label: 'deliverables.top', title: 'deliverables.topTitle' },
   { id: 'prove', group: 'work', label: 'prove.top', title: 'prove.topTitle' },
+  { id: 'dossier', group: 'work', label: 'dossier.top', title: 'dossier.topTitle' },
   { id: 'archive', group: 'work', label: 'palette.a.archive', title: 'palette.t.archive' },
   { id: 'tutorial', group: 'work', label: 'tutorial.top', title: 'tutorial.topTitle' },
   { id: 'hire', group: 'team', label: 'top.hire', title: 'top.hireTitle' },

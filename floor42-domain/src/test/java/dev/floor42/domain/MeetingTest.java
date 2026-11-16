@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -37,7 +37,7 @@ class MeetingTest {
                 .mission();
         TicketId t = f.ticket(m, "Validate token audience");
         f.record(f.company.tickets().assign(f.director(), t, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
         f.record(f.company.tickets().start(f.agent(CHRIS), t));
@@ -48,15 +48,15 @@ class MeetingTest {
     void theDirectorCallsAMeetingSaysThingsAndClosesIt() {
         MissionId m = running();
         List<EventEnvelope> called =
-                f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DARIUS, CHRIS), " Scope "));
+                f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DEHREN, CHRIS), " Scope "));
 
         EventEnvelope e = called.getFirst();
-        assertThat(e.event()).isEqualTo(new MeetingCalled("MT-1", m, List.of(CHRIS, DARIUS), "Scope"));
+        assertThat(e.event()).isEqualTo(new MeetingCalled("MT-1", m, List.of(CHRIS, DEHREN), "Scope"));
         assertThat(e.actor().isDirector()).isTrue();
         assertThat(e.origin()).isEqualTo(Origin.REAL);
         assertThat(e.mission()).isEqualTo(m);
         assertThat(f.company.queries().statusOf(CHRIS)).isEqualTo(AgentStatus.IN_MEETING);
-        assertThat(f.company.meetings().attending(DARIUS)).isPresent();
+        assertThat(f.company.meetings().attending(DEHREN)).isPresent();
 
         f.record(f.company
                 .meetings()
@@ -67,12 +67,12 @@ class MeetingTest {
         assertThat(f.company.meetings().notesFor(m, CHRIS))
                 .extracting(MeetingNote::text)
                 .containsExactly("Keep the API stable", "Start with the tests");
-        assertThat(f.company.meetings().notesFor(m, DARIUS))
+        assertThat(f.company.meetings().notesFor(m, DEHREN))
                 .extracting(MeetingNote::text)
                 .containsExactly("Keep the API stable");
 
         List<EventEnvelope> closed = f.record(f.company.meetings().close(f.director(), "MT-1"));
-        assertThat(closed.getFirst().event()).isEqualTo(new MeetingClosed("MT-1", m, List.of(CHRIS, DARIUS)));
+        assertThat(closed.getFirst().event()).isEqualTo(new MeetingClosed("MT-1", m, List.of(CHRIS, DEHREN)));
         assertThat(f.company.queries().statusOf(CHRIS)).isEqualTo(AgentStatus.WORKING);
         assertThat(f.company.meetings().openOn(m)).isEmpty();
         assertThat(f.company.meetings().notesFor(m, CHRIS))
@@ -98,7 +98,7 @@ class MeetingTest {
     void aNoteMayAlsoBeADirectiveOnTheAttendeesTicketUnderWay() {
         MissionId m = running();
         TicketId t = f.firstTicket(m);
-        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DARIUS), null));
+        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DEHREN), null));
 
         List<EventEnvelope> events = f.record(f.company
                 .meetings()
@@ -106,10 +106,10 @@ class MeetingTest {
 
         assertThat(events).extracting(EventEnvelope::event).hasAtLeastOneElementOfType(MeetingNoteGiven.class);
         assertThat(events.stream().map(EventEnvelope::event).filter(DirectiveGiven.class::isInstance))
-                .as("one ticket under way: Chris's; Darius has none")
+                .as("one ticket under way: Chris's; Dehren has none")
                 .containsExactly(new DirectiveGiven(m, t, "From the director's meeting MT-1: Log every refusal"));
         assertThatThrownBy(() ->
-                        f.company.meetings().note(f.director(), "MT-1", DARIUS, "x", MeetingNoteUse.ALSO_DIRECTIVE))
+                        f.company.meetings().note(f.director(), "MT-1", DEHREN, "x", MeetingNoteUse.ALSO_DIRECTIVE))
                 .isInstanceOf(DomainException.class)
                 .extracting(x -> ((DomainException) x).code())
                 .isEqualTo("NO_TICKET_UNDER_WAY");
@@ -123,13 +123,13 @@ class MeetingTest {
         assertRefused(
                 () -> f.company.meetings().call(f.director(), m, List.of(new AgentId("nobody")), null),
                 "UNKNOWN_AGENT");
-        f.record(f.company.staff().dismiss(f.director(), GALEN, "gone"));
-        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(GALEN), null), "AGENT_DISMISSED");
+        f.record(f.company.staff().dismiss(f.director(), GEOFFREY, "gone"));
+        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(GEOFFREY), null), "AGENT_DISMISSED");
 
         f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS), null));
-        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(DARIUS), null), "MEETING_OPEN");
+        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(DEHREN), null), "MEETING_OPEN");
         assertRefused(
-                () -> f.company.meetings().note(f.director(), "MT-1", DARIUS, "x", MeetingNoteUse.NOTE_ONLY),
+                () -> f.company.meetings().note(f.director(), "MT-1", DEHREN, "x", MeetingNoteUse.NOTE_ONLY),
                 "NOT_AN_ATTENDEE");
         assertRefused(
                 () -> f.company.meetings().note(f.director(), "MT-1", null, " ", MeetingNoteUse.NOTE_ONLY),
@@ -142,7 +142,7 @@ class MeetingTest {
         f.record(f.company.meetings().call(f.director(), other, List.of(CHRIS), null));
         assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(CHRIS), null), "AGENT_IN_MEETING");
         f.record(f.company.missions().cancel(f.director(), m, "enough"));
-        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(DARIUS), null), "MISSION_CLOSED");
+        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(DEHREN), null), "MISSION_CLOSED");
         assertThat(f.company.meetings().close(f.director(), "MT-2"))
                 .as("a meeting still closes")
                 .hasSize(1);
@@ -163,7 +163,7 @@ class MeetingTest {
                         .event())
                 .mission();
         TicketId ticket = r.ticket(id, "Decide: Gateway?");
-        r.record(r.company.tickets().assign(r.director(), ticket, GALEN));
+        r.record(r.company.tickets().assign(r.director(), ticket, GEOFFREY));
         r.record(r.company
                 .committees()
                 .convene(
@@ -171,15 +171,15 @@ class MeetingTest {
                         id,
                         ticket,
                         "Gateway?",
-                        List.of(GALEN, DARIUS, CHRIS),
+                        List.of(GEOFFREY, DEHREN, CHRIS),
                         List.of("Architect", "Security", "Dev")));
-        r.record(r.company.missions().submitPlan(r.agent(GALEN), id));
+        r.record(r.company.missions().submitPlan(r.agent(GEOFFREY), id));
         r.record(r.company.verification().setBudget(r.director(), id, null));
         r.record(r.company.missions().approvePlan(r.director(), id));
-        r.record(r.company.tickets().start(r.agent(GALEN), ticket));
+        r.record(r.company.tickets().start(r.agent(GEOFFREY), ticket));
 
-        assertRefused(() -> r.company.meetings().call(r.director(), id, List.of(DARIUS), null), "AGENT_IN_COMMITTEE");
-        assertThatThrownBy(() -> r.company.meetings().call(r.director(), id, List.of(DARIUS), null))
+        assertRefused(() -> r.company.meetings().call(r.director(), id, List.of(DEHREN), null), "AGENT_IN_COMMITTEE");
+        assertThatThrownBy(() -> r.company.meetings().call(r.director(), id, List.of(DEHREN), null))
                 .as("the numbered committee it sits on (ADR-0046)")
                 .hasMessageContaining(id + " committee 1");
     }
@@ -198,7 +198,7 @@ class MeetingTest {
         TicketId t = ((dev.floor42.domain.event.TicketEvent.TicketCreated) f.record(f.company
                                 .tickets()
                                 .create(
-                                        sim.apply(Actor.agent(GALEN)),
+                                        sim.apply(Actor.agent(GEOFFREY)),
                                         rehearsal,
                                         "Practice",
                                         "",
@@ -209,13 +209,13 @@ class MeetingTest {
                         .event())
                 .ticket();
         f.record(f.company.tickets().assign(sim.apply(Actor.director()), t, CHRIS));
-        f.record(f.company.missions().submitPlan(sim.apply(Actor.agent(GALEN)), rehearsal));
+        f.record(f.company.missions().submitPlan(sim.apply(Actor.agent(GEOFFREY)), rehearsal));
         f.record(f.company.verification().setBudget(sim.apply(Actor.director()), rehearsal, null));
         f.record(f.company.missions().approvePlan(sim.apply(Actor.director()), rehearsal));
-        f.record(f.company.staff().requestStaffingReview(sim.apply(Actor.director()), rehearsal, GALEN));
+        f.record(f.company.staff().requestStaffingReview(sim.apply(Actor.director()), rehearsal, GEOFFREY));
         MissionId m = running();
 
-        assertThat(f.company.meetings().call(f.director(), m, List.of(GALEN), null))
+        assertThat(f.company.meetings().call(f.director(), m, List.of(GEOFFREY), null))
                 .as("the planner's only review is a rehearsal's")
                 .hasSize(1);
     }
@@ -245,9 +245,9 @@ class MeetingTest {
     @Test
     void anAgentWritingAStaffingReviewIsNotCalled() {
         MissionId m = running();
-        f.record(f.company.staff().requestStaffingReview(f.director(), m, GALEN));
+        f.record(f.company.staff().requestStaffingReview(f.director(), m, GEOFFREY));
 
-        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(GALEN), null), "AGENT_IN_STAFFING");
+        assertRefused(() -> f.company.meetings().call(f.director(), m, List.of(GEOFFREY), null), "AGENT_IN_STAFFING");
         assertThat(f.company.meetings().call(f.director(), m, List.of(CHRIS), null))
                 .as("the others may still be called")
                 .hasSize(1);
@@ -256,7 +256,7 @@ class MeetingTest {
     @Test
     void aMeetingOfAnEndedMissionHoldsNobodyAndStillCloses() {
         MissionId m = running();
-        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DARIUS), null));
+        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DEHREN), null));
         f.record(f.company.missions().cancel(f.director(), m, "enough"));
 
         assertThat(f.company.meetings().attending(CHRIS)).isEmpty();

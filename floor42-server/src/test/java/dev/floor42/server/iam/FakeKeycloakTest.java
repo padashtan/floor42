@@ -50,8 +50,7 @@ class FakeKeycloakTest {
                                     .path("exp")
                                     .asLong()
                             - now)
-                    // 300 s of life, plus one for the second that may tick between reading now and the exchange.
-                    .isLessThanOrEqualTo(301);
+                    .isLessThanOrEqualTo(300);
         }
     }
 

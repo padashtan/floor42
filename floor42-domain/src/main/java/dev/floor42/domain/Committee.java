@@ -298,7 +298,7 @@ public final class Committee {
         String verb = words[0].toUpperCase(java.util.Locale.ROOT);
         if (verb.equals("NEW") || verb.equals("MAINTAINED") || verb.equals("REVISED")) return c.member();
         if (!verb.equals("ADOPTED")) return null;
-        // The first word naming a member: "ADOPTED galen" or "ADOPTED the proposal of galen".
+        // The first word naming a member: "ADOPTED geoffrey" or "ADOPTED the proposal of geoffrey".
         for (int i = 1; i < words.length; i++) {
             String named = words[i].toLowerCase(java.util.Locale.ROOT);
             for (AgentId m : debaters()) {

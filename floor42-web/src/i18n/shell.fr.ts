@@ -101,7 +101,7 @@ export const shellFr: Record<keyof typeof shellEn, string> = {
   'settings.SESSION_BUDGET_USD': 'Le plus qu’une session peut dépenser (USD)',
   'settings.SESSION_BUDGET_USD.hint': 'Voir le panneau Plafonds.',
   'settings.SHELL_SANDBOX': 'Où tournent les commandes shell et les contrôles',
-  'settings.SHELL_SANDBOX.hint': 'off : sur cette machine telle quelle, les commandes d’un agent atteignent tout ce que votre compte atteint. wsl : dans le bac à sable (WSL2 sous Windows, un espace de noms Linux sous Linux), elles ne voient que leur espace de travail ; les outils qu’elles utilisent doivent y être installés. Une vraie mission utilise toujours le bac à sable sauf en mode non sûr. Si le bac à sable ne marche plus, aucune commande shell ne tourne (fermé par défaut).',
+  'settings.SHELL_SANDBOX.hint': 'off : sur cette machine telle quelle, les commandes d’un agent atteignent tout ce que votre compte atteint. wsl : isolées dans WSL2, elles ne voient que leur espace de travail ; les outils qu’elles utilisent doivent être installés dans la distribution WSL. Si le bac à sable ne marche plus, aucune commande shell ne tourne (fermé par défaut).',
   'settings.SANDBOX_NETWORK': 'Réseau dans le bac à sable',
   'settings.SANDBOX_NETWORK.hint': 'off : aucun réseau dans le bac à sable. on : les commandes peuvent télécharger (builds qui récupèrent leurs dépendances).',
   'settings.OFFICE_THEME': 'Style du bureau',

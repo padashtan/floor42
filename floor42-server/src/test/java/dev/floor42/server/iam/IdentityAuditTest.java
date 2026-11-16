@@ -81,6 +81,13 @@ class IdentityAuditTest {
     }
 
     @Test
+    void ndjsonIsUnchangedByTheEventId() {
+        var lines = IdentityAudit.lines(M, journal);
+        assertThat(lines).extracting(IdentityAudit.Line::eventId).containsExactly("e1", "e3", "e7");
+        assertThat(IdentityAudit.ndjson(lines)).doesNotContain("eventId");
+    }
+
+    @Test
     void theTrustChainIsOrderedAndShowsARefusalInRedWithItsCode() {
         var delegation = new MissionDelegation(
                 M, "v", Instant.parse("2026-11-05T09:00:00Z"), Instant.parse("2026-12-05T09:00:00Z"), List.of(), false);

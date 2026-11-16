@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -62,7 +62,7 @@ class ReviewCalibrationTest {
         List<EventEnvelope> events = f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                         "fine overall",
@@ -73,7 +73,7 @@ class ReviewCalibrationTest {
                 .isEqualTo(ReviewVerdict.VALIDATED_WITH_RESERVATIONS);
         EventEnvelope items = events.get(1);
         assertThat(items.event()).isInstanceOf(ReviewItemsRecorded.class);
-        assertThat(items.actor()).isEqualTo(Actor.agent(DARIUS));
+        assertThat(items.actor()).isEqualTo(Actor.agent(DEHREN));
         assertThat(items.origin()).isEqualTo(f.origin);
         ReviewItemsRecorded e = (ReviewItemsRecorded) items.event();
         assertThat(e.declared()).isEqualTo(ReviewVerdict.VALIDATED_WITH_RESERVATIONS);
@@ -100,7 +100,7 @@ class ReviewCalibrationTest {
         f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.VALIDATED,
                         "mostly there",
@@ -117,7 +117,7 @@ class ReviewCalibrationTest {
         f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                         "Reservations: the docs are thin",
@@ -136,7 +136,7 @@ class ReviewCalibrationTest {
         f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                         "one keyed, one free-form",
@@ -152,7 +152,7 @@ class ReviewCalibrationTest {
         f.record(f.company
                 .tickets()
                 .review(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ReviewVerdict.UNVERIFIABLE,
                         "cannot run it",
@@ -166,7 +166,7 @@ class ReviewCalibrationTest {
     void aRejectionKeepsItsVerdict() {
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, "broken", List.of(ReviewClaim.note("x"))));
+                .review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, "broken", List.of(ReviewClaim.note("x"))));
         assertThat(last(f.company).verdict()).isEqualTo(ReviewVerdict.REJECTED);
         assertThat(f.company.tickets().find(t).orElseThrow().status()).isEqualTo(TicketStatus.IN_PROGRESS);
     }
@@ -175,7 +175,7 @@ class ReviewCalibrationTest {
     void anOldReviewWithReservationsKeepsItsMeaning() {
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.VALIDATED_WITH_RESERVATIONS, "ok, docs missing"));
+                .review(f.agent(DEHREN), t, ReviewVerdict.VALIDATED_WITH_RESERVATIONS, "ok, docs missing"));
         Ticket.Review r = last(Company.replay(f.journal));
         assertThat(r.verdict()).isEqualTo(ReviewVerdict.VALIDATED_WITH_RESERVATIONS);
         assertThat(r.calibrated()).isFalse();
@@ -195,7 +195,7 @@ class ReviewCalibrationTest {
                 any.mission(),
                 null,
                 null,
-                new ReviewItemsRecorded(t, DARIUS, ReviewVerdict.VALIDATED, List.of(), List.of())));
+                new ReviewItemsRecorded(t, DEHREN, ReviewVerdict.VALIDATED, List.of(), List.of())));
         assertThatThrownBy(() -> Company.replay(journal)).hasMessageContaining("has no review by");
     }
 }

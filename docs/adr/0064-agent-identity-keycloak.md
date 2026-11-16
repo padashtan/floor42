@@ -1,6 +1,6 @@
 # ADR-0064: Agents get a Keycloak identity, delegated per mission, with a token broker for external resources
 
-Date: 2026-11-05 · Status: Accepted 2026-11-05 (the director's decisions after the builder check); implemented for v1.0.0.
+Date: 2026-11-05 · Status: Accepted 2026-11-05 (the director's decisions after the builder check); implemented for 1.17.0.
 One new event type, `AgentTokenIssued`. The
 protocol facts below were measured on Keycloak 26.8.1 (2026-11-04); the full record is `iam/README.md`.
 

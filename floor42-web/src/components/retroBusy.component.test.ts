@@ -11,8 +11,8 @@ beforeAll(() => setLang('en'))
 
 const retro = {
   concluded: false,
-  chair: 'Galen',
-  participants: ['Galen'],
+  chair: 'Geoffrey',
+  participants: ['Geoffrey'],
   pending: [],
   contributions: [],
   conclusions: [],

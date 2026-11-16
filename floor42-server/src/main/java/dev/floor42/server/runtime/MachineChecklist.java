@@ -257,7 +257,7 @@ public final class MachineChecklist {
             "the sandbox could not run",
             "userns",
             "the system refuses unprivileged user namespaces (Ubuntu: kernel.apparmor_restrict_unprivileged_userns=1):"
-                    + " run the command below to allow unshare in a dedicated AppArmor profile",
+                    + " run the command below, or allow unshare in an AppArmor profile",
             "hiddenTool",
             "found on your PATH, not shown in the sandbox: install it system-wide, or with sdkman, nvm, pyenv, asdf, fnm,"
                     + " uv or mise");

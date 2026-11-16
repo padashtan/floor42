@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.floor42.domain.event.DeskEvent;
@@ -79,7 +79,7 @@ class OptionCodeTest {
     @Test
     void anAgentsOptionIsNeverOneOfFloor42sWhateverItsWords() {
         f.record(f.company.tickets().assign(f.director(), t, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
         QuestionId id = ((DeskEvent.QuestionAsked) f.record(f.company
                                 .desk()
@@ -149,7 +149,9 @@ class OptionCodeTest {
                         .event())
                 .ticket();
 
-        f.record(f.company.tickets().edit(f.director(), planning, "Secure the APIs, planned by Galen", "", List.of()));
+        f.record(f.company
+                .tickets()
+                .edit(f.director(), planning, "Secure the APIs, planned by Geoffrey", "", List.of()));
 
         assertThat(f.company.tickets().find(planning).orElseThrow().kind()).isEqualTo(TicketKind.PLANNING);
         assertThat(Company.replay(f.journal)

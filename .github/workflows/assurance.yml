@@ -23,8 +23,6 @@ permissions:
 jobs:
   # 1. Build: the daemon and its UI, once; the packaged app travels to the layers that run it.
   build:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -188,7 +186,7 @@ jobs:
           unshare -Urm true
 
       - name: Format and every test
-        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp verify
 
   verify-windows:
     needs: [semgrep, static-scan, trivy, actionlint, hadolint]
@@ -217,7 +215,7 @@ jobs:
         working-directory: floor42-web
 
       - name: Format and every test
-        run: ./mvnw.cmd -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw.cmd -B -ntp verify
 
   nightly-layers:
     needs: [semgrep, static-scan, trivy, actionlint, hadolint]
@@ -262,9 +260,8 @@ jobs:
 
   # 5. One page with the result of every layer. It runs whatever the outcome, and fails when a layer failed.
   summary:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
     needs: [build, semgrep, codeql, static-scan, trivy, actionlint, hadolint, scorecard, verify, verify-windows, nightly-layers, zap, oidc-conformance]
-    if: ${{ (always()) && (github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch') }}
+    if: ${{ always() }}
     runs-on: ubuntu-24.04
     steps:
       - name: Result of each layer

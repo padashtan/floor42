@@ -1,3 +1,9 @@
+# Proprietary visual references (Space Haven, RimWorld screenshots). Kept locally, never published.
+docs/references/
+
+# The director's product vision (French). Kept locally, never published.
+docs/vision/
+
 # Java / Maven
 target/
 .mvn/wrapper/maven-wrapper.jar

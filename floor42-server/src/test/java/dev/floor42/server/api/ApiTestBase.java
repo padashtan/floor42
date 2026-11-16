@@ -7,12 +7,12 @@ import io.restassured.specification.RequestSpecification;
 import jakarta.inject.Inject;
 
 /** What the API tests share: a request signed in as the director, with a JSON body. */
-abstract class ApiTestBase {
+public abstract class ApiTestBase {
 
     @Inject
-    SessionToken token;
+    public SessionToken token;
 
-    RequestSpecification api() {
+    protected RequestSpecification api() {
         return given().header("Authorization", "Bearer " + token.value()).contentType("application/json");
     }
 }

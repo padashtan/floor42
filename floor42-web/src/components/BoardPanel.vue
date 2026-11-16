@@ -88,7 +88,7 @@ function closeMission() {
   void run(() => completeMission(m.id, closing.value.trim() || defaultNote('board.closeDefault'), withIgnored.value))
 }
 
-// Reinforcing the team: Galen judges from measured facts, then the director answers yes or no. Offered on a real
+// Reinforcing the team: Geoffrey judges from measured facts, then the director answers yes or no. Offered on a real
 // mission in progress; put forward when more tickets are ready than there are developers free to take them.
 const ready = computed(() =>
   tickets.value.filter(

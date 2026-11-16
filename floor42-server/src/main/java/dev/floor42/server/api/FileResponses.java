@@ -1,8 +1,8 @@
 package dev.floor42.server.api;
 
-import dev.floor42.server.app.Deliverables;
-import dev.floor42.server.app.Delivered.Blob;
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.RefusedException;
+import dev.floor42.server.app.delivery.Deliverables;
+import dev.floor42.server.app.delivery.Delivered.Blob;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import java.util.Locale;
  * bytes say so, a PDF only when it starts with {@code %PDF-}, an SVG only when its first bytes hold its root element.
  * Every answer carries {@code nosniff} and a Content-Security-Policy as narrow as its type allows.
  */
-final class FileResponses {
+public final class FileResponses {
 
     private FileResponses() {}
 
     /** No script, no plugin, no request of its own: the file is data, whatever it holds. */
-    static final String SANDBOX = "sandbox; default-src 'none'";
+    public static final String SANDBOX = "sandbox; default-src 'none'";
 
     /**
      * An image (raster or SVG): the same sandbox; the image may draw itself and its own inline styles, and nothing
@@ -60,7 +60,7 @@ final class FileResponses {
      * A HEAD: the headers the GET would send, and no body. RESTEasy would route HEAD to the GET method and never write
      * its body, so the file opened for the check would stay open; here it is released before the answer leaves.
      */
-    static Response head(Blob blob, boolean download, boolean check) {
+    public static Response head(Blob blob, boolean download, boolean check) {
         try {
             if (check) return Response.ok().type("application/json").build();
             if (download) return headers(Response.ok(), blob, downloadType(blob), SANDBOX, "attachment");
@@ -72,7 +72,7 @@ final class FileResponses {
     }
 
     /** The file shown, downloaded, or only checked; the blob is released when no body will send it. */
-    static Response of(Blob blob, boolean download, boolean check) {
+    public static Response of(Blob blob, boolean download, boolean check) {
         try {
             if (check) return Response.ok(check(blob), "application/json").build();
             if (download) return send(blob, downloadType(blob), SANDBOX, "attachment");
@@ -217,7 +217,7 @@ final class FileResponses {
     }
 
     /** A filename only of safe characters, and the real one percent-encoded: no quote or line break reaches a header. */
-    static String disposition(String how, String name) {
+    public static String disposition(String how, String name) {
         String safe = name == null ? "" : name.replaceAll("[^A-Za-z0-9._-]", "_");
         if (safe.length() > 120) safe = safe.substring(safe.length() - 120);
         if (safe.isBlank() || safe.matches("[._]*")) safe = "file";

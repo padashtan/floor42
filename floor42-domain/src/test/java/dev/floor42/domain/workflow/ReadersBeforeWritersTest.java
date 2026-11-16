@@ -86,10 +86,7 @@ class ReadersBeforeWritersTest {
 
     /** 1.14.0-SNAPSHOT is release 1.14.0: the one under construction. */
     static int[] release(String version) {
-        // An internal release came before the public numbering started again at 1.0.0: earlier than any public one.
-        if (version.startsWith("internal ")) return new int[] {-1};
-        // A prerelease or snapshot (1.0.0-rc.1, 1.1.0-SNAPSHOT) is ordered as its release.
-        return Arrays.stream(version.replaceFirst("-.*$", "").split("\\."))
+        return Arrays.stream(version.replace("-SNAPSHOT", "").split("\\."))
                 .mapToInt(Integer::parseInt)
                 .toArray();
     }

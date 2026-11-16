@@ -160,7 +160,7 @@ signed in through its printed link, then a run without a session. It runs nightl
 - The aggregate JaCoCo report lives in `floor42-coverage`, a pom-only module listed in the `quality` profile only.
 - Tests tagged `slow` are not run (as in the normal build).
 
-## Baseline (2026-11-09, the branch that became v1.0.0)
+## Baseline (2026-11-09, `integ/1.17`)
 
 Tests under JaCoCo: domain 484 green; server 1141 run, 4 failed and 3 skipped in the last run (the characterisation
 tests `BriefsCharacterisationTest` and `ResponseBodiesCharacterisationTest` fail in this worktree with or without
@@ -352,7 +352,7 @@ and `Sandbox.autocrlf` interrupt-free paths that only differ on Linux or on a gi
 
 ## Correctness round (branch `q3-correctness`)
 
-Before and after, same `-Pquality` SpotBugs (Medium and up) and PMD run on the branch that became v1.0.0:
+Before and after, same `-Pquality` SpotBugs (Medium and up) and PMD run on `integ/1.17`:
 
 | | Before | After |
 |-|-------:|------:|

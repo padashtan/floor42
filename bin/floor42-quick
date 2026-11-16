@@ -8,7 +8,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 REF="${1:-HEAD}"
-MVNW="./mvnw -B -ntp -q"
+# Compile only the changed files (37 s to 17.5 s per round, measured 2026-11-12). shortcut: a changed signature or
+# constant does not recompile its dependents; the gate (`make verify`) compiles everything.
+MVNW="./mvnw -B -ntp -q -Dmaven.compiler.useIncrementalCompilation=false"
 
 changed="$( { git diff --name-only "$REF" --; git ls-files --others --exclude-standard; } | sort -u)"
 if [ -z "$changed" ]; then echo "quick: nothing changed since $REF."; exit 0; fi

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.floor42.domain.DomainException;
 import dev.floor42.domain.Refusal;
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.RefusedException;
 import org.junit.jupiter.api.Test;
 
 class RefusalStatusTest {

@@ -25,9 +25,9 @@ import org.junit.jupiter.api.Test;
  */
 class GoldenScenarioTest {
 
-    static final AgentId GALEN = new AgentId("galen");
+    static final AgentId GEOFFREY = new AgentId("geoffrey");
     static final AgentId CHRIS = new AgentId("chris");
-    static final AgentId DARIUS = new AgentId("darius");
+    static final AgentId DEHREN = new AgentId("dehren");
     static final AgentId KEN = new AgentId("ken");
     static final AgentId ANA = new AgentId("ana");
     static final AgentId RITA = new AgentId("rita");
@@ -210,7 +210,7 @@ class GoldenScenarioTest {
                 "a ticket with criteria",
                 () -> c.tickets()
                         .create(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 m,
                                 "Write the guide",
                                 "",
@@ -219,7 +219,7 @@ class GoldenScenarioTest {
                                 List.of("covers install", "covers upgrade")));
         TicketId t = c.tickets().of(m).getLast().id();
         s.run("assign it", () -> c.tickets().assign(s.director(REAL), t, CHRIS));
-        s.run("submit the plan", () -> c.missions().submitPlan(s.agent(GALEN, REAL), m));
+        s.run("submit the plan", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), m));
         s.run("its budget", () -> c.verification().setBudget(s.director(REAL), m, 2.0));
         s.run("approve the plan", () -> c.missions().approvePlan(s.director(REAL), m));
         s.run("start the guide", () -> c.tickets().start(s.agent(CHRIS, REAL), t));
@@ -228,7 +228,7 @@ class GoldenScenarioTest {
                 "reservations that are notes",
                 () -> c.tickets()
                         .review(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 t,
                                 ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                                 "RESERVATION: naming | CHANGE: rename\nRESERVATION C1: thin | CHANGE: add a step",
@@ -246,7 +246,7 @@ class GoldenScenarioTest {
         UncommittedWorktree dirty =
                 new UncommittedWorktree("chris", UncommittedWorktree.DIRTY, null, 2, List.of("deliverables/a.md"));
         UncommittedWorktree unknown =
-                new UncommittedWorktree("darius", UncommittedWorktree.UNKNOWN, "GIT_FAILED", 0, List.of());
+                new UncommittedWorktree("dehren", UncommittedWorktree.UNKNOWN, "GIT_FAILED", 0, List.of());
         s.run(
                 "an agent accepts uncommitted work",
                 () -> c.deliveries().acceptUncommitted(s.agent(CHRIS, REAL), m, List.of(dirty)));
@@ -309,8 +309,8 @@ class GoldenScenarioTest {
                 () -> c.staff()
                         .hire(
                                 s.director(REAL),
-                                GALEN,
-                                "Galen",
+                                GEOFFREY,
+                                "Geoffrey",
                                 "Planner",
                                 WorkRole.PLANNER,
                                 "claude-sonnet-5-5",
@@ -331,8 +331,8 @@ class GoldenScenarioTest {
                 () -> c.staff()
                         .hire(
                                 s.director(REAL),
-                                DARIUS,
-                                "Darius",
+                                DEHREN,
+                                "Dehren",
                                 "Reviewer",
                                 WorkRole.REVIEWER,
                                 "claude-opus-5-5",
@@ -384,7 +384,7 @@ class GoldenScenarioTest {
                                 List.of("java", "sql")));
         s.run(
                 "hire twice",
-                () -> c.staff().hire(s.director(REAL), GALEN, "G", "Planner", WorkRole.PLANNER, "m", "low"));
+                () -> c.staff().hire(s.director(REAL), GEOFFREY, "G", "Planner", WorkRole.PLANNER, "m", "low"));
         s.run(
                 "an agent hires",
                 () -> c.staff()
@@ -413,7 +413,7 @@ class GoldenScenarioTest {
         s.run("mark core twice", () -> c.staff().markCore(s.director(REAL), CHRIS, true));
         s.run("mark core in a simulation", () -> c.staff().markCore(s.director(SIMULATED), CHRIS, false));
         s.run("unmark core", () -> c.staff().markCore(s.director(REAL), CHRIS, false));
-        s.run("mark core again", () -> c.staff().markCore(s.director(REAL), DARIUS, true));
+        s.run("mark core again", () -> c.staff().markCore(s.director(REAL), DEHREN, true));
     }
 
     void companyWide() {
@@ -474,7 +474,8 @@ class GoldenScenarioTest {
                                 List.of("idea")));
         s.run(
                 "seat on an agent's name",
-                () -> c.committees().defineSeat(s.director(REAL), "galen", "G", "T", "m", "e", "l", List.of("idea")));
+                () -> c.committees()
+                        .defineSeat(s.director(REAL), "geoffrey", "G", "T", "m", "e", "l", List.of("idea")));
         s.run(
                 "seat with a bad key",
                 () -> c.committees().defineSeat(s.director(REAL), "X", "G", "T", "m", "e", "l", List.of("idea")));
@@ -636,11 +637,20 @@ class GoldenScenarioTest {
         s.run(
                 "mission",
                 () -> c.missions().create(s.director(REAL), " App ", " Ship the app ", APP, Workflow.BUILT_IN));
-        s.run("mission by an agent", () -> c.missions().create(s.agent(GALEN, REAL), "x", "y", APP, Workflow.BUILT_IN));
+        s.run(
+                "mission by an agent",
+                () -> c.missions().create(s.agent(GEOFFREY, REAL), "x", "y", APP, Workflow.BUILT_IN));
         s.run(
                 "planning ticket",
                 () -> c.tickets()
-                        .create(s.agent(GALEN, REAL), M1, " Plan the work ", null, null, List.of(), List.of("A plan")));
+                        .create(
+                                s.agent(GEOFFREY, REAL),
+                                M1,
+                                " Plan the work ",
+                                null,
+                                null,
+                                List.of(),
+                                List.of("A plan")));
         s.run(
                 "build ticket",
                 () -> c.tickets()
@@ -728,28 +738,28 @@ class GoldenScenarioTest {
                                 s.director(REAL),
                                 M1,
                                 PermissionRule.forTool("Glob", ActionCategory.READ, Decision.DENY)));
-        s.run("assign the planner", () -> c.tickets().assign(s.director(REAL), new TicketId("T-1"), GALEN));
-        s.run("assign an unknown ticket", () -> c.tickets().assign(s.director(REAL), new TicketId("T-99"), GALEN));
-        s.run("start before approval", () -> c.tickets().start(s.agent(GALEN, REAL), new TicketId("T-1")));
-        s.run("submit the plan", () -> c.missions().submitPlan(s.agent(GALEN, REAL), M1));
-        s.run("submit it twice", () -> c.missions().submitPlan(s.agent(GALEN, REAL), M1));
+        s.run("assign the planner", () -> c.tickets().assign(s.director(REAL), new TicketId("T-1"), GEOFFREY));
+        s.run("assign an unknown ticket", () -> c.tickets().assign(s.director(REAL), new TicketId("T-99"), GEOFFREY));
+        s.run("start before approval", () -> c.tickets().start(s.agent(GEOFFREY, REAL), new TicketId("T-1")));
+        s.run("submit the plan", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), M1));
+        s.run("submit it twice", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), M1));
         s.run("approve without a budget", () -> c.missions().approvePlan(s.director(REAL), M1));
         s.run("reject the plan", () -> c.missions().rejectPlan(s.director(REAL), M1, "Add a test ticket"));
         s.run("reject without a plan", () -> c.missions().rejectPlan(s.director(REAL), M1, "again"));
         s.run(
                 "test ticket",
-                () -> c.tickets().create(s.agent(GALEN, REAL), M1, "Tests", "", Priority.LOW, List.of(), List.of()));
-        s.run("submit again", () -> c.missions().submitPlan(s.agent(GALEN, REAL), M1));
+                () -> c.tickets().create(s.agent(GEOFFREY, REAL), M1, "Tests", "", Priority.LOW, List.of(), List.of()));
+        s.run("submit again", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), M1));
         s.run("budget of zero", () -> c.verification().setBudget(s.director(REAL), M1, 0.0));
         s.run("budget", () -> c.verification().setBudget(s.director(REAL), M1, 5.0));
         s.run("approve", () -> c.missions().approvePlan(s.director(REAL), M1));
         s.run("validation", () -> c.missions().enableTicketValidation(s.director(REAL), M1));
         s.run("validation twice", () -> c.missions().enableTicketValidation(s.director(REAL), M1));
-        s.run("start the planning", () -> c.tickets().start(s.agent(GALEN, REAL), new TicketId("T-1")));
+        s.run("start the planning", () -> c.tickets().start(s.agent(GEOFFREY, REAL), new TicketId("T-1")));
         s.run(
                 "planner's session",
                 () -> c.sessions()
-                        .start(s.system(REAL), "s-plan", new TicketId("T-1"), GALEN, "claude-sonnet-5-5", "2.1.0"));
+                        .start(s.system(REAL), "s-plan", new TicketId("T-1"), GEOFFREY, "claude-sonnet-5-5", "2.1.0"));
         s.run(
                 "planner's session ends",
                 () -> c.sessions().end(s.system(REAL), "s-plan", false, "completed", 3, 1000L, 200L, 0.10));
@@ -766,7 +776,7 @@ class GoldenScenarioTest {
                 "propose with a later dependency",
                 () -> c.tickets()
                         .propose(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new TicketId("T-1"),
                                 CHRIS,
                                 List.of(
@@ -774,12 +784,12 @@ class GoldenScenarioTest {
                                         new ProposedTicket("y", null, null, null))));
         s.run(
                 "propose nothing",
-                () -> c.tickets().propose(s.agent(GALEN, REAL), new TicketId("T-1"), CHRIS, List.of()));
+                () -> c.tickets().propose(s.agent(GEOFFREY, REAL), new TicketId("T-1"), CHRIS, List.of()));
         s.run(
                 "propose",
                 () -> c.tickets()
                         .propose(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new TicketId("T-1"),
                                 CHRIS,
                                 List.of(
@@ -803,7 +813,9 @@ class GoldenScenarioTest {
                                 " Profile page ",
                                 " Show the profile ",
                                 List.of(" Shows it ", " ")));
-        s.run("edit by an agent", () -> c.tickets().edit(s.agent(GALEN, REAL), new TicketId("T-6"), "x", null, null));
+        s.run(
+                "edit by an agent",
+                () -> c.tickets().edit(s.agent(GEOFFREY, REAL), new TicketId("T-6"), "x", null, null));
         s.run("cancel a proposal", () -> c.tickets().cancel(s.director(REAL), new TicketId("T-6"), "Later"));
         s.run("cancel it twice", () -> c.tickets().cancel(s.director(REAL), new TicketId("T-6"), "Later"));
         s.run("approve the tests", () -> c.tickets().approve(s.director(REAL), M1, List.of(new TicketId("T-3"))));
@@ -822,7 +834,7 @@ class GoldenScenarioTest {
         s.run("workspace twice", () -> c.workshop().prepareWorkspace(s.system(REAL), M1, CHRIS, "C:/ws/x", "b", "c"));
         s.run(
                 "workspace by the director",
-                () -> c.workshop().prepareWorkspace(s.director(REAL), M1, DARIUS, "C:/ws/d", "b", "c"));
+                () -> c.workshop().prepareWorkspace(s.director(REAL), M1, DEHREN, "C:/ws/d", "b", "c"));
         s.run(
                 "director edits a file",
                 () -> c.workshop()
@@ -871,7 +883,7 @@ class GoldenScenarioTest {
                 "read executed twice",
                 () -> c.actions().recordOutcome(s.system(REAL), new ActionId("a1"), true, "again"));
         s.run("self confirmation", () -> c.actions().confirm(s.agent(CHRIS, REAL), new ActionId("a1"), "I checked"));
-        s.run("confirmation", () -> c.actions().confirm(s.agent(DARIUS, REAL), new ActionId("a1"), "Same file"));
+        s.run("confirmation", () -> c.actions().confirm(s.agent(DEHREN, REAL), new ActionId("a1"), "Same file"));
         s.run(
                 "mvn allowed",
                 () -> c.actions()
@@ -891,7 +903,7 @@ class GoldenScenarioTest {
                 "mvn failed",
                 () -> c.actions().recordOutcome(s.system(REAL), new ActionId("a2"), false, "BUILD FAILURE"));
         s.run("progress after the end", () -> c.actions().recordProgress(s.system(REAL), new ActionId("a2"), 30));
-        s.run("confirm a failure", () -> c.actions().confirm(s.agent(DARIUS, REAL), new ActionId("a2"), "x"));
+        s.run("confirm a failure", () -> c.actions().confirm(s.agent(DEHREN, REAL), new ActionId("a2"), "x"));
         s.run(
                 "grep denied by the table",
                 () -> c.actions()
@@ -1315,8 +1327,8 @@ class GoldenScenarioTest {
         s.run(
                 "reviewer's session",
                 () -> c.sessions()
-                        .start(s.system(REAL), "s-rev", new TicketId("T-4"), DARIUS, "claude-opus-5-5", "2.1.0"));
-        s.ask("reviewing", () -> c.queries().statusOf(DARIUS));
+                        .start(s.system(REAL), "s-rev", new TicketId("T-4"), DEHREN, "claude-opus-5-5", "2.1.0"));
+        s.ask("reviewing", () -> c.queries().statusOf(DEHREN));
         s.run(
                 "consult by the producer",
                 () -> c.tickets()
@@ -1330,12 +1342,12 @@ class GoldenScenarioTest {
                 "consult without a role",
                 () -> c.tickets()
                         .requestConsultation(
-                                s.agent(DARIUS, REAL), new TicketId("T-4"), ConsultationKind.CONSULT, " ", "Safe?"));
+                                s.agent(DEHREN, REAL), new TicketId("T-4"), ConsultationKind.CONSULT, " ", "Safe?"));
         s.run(
                 "consult",
                 () -> c.tickets()
                         .requestConsultation(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-4"),
                                 ConsultationKind.CONSULT,
                                 " security ",
@@ -1344,7 +1356,7 @@ class GoldenScenarioTest {
                 "consult twice",
                 () -> c.tickets()
                         .requestConsultation(
-                                s.agent(DARIUS, REAL), new TicketId("T-4"), ConsultationKind.RESEARCH, null, "again"));
+                                s.agent(DEHREN, REAL), new TicketId("T-4"), ConsultationKind.RESEARCH, null, "again"));
         s.run(
                 "answer by the producer",
                 () -> c.tickets().answerConsultation(s.agent(CHRIS, REAL), new TicketId("T-4"), "yes"));
@@ -1354,10 +1366,10 @@ class GoldenScenarioTest {
         s.run(
                 "answer the consultation",
                 () -> c.tickets()
-                        .answerConsultation(s.agent(GALEN, REAL), new TicketId("T-4"), "Check the audience too"));
+                        .answerConsultation(s.agent(GEOFFREY, REAL), new TicketId("T-4"), "Check the audience too"));
         s.run(
                 "answer it twice",
-                () -> c.tickets().answerConsultation(s.agent(GALEN, REAL), new TicketId("T-4"), "again"));
+                () -> c.tickets().answerConsultation(s.agent(GEOFFREY, REAL), new TicketId("T-4"), "again"));
         s.run(
                 "self review",
                 () -> c.tickets().review(s.agent(CHRIS, REAL), new TicketId("T-4"), ReviewVerdict.VALIDATED, "fine"));
@@ -1368,7 +1380,7 @@ class GoldenScenarioTest {
                 "reject",
                 () -> c.tickets()
                         .review(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-4"),
                                 ReviewVerdict.REJECTED,
                                 "No audience check"));
@@ -1383,7 +1395,7 @@ class GoldenScenarioTest {
                 "research",
                 () -> c.tickets()
                         .requestConsultation(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-4"),
                                 ConsultationKind.RESEARCH,
                                 "ignored",
@@ -1397,7 +1409,7 @@ class GoldenScenarioTest {
                 "unverifiable",
                 () -> c.tickets()
                         .review(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-4"),
                                 ReviewVerdict.UNVERIFIABLE,
                                 "Cannot run the browser"));
@@ -1417,7 +1429,7 @@ class GoldenScenarioTest {
                 "unverifiable again",
                 () -> c.tickets()
                         .review(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-4"),
                                 ReviewVerdict.UNVERIFIABLE,
                                 "Still cannot"));
@@ -1434,7 +1446,7 @@ class GoldenScenarioTest {
         s.run(
                 "unverifiable a third time",
                 () -> c.tickets()
-                        .review(s.agent(DARIUS, REAL), new TicketId("T-4"), ReviewVerdict.UNVERIFIABLE, "No browser"));
+                        .review(s.agent(DEHREN, REAL), new TicketId("T-4"), ReviewVerdict.UNVERIFIABLE, "No browser"));
         s.run(
                 "accept as is",
                 () -> c.desk()
@@ -1447,7 +1459,7 @@ class GoldenScenarioTest {
                 "validate with reservations",
                 () -> c.tickets()
                         .review(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new TicketId("T-5"),
                                 ReviewVerdict.VALIDATED_WITH_RESERVATIONS,
                                 "Fine, no test for expiry"));
@@ -1480,7 +1492,7 @@ class GoldenScenarioTest {
                 () -> c.verification().configureChecks(s.director(REAL), M1, " ", true));
         s.run("checks", () -> c.verification().configureChecks(s.director(REAL), M1, " mvn -q verify ", true));
         s.check("checks can run", () -> c.verification().checkChecksCanRun(s.director(REAL), M1, CHRIS));
-        s.check("checks on no workspace", () -> c.verification().checkChecksCanRun(s.director(REAL), M1, DARIUS));
+        s.check("checks on no workspace", () -> c.verification().checkChecksCanRun(s.director(REAL), M1, DEHREN));
         s.run(
                 "checks ran",
                 () -> c.verification()
@@ -1529,7 +1541,7 @@ class GoldenScenarioTest {
                                 List.of("build.gradle")));
         s.run(
                 "patch on no workspace",
-                () -> c.workshop().acceptPatch(s.director(REAL), M1, DARIUS, "x", "y", List.of("z")));
+                () -> c.workshop().acceptPatch(s.director(REAL), M1, DEHREN, "x", "y", List.of("z")));
         s.ask("commit for the login", () -> c.queries().commitFor(new TicketId("T-4")));
         s.ask("commit for the build", () -> c.queries().commitFor(new TicketId("T-2")));
         s.run(
@@ -1562,7 +1574,7 @@ class GoldenScenarioTest {
                 () -> c.workshop().recordProjectMerged(s.director(REAL), M1, KEN, "f1e2d3d", false, "conflict"));
         s.run(
                 "project merged on no workspace",
-                () -> c.workshop().recordProjectMerged(s.director(REAL), M1, DARIUS, "f1e2d3d", true, null));
+                () -> c.workshop().recordProjectMerged(s.director(REAL), M1, DEHREN, "f1e2d3d", true, null));
         s.check("pull request allowed", () -> c.deliveries().checkPullRequest(s.director(REAL), M1));
         s.check("pull request by Floor42", () -> c.deliveries().checkPullRequest(s.system(REAL), M1));
         s.run(
@@ -1639,19 +1651,19 @@ class GoldenScenarioTest {
     }
 
     void budgetAndUsage() {
-        s.run("staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GALEN));
-        s.run("staffing review twice", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GALEN));
+        s.run("staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GEOFFREY));
+        s.run("staffing review twice", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GEOFFREY));
         s.run(
                 "advice by someone else",
                 () -> c.staff().adviseStaffing(s.agent(CHRIS, REAL), M1, "Hire", true, List.of(), null, null));
         s.run(
                 "advice with too wide parallelism",
-                () -> c.staff().adviseStaffing(s.agent(GALEN, REAL), M1, "Hire", true, List.of(), 9, null));
+                () -> c.staff().adviseStaffing(s.agent(GEOFFREY, REAL), M1, "Hire", true, List.of(), 9, null));
         s.run(
                 "advice",
                 () -> c.staff()
                         .adviseStaffing(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 M1,
                                 "Two more developers",
                                 true,
@@ -1662,21 +1674,21 @@ class GoldenScenarioTest {
                                 "Estimated by Floor42: 2 days sooner"));
         s.run(
                 "advice twice",
-                () -> c.staff().adviseStaffing(s.agent(GALEN, REAL), M1, "again", false, List.of(), null, null));
+                () -> c.staff().adviseStaffing(s.agent(GEOFFREY, REAL), M1, "again", false, List.of(), null, null));
         s.ask("staffing ticket", () -> c.staff().isStaffingTicket(s.lastTicket(M1)));
         s.run(
                 "hire them",
                 () -> c.desk().answer(s.director(REAL), s.openQuestion(M1, QuestionKind.STAFFING), "hire them"));
-        s.run("second staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GALEN));
+        s.run("second staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GEOFFREY));
         s.run(
                 "Floor42 says why there is no advice",
                 () -> c.staff().adviseStaffing(s.system(REAL), M1, "No measure yet", false, null, null, null));
-        s.run("third staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GALEN));
+        s.run("third staffing review", () -> c.staff().requestStaffingReview(s.director(REAL), M1, GEOFFREY));
         s.run(
                 "advice against",
                 () -> c.staff()
                         .adviseStaffing(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 M1,
                                 "Not worth it",
                                 false,
@@ -1773,12 +1785,12 @@ class GoldenScenarioTest {
         s.run("submit it", () -> c.tickets().submitForReview(s.agent(CHRIS, REAL), noteTicket, "Faster board"));
         s.run(
                 "validate it",
-                () -> c.tickets().review(s.agent(DARIUS, REAL), noteTicket, ReviewVerdict.VALIDATED, "Fast"));
+                () -> c.tickets().review(s.agent(DEHREN, REAL), noteTicket, ReviewVerdict.VALIDATED, "Fast"));
         s.run(
                 "Floor42 closes the note",
                 () -> c.notebook().close(s.system(REAL), "N-1", c.queries().commitFor(noteTicket)));
         s.check("complete with work open", () -> c.missions().checkComplete(s.director(REAL), M1));
-        s.run("complete by an agent", () -> c.missions().complete(s.agent(GALEN, REAL), M1, "done"));
+        s.run("complete by an agent", () -> c.missions().complete(s.agent(GEOFFREY, REAL), M1, "done"));
         for (Ticket t : c.tickets().of(M1)) {
             if (!t.status().isTerminal()) {
                 s.run("cancel " + t.id().value(), () -> c.tickets().cancel(s.director(REAL), t.id(), "Out of scope"));
@@ -1811,21 +1823,28 @@ class GoldenScenarioTest {
     }
 
     void retrospective() {
-        s.run("retro by the director", () -> c.retros().open(s.director(REAL), M1, GALEN, List.of(GALEN), "facts"));
+        s.run(
+                "retro by the director",
+                () -> c.retros().open(s.director(REAL), M1, GEOFFREY, List.of(GEOFFREY), "facts"));
         s.run(
                 "retro with someone who did not work",
-                () -> c.retros().open(s.system(REAL), M1, GALEN, List.of(GALEN, ANA), "facts"));
+                () -> c.retros().open(s.system(REAL), M1, GEOFFREY, List.of(GEOFFREY, ANA), "facts"));
         s.run(
                 "retro with a dismissed agent",
-                () -> c.retros().open(s.system(REAL), M1, GALEN, List.of(GALEN, KEN), "facts"));
+                () -> c.retros().open(s.system(REAL), M1, GEOFFREY, List.of(GEOFFREY, KEN), "facts"));
         s.run(
                 "retro with the chair outside",
-                () -> c.retros().open(s.system(REAL), M1, ANA, List.of(GALEN, CHRIS), "facts"));
+                () -> c.retros().open(s.system(REAL), M1, ANA, List.of(GEOFFREY, CHRIS), "facts"));
         s.run(
                 "retro",
                 () -> c.retros()
-                        .open(s.system(REAL), M1, GALEN, List.of(GALEN, CHRIS, DARIUS), "12 sessions, 2 rejections"));
-        s.run("retro twice", () -> c.retros().open(s.system(REAL), M1, GALEN, List.of(GALEN), "facts"));
+                        .open(
+                                s.system(REAL),
+                                M1,
+                                GEOFFREY,
+                                List.of(GEOFFREY, CHRIS, DEHREN),
+                                "12 sessions, 2 rejections"));
+        s.run("retro twice", () -> c.retros().open(s.system(REAL), M1, GEOFFREY, List.of(GEOFFREY), "facts"));
         TicketId retroTicket = c.retros().find(M1).map(Retro::ticket).orElse(new TicketId("T-none"));
         s.ask("in retro", () -> c.queries().statusOf(CHRIS));
         s.run(
@@ -1841,14 +1860,14 @@ class GoldenScenarioTest {
         s.run("contribution twice", () -> c.retros().contribute(s.agent(CHRIS, REAL), M1, null, null, "again"));
         s.run(
                 "conclude too early",
-                () -> c.retros().conclude(s.agent(GALEN, REAL), M1, List.of(), "x", null, List.of()));
-        s.run("skip", () -> c.retros().skip(s.system(REAL), M1, DARIUS, "usage window"));
-        s.run("skip by the director", () -> c.retros().skip(s.director(REAL), M1, GALEN, "x"));
+                () -> c.retros().conclude(s.agent(GEOFFREY, REAL), M1, List.of(), "x", null, List.of()));
+        s.run("skip", () -> c.retros().skip(s.system(REAL), M1, DEHREN, "usage window"));
+        s.run("skip by the director", () -> c.retros().skip(s.director(REAL), M1, GEOFFREY, "x"));
         s.run(
                 "chair speaks",
                 () -> c.retros()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 M1,
                                 List.of("Plan held"),
                                 List.of("Budget surprises"),
@@ -1860,7 +1879,7 @@ class GoldenScenarioTest {
                 "conclude with a blank lesson",
                 () -> c.retros()
                         .conclude(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 M1,
                                 List.of(),
                                 "x",
@@ -1870,7 +1889,7 @@ class GoldenScenarioTest {
                 "conclude",
                 () -> c.retros()
                         .conclude(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 M1,
                                 List.of("Keep tests first"),
                                 "We shipped",
@@ -1879,7 +1898,9 @@ class GoldenScenarioTest {
                                         new Lesson.Proposal(WorkRole.DEVELOPER, " Write the test first "),
                                         new Lesson.Proposal(null, "Say what was not verified"),
                                         new Lesson.Proposal(WorkRole.REVIEWER, "Run the browser"))));
-        s.run("conclude twice", () -> c.retros().conclude(s.agent(GALEN, REAL), M1, List.of(), "x", null, List.of()));
+        s.run(
+                "conclude twice",
+                () -> c.retros().conclude(s.agent(GEOFFREY, REAL), M1, List.of(), "x", null, List.of()));
         s.run("accept by an agent", () -> c.retros().acceptLesson(s.agent(CHRIS, REAL), "L-1", null));
         s.run("accept a too long lesson", () -> c.retros().acceptLesson(s.director(REAL), "L-1", "q".repeat(501)));
         s.run("accept", () -> c.retros().acceptLesson(s.director(REAL), "L-1", null));
@@ -1905,20 +1926,21 @@ class GoldenScenarioTest {
                 "decision ticket",
                 () -> c.tickets().create(s.director(REAL), M2, "Decide: gateway", "", null, List.of(), List.of()));
         TicketId decision = s.lastTicket(M2);
-        s.run("assign the chair", () -> c.tickets().assign(s.director(REAL), decision, GALEN));
+        s.run("assign the chair", () -> c.tickets().assign(s.director(REAL), decision, GEOFFREY));
         s.run(
                 "committee with one member",
                 () -> c.committees()
-                        .convene(s.director(REAL), M2, decision, "Gateway?", List.of(GALEN), List.of("Architect")));
+                        .convene(s.director(REAL), M2, decision, "Gateway?", List.of(GEOFFREY), List.of("Architect")));
         s.run(
                 "committee with a chair who is not the assignee",
                 () -> c.committees()
                         .convene(
-                                s.director(REAL), M2, decision, "Gateway?", List.of(CHRIS, DARIUS), List.of("a", "b")));
+                                s.director(REAL), M2, decision, "Gateway?", List.of(CHRIS, DEHREN), List.of("a", "b")));
         s.run(
                 "committee with a dismissed member",
                 () -> c.committees()
-                        .convene(s.director(REAL), M2, decision, "Gateway?", List.of(GALEN, KEN), List.of("a", "b")));
+                        .convene(
+                                s.director(REAL), M2, decision, "Gateway?", List.of(GEOFFREY, KEN), List.of("a", "b")));
         s.run(
                 "committee",
                 () -> c.committees()
@@ -1927,37 +1949,42 @@ class GoldenScenarioTest {
                                 M2,
                                 decision,
                                 "Gateway?",
-                                List.of(GALEN, DARIUS, CHRIS),
+                                List.of(GEOFFREY, DEHREN, CHRIS),
                                 List.of("Architect", "Security", "Developer")));
         s.run(
                 "committee twice",
                 () -> c.committees()
                         .convene(
-                                s.director(REAL), M2, decision, "Gateway?", List.of(GALEN, DARIUS), List.of("a", "b")));
-        s.run("submit", () -> c.missions().submitPlan(s.agent(GALEN, REAL), M2));
+                                s.director(REAL),
+                                M2,
+                                decision,
+                                "Gateway?",
+                                List.of(GEOFFREY, DEHREN),
+                                List.of("a", "b")));
+        s.run("submit", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), M2));
         s.run("no cap", () -> c.verification().setBudget(s.director(REAL), M2, null));
         s.run("approve", () -> c.missions().approvePlan(s.director(REAL), M2));
-        s.run("start deciding", () -> c.tickets().start(s.agent(GALEN, REAL), decision));
+        s.run("start deciding", () -> c.tickets().start(s.agent(GEOFFREY, REAL), decision));
         s.run(
                 "member's session",
-                () -> c.sessions().start(s.system(REAL), "s-c1", decision, DARIUS, "claude-opus-5-5", "2.1.0"));
+                () -> c.sessions().start(s.system(REAL), "s-c1", decision, DEHREN, "claude-opus-5-5", "2.1.0"));
         s.run(
                 "member's session ends",
                 () -> c.sessions().end(s.system(REAL), "s-c1", false, "completed", 2, 10L, 10L, 0.02));
         s.run(
                 "chair's session",
-                () -> c.sessions().start(s.system(REAL), "s-c2", decision, GALEN, "claude-opus-5-5", "2.1.0"));
+                () -> c.sessions().start(s.system(REAL), "s-c2", decision, GEOFFREY, "claude-opus-5-5", "2.1.0"));
         s.run(
                 "chair's session ends",
                 () -> c.sessions().end(s.system(REAL), "s-c2", false, "completed", 2, 10L, 10L, 0.02));
-        s.ask("in committee", () -> c.queries().statusOf(DARIUS));
+        s.ask("in committee", () -> c.queries().statusOf(DEHREN));
         s.run(
                 "contribution of the wrong kind",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.REBUTTAL,
                                 "x",
                                 null,
@@ -1969,7 +1996,7 @@ class GoldenScenarioTest {
                         .contribute(
                                 s.agent(CHRIS, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.ANALYSIS,
                                 "x",
                                 null,
@@ -1979,9 +2006,9 @@ class GoldenScenarioTest {
                 "analysis with questions",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.ANALYSIS,
                                 "Gateway",
                                 "Gateway",
@@ -1992,9 +2019,9 @@ class GoldenScenarioTest {
                 "analysis with an objection",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.ANALYSIS,
                                 "mTLS",
                                 "Gateway with mTLS",
@@ -2004,9 +2031,9 @@ class GoldenScenarioTest {
                 "analysis twice",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.ANALYSIS,
                                 "again",
                                 null,
@@ -2032,9 +2059,9 @@ class GoldenScenarioTest {
                 "rebuttal",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.REBUTTAL,
                                 "Still a gateway",
                                 "Gateway",
@@ -2044,9 +2071,9 @@ class GoldenScenarioTest {
                 "rebuttal with the objection",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "Still",
                                 "Gateway with mTLS",
@@ -2068,9 +2095,9 @@ class GoldenScenarioTest {
                 "synthesis",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.SYNTHESIS,
                                 "# Record",
                                 "Adopt a gateway",
@@ -2109,9 +2136,9 @@ class GoldenScenarioTest {
                 "second rebuttal",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.REBUTTAL,
                                 "With 99.9",
                                 "Gateway",
@@ -2122,9 +2149,9 @@ class GoldenScenarioTest {
                 "second rebuttal with the objection",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "Still",
                                 "Gateway with mTLS",
@@ -2146,9 +2173,9 @@ class GoldenScenarioTest {
                 "second synthesis",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.SYNTHESIS,
                                 "# Record 2",
                                 null,
@@ -2166,9 +2193,9 @@ class GoldenScenarioTest {
                 "third rebuttal",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.REBUTTAL,
                                 "On-prem gateway",
                                 "Gateway",
@@ -2178,13 +2205,13 @@ class GoldenScenarioTest {
                 "third rebuttal, objection withdrawn",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M2, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "Fine with mTLS",
                                 "Gateway with mTLS",
-                                "ADOPTED galen",
+                                "ADOPTED geoffrey",
                                 null));
         s.run(
                 "last third rebuttal",
@@ -2202,9 +2229,9 @@ class GoldenScenarioTest {
                 "third synthesis",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M2, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.SYNTHESIS,
                                 "# Record 3",
                                 "On-prem gateway",
@@ -2268,7 +2295,7 @@ class GoldenScenarioTest {
         s.run("cancel", () -> c.missions().cancel(s.director(REAL), M2, "Bought a product instead"));
         s.run(
                 "retro of a cancelled mission",
-                () -> c.retros().open(s.system(REAL), M2, GALEN, List.of(GALEN, DARIUS), "Cancelled"));
+                () -> c.retros().open(s.system(REAL), M2, GEOFFREY, List.of(GEOFFREY, DEHREN), "Cancelled"));
         s.run("close the retro now by Floor42", () -> c.retros().closeNow(s.system(REAL), M2));
         s.run("close the retro now", () -> c.retros().closeNow(s.director(REAL), M2));
         s.run("Floor42 concludes a closed retro", () -> c.retros().conclude(s.system(REAL), M2, null, null, "x", null));
@@ -2288,7 +2315,7 @@ class GoldenScenarioTest {
                 "idea ticket",
                 () -> c.tickets().create(s.director(REAL), M3, "Decide: idea", "", null, List.of(), List.of()));
         TicketId idea = s.lastTicket(M3);
-        s.run("assign the moderator", () -> c.tickets().assign(s.director(REAL), idea, GALEN));
+        s.run("assign the moderator", () -> c.tickets().assign(s.director(REAL), idea, GEOFFREY));
         s.run(
                 "moderated committee too small",
                 () -> c.committees()
@@ -2297,7 +2324,7 @@ class GoldenScenarioTest {
                                 M3,
                                 idea,
                                 "Marketplace?",
-                                List.of(GALEN, DARIUS),
+                                List.of(GEOFFREY, DEHREN),
                                 List.of("Moderator", "Lawyer"),
                                 new Committee.Format("idea", true, 2, null)));
         s.run(
@@ -2308,9 +2335,9 @@ class GoldenScenarioTest {
                                 M3,
                                 idea,
                                 "Marketplace?",
-                                List.of(GALEN, DARIUS, CHRIS),
+                                List.of(GEOFFREY, DEHREN, CHRIS),
                                 List.of("M", "L", "D"),
-                                new Committee.Format("idea", true, 2, GALEN)));
+                                new Committee.Format("idea", true, 2, GEOFFREY)));
         s.run(
                 "committee without format",
                 () -> c.committees()
@@ -2319,7 +2346,7 @@ class GoldenScenarioTest {
                                 M3,
                                 idea,
                                 "Marketplace?",
-                                List.of(GALEN, DARIUS, CHRIS),
+                                List.of(GEOFFREY, DEHREN, CHRIS),
                                 List.of("M", "L", "D"),
                                 null));
         s.run(
@@ -2330,17 +2357,17 @@ class GoldenScenarioTest {
                                 M3,
                                 idea,
                                 "Marketplace?",
-                                List.of(GALEN, DARIUS, CHRIS),
+                                List.of(GEOFFREY, DEHREN, CHRIS),
                                 List.of("Moderator", "Lawyer", "Your double"),
                                 new Committee.Format("idea", true, 2, CHRIS)));
-        s.run("submit", () -> c.missions().submitPlan(s.agent(GALEN, REAL), M3));
+        s.run("submit", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), M3));
         s.run(
                 "director speaks before the plan is approved",
                 () -> c.committees()
                         .contributeAsDirector(s.director(REAL), new CommitteeRef(M3, 1), "x", null, null, null));
         s.run("budget", () -> c.verification().setBudget(s.director(REAL), M3, 10.0));
         s.run("approve", () -> c.missions().approvePlan(s.director(REAL), M3));
-        s.run("start", () -> c.tickets().start(s.agent(GALEN, REAL), idea));
+        s.run("start", () -> c.tickets().start(s.agent(GEOFFREY, REAL), idea));
         s.run(
                 "the director speaks",
                 () -> c.committees()
@@ -2359,9 +2386,9 @@ class GoldenScenarioTest {
                 "the lawyer",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M3, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.ANALYSIS,
                                 "Liability",
                                 "Sell with insurance",
@@ -2387,15 +2414,15 @@ class GoldenScenarioTest {
                                 new CommitteeRef(M3, 1),
                                 "Changed my mind",
                                 null,
-                                "ADOPTED darius",
+                                "ADOPTED dehren",
                                 null));
         s.run(
                 "the lawyer debates",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M3, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "Insurance",
                                 "Sell with insurance",
@@ -2405,9 +2432,9 @@ class GoldenScenarioTest {
                 "second debate round, lawyer",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M3, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "Same",
                                 "Sell with insurance",
@@ -2433,9 +2460,9 @@ class GoldenScenarioTest {
                 "moderator's record",
                 () -> c.committees()
                         .contribute(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 new CommitteeRef(M3, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.SYNTHESIS,
                                 "# Record",
                                 "Sell with insurance",
@@ -2449,9 +2476,9 @@ class GoldenScenarioTest {
                 "contribution after the ruling",
                 () -> c.committees()
                         .contribute(
-                                s.agent(DARIUS, REAL),
+                                s.agent(DEHREN, REAL),
                                 new CommitteeRef(M3, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.REBUTTAL,
                                 "x",
                                 null,
@@ -2474,7 +2501,8 @@ class GoldenScenarioTest {
                 () -> c.tickets().create(s.director(REAL), M4, "x", "", null, List.of(), List.of()));
         s.run(
                 "simulated ticket",
-                () -> c.tickets().create(s.agent(GALEN, SIMULATED), M4, "Try", "", Priority.LOW, List.of(), List.of()));
+                () -> c.tickets()
+                        .create(s.agent(GEOFFREY, SIMULATED), M4, "Try", "", Priority.LOW, List.of(), List.of()));
         s.run(
                 "planning ticket by kind",
                 () -> c.tickets()
@@ -2510,7 +2538,7 @@ class GoldenScenarioTest {
         s.run(
                 "simulated checks",
                 () -> c.verification().configureChecks(s.director(SIMULATED), M4, "mvn verify", false));
-        s.run("simulated empty plan", () -> c.missions().submitPlan(s.agent(GALEN, SIMULATED), M4));
+        s.run("simulated empty plan", () -> c.missions().submitPlan(s.agent(GEOFFREY, SIMULATED), M4));
         s.run(
                 "simulated assign",
                 () -> c.tickets()
@@ -2518,7 +2546,7 @@ class GoldenScenarioTest {
                                 s.director(SIMULATED),
                                 c.tickets().of(M4).getFirst().id(),
                                 CHRIS));
-        s.run("simulated submit", () -> c.missions().submitPlan(s.agent(GALEN, SIMULATED), M4));
+        s.run("simulated submit", () -> c.missions().submitPlan(s.agent(GEOFFREY, SIMULATED), M4));
         s.run("simulated approve", () -> c.missions().approvePlan(s.director(SIMULATED), M4));
         s.run(
                 "simulated start",
@@ -2585,7 +2613,7 @@ class GoldenScenarioTest {
         s.run("meeting called by an agent", () -> c.meetings().call(s.agent(CHRIS, REAL), m5, List.of(CHRIS), null));
         s.run(
                 "call a meeting",
-                () -> c.meetings().call(s.director(REAL), m5, List.of(CHRIS, DARIUS), "Where we go next"));
+                () -> c.meetings().call(s.director(REAL), m5, List.of(CHRIS, DEHREN), "Where we go next"));
         s.ask("in the meeting", () -> c.queries().statusOf(CHRIS));
         s.run("a second meeting on the mission", () -> c.meetings().call(s.director(REAL), m5, List.of(KEN), null));
         s.run(
@@ -2602,7 +2630,7 @@ class GoldenScenarioTest {
         s.run(
                 "note for someone absent",
                 () -> c.meetings().note(s.director(REAL), "MT-1", KEN, "x", MeetingNoteUse.NOTE_ONLY));
-        s.ask("notes for darius", () -> c.meetings().notesFor(m5, DARIUS));
+        s.ask("notes for dehren", () -> c.meetings().notesFor(m5, DEHREN));
         s.run("close the meeting", () -> c.meetings().close(s.director(REAL), "MT-1"));
         s.run("close it twice", () -> c.meetings().close(s.director(REAL), "MT-1"));
         s.ask("after the meeting", () -> c.queries().statusOf(CHRIS));
@@ -2627,7 +2655,7 @@ class GoldenScenarioTest {
                                 Priority.LOW,
                                 List.of(),
                                 List.of()));
-        s.run("its plan", () -> c.missions().submitPlan(s.agent(GALEN, REAL), m6));
+        s.run("its plan", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), m6));
         s.run("its budget", () -> c.verification().setBudget(s.director(REAL), m6, 5.0));
         s.run("approve it", () -> c.missions().approvePlan(s.director(REAL), m6));
         s.run(
@@ -2636,12 +2664,12 @@ class GoldenScenarioTest {
                         .call(
                                 s.director(REAL),
                                 m6,
-                                List.of(CHRIS, DARIUS),
+                                List.of(CHRIS, DEHREN),
                                 "Review the release notes",
                                 MeetingPlace.CONFERENCE));
         s.run(
                 "ask for their views",
-                () -> c.meetings().askForViews(s.director(REAL), "MT-2", List.of(DARIUS, CHRIS), 0.5, "Is it good?"));
+                () -> c.meetings().askForViews(s.director(REAL), "MT-2", List.of(DEHREN, CHRIS), 0.5, "Is it good?"));
         s.ask(
                 "the meeting's ticket",
                 () -> c.meetings().find("MT-2").map(Meeting::ticket).flatMap(c.tickets()::find));
@@ -2657,9 +2685,9 @@ class GoldenScenarioTest {
                 () -> c.meetings()
                         .recordTurn(s.system(REAL), "MT-2", SpokenTurn.heard(1, CHRIS, null, "Me first", 0.1)));
         s.run(
-                "darius speaks",
+                "dehren speaks",
                 () -> c.meetings()
-                        .recordTurn(s.system(REAL), "MT-2", SpokenTurn.heard(1, DARIUS, null, "Tighten it", 0.1)));
+                        .recordTurn(s.system(REAL), "MT-2", SpokenTurn.heard(1, DEHREN, null, "Tighten it", 0.1)));
         s.run(
                 "chris is not heard",
                 () -> c.meetings()
@@ -2719,11 +2747,11 @@ class GoldenScenarioTest {
                                 List.of("c"),
                                 TicketKind.PLANNING));
         TicketId planning = c.tickets().of(pinned).getLast().id();
-        s.run("the planner takes it", () -> c.tickets().assign(s.director(REAL), planning, GALEN));
-        s.run("the planner proposes", () -> c.workflows().propose(s.agent(GALEN, REAL), pinned, talk));
+        s.run("the planner takes it", () -> c.tickets().assign(s.director(REAL), planning, GEOFFREY));
+        s.run("the planner proposes", () -> c.workflows().propose(s.agent(GEOFFREY, REAL), pinned, talk));
         s.run(
                 "the planner proposes again",
-                () -> c.workflows().propose(s.agent(GALEN, REAL), pinned, light.renamed("Quick")));
+                () -> c.workflows().propose(s.agent(GEOFFREY, REAL), pinned, light.renamed("Quick")));
         s.run(
                 "adopt the first proposal, edited",
                 () -> c.workflows().save(s.director(REAL), talk.renamed("Talk it over"), false, 1));
@@ -2758,7 +2786,7 @@ class GoldenScenarioTest {
                 .findFirst()
                 .orElseThrow()
                 .id();
-        s.run("its plan opens with no ticket", () -> c.missions().submitPlan(s.agent(GALEN, REAL), researching));
+        s.run("its plan opens with no ticket", () -> c.missions().submitPlan(s.agent(GEOFFREY, REAL), researching));
         s.run("it cannot be sent back", () -> c.missions().rejectPlan(s.director(REAL), researching, "again"));
         s.run("its budget", () -> c.verification().setBudget(s.director(REAL), researching, 2.0));
         s.run("approve it: the task opens", () -> c.missions().approvePlan(s.director(REAL), researching));
@@ -2781,7 +2809,7 @@ class GoldenScenarioTest {
                 "the planner proposes a node with its notes and its test",
                 () -> c.tickets()
                         .create(
-                                s.agent(GALEN, REAL),
+                                s.agent(GEOFFREY, REAL),
                                 graphing,
                                 "Read the code",
                                 "Reads it.\nRisk: low: it only reads\nTier: light",
@@ -2821,7 +2849,7 @@ class GoldenScenarioTest {
                         .create(s.director(SIMULATED), simIam, "Badge in", "", Priority.LOW, List.of(), List.of()));
         TicketId badge = c.tickets().of(simIam).getFirst().id();
         s.run("simulated badge assign", () -> c.tickets().assign(s.director(SIMULATED), badge, CHRIS));
-        s.run("simulated badge submit", () -> c.missions().submitPlan(s.agent(GALEN, SIMULATED), simIam));
+        s.run("simulated badge submit", () -> c.missions().submitPlan(s.agent(GEOFFREY, SIMULATED), simIam));
         s.run("simulated badge approve", () -> c.missions().approvePlan(s.director(SIMULATED), simIam));
         s.run("simulated badge start", () -> c.tickets().start(s.agent(CHRIS, SIMULATED), badge));
         s.run(

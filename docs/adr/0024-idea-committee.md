@@ -15,7 +15,7 @@ The director chose, on 2026-10-29:
 ## Decision
 - **A second panel.** A mission may convene an `idea` committee instead of an `architecture` one. Its seats:
   - moderator (Lucie, chairs);
-  - lawyer (Clara), altruist (Malik), visionary disruptor (Iris), the director's double, global architect (Galen), security (Nora), experienced developer (Chris), salesperson (Sofia), and someone who knows nothing about IT (Marcel).
+  - lawyer (Clara), altruist (Malik), visionary disruptor (Iris), the director's double, global architect (Geoffrey), security (Nora), experienced developer (Chris), salesperson (Sofia), and someone who knows nothing about IT (Marcel).
   
   Each seat is an agent with its own lens, model and effort, hired on first need. The visionary is a style of thinking, not an impersonation: the agent is named Max.
 - **Neutral by brief and by structure.** Every member's brief tells it to serve no side and not to guess what the director wants to hear. Round 1 stays independent: no member sees another's analysis.
@@ -31,7 +31,7 @@ The director chose, on 2026-10-29:
 - **Existing committees are unchanged.** The architecture committee keeps one debate round and a chair that takes part. Events recorded before this change read as an architecture committee.
 
 ## Consequences
-- The cost is (members × rounds) + 1 sessions. With the nine members and the moderator, that is 19 sessions if they agree in the first debate round and 37 at most. Galen on Opus with high effort is the most expensive seat. The mission budget holds the next session when it is reached.
+- The cost is (members × rounds) + 1 sessions. With the nine members and the moderator, that is 19 sessions if they agree in the first debate round and 37 at most. Geoffrey on Opus with high effort is the most expensive seat. The mission budget holds the next session when it is reached.
 - An agreement is still not a proof: the moderator's record lists what remains to be verified, and the director still rules (adopt, adopt and implement, send back, reject).
 - The director's in-person contribution and the double's session may cross: when the director fills the seat while the double's session runs, the session's text is set aside and logged, and the director's stands.
 

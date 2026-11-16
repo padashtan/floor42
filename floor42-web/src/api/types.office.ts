@@ -173,7 +173,7 @@ export interface AgentView {
   workRole: string | null
   /** A session of the agent is open: it cannot be dismissed until it ends. */
   atWork: boolean
-  /** A chair of Floor42's committees (Galen, Lucie): never dismissed, nobody can be hired in their place. */
+  /** A chair of Floor42's committees (Geoffrey, Lucie): never dismissed, nobody can be hired in their place. */
   stays: boolean
   /** Starred by the director as a core member: "dismiss everyone except the core members" keeps it. */
   core: boolean

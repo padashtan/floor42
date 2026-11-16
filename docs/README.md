@@ -18,7 +18,7 @@ ones written for readers, and the working notes the agents keep for each other.
 | [`backups.md`](backups.md) | The journal's automatic backups and how to restore one. |
 | [`releases.md`](releases.md) | What a release publishes (zip, image, SBOMs, signed provenance) and how to verify it with `gh attestation verify`. |
 | [`quality.md`](quality.md), [`security-scanning.md`](security-scanning.md), [`oidc-conformance.md`](oidc-conformance.md) | The assurance chain: static analysis, coverage, mutation, fuzzing, scanners, and the OpenID conformance run. |
-| [`migration-from-office.md`](migration-from-office.md) | What happens on the first start after an upgrade from Office (the project's name before its public release). |
+| [`migration-from-office.md`](migration-from-office.md) | What happens on the first start after an upgrade from Office (the name before 1.5.0). |
 | [`../SECURITY.md`](../SECURITY.md) | What Floor42 enforces, what it does not, and how to report a vulnerability. |
 | [`../CHANGELOG.md`](../CHANGELOG.md) | What changed in each release, one line per change, with links to the ADRs. |
 
@@ -31,5 +31,5 @@ ones written for readers, and the working notes the agents keep for each other.
 | [`DEBT.md`](DEBT.md) | The technical debt register. Above 5 open items the build fails (`DebtGateTest`). |
 | [`V2_IDEAS.md`](V2_IDEAS.md) | Ideas after v1 and known loose ends. Not a roadmap. |
 
-Records written before the rename say "Office", and some cite `spike/*` branches, throwaway experiments that are not in this
+Records written before 1.5.0 say "Office", and some cite `spike/*` branches, throwaway experiments that are not in this
 repository: they are kept as written.

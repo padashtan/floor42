@@ -10,7 +10,8 @@ The spec requires separating rendering, interactions, domain, orchestration, run
 - `floor42-server`: one Quarkus application, organised in packages (`api`, `app`, `config`, `iam`, `journal`, `runtime`, `security`).
 - `floor42-web`: UI; consumes projections only. Not a Maven module of the root reactor.
 
-Package dependency rules are enforced by ArchUnit tests, not by convention.
+Package dependency rules are enforced by ArchUnit tests, not by convention. Since 2026-11-12, `app` and `api` are
+split into feature sub-packages under the same rules (ADR-0067).
 
 ## Consequences
 Domain tests run in milliseconds and boundaries are checked on every build. Splitting further later does not require moving code across repositories.

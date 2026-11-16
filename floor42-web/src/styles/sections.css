@@ -1,0 +1,252 @@
+/* ---- Sandbox, skills, meeting room, report and proof on the section list: the frame of Settings ----------------- */
+/* Same place, size and level as .settings-panel; opaque, above the event log and the away summary. */
+.panel.sandbox-panel,
+.panel.skills-panel,
+.panel.meeting.sectioned-panel,
+.panel.mission-end,
+.panel.prove-panel {
+  top: 90px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(1000px, calc(100vw - 48px));
+  height: calc(100vh - 170px);
+  max-height: none;
+  z-index: 24;
+  background: #071a21;
+}
+.meeting.meeting-empty {
+  z-index: 24;
+}
+.sb-sections,
+.settings-form.sb-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sb-block,
+.sk-block,
+.mr-block,
+.mr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #0a232c;
+  border: 1px solid #1d4a57;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.mr-card > .card-label {
+  color: var(--cyan);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.mr-card.question .topic {
+  font-size: 16px;
+  margin: 0;
+}
+.mr-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 10px;
+}
+.mr-members .mr-card {
+  gap: 4px;
+}
+.mr-members .mr-card.pending {
+  border-color: var(--green);
+}
+.mr-members .mr-card .state {
+  font-size: 12px;
+  color: var(--muted);
+}
+.mr-members .mr-card.pending .state {
+  color: var(--green);
+}
+.sk-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.mr-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel.meeting .meeting-body {
+  display: grid;
+  grid-template-columns: minmax(300px, 46%) minmax(0, 1fr);
+  align-items: start;
+  gap: 14px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.panel.meeting .rounds {
+  overflow: visible;
+}
+.panel.meeting .contribution {
+  padding: 10px 14px;
+  margin: 8px 0;
+  background: #0a232c;
+  border: 1px solid #1d4a57;
+  line-height: 1.55;
+  font-size: 14px;
+}
+.panel.meeting .contribution.on {
+  border-color: var(--cyan);
+}
+.panel.meeting .round > .sub {
+  margin-top: 12px;
+  color: var(--cyan);
+}
+.panel.meeting .reader {
+  background: #050c10;
+  position: sticky;
+  top: 0;
+  max-height: 70vh;
+}
+.committee-decision .in-person,
+.committee-decision .ruling,
+.committee-decision .clarifying {
+  border-top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* The desk's Archives (ADR-0054). */
+.mission-archives .archived-list {
+  padding-left: 18px;
+}
+.mission-archives .archived-mission {
+  margin: 4px 0;
+}
+.mission-archives .archived-mission .restore {
+  margin-left: 10px;
+}
+.mission-archives .clean-report {
+  margin: 6px 0;
+}
+/* ---- A director's check, defined over the timeline (WorkflowStepDialog.vue, ADR-0052) ------------------------------ */
+.step-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+.step-dialog h3 {
+  margin: 0 0 12px;
+}
+.step-dialog fieldset {
+  border: 0;
+  padding: 0;
+}
+.step-dialog textarea,
+.step-dialog select {
+  font: inherit;
+}
+.timeline .tl-checks {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 0 12px;
+}
+.timeline .tl-check {
+  padding: 4px 0;
+}
+
+/* ---- To do: under the event log, always on screen; the pin button next to a panel's close cross ------------------- */
+.todo {
+  top: var(--log-bottom, 50vh);
+  right: 8px;
+  width: 400px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  max-height: calc(100vh - var(--log-bottom, 50vh) - 8px);
+  overflow-y: auto;
+}
+.todo .title .fold {
+  margin-left: auto;
+  border: none;
+  background: none;
+}
+.todo .count {
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--amber);
+  color: #071a21;
+  font-size: 12px;
+  text-align: center;
+}
+.todo .count.zero {
+  background: none;
+  color: var(--muted);
+}
+.todo .sub {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.todo .row {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  padding: 3px 0;
+  border-top: 1px solid #12323c;
+}
+.todo .what {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.todo .what .facts {
+  display: block;
+}
+.todo .row button.action {
+  margin: 0;
+  flex: none;
+}
+.panel > .title > button.pin {
+  position: absolute;
+  top: -15px;
+  right: 21px;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: #071a21;
+  color: var(--text);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+.panel > .title > button.pin:hover,
+.panel[data-pinned] > .title > button.pin {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+@media (max-width: 760px) {
+  .panel > .title > button.pin {
+    top: 4px;
+    right: 40px;
+  }
+  /* Narrow: the log sits at the bottom (above), the list just over it, and both give way to a panel in front. */
+  .todo {
+    top: auto;
+    bottom: calc(22vh + 16px);
+    max-height: 26vh;
+  }
+  .hud:has(> .panel.framed) > .todo,
+  .hud:has(> .panel.workshop) > .todo,
+  .hud:has(> .selection) > .todo {
+    display: none;
+  }
+}

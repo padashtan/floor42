@@ -1,23 +1,23 @@
 === aProposalWithANameTheDirectorCouldNotGiveIsRefused
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 4
   #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="t", objective="o", workspace="C:/repo")
   #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
 command 5
   #5 2026-10-20T09:00:05Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Plan: t", description="o", priority=NORMAL, dependsOn=[], acceptanceCriteria=["c"], kind=PLANNING)
 command 6
-  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="galen")
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="geoffrey")
 events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -65,7 +65,7 @@ settings = {}
 since = {}
 staffing = {}
 terminalsEver = 0
-tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}}
+tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}}
 uncommittedAccepted = {}
 unprovenByMission = {}
 unsafeMode = false
@@ -75,7 +75,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 7
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
 openQuestions = []
 committeeSeats = []
@@ -110,20 +110,20 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = ASSIGNED
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = ASSIGNED
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
-tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
 actions M-1 = []
 questions M-1 = []
 sessions M-1 = []
@@ -143,7 +143,7 @@ budgetReached M-1 = false
 lastActivity M-1 = Optional[2026-10-20T09:00:06Z]
 checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: PLANNING -> COMPLETED is not allowed
 checkPullRequest M-1 = "ok"
-ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
 merge T-1 = Optional.empty
 isStaffingTicket T-1 = false
 commitFor T-1 = null
@@ -157,20 +157,20 @@ projectForgotten C:/never/worked/on = false
 === cancellingAMissionDismissesItsOpenProposals
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 4
   #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="t", objective="o", workspace="C:/repo")
   #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
 command 5
   #5 2026-10-20T09:00:05Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Plan: t", description="o", priority=NORMAL, dependsOn=[], acceptanceCriteria=["c"], kind=PLANNING)
 command 6
-  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="galen")
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="geoffrey")
 command 7
-  #7 2026-10-20T09:00:07Z REAL AGENT:galen mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=1, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+  #7 2026-10-20T09:00:07Z REAL AGENT:geoffrey mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=1, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
 command 8
   #8 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-1", reason="mission cancelled")
   #9 2026-10-20T09:00:08Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowProposalClosed(proposal=1, adopted=false)
@@ -179,7 +179,7 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -213,7 +213,7 @@ pinMarks = {"M-1"=Pin(at=0, start=0)}
 pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
-proposals = {1=WorkflowProposal(number=1, mission="M-1", by="galen", at=2026-10-20T09:00:07Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=DISMISSED)}
+proposals = {1=WorkflowProposal(number=1, mission="M-1", by="geoffrey", at=2026-10-20T09:00:07Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=DISMISSED)}
 pullRequests = []
 questions = {}
 retros = {}
@@ -227,7 +227,7 @@ settings = {}
 since = {}
 staffing = {}
 terminalsEver = 0
-tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}}
+tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}}
 uncommittedAccepted = {}
 unprovenByMission = {}
 unsafeMode = false
@@ -237,7 +237,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome="stop", planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=CANCELLED, ticketValidation=false, title="t", workspace="C:/repo"}]
 openQuestions = []
 committeeSeats = []
@@ -272,20 +272,20 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = AVAILABLE
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome="stop", planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=CANCELLED, ticketValidation=false, title="t", workspace="C:/repo"}]
-tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}]
 actions M-1 = []
 questions M-1 = []
 sessions M-1 = []
@@ -305,7 +305,7 @@ budgetReached M-1 = false
 lastActivity M-1 = Optional[2026-10-20T09:00:08Z]
 checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: CANCELLED -> COMPLETED is not allowed
 checkPullRequest M-1 = "ok"
-ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}]
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=2026-10-20T09:00:08Z, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=CANCELLED, title="Plan: t"}]
 merge T-1 = Optional.empty
 isStaffingTicket T-1 = false
 commitFor T-1 = null
@@ -319,16 +319,16 @@ projectForgotten C:/never/worked/on = false
 === namesAreLatinAndComparedAfterNormalisation
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -386,7 +386,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 3
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = []
 openQuestions = []
 committeeSeats = []
@@ -421,18 +421,18 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = AVAILABLE
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 planLimitRisk claude-sonnet-5-5 = Optional.empty
 projectMark C:/never/worked/on = Optional.empty
 projectForgotten C:/never/worked/on = false
@@ -440,16 +440,16 @@ projectForgotten C:/never/worked/on = false
 === onlyTheDirectorWritesTheCompanysWorkflows
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -507,7 +507,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 3
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = []
 openQuestions = []
 committeeSeats = []
@@ -542,18 +542,18 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = AVAILABLE
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 planLimitRisk claude-sonnet-5-5 = Optional.empty
 projectMark C:/never/worked/on = Optional.empty
 projectForgotten C:/never/worked/on = false
@@ -561,11 +561,11 @@ projectForgotten C:/never/worked/on = false
 === removingOrEditingACompanyWorkflowNeverChangesAPinnedMission
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 4
   #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
 command 5
@@ -579,7 +579,7 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -637,7 +637,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 8
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:05Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
 openQuestions = []
 committeeSeats = []
@@ -672,18 +672,18 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = AVAILABLE
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:05Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
 tickets M-1 = []
 actions M-1 = []
@@ -714,11 +714,11 @@ projectForgotten C:/never/worked/on = false
 === theDirectorSavesAWorkflowAndReplacesItOnlyWhenAsked
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 4
   #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
 command 5
@@ -727,7 +727,7 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -785,7 +785,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 5
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = []
 openQuestions = []
 committeeSeats = []
@@ -820,18 +820,18 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = AVAILABLE
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = AVAILABLE
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 planLimitRisk claude-sonnet-5-5 = Optional.empty
 projectMark C:/never/worked/on = Optional.empty
 projectForgotten C:/never/worked/on = false
@@ -839,22 +839,22 @@ projectForgotten C:/never/worked/on = false
 === thePlannerProposesAndTheDirectorAdoptsOrDismisses
 ## fixture 1 REAL
 command 1
-  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="galen", displayName="galen", role="role of galen", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #0 2026-10-20T09:00:01Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="geoffrey", displayName="geoffrey", role="role of geoffrey", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 2
   #1 2026-10-20T09:00:02Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="chris", displayName="chris", role="role of chris", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 3
-  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="darius", displayName="darius", role="role of darius", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
+  #2 2026-10-20T09:00:03Z REAL DIRECTOR:director mission=- auth=null cause=null AgentHired(agent="dehren", displayName="dehren", role="role of dehren", provider="anthropic", model="claude-sonnet-5-5", effort="medium", skills=[])
 command 4
   #3 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCreated(mission="M-1", title="t", objective="o", workspace="C:/repo")
   #4 2026-10-20T09:00:04Z REAL DIRECTOR:director mission=M-1 auth=null cause=null WorkflowPinned(mission="M-1", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
 command 5
   #5 2026-10-20T09:00:05Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-1", mission="M-1", title="Plan: t", description="o", priority=NORMAL, dependsOn=[], acceptanceCriteria=["c"], kind=PLANNING)
 command 6
-  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="galen")
+  #6 2026-10-20T09:00:06Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-1", agent="geoffrey")
 command 7
-  #7 2026-10-20T09:00:09Z REAL AGENT:galen mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=1, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+  #7 2026-10-20T09:00:09Z REAL AGENT:geoffrey mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=1, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":2},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
 command 8
-  #8 2026-10-20T09:00:10Z REAL AGENT:galen mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=2, document="{\"name\":\"Talk\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+  #8 2026-10-20T09:00:10Z REAL AGENT:geoffrey mission=M-1 auth=null cause=null WorkflowProposed(mission="M-1", proposal=2, document="{\"name\":\"Talk\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
 command 9
   #9 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Quick edited", document="{\"name\":\"Quick edited\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
   #10 2026-10-20T09:00:11Z REAL DIRECTOR:director mission=- auth=null cause=null WorkflowProposalClosed(proposal=1, adopted=true)
@@ -864,7 +864,7 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"geoffrey"=Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "dehren"=Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
@@ -898,7 +898,7 @@ pinMarks = {"M-1"=Pin(at=0, start=0)}
 pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8), Approval(), Committee(), Produce(), Review(), Accept(), Retro()], mode=LOOP))}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
-proposals = {1=WorkflowProposal(number=1, mission="M-1", by="galen", at=2026-10-20T09:00:09Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=ADOPTED), 2=WorkflowProposal(number=2, mission="M-1", by="galen", at=2026-10-20T09:00:10Z, reading=Read(workflow=Workflow(name="Talk", steps=[Approval(), Committee(), Accept()], mode=LOOP)), status=DISMISSED)}
+proposals = {1=WorkflowProposal(number=1, mission="M-1", by="geoffrey", at=2026-10-20T09:00:09Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=ADOPTED), 2=WorkflowProposal(number=2, mission="M-1", by="geoffrey", at=2026-10-20T09:00:10Z, reading=Read(workflow=Workflow(name="Talk", steps=[Approval(), Committee(), Accept()], mode=LOOP)), status=DISMISSED)}
 pullRequests = []
 questions = {}
 retros = {}
@@ -912,7 +912,7 @@ settings = {}
 since = {}
 staffing = {}
 terminalsEver = 0
-tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}}
+tickets = {"T-1"=Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}}
 uncommittedAccepted = {}
 unprovenByMission = {}
 unsafeMode = false
@@ -922,7 +922,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
 openQuestions = []
 committeeSeats = []
@@ -957,20 +957,20 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
-statusOf galen = ASSIGNED
-atWork galen = false
-handedBackOnDismissal galen = []
+agent geoffrey = Optional[Agent{core=false, dismissed=false, displayName="geoffrey", effort="medium", id="geoffrey", model="claude-sonnet-5-5", provider="anthropic", role="role of geoffrey", skills=[], suspended=false, workRole=null}]
+statusOf geoffrey = ASSIGNED
+atWork geoffrey = false
+handedBackOnDismissal geoffrey = []
 agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
 statusOf chris = AVAILABLE
 atWork chris = false
 handedBackOnDismissal chris = []
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
-statusOf darius = AVAILABLE
-atWork darius = false
-handedBackOnDismissal darius = []
+agent dehren = Optional[Agent{core=false, dismissed=false, displayName="dehren", effort="medium", id="dehren", model="claude-sonnet-5-5", provider="anthropic", role="role of dehren", skills=[], suspended=false, workRole=null}]
+statusOf dehren = AVAILABLE
+atWork dehren = false
+handedBackOnDismissal dehren = []
 mission M-1 = Optional[Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="o", origin=REAL, outcome=null, planSubmitted=false, policy=PermissionPolicy{authors=[], rules=[]}, status=PLANNING, ticketValidation=false, title="t", workspace="C:/repo"}]
-tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
+tickets M-1 = [Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
 actions M-1 = []
 questions M-1 = []
 sessions M-1 = []
@@ -990,7 +990,7 @@ budgetReached M-1 = false
 lastActivity M-1 = Optional[2026-10-20T09:00:10Z]
 checkCompleteMission M-1 = refused INVALID_TRANSITION: M-1: PLANNING -> COMPLETED is not allowed
 checkPullRequest M-1 = "ok"
-ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="galen", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
+ticket T-1 = Optional[Ticket{acceptanceCriteria=["c"], assignee="geoffrey", consultations=[], createdAt=2026-10-20T09:00:05Z, deliverable=null, dependsOn=[], description="o", directives=[], endedAt=null, id="T-1", kind=PLANNING, mission="M-1", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Plan: t"}]
 merge T-1 = Optional.empty
 isStaffingTicket T-1 = false
 commitFor T-1 = null

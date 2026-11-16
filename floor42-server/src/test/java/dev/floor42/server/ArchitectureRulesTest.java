@@ -21,4 +21,13 @@ class ArchitectureRulesTest {
                 .anyMatch(d -> d.contains("Thread.<init>"))
                 .anyMatch(d -> d.contains("Executors.newSingleThreadExecutor()"));
     }
+
+    @Test
+    void aContextThatUsesAContextItDoesNotListIsRefused() throws ClassNotFoundException {
+        JavaClasses rogue =
+                new ClassFileImporter().importClasses(Class.forName("dev.floor42.server.app.core.ReachesUpIntoBoot"));
+        EvaluationResult result = ArchitectureTest.appContextsFollowTheirGraph.evaluate(rogue);
+        assertThat(result.hasViolation()).isTrue();
+        assertThat(result.getFailureReport().getDetails()).anyMatch(d -> d.contains("context core uses boot"));
+    }
 }

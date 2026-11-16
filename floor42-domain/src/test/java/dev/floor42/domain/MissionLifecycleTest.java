@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -29,7 +29,7 @@ class MissionLifecycleTest {
 
     @Test
     void agentsCannotCreateMissions() {
-        assertThatThrownBy(() -> f.company.missions().create(f.agent(GALEN), "x", "y"))
+        assertThatThrownBy(() -> f.company.missions().create(f.agent(GEOFFREY), "x", "y"))
                 .isInstanceOf(DomainException.class)
                 .extracting("code")
                 .isEqualTo("DIRECTOR_ONLY");
@@ -39,7 +39,7 @@ class MissionLifecycleTest {
     void aPlanNeedsAtLeastOneTicket() {
         MissionId m = f.mission();
 
-        assertThatThrownBy(() -> f.company.missions().submitPlan(f.agent(GALEN), m))
+        assertThatThrownBy(() -> f.company.missions().submitPlan(f.agent(GEOFFREY), m))
                 .extracting("code")
                 .isEqualTo("EMPTY_PLAN");
     }
@@ -48,12 +48,12 @@ class MissionLifecycleTest {
     void directorApprovesOrRejectsThePlan() {
         MissionId m = f.mission();
         f.ticket(m, "Analyse the flows");
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
 
         f.record(f.company.missions().rejectPlan(f.director(), m, "Compare at least two gateways"));
         assertThat(f.company.missions().find(m).orElseThrow().status()).isEqualTo(MissionStatus.PLANNING);
 
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
         assertThat(f.company.missions().find(m).orElseThrow().status()).isEqualTo(MissionStatus.IN_PROGRESS);
     }
@@ -62,9 +62,9 @@ class MissionLifecycleTest {
     void agentsCannotApproveTheirOwnPlan() {
         MissionId m = f.mission();
         f.ticket(m, "Analyse the flows");
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
 
-        assertThatThrownBy(() -> f.company.missions().approvePlan(f.agent(GALEN), m))
+        assertThatThrownBy(() -> f.company.missions().approvePlan(f.agent(GEOFFREY), m))
                 .extracting("code")
                 .isEqualTo("DIRECTOR_ONLY");
     }
@@ -85,7 +85,7 @@ class MissionLifecycleTest {
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "AudienceFilter + tests"));
         f.record(f.company
                 .tickets()
-                .review(f.agent(Fixture.DARIUS), t, ReviewVerdict.VALIDATED, "48 tests green, reproduced"));
+                .review(f.agent(Fixture.DEHREN), t, ReviewVerdict.VALIDATED, "48 tests green, reproduced"));
 
         f.record(f.company.missions().complete(f.director(), m, "POC delivered"));
 
@@ -104,7 +104,7 @@ class MissionLifecycleTest {
         assertThat(started.endedAt()).isNull();
 
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "report"));
-        f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, ReviewVerdict.VALIDATED, "ok"));
+        f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, ReviewVerdict.VALIDATED, "ok"));
 
         Ticket done = f.company.tickets().find(t).orElseThrow();
         assertThat(done.status()).isEqualTo(TicketStatus.DONE);
@@ -185,10 +185,10 @@ class MissionLifecycleTest {
         f.record(f.company.missions().cancel(f.director(), m, "client changed scope"));
 
         List<org.assertj.core.api.ThrowableAssert.ThrowingCallable> late = List.of(
-                () -> f.company.tickets().review(f.agent(Fixture.DARIUS), t, ReviewVerdict.VALIDATED, "ok"),
+                () -> f.company.tickets().review(f.agent(Fixture.DEHREN), t, ReviewVerdict.VALIDATED, "ok"),
                 () -> f.company
                         .tickets()
-                        .requestConsultation(f.agent(Fixture.DARIUS), t, ConsultationKind.RESEARCH, null, "Is it so?"));
+                        .requestConsultation(f.agent(Fixture.DEHREN), t, ConsultationKind.RESEARCH, null, "Is it so?"));
         for (var call : late) {
             assertThatThrownBy(call).extracting("code").isEqualTo("MISSION_CLOSED");
         }
@@ -211,13 +211,13 @@ class MissionLifecycleTest {
         Instant later = journal.getLast().occurredAt().plusSeconds(2);
         for (dev.floor42.domain.event.DomainEvent late : List.of(
                 new dev.floor42.domain.event.TicketEvent.TicketReviewed(
-                        t, Fixture.DARIUS, ReviewVerdict.VALIDATED, "ok"),
+                        t, Fixture.DEHREN, ReviewVerdict.VALIDATED, "ok"),
                 new dev.floor42.domain.event.TicketEvent.TicketCompleted(t))) {
             journal.add(new dev.floor42.domain.event.EventEnvelope(
                     "late-" + journal.size(),
                     later,
                     Origin.SIMULATED,
-                    Actor.agent(Fixture.DARIUS),
+                    Actor.agent(Fixture.DEHREN),
                     m,
                     null,
                     null,
@@ -234,7 +234,7 @@ class MissionLifecycleTest {
     void simulatedAndRealEventsNeverMixInOneMission() {
         MissionId m = f.mission();
         CommandContext real =
-                new CommandContext(Actor.agent(GALEN), Origin.REAL, Instant.parse("2026-10-20T08:00:00Z"), null);
+                new CommandContext(Actor.agent(GEOFFREY), Origin.REAL, Instant.parse("2026-10-20T08:00:00Z"), null);
 
         assertThatThrownBy(() -> f.company.tickets().create(real, m, "x", "", Priority.LOW, List.of(), List.of()))
                 .extracting("code")
@@ -246,7 +246,7 @@ class MissionLifecycleTest {
         MissionId m = f.mission();
         long before = f.company.version();
 
-        assertThatThrownBy(() -> f.company.missions().submitPlan(f.agent(GALEN), m))
+        assertThatThrownBy(() -> f.company.missions().submitPlan(f.agent(GEOFFREY), m))
                 .isInstanceOf(DomainException.class);
 
         assertThat(f.company.version()).isEqualTo(before);

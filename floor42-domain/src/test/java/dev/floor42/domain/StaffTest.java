@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -36,13 +36,13 @@ class StaffTest {
     void aDismissedAgentLeavesAndTakesNoWork() {
         MissionId m = f.mission();
         TicketId t = f.ticket(m, "Next");
-        f.record(f.company.staff().dismiss(f.director(), new AgentId("darius"), "not needed"));
+        f.record(f.company.staff().dismiss(f.director(), new AgentId("dehren"), "not needed"));
 
-        assertThat(f.company.staff().find(new AgentId("darius")).orElseThrow().dismissed())
+        assertThat(f.company.staff().find(new AgentId("dehren")).orElseThrow().dismissed())
                 .isTrue();
-        assertThatThrownBy(() -> f.company.tickets().assign(f.director(), t, new AgentId("darius")))
+        assertThatThrownBy(() -> f.company.tickets().assign(f.director(), t, new AgentId("dehren")))
                 .hasMessageContaining("left");
-        assertThatThrownBy(() -> f.company.staff().dismiss(f.director(), new AgentId("darius"), "again"))
+        assertThatThrownBy(() -> f.company.staff().dismiss(f.director(), new AgentId("dehren"), "again"))
                 .isInstanceOf(DomainException.class);
     }
 
@@ -77,7 +77,7 @@ class StaffTest {
         Ticket replayed = Company.replay(f.journal).tickets().find(t).orElseThrow();
         assertThat(replayed.status()).isEqualTo(TicketStatus.TODO);
         assertThat(replayed.assignee()).isNull();
-        f.record(f.company.tickets().assign(f.director(), t, DARIUS));
+        f.record(f.company.tickets().assign(f.director(), t, DEHREN));
     }
 
     @Test
@@ -104,7 +104,7 @@ class StaffTest {
             assertThat(e.actor()).isEqualTo(Actor.director());
         });
         assertThat(real.company.staff().find(CHRIS).orElseThrow().core()).isTrue();
-        assertThat(real.company.staff().find(DARIUS).orElseThrow().core()).isFalse();
+        assertThat(real.company.staff().find(DEHREN).orElseThrow().core()).isFalse();
         assertThat(Company.replay(real.journal)
                         .staff()
                         .find(CHRIS)
@@ -137,8 +137,8 @@ class StaffTest {
                 .as("a simulated context")
                 .extracting("code")
                 .isEqualTo("INVALID_ARGUMENT");
-        real.record(real.company.staff().dismiss(real.director(), DARIUS, "not needed"));
-        assertThatThrownBy(() -> real.company.staff().markCore(real.director(), DARIUS, true))
+        real.record(real.company.staff().dismiss(real.director(), DEHREN, "not needed"));
+        assertThatThrownBy(() -> real.company.staff().markCore(real.director(), DEHREN, true))
                 .extracting("code")
                 .isEqualTo("AGENT_DISMISSED");
         assertThat(real.company.staff().find(CHRIS).orElseThrow().core()).isFalse();

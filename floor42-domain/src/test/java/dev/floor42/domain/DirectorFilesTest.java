@@ -31,7 +31,7 @@ class DirectorFilesTest {
                 .mission();
         ticket = f.ticket(id, "Deliver: the report");
         f.record(f.company.tickets().assign(f.director(), ticket, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(dev.floor42.domain.Fixture.GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(dev.floor42.domain.Fixture.GEOFFREY), id));
         f.record(f.company.verification().setBudget(f.director(), id, null));
         f.record(f.company.missions().approvePlan(f.director(), id));
         f.record(f.company.tickets().start(f.agent(CHRIS), ticket));

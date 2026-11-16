@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -24,7 +24,7 @@ class AgentStatusAndReplayTest {
         f.record(f.company.tickets().assign(f.director(), t, CHRIS));
         assertThat(f.company.queries().statusOf(CHRIS)).isEqualTo(AgentStatus.ASSIGNED);
 
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
         f.record(f.company.tickets().start(f.agent(CHRIS), t));
         assertThat(f.company.queries().statusOf(CHRIS)).isEqualTo(AgentStatus.WORKING);
@@ -92,7 +92,7 @@ class AgentStatusAndReplayTest {
         f.record(f.company
                 .desk()
                 .ask(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         m,
                         "Gateway or services?",
                         "",
@@ -104,7 +104,7 @@ class AgentStatusAndReplayTest {
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "patch"));
         f.record(f.company
                 .tickets()
-                .review(f.agent(DARIUS), t, ReviewVerdict.VALIDATED_WITH_RESERVATIONS, "ok, docs missing"));
+                .review(f.agent(DEHREN), t, ReviewVerdict.VALIDATED_WITH_RESERVATIONS, "ok, docs missing"));
 
         Company rebuilt = Company.replay(f.journal);
 

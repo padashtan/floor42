@@ -69,7 +69,7 @@ class WorkflowTasksTest {
     void theApprovalOpensEachTaskOnceWithItsLinkAndNothingBefore() {
         MissionId m = created(TASKED);
         TicketId plan = f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         assertThat(f.company.workflows().linked(m)).isEmpty();
         List<String> names = approve(m).stream()
                 .map(e -> e.event().getClass().getSimpleName())
@@ -93,9 +93,9 @@ class WorkflowTasksTest {
     void aRejectedPlanAndItsResubmissionOpenNothing() {
         MissionId m = created(TASKED);
         f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         f.record(f.company.missions().rejectPlan(f.director(), m, "again"));
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         assertThat(f.company.workflows().linked(m)).isEmpty();
         approve(m);
         assertThat(f.company.workflows().linked(m)).hasSize(2);
@@ -122,7 +122,7 @@ class WorkflowTasksTest {
     void aTaskBeforeProductionHoldsTheOtherWorkAndTheOneBeforeAcceptanceWaitsForIt() {
         MissionId m = created(TASKED);
         TicketId work = f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         approve(m);
         Ticket design = linked(m, "design-note");
         Ticket audit = linked(m, "audit");
@@ -151,21 +151,21 @@ class WorkflowTasksTest {
     void aReviewedTaskIsReviewedAndWorkChangedAfterADoneTaskReopensIt() {
         MissionId m = created(TASKED);
         TicketId work = f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         approve(m);
         finish(m, "design-note", Fixture.CHRIS);
         f.record(f.company.tickets().assign(f.director(), work, Fixture.CHRIS));
         f.record(f.company.tickets().start(f.agent(Fixture.CHRIS), work));
         f.record(f.company.tickets().submitForReview(f.agent(Fixture.CHRIS), work, "patch"));
-        f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), work, ReviewVerdict.VALIDATED, "fine"));
+        f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), work, ReviewVerdict.VALIDATED, "fine"));
         Ticket audit = linked(m, "audit");
         assertThat(interpreter.held(f.company, audit)).isFalse();
-        f.record(f.company.tickets().assign(f.director(), audit.id(), Fixture.GALEN));
-        f.record(f.company.tickets().start(f.agent(Fixture.GALEN), audit.id()));
-        f.record(f.company.tickets().submitForReview(f.agent(Fixture.GALEN), audit.id(), "findings"));
+        f.record(f.company.tickets().assign(f.director(), audit.id(), Fixture.GEOFFREY));
+        f.record(f.company.tickets().start(f.agent(Fixture.GEOFFREY), audit.id()));
+        f.record(f.company.tickets().submitForReview(f.agent(Fixture.GEOFFREY), audit.id(), "findings"));
         assertThat(interpreter.step(f.company, linked(m, "audit"), WorkRole.REVIEWER))
                 .isEqualTo(TicketStep.REVIEW);
-        f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), audit.id(), ReviewVerdict.VALIDATED, "ok"));
+        f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), audit.id(), ReviewVerdict.VALIDATED, "ok"));
         assertThat(linked(m, "audit").status()).isEqualTo(TicketStatus.DONE);
         // The director sends the work back: the audit judged work that is not the work anymore.
         List<EventEnvelope> events = f.record(f.company.workshop().giveDirective(f.director(), work, "also the docs"));
@@ -187,7 +187,7 @@ class WorkflowTasksTest {
     void aReplayStopsOnALinkTheCodeDisagreesWith() {
         MissionId m = created(TASKED);
         f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         approve(m);
         EventEnvelope link = f.journal.stream()
                 .filter(e -> e.event() instanceof WorkflowStepTicketOpened)

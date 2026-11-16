@@ -5,8 +5,7 @@ Floor42 drives AI agents that can read and modify files and run commands. Securi
 ## Reporting a vulnerability
 
 **Please do not open a public issue for a vulnerability.** Use GitHub's private vulnerability reporting on this
-repository ("Security" tab, "Report a vulnerability"):
-<https://github.com/padashtan/floor42/security/advisories/new>.
+repository ("Security" tab, "Report a vulnerability").
 
 Especially relevant:
 
@@ -19,7 +18,7 @@ Especially relevant:
 
 Only the latest release receives security fixes.
 
-Releases come with a signed build provenance and software bills of materials; how to verify them is in [docs/releases.md](docs/releases.md).
+Releases from 1.9.0 on come with a signed build provenance and software bills of materials; how to verify them is in [docs/releases.md](docs/releases.md).
 
 The threat model, with the code that enforces each control: [docs/threat-model.md](docs/threat-model.md).
 
@@ -62,7 +61,7 @@ The threat model, with the code that enforces each control: [docs/threat-model.m
 - **A pull request you confirm leaves your machine** (ADR-0036); so do the plugin installs and marketplace refreshes
   below, also on your click only. Everything else Floor42 does stays local.
   On your click in the workshop, Floor42 pushes one branch of the mission to the repository's remote and opens a pull
-  request with your own `gh`. What bounds it:
+  request with your own `gh`. Why it is safe:
   - only you can trigger it: director routes under `/api`, refused by the domain for any agent and for Floor42 itself;
     no MCP tool and nothing in agents' briefs offers it, and an agent's shell command may not `git push` or call `gh`;
   - nothing is pushed before you read remote, branch, base, title and body in a confirmation dialog, and Floor42 pushes
@@ -111,12 +110,11 @@ The threat model, with the code that enforces each control: [docs/threat-model.m
   start. No credential is rebuilt from the journal, but a forged permission or approval would count (debt D16). They can
   **read Claude Code's sign-in** (`~/.claude`): they are Claude Code and need it. On Linux and in Docker, the daemon
   makes itself non-dumpable, so they cannot read its standard output (where Docker's sign-in link goes), its
-  environment or its memory. Running agents under a uid of their own would close the journal,
+  environment or its memory; before 1.6.0 they could. Running agents under a uid of their own would close the journal,
   but needs root in the container and your repositories writable by that uid: not done.
-- **What the daemon reads at its next start is kept out of their reach where Floor42 can do it**. Agents
-  can stop the daemon, and in Docker `restart: unless-stopped` starts it again, so without these defences they could change what
-  it does next. Each of these was shown on 2026-11-01 in a container of a private build that predates v1.0.0 and had
-  none of them ([docs/docker.md](docs/docker.md)):
+- **What the daemon reads at its next start is kept out of their reach where Floor42 can do it** (since 1.8.0). Agents
+  can stop the daemon, and in Docker `restart: unless-stopped` starts it again, so before 1.8.0 they could change what
+  it did next. Each of these was shown in a 1.7.0 container on 2026-11-01 ([docs/docker.md](docs/docker.md)):
   - a planted `restore-pending.properties` rolled the journal back. Now a restore is prepared only through the
     director's API, kept in the daemon's memory and applied during its own orderly stop. A start never restores; a
     planted file is refused, kept aside, logged, and shown in a red banner;
@@ -150,7 +148,7 @@ The threat model, with the code that enforces each control: [docs/threat-model.m
   working-directory configuration is refused there too, and `ShellGuard` denies commands that name the data folder,
   but that reads the command's text: it stops plain attempts, not a determined one. Only the shell sandbox (WSL on Windows,
   native on Linux) or the Docker container confine agents away from the installed daemon. Without them, keep shell commands on *ask*.
-  This holds for any installed version on Windows. On Windows, any process of your user can
+  This holds for an installed 1.7.x on Windows today as much as for 1.8.0. On Windows, any process of your user can
   open the daemon's process and read or write its memory (`OpenProcess` with the user's own rights), inject a thread,
   or run `jcmd` against a JVM that allows attach. There is no non-dumpable equivalent. `-XX:+DisableAttachMechanism`,
   which the launchers now pass, closes only the JVM's own attach (`jcmd`, loading a Java agent), the easy door. It does

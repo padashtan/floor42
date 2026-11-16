@@ -198,8 +198,8 @@ export const missionsFr: Record<keyof typeof missionsEn, string> = {
   // Mission control
   'mission.onBoard': 'Mission au tableau',
   'mission.none': 'Aucune mission. Lancez-en une dans l’onglet « Nouvelle mission ».',
-  'mission.galenPlans':
-    'Galen planifie d’abord (une session en lecture seule) ; vous approuvez ensuite chaque ticket qu’il propose :',
+  'mission.geoffreyPlans':
+    'Geoffrey planifie d’abord (une session en lecture seule) ; vous approuvez ensuite chaque ticket qu’il propose :',
   'mission.officePlan': 'Plan proposé par Floor42 :',
   'mission.checkPermissions': 'Vérifiez l’onglet Permissions, puis :',
   'mission.approvePlan': 'Approuver le plan',
@@ -215,8 +215,8 @@ export const missionsFr: Record<keyof typeof missionsEn, string> = {
   'mission.fieldTitle': 'Titre, ex. Inventaire du build',
   'mission.fieldObjective': 'Objectif : que doivent trouver ou livrer les agents ?',
   'mission.fieldRepository': 'Chemin du dépôt git, ex. C:\\work\\mon-projet',
-  'mission.letGalenPlan':
-    'laisser Galen planifier : il découpe l’objectif en tickets (une session en lecture seule), vous approuvez chacun avant le travail',
+  'mission.letGeoffreyPlan':
+    'laisser Geoffrey planifier : il découpe l’objectif en tickets (une session en lecture seule), vous approuvez chacun avant le travail',
   'mission.withCommittee':
     'réunir d’abord un comité d’architecture (lecture seule ; vous tranchez sa décision avant tout changement)',
   'mission.alwaysChairs': 'toujours, préside',
@@ -225,7 +225,7 @@ export const missionsFr: Record<keyof typeof missionsEn, string> = {
   'mission.fieldIdea': 'Votre idée : quel serait le projet, pour qui, et qu’est-ce qui vous inquiète ?',
   'mission.fieldRepositoryOptional': 'Chemin du dépôt git, facultatif : vide pour un projet qui n’existe pas encore',
   'mission.alwaysModerates': 'toujours, modère sans prendre parti',
-  'mission.ideaHow': 'Chacun des {seats} membres analyse seul, puis ils débattent (3 tours au plus) jusqu’à s’entendre ; la modératrice rédige la synthèse et vous décidez. Au plus (membres × 4) + 1 sessions ; Galen sur Opus coûte le plus.',
+  'mission.ideaHow': 'Chacun des {seats} membres analyse seul, puis ils débattent (3 tours au plus) jusqu’à s’entendre ; la modératrice rédige la synthèse et vous décidez. Au plus (membres × 4) + 1 sessions ; Geoffrey sur Opus coûte le plus.',
   'meeting.agreement': 'Accord mesuré sur leurs lignes de conclusion : tous soutiennent {member}',
   'meeting.noAgreement': 'Pas encore d’accord après {rounds} tour(s) de débat sur {max}',
   'meeting.byDirector': 'écrit par vous en personne',

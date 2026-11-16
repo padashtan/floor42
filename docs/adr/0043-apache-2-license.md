@@ -43,8 +43,8 @@ Why:
 - `LICENSE` holds the Apache-2.0 text; `NOTICE` names the copyright holder and states that Claude Code is not part of
   Floor42. `pom.xml`, `floor42-web/package.json`, the OpenAPI document, the Docker image labels, the README and
   `CONTRIBUTING.md` say Apache-2.0.
-- Nothing was published under AGPL-3.0: the versions before this decision were internal to the private development.
-  Every public release of Floor42, from v1.0.0 on, is Apache-2.0.
+- Releases published before this decision (up to 1.5.1) stay available under AGPL-3.0 as published; from 1.6.0 on,
+  Floor42 is Apache-2.0.
 - Dependencies under EPL-2.0 (Jakarta APIs, Vert.x) and LGPL-2.1 (Narayana) are used as libraries, unchanged; they are
   compatible with an Apache-2.0 application. As in ADR-0041, a new dependency's license is checked before it is added;
   ADR-0041's license argument against pty4j (EPL-1.0 against AGPL-3.0) no longer applies, its other reasons stand.

@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,8 +14,6 @@ permissions:
 # a job that hangs instead of leaving it for six hours.
 jobs:
   build:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
@@ -65,8 +62,6 @@ jobs:
           -Dspotless.check.skip=true -Dquarkus.quinoa=false
 
   build-windows:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: windows-latest
     timeout-minutes: 120
     steps:
@@ -98,8 +93,6 @@ jobs:
         run: ./mvnw.cmd -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
 
   secrets:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -111,14 +104,9 @@ jobs:
       - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # The action's default (8.24.3) does not read the [[allowlists]] of .gitleaks.toml and reports the documented
-          # fake fixtures; 8.30.1 is the version of tools/quality/static-run.sh (docs/security-scanning.md).
-          GITLEAKS_VERSION: 8.30.1
 
   # Dockerfile lint (docs/security-scanning.md); the image is pinned by digest, like the base images of the Dockerfile.
   hadolint:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -126,8 +114,6 @@ jobs:
         run: sh tools/quality/hadolint-run.sh
 
   actionlint:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

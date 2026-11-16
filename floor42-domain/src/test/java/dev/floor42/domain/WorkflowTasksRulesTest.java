@@ -85,7 +85,7 @@ class WorkflowTasksRulesTest {
                 .mission();
         TicketId t = f.ticket(m, "Work");
         f.record(f.company.tickets().assign(f.director(), t, Fixture.CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
         f.record(f.company.tickets().start(f.agent(Fixture.CHRIS), t));
@@ -104,7 +104,7 @@ class WorkflowTasksRulesTest {
                     .progress(f.company, f.company.tickets().find(t).orElseThrow())
                     .orElseThrow()
                     .at();
-            f.record(f.company.tickets().review(f.agent(Fixture.DARIUS), t, verdicts[i], "f", List.of(), at));
+            f.record(f.company.tickets().review(f.agent(Fixture.DEHREN), t, verdicts[i], "f", List.of(), at));
         }
         Ticket done = f.company.tickets().find(t).orElseThrow();
         assertThat(done.status()).isEqualTo(TicketStatus.DONE);

@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @param agent the agent it applies to, or null for every agent of the mission
  * @param tool narrows the rule to one tool (Write, Bash...), or null for every tool of the category
- * @param commandPrefix narrows the rule to actions whose summary starts with this command (on a word boundary), or null
+ * @param commandPrefix narrows the rule to shell calls whose full command starts with this one (on a word boundary), or null
  * @param ticket narrows the rule to the work of one ticket (D15), or null for the whole mission; nullable in rules
  *     journaled before 1.8.0, which all covered the whole mission
  */

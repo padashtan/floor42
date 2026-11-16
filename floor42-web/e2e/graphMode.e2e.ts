@@ -24,7 +24,7 @@ interface Mission {
  * and the board draws it too. Then the graph is extended by one planner session, and a node reopened after its
  * dependent was done marks that dependent "to recheck" (increment 2).
  */
-test('the director creates a graph mission and sees the graph at the approval and on the board', async ({ page, daemon }) => {
+test('the director creates a graph mission and sees the graph at the approval and on the board', { tag: '@tickets' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   page.on('dialog', (d) => void d.accept())
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
@@ -45,7 +45,7 @@ test('the director creates a graph mission and sees the graph at the approval an
   await form.getByPlaceholder(t['mission.fieldRepository']).fill(repo)
 
   // The graph needs the planner: without it the choice is closed and says why.
-  const planner = form.locator('label', { hasText: t['mission.letGalenPlan'] }).locator('input')
+  const planner = form.locator('label', { hasText: t['mission.letGeoffreyPlan'] }).locator('input')
   await planner.uncheck()
   const graph = form.locator('fieldset.team-mode').getByRole('radio').nth(1)
   await expect(graph).toBeDisabled()
@@ -124,7 +124,7 @@ test('the director creates a graph mission and sees the graph at the approval an
         }
         return nodes.every((n) => m.tickets.find((x) => x.id === n.id)?.status === 'DONE')
       },
-      { timeout: 120_000, intervals: [1_000] },
+      { timeout: 120_000, intervals: [250] },
     )
     .toBe(true)
   const sandbox = (await mission()).tickets.find((x) => x.id === nodes[0].id)!.node!

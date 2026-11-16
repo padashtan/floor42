@@ -1,6 +1,5 @@
 package dev.floor42.server.runtime;
 
-import dev.floor42.server.security.LogSafe;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -199,9 +198,7 @@ public final class GitProcess {
     }
 
     private static void refuse(Path dir, String why) throws IOException {
-        LOG.warnf(
-                "Floor42 refused to run git in %s: %s (changed from inside the worktree?)",
-                LogSafe.of(dir), LogSafe.of(why));
+        LOG.warnf("Floor42 refused to run git in %s: %s (changed from inside the worktree?)", dir, why);
         throw new IOException("Floor42 refused to run git in " + dir + ": " + why);
     }
 

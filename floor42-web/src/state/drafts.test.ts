@@ -16,7 +16,7 @@ describe('the drafts of the forms', () => {
   })
 
   it('go back to blank, choices included', () => {
-    drafts.mission.letGalenPlan = false
+    drafts.mission.letGeoffreyPlan = false
     drafts.mission.panel = 'idea'
     drafts.mission.seated = ['moderator']
     drafts.mission.deliverTo = 'C:/elsewhere'
@@ -29,7 +29,7 @@ describe('the drafts of the forms', () => {
       repository: '',
       checks: '',
       panel: 'none',
-      letGalenPlan: true,
+      letGeoffreyPlan: true,
       seated: ['security', 'developer'],
       // The project's deliverables/ folder by default (ADR-0051).
       deliverTo: 'deliverables',

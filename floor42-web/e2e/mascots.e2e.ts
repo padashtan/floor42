@@ -16,7 +16,7 @@ async function marks(page: Page): Promise<Record<string, { x: number; y: number 
 }
 
 /** Journey 11: the robot opens the director's terminal; the pets only show their name. Reduced motion freezes them. */
-test('a click on the robot opens the terminal; the pets show their names', async ({ page }) => {
+test('a click on the robot opens the terminal; the pets show their names', { tag: '@scene' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await useLanguage(page, 'en')
@@ -34,15 +34,8 @@ test('a click on the robot opens the terminal; the pets show their names', async
     await page.waitForTimeout(700)
     at = await marks(page)
   }
-  // The zoom eases in: read the marks once two reads in a row agree, so a loaded machine does not hover a stale spot.
-  let previous = ''
-  for (let i = 0; i < 20; i++) {
-    await page.waitForTimeout(500)
-    at = await marks(page)
-    const now = JSON.stringify(at)
-    if (now === previous) break
-    previous = now
-  }
+  await page.waitForTimeout(500)
+  at = await marks(page)
   expect(Object.keys(at).filter((k) => k !== 'library').sort()).toEqual(['cat', 'dog', 'robot'])
   const xs = Object.values(at).map((p) => p.x)
   const ys = Object.values(at).map((p) => p.y)
@@ -82,7 +75,7 @@ async function states(page: Page): Promise<Record<string, string>> {
 }
 
 /** Journey 11b: without reduced motion the pets walk and run, speak, and sleep curled up in their baskets. */
-test('the pets walk, speak and sleep in their baskets', async ({ page }) => {
+test('the pets walk, speak and sleep in their baskets', { tag: '@scene' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

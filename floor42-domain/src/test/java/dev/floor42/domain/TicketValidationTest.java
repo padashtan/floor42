@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -18,11 +18,11 @@ class TicketValidationTest {
     final TicketId planning = f.ticket(m, "Plan: secure the APIs");
 
     {
-        f.record(f.company.tickets().assign(f.director(), planning, GALEN));
+        f.record(f.company.tickets().assign(f.director(), planning, GEOFFREY));
         f.record(f.company.missions().enableTicketValidation(f.director(), m));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.missions().approvePlan(f.director(), m));
-        f.record(f.company.tickets().start(f.agent(GALEN), planning));
+        f.record(f.company.tickets().start(f.agent(GEOFFREY), planning));
     }
 
     List<Ticket> proposed() {
@@ -35,7 +35,7 @@ class TicketValidationTest {
         f.record(f.company
                 .tickets()
                 .propose(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         planning,
                         CHRIS,
                         List.of(
@@ -141,7 +141,7 @@ class TicketValidationTest {
         assertThatThrownBy(() -> f.company
                         .tickets()
                         .propose(
-                                f.agent(GALEN),
+                                f.agent(GEOFFREY),
                                 planning,
                                 CHRIS,
                                 List.of(new ProposedTicket("x", "", List.of(), List.of(0)))))
@@ -150,7 +150,9 @@ class TicketValidationTest {
         assertThatThrownBy(() -> f.company
                         .tickets()
                         .approve(
-                                f.agent(GALEN), m, List.of(proposed().getFirst().id())))
+                                f.agent(GEOFFREY),
+                                m,
+                                List.of(proposed().getFirst().id())))
                 .isInstanceOf(DomainException.class);
     }
 
@@ -190,7 +192,7 @@ class TicketValidationTest {
         assertThatThrownBy(() -> f.company
                         .tickets()
                         .propose(
-                                f.agent(GALEN),
+                                f.agent(GEOFFREY),
                                 planning,
                                 CHRIS,
                                 List.of(
@@ -200,7 +202,7 @@ class TicketValidationTest {
         assertThatThrownBy(() -> f.company
                         .tickets()
                         .propose(
-                                f.agent(GALEN),
+                                f.agent(GEOFFREY),
                                 planning,
                                 CHRIS,
                                 List.of(

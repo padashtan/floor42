@@ -222,4 +222,5 @@ export type Contract = [
   Agree<Mismatch<I.Resource, 'Resource'>>,
   Agree<Mismatch<I.ResourceCatalogueView, 'ResourceCatalogueView'>>,
   Agree<Mismatch<I.GrantsRequest, 'GrantsRequest'>>,
+  Agree<Mismatch<T.ProofDossier, 'ProofDossier'>>,
 ]

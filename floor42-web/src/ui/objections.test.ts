@@ -19,7 +19,7 @@ const ticket = (id: string, assignee: string, endedAt: string, status: TicketVie
 
 const board = [
   ticket('T-1', 'chris', '2026-11-04T09:00:00Z'),
-  ticket('T-2', 'darius', '2026-11-04T09:10:00Z'),
+  ticket('T-2', 'dehren', '2026-11-04T09:10:00Z'),
   ticket('T-3', 'chris', '2026-11-04T09:20:00Z'),
   ticket('T-4', 'chris', '2026-11-04T09:30:00Z', 'CANCELLED'),
 ]
@@ -29,7 +29,7 @@ describe('objections at acceptance (ADR-0060)', () => {
   it('offers the done work tickets only, and not a decision the director already ruled on', () => {
     const ruled = { ticket: 'T-2', stage: 'ADOPTED' } as CommitteeSummaryView
     const open = { ticket: 'T-3', stage: 'DEBATE' } as CommitteeSummaryView
-    const all = [...board, ticket('T-5', 'galen', '', 'IN_REVIEW'), ticket('T-6', 'galen', '', 'DONE', 'PLANNING')]
+    const all = [...board, ticket('T-5', 'geoffrey', '', 'IN_REVIEW'), ticket('T-6', 'geoffrey', '', 'DONE', 'PLANNING')]
     expect(objectable(all).map((x) => x.id)).toEqual(['T-1', 'T-2', 'T-3'])
     expect(objectable(all, [ruled, open]).map((x) => x.id)).toEqual(['T-1', 'T-3'])
   })

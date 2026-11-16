@@ -104,7 +104,7 @@ function typeMission() {
   drafts.mission.title = 'Ship it'
   drafts.mission.objective = 'Do the thing'
   drafts.mission.repository = 'C:/repo'
-  drafts.mission.letGalenPlan = false
+  drafts.mission.letGeoffreyPlan = false
 }
 
 describe('the new mission form', () => {
@@ -133,7 +133,7 @@ describe('the new mission form', () => {
       'loop',
     )
     expect(missionDrafted()).toBe(false)
-    expect(drafts.mission.letGalenPlan).toBe(true)
+    expect(drafts.mission.letGeoffreyPlan).toBe(true)
   })
 
   it('keeps its draft when the proposal is refused', async () => {

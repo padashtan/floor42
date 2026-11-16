@@ -18,7 +18,7 @@ interface Mission {
  * scene walks the attendee to the conference room, marks it as the speaker when its turn is heard, and walks it back to
  * its desk when the meeting ends (canvas data `office` and `speaking`).
  */
-test('the director asks the attendees for their view at the conference table', async ({ page, daemon, consoleErrors }) => {
+test('the director asks the attendees for their view at the conference table', { tag: '@meetings' }, async ({ page, daemon, consoleErrors }) => {
   test.setTimeout(240_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })

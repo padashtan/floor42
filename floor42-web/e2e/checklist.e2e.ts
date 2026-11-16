@@ -7,7 +7,7 @@ const t = CATALOGS.en
  * in the sandbox panel. The daemon of the journeys points at a distribution that does not exist, so that row is
  * missing, with the command to copy; nothing on the screen runs it.
  */
-test('the machine checklist opens once at the first start and names what is missing', async ({ page, consoleErrors }) => {
+test('the machine checklist opens once at the first start and names what is missing', { tag: '@settings' }, async ({ page, consoleErrors }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

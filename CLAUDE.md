@@ -20,7 +20,7 @@
 - **Forks**: lower them when another build runs (`-Dfloor42.test.forks=2`); never share one `target` between concurrent builds.
 - **Every test, no web build**: `make test-fast` (Vitest, then every Java test without the format check).
 - **Web only**: `cd floor42-web && npm test` (Vitest) and `npx vue-tsc -b` (types, `contract.ts`).
-- **Full gate**, before a merge to main and a release only: `make gate` (= `./mvnw -q spotless:apply; ./mvnw verify`,
+- **Full gate**, before a merge to main and a release only: `make gate-double` (Windows then a fresh Linux clone, one heavy job at a time, verdict line `GATE GREEN|RED`, `tools/gate/`; `make gate-windows` before a push of main; `tools/gate/triage.sh <Class>` classifies a failing class) or the plain `make gate` (= `./mvnw -q spotless:apply; ./mvnw verify`,
   then Vitest). Spotless checks before the compilation, so a format slip fails in seconds.
 - **Slow tests**: `@Tag("slow")` ones (real WSL sandbox, real timeouts) are not in `verify`; `make test-slow` (`./mvnw
   verify -Pslow` runs only them) and `make release-gate` (verify + slow + Vitest) before a release (docs/releases.md).
@@ -32,14 +32,20 @@
   (2 workers, `FLOOR42_E2E_WORKERS=1` for one).
 - **Java only, no web build in `package`**: add `-Dquarkus.quinoa=false` (the jar then has no UI: not for e2e or a release).
 
-**Start here: `docs/PROGRESS.md`** (current state, decisions taken along the way, gotchas, next step). Keep it updated at the end of every increment.
+**Start here: `docs/PROGRESS.md`** (current state, next step, index of the area files in `docs/progress/`: decisions, gotchas, limits). A branch adds or edits lines in the area file it touches (`docs/progress/`); State and Next step are updated only at merge to main.
 
-Decisions: `docs/adr/`.
+Decisions: `docs/adr/`. The product vision (French, the director's, `docs/vision/`) is kept locally and never published.
 
 ## Layout
 
 - `floor42-domain/`: pure Java 25 business model. JDK only (enforced by `ArchitectureTest` in `floor42-server`, with the other module boundaries).
-- `floor42-server/`: Quarkus daemon. Serves the UI through Quinoa from `../floor42-web`.
+- `floor42-server/`: Quarkus daemon. Serves the UI through Quinoa from `../floor42-web`. Layer packages `api`, `app`,
+  `config`, `iam`, `journal`, `runtime`, `security` (ADR-0003); `app` and `api` are split by business context
+  (ADR-0067): `app.core` (the company, settings, scheduler), `workspace`, `mission` (dispatch, tasks, staff, workshop),
+  `delivery` (deliverables, proofs, checks, pull requests, reports), `session` (gate, runners, briefs), `committee`
+  (committees, retrospectives, meetings, staffing), `asset`, `demo`, `terminal`, `cost`, `boot` (wiring). `api.<context>`
+  holds its resources and views; `api` itself the shared HTTP plumbing; `api.event` the event renderers. Allowed
+  dependencies between contexts: `APP_CONTEXTS` and `API_CONTEXTS` in `ArchitectureTest`. Tests mirror the packages.
 - `floor42-web/`: Vue 3 + TypeScript + Vite. The 3D scene must not depend on Vue.
 - Spikes are throwaway experiments on local `spike/*` branches: they are not pushed to the public repository and are
   never merged into product code. ADR-0004 and ADR-0006 cite the first two as history.
@@ -49,9 +55,10 @@ Decisions: `docs/adr/`.
 - Build and test everything: `./mvnw spotless:apply && ./mvnw verify` (needs `JAVA_HOME` on a JDK 25 and `npm ci` in `floor42-web` first; `verify` fails on formatting).
 - Dev mode: `bin/floor42-dev` (see "Fast loop"), then http://127.0.0.1:7421.
 - Web only: `cd floor42-web && npm run build` and `npm test` (Vitest: scene mapping, navigation, layout, diff view).
+- Web code is split by domain to avoid merge conflicts: a new API call goes in its domain's file in `floor42-web/src/api/client/` (`client.ts` only assembles them), a new style in its area's file in `floor42-web/src/styles/` (`index.css` fixes the cascade order).
 - A changed view or route: `./mvnw verify -Dfloor42.openapi.write=true`, then align `floor42-web/src/api/types.ts` until `contract.ts` type-checks.
-- Browser tests, the gate before a release (not part of `verify`, too slow): `make e2e`, or `./mvnw -q package -DskipTests` then `cd floor42-web && npm run e2e`. Playwright drives the installed Chrome (`FLOOR42_E2E_BROWSER=msedge` for Edge, `FLOOR42_E2E_HEADED=true` to watch; no browser is downloaded; on Linux `FLOOR42_E2E_EXECUTABLE=/usr/bin/chromium`, and on WSL also `FLOOR42_E2E_GPU=true`: headless Chromium there renders WebGL in software and the journeys time out, GPU mode runs headed on WSLg with the Windows GPU) against a daemon of its own: the packaged jar on a free port, a temp data folder, the fake Claude Code and terminal, sign-in through the link the daemon prints (`floor42.sign-in.delivery=stdout`). Needs Java 25 (`FLOOR42_JAVA` or `JAVA_HOME`). Screenshots per journey in `floor42-web/e2e-results` (gitignored); no console error is allowed. A new action in `ui/actions.ts` needs its panel in `e2e/bar.ts`. Mandatory on the developer machine, on Windows and Linux, before every tag (docs/releases.md); in CI the "Browser tests" workflow runs by hand only (GitHub's runners have no GPU).
-- Server tests drive a fake Claude Code (`floor42-server/src/test/resources/fake-claude`); its markers are listed in the gotchas of `docs/PROGRESS.md`.
+- Browser tests, the gate before a release (not part of `verify`, too slow): `make e2e`, or `./mvnw -q package -DskipTests` then `cd floor42-web && npm run e2e`. Playwright drives the installed Chrome (`FLOOR42_E2E_BROWSER=msedge` for Edge, `FLOOR42_E2E_HEADED=true` to watch; no browser is downloaded; on Linux `FLOOR42_E2E_EXECUTABLE=/usr/bin/chromium`, and on WSL also `FLOOR42_E2E_GPU=true`: headless Chromium there renders WebGL in software and the journeys time out, GPU mode runs headed on WSLg with the Windows GPU) against a daemon of its own: the packaged jar on a free port, a temp data folder, the fake Claude Code and terminal, sign-in through the link the daemon prints (`floor42.sign-in.delivery=stdout`). Needs Java 25 (`FLOOR42_JAVA` or `JAVA_HOME`). Screenshots per journey in `floor42-web/e2e-results` (gitignored); no console error is allowed. A new action in `ui/actions.ts` needs its panel in `e2e/bar.ts`. Every test carries a domain tag (`{ tag: '@tickets' }`, the list is `DOMAINS` in `e2e/fixtures.ts`; an untagged test fails): while working run one domain with `npm run e2e:domain -- @tickets` or the failed ones with `npm run e2e:failed`, and the full suite still runs before a merge to main and before a tag. Mandatory on the developer machine, on Windows and Linux, before every tag (docs/releases.md); in CI the "Browser tests" workflow runs by hand only (GitHub's runners have no GPU).
+- Server tests drive a fake Claude Code (`floor42-server/src/test/resources/fake-claude`); its markers are listed in `docs/progress/gotchas-build-and-tests.md`.
 
 ## Known pitfalls
 
@@ -66,7 +73,7 @@ Decisions: `docs/adr/`.
 
 ## Rules
 
-- Code, docs and commit messages in English. UI texts exist in English and French: add each one to both catalogues in `floor42-web/src/i18n/` (ADR-0021).
+- Code, docs and commit messages in English. Talk to the director in French. UI texts exist in English and French: add each one to both catalogues in `floor42-web/src/i18n/` (ADR-0021).
 - Never present a simulated event, an estimate or an unverified result as real or measured. Every event carries an `Origin`.
 - Permissions are enforced by code (hooks, policy), never only by prompt text.
 - Tests never call a paid model or a real agent.

@@ -1,5 +1,5 @@
 {
-  "info": "The director's API of the Floor42 daemon, on loopback only (ADR-0007). Every route under /api needs the session token except /api/status: the browser sends its session cookie (and `X-Floor42-Request: 1` on every change, with its own Origin); a script sends a script token issued from the desk (System > Sessions and tokens, ADR-0044) as a bearer, limited to its scope.\n\n```\n# a script token issued from the desk, shown once (scope read, missions:write or all; at most 30 days)\ncurl -H \"Authorization: Bearer $FLOOR42_TOKEN\" http://127.0.0.1:7420/api/missions\n```\n\n`FLOOR42_DIRECTOR_TOKEN_FILE=true` (writing the director's token to `~/.floor42/session.token`) still works but is deprecated: unconfined agents can read that file. A request a proxy forwarded (`X-Forwarded-For`, `X-Forwarded-Host`, `Forwarded`) is refused with `FORWARDED`: reach a remote daemon through an SSH tunnel (docs/remote.md).\n\nIdentifiers are short and readable: missions M-1, tickets T-1, questions Q-1, lessons L-1, notes N-1; agents are named (galen, chris). Every error comes back as `{\"code\": \"...\", \"message\": \"...\"}`, with a stable code: 400 when the request itself is wrong (`INVALID_ARGUMENT`, `MISSING_...`, `BAD_REQUEST` for a body that cannot be read), 401 without the session token (`UNAUTHORIZED`), 403 from another host or origin (`FORBIDDEN`), 404 when what it names does not exist (`NOT_FOUND`), 409 when the state of things refuses it (a business rule), 413 when it is too large, 503 when the journal cannot be written (`JOURNAL_UNAVAILABLE`). Every fact is recorded in the journal with its origin (REAL or SIMULATED): what the API returns is rebuilt from it.\n\n## Authentication\n\nThree schemes, applied per path group. `cookieAuth`: the browser's sign-in cookie, plus `X-Floor42-Request: 1` on every request that changes something and an `Origin` that is exactly the daemon's own. `bearerToken`: a script token with scope `read` (reads only), `missions:write` (reads, plus the MISSION_WRITES allow-list: create a mission, approve or reject it and its tickets, nudge it, send a workshop directive, answer a question that is not a permission) or `all`; it needs neither the header nor an Origin. `agentBearer`: an agent session's hook credential, accepted on `/hooks/*` and `/mcp` only and refused with 403 on `/api`. `/api/status` is open. The sign-in link request (`POST /auth/open`, outside this document) answers 429 `TOO_MANY_REQUESTS` when one was just opened.\n\n## Stability\n\nThe stable core is every route not marked `x-stability: unstable`. Unstable routes (identity, calls, demo, terminals, plugins, sandbox, backups, resume, projects, workflows, committee roles, lessons, some mission helpers, the journal helpers, `/mcp`, `/hooks/*`) may change in any release, with no notice. A change to the stable core is listed in the changelog.\n\n## Status codes\n\nEvery success is `200`, creates and deletes included: there is no `201` or `204`, by decision. Errors are the shared responses of this document, all with the `Problem` body.\n\n## Idempotency\n\n`POST /api/missions` accepts an `Idempotency-Key` header: the same request sent twice with one key creates one mission.",
+  "info": "The director's API of the Floor42 daemon, on loopback only (ADR-0007). Every route under /api needs the session token except /api/status: the browser sends its session cookie (and `X-Floor42-Request: 1` on every change, with its own Origin); a script sends a script token issued from the desk (System > Sessions and tokens, ADR-0044) as a bearer, limited to its scope.\n\n```\n# a script token issued from the desk, shown once (scope read, missions:write or all; at most 30 days)\ncurl -H \"Authorization: Bearer $FLOOR42_TOKEN\" http://127.0.0.1:7420/api/missions\n```\n\n`FLOOR42_DIRECTOR_TOKEN_FILE=true` (writing the director's token to `~/.floor42/session.token`) still works but is deprecated: unconfined agents can read that file. A request a proxy forwarded (`X-Forwarded-For`, `X-Forwarded-Host`, `Forwarded`) is refused with `FORWARDED`: reach a remote daemon through an SSH tunnel (docs/remote.md).\n\nIdentifiers are short and readable: missions M-1, tickets T-1, questions Q-1, lessons L-1, notes N-1; agents are named (geoffrey, chris). Every error comes back as `{\"code\": \"...\", \"message\": \"...\"}`, with a stable code: 400 when the request itself is wrong (`INVALID_ARGUMENT`, `MISSING_...`, `BAD_REQUEST` for a body that cannot be read), 401 without the session token (`UNAUTHORIZED`), 403 from another host or origin (`FORBIDDEN`), 404 when what it names does not exist (`NOT_FOUND`), 409 when the state of things refuses it (a business rule), 413 when it is too large, 503 when the journal cannot be written (`JOURNAL_UNAVAILABLE`). Every fact is recorded in the journal with its origin (REAL or SIMULATED): what the API returns is rebuilt from it.\n\n## Authentication\n\nThree schemes, applied per path group. `cookieAuth`: the browser's sign-in cookie, plus `X-Floor42-Request: 1` on every request that changes something and an `Origin` that is exactly the daemon's own. `bearerToken`: a script token with scope `read` (reads only), `missions:write` (reads, plus the MISSION_WRITES allow-list: create a mission, approve or reject it and its tickets, nudge it, send a workshop directive, answer a question that is not a permission) or `all`; it needs neither the header nor an Origin. `agentBearer`: an agent session's hook credential, accepted on `/hooks/*` and `/mcp` only and refused with 403 on `/api`. `/api/status` is open. The sign-in link request (`POST /auth/open`, outside this document) answers 429 `TOO_MANY_REQUESTS` when one was just opened.\n\n## Stability\n\nThe stable core is every route not marked `x-stability: unstable`. Unstable routes (identity, calls, demo, terminals, plugins, sandbox, backups, resume, projects, workflows, committee roles, lessons, some mission helpers, the journal helpers, `/mcp`, `/hooks/*`) may change in any release, with no notice. A change to the stable core is listed in the changelog.\n\n## Status codes\n\nEvery success is `200`, creates and deletes included: there is no `201` or `204`, by decision. Errors are the shared responses of this document, all with the `Problem` body.\n\n## Idempotency\n\n`POST /api/missions` accepts an `Idempotency-Key` header: the same request sent twice with one key creates one mission.",
   "tags": {
     "Journal": "The journal's health and its copies (ADR-0042): the events this version could not read, the automatic backups, and a restore prepared for the next start.",
     "Status": "Whether Floor42 runs for real and which Claude Code it drives.",
@@ -406,7 +406,7 @@
       "summary": "Hire",
       "description": "Hires an agent. `workRole` is DEVELOPER, REVIEWER or RESEARCHER; `role` is the title shown.",
       "example": {
-        "name": "Darius",
+        "name": "Dehren",
         "role": "Code reviewer",
         "workRole": "REVIEWER",
         "model": "claude-sonnet-5-5",
@@ -443,7 +443,7 @@
     "POST /api/agents/{id}/dismiss": {
       "tag": "Team",
       "summary": "Dismiss",
-      "description": "The agent leaves the company; its history stays in the journal. Refused with AGENT_BUSY while it is at work (a session is open or about to start) and with AGENT_NEEDED for the two chairs, Galen and Lucie. A ticket it had started goes back to the queue (TicketReleased); a delivery under review stays in review; a committee member gives up their seat (`vacant` in the committee roles).",
+      "description": "The agent leaves the company; its history stays in the journal. Refused with AGENT_BUSY while it is at work (a session is open or about to start) and with AGENT_NEEDED for the two chairs, Geoffrey and Lucie. A ticket it had started goes back to the queue (TicketReleased); a delivery under review stays in review; a committee member gives up their seat (`vacant` in the committee roles).",
       "example": {
         "reason": "Role no longer needed"
       }
@@ -570,7 +570,7 @@
       "summary": "Ask for their view",
       "description": "Paid (ADR-0049): each speaker answers once, in this order, in a short read-only session on the meeting's own ticket, once seated. `capUsd` caps what the whole meeting is charged (Claude Code's estimates, or a turn's budget when it gave none); a speaker past the cap is recorded as not heard. Refused while a round is under way and on a mission not in progress.",
       "example": {
-        "speakers": ["darius", "chris"],
+        "speakers": ["dehren", "chris"],
         "capUsd": 0.5,
         "question": "Is it ready?"
       }
@@ -756,7 +756,7 @@
       "description": "Called by the agent sessions Floor42 starts, before every tool call, with the session's own token. Floor42 decides from the mission's table; a failure blocks the call (fail closed).",
       "schema": "object",
       "example": {
-        "session_id": "00000000-0000-4000-8000-00000000002d",
+        "session_id": "39b6ed54-cd27-4855-aa56-f996cfaaa9a6",
         "hook_event_name": "PreToolUse",
         "tool_name": "Read",
         "tool_input": {
@@ -795,7 +795,7 @@
             ]
           },
           "_meta": {
-            "claudecode/toolUseId": "toolu_01CqNh6yXYe6d4CCpUGt9ho1"
+            "claudecode/toolUseId": "toolu_01EgCYJhk3jtoz55NPrzQkFC"
           }
         }
       }
@@ -949,6 +949,16 @@
       "summary": "What a project needs and what the sandbox has",
       "description": "Reads the project's files (`project`, a folder; optional) and the checks command (`check`, optional) for the tools it needs, and compares them with the last measure of the sandbox in the journal. Nothing runs: without a measure (or since the sandbox was turned on) every state is `UNKNOWN`, never `MISSING`. `commands` are apt lines (Debian, Ubuntu) and, for a Node newer than the distribution's, the official tarball into /usr/local: for you to copy into a WSL terminal; Floor42 never runs them."
     },
+    "GET /api/preflight": {
+      "tag": "Missions",
+      "summary": "What stands in the way of a real mission on a folder",
+      "description": "Before the click (ADR-0070): the folder's profile read from its files (`project`, required: an absolute folder; `check`, optional: the checks command typed in the form), a proposed checks command (never run) and one list of `lines`, each a `code`, a `level` (`BLOCK`, `WARN`, `INFO` or `OK`) and the `params` the screen puts in its text. `verdict`: `BLOCKED`, `WARNINGS` or `READY`. A Claude Code that cannot run is a `claude.<reason>` line (`notFound`, `noAnswer`, `unexpectedAnswer`, `tooOld`, `interrupted`, `notChecked`). The two blockers mirror refusals made anyway at the creation of the mission. Nothing is measured (the sandbox tools come from the last measure in the journal) and nothing is recorded. 400 without `project`, 404 for a path that is not a folder."
+    },
+    "GET /api/missions/{id}/proof-dossier": {
+      "tag": "Missions",
+      "summary": "The mission's proof dossier, for the director",
+      "description": "What the mission did, read from its journal, with the source of every fact (`JOURNAL`, `GIT`, `STATE` or `DERIVED`) (ADR-0071): identities, delegation, broker calls, refusals, approvals, costs, checks, deliverables and diff, each list capped with its full `count`. Always masked by the replay export's sanitizer: no parameter turns that off. Read only, journals nothing, never cached. Behind the session token agents never receive; the shell guard refuses a command naming this route. `download` true adds a `Content-Disposition` header to save it as a file. The body is refused (empty 500) if it would hold the session token."
+    },
     "GET /api/sandbox/checklist": {
       "tag": "Sandbox",
       "summary": "What is missing on this machine",
@@ -972,7 +982,7 @@
     "GET /api/missions/{id}/replay-export/preview": {
       "tag": "Missions",
       "summary": "Preview a replay export",
-      "description": "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`). Builds no file; `digest` names this content for the export."
+      "description": "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `EMAIL`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`), e-mail addresses by `<email>` (sample and no-reply ones stay). Builds no file; `digest` names this content for the export."
     },
     "POST /api/missions/{id}/replay-export": {
       "tag": "Missions",
@@ -1016,7 +1026,7 @@
       "summary": "Resume a session's work",
       "description": "On your click only: answers the open \"Retry\" question of the session's ticket. `mode` FRESH (default) starts a new session from the journal's brief, as \"Retry\" always did; CONTINUE first records `SessionContinuationRequested`, so the next session of that developer on that ticket runs `claude --resume <id> --fork-session` in the same worktree with the same tools, model and effort, checked again when it starts (fresh if no longer safe; the journal's `SessionContinued` says which happened). Every tool call is still decided by Floor42's hook. `NOTHING_TO_RESUME` (409) without an open \"Retry\"; `CONTINUE_UNSAFE` (409) when continuing is not safe now.",
       "example": {
-        "session": "M-3:885ccb28-c7cb-4ff0-ae57-286455b37da3",
+        "session": "M-3:6f1c2d1e-4b7a-4c55-9a0e-2f3b8c1d9e70",
         "mode": "CONTINUE"
       }
     },

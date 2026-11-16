@@ -34,7 +34,7 @@ function event(partial: Partial<EventView>): EventView {
   }
 }
 
-const board: Record<string, string> = { 'T-1': 'darius' }
+const board: Record<string, string> = { 'T-1': 'dehren' }
 const assignee = (ticket: string) => board[ticket]
 
 describe('gestures', () => {
@@ -47,7 +47,7 @@ describe('gestures', () => {
 
   it('makes the assignee of a completed ticket celebrate, looked up on the board', () => {
     expect(gestureFor(event({ type: 'TicketCompleted', agent: null }), assignee)).toEqual({
-      agent: 'darius',
+      agent: 'dehren',
       gesture: 'celebrate',
     })
     // A ticket the board does not know: nobody celebrates in its name.
@@ -86,6 +86,9 @@ describe('daylight', () => {
     expect(daylight(3).warmth).toBeCloseTo(0.8)
     expect(daylight(9).warmth).toBe(0)
     expect(daylight(20).level).toBeLessThan(daylight(12).level)
+    expect(daylight(23).level).toBeCloseTo(0.4, 1) // a truly dark office at night
+    expect(daylight(23).level).toBeLessThan(daylight(20).level)
+    expect(daylight(8).level).toBeGreaterThan(0.8)
   })
 
   it('wraps hours outside 0..24', () => {

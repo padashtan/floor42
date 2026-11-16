@@ -81,15 +81,7 @@ public final class FakeTools implements LauncherSessionListener {
                     out.closeEntry();
                 }
             }
-            try {
-                Files.move(partial, jar, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (IOException e) {
-                // Test forks are separate JVMs: on Windows the move fails while another fork has just written the jar
-                // and holds it open. That jar is complete (moves are atomic) and as new as ours, so it is kept.
-                Files.deleteIfExists(partial);
-                if (!Files.isRegularFile(jar)
-                        || Files.getLastModifiedTime(jar).compareTo(Files.getLastModifiedTime(source)) <= 0) throw e;
-            }
+            Files.move(partial, jar, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } finally {
             try (Stream<Path> files = Files.walk(classes)) {
                 for (Path f : files.sorted(java.util.Comparator.reverseOrder()).toList()) Files.deleteIfExists(f);

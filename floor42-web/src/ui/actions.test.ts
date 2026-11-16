@@ -42,7 +42,7 @@ describe('action registry', () => {
     expect(menus.map((m) => m.group)).toEqual([...GROUPS])
     expect(menus.flatMap((m) => m.items.map((a) => a.id)).sort()).toEqual(ACTIONS.map((a) => a.id).sort())
     const of = (group: string) => menus.find((m) => m.group === group)!.items.map((a) => a.id)
-    expect(of('work')).toEqual(['desk', 'board', 'progress', 'resume', 'workshop', 'library', 'meeting', 'callMeeting', 'workflows', 'deliverables', 'prove', 'archive', 'tutorial'])
+    expect(of('work')).toEqual(['desk', 'board', 'progress', 'resume', 'workshop', 'library', 'meeting', 'callMeeting', 'workflows', 'deliverables', 'prove', 'dossier', 'archive', 'tutorial'])
     expect(of('team')).toEqual(['hire', 'core'])
     expect(of('system')).toEqual(['console', 'docs', 'costs', 'caps', 'sandbox', 'skills', 'terminal', 'sessions', 'identities', 'usage', 'settings'])
   })

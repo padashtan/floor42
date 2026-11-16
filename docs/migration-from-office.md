@@ -1,6 +1,6 @@
 # From Office to Floor42
 
-The product was called Office during its private development and became Floor42 before v1.0.0, its first public release. On its first start, Floor42 takes over an
+The product was called Office until 1.4.0 and became Floor42 in 1.5.0. On its first start, Floor42 takes over an
 existing installation:
 
 - **Data**: when `~/.floor42/floor42.db` does not exist and `~/.office/office.db` does, the journal is copied (a
@@ -19,4 +19,4 @@ existing installation:
 - **Browser**: what the page kept in your browser (language, panel places, filters) moves to the new names once.
 - **Repository**: Floor42 is published as `github.com/padashtan/floor42`.
 
-Architecture decision records written before the rename say "Office": they are kept as written.
+Architecture decision records written before 1.5.0 say "Office": they are kept as written.

@@ -8,7 +8,7 @@ const t = CATALOGS.en
  * director opens the confirmation, reads what a quarantine does, confirms, and sees the mission suspended and the
  * journal line. Detection only: nothing is applied before the click.
  */
-test('a probing session shows in To do and the director quarantines it', async ({ page, daemon }) => {
+test('a probing session shows in To do and the director quarantines it', { tag: '@office' }, async ({ page, daemon }) => {
   test.setTimeout(240_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })

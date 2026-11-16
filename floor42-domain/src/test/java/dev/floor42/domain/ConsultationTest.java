@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -30,7 +30,7 @@ class ConsultationTest {
         f.record(f.company
                 .tickets()
                 .requestConsultation(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         t,
                         ConsultationKind.CONSULT,
                         "security",
@@ -39,21 +39,21 @@ class ConsultationTest {
                 .hasValueSatisfying(c -> assertThat(c.pending()).isTrue());
         assertThatThrownBy(() -> f.company
                         .tickets()
-                        .requestConsultation(f.agent(DARIUS), t, ConsultationKind.RESEARCH, null, "again"))
+                        .requestConsultation(f.agent(DEHREN), t, ConsultationKind.RESEARCH, null, "again"))
                 .hasMessageContaining("One consultation per review");
 
-        f.record(f.company.tickets().answerConsultation(f.agent(GALEN), t, "No: rotate it."));
+        f.record(f.company.tickets().answerConsultation(f.agent(GEOFFREY), t, "No: rotate it."));
         Ticket.Consultation c = ticket().consultations().getFirst();
         assertThat(c.answer()).isEqualTo("No: rotate it.");
-        assertThat(c.answeredBy()).isEqualTo(GALEN);
+        assertThat(c.answeredBy()).isEqualTo(GEOFFREY);
         assertThat(c.round()).isZero();
 
         // A rejection and a new delivery open a new review round: help may be asked again.
-        f.record(f.company.tickets().review(f.agent(DARIUS), t, ReviewVerdict.REJECTED, "rotate the token"));
+        f.record(f.company.tickets().review(f.agent(DEHREN), t, ReviewVerdict.REJECTED, "rotate the token"));
         f.record(f.company.tickets().submitForReview(f.agent(CHRIS), t, "report 2"));
         f.record(f.company
                 .tickets()
-                .requestConsultation(f.agent(DARIUS), t, ConsultationKind.RESEARCH, null, "token rotation"));
+                .requestConsultation(f.agent(DEHREN), t, ConsultationKind.RESEARCH, null, "token rotation"));
         f.record(f.company.tickets().answerConsultation(f.system(), t, "Research not run: the table denies web tools"));
         assertThat(ticket().consultations()).hasSize(2);
         assertThat(ticket().consultations().getLast().answeredBy()).isNull();
@@ -69,7 +69,7 @@ class ConsultationTest {
                 .hasMessageContaining("cannot review");
         f.record(f.company
                 .tickets()
-                .requestConsultation(f.agent(DARIUS), t, ConsultationKind.CONSULT, "developer", "?"));
+                .requestConsultation(f.agent(DEHREN), t, ConsultationKind.CONSULT, "developer", "?"));
         assertThatThrownBy(() -> f.company.tickets().answerConsultation(f.agent(CHRIS), t, "trust me"))
                 .hasMessageContaining("producer");
         assertThatThrownBy(() -> f.company.tickets().answerConsultation(f.director(), t, "director answers"))
@@ -79,7 +79,7 @@ class ConsultationTest {
     @Test
     void aConsultationNeedsAQuestionAndARole() {
         assertThatThrownBy(() ->
-                        f.company.tickets().requestConsultation(f.agent(DARIUS), t, ConsultationKind.CONSULT, " ", "q"))
+                        f.company.tickets().requestConsultation(f.agent(DEHREN), t, ConsultationKind.CONSULT, " ", "q"))
                 .hasMessageContaining("Whom");
         assertThatThrownBy(() -> f.company.tickets().answerConsultation(f.system(), t, "nothing asked"))
                 .hasMessageContaining("No consultation pending");

@@ -12,8 +12,6 @@ permissions:
 
 jobs:
   slow:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -44,18 +42,16 @@ jobs:
           unshare -Urm true
 
       - name: Slow tests
-        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false
 
       # SandboxNativeEscapeTest is not tagged slow (the push build runs it); the nightly runs it too, on this runner.
       - name: Native sandbox escape tests
         run: >-
           ./mvnw -B -ntp -pl floor42-server -am test -Dtest=SandboxNativeEscapeTest
-          -Dsurefire.failIfNoSpecifiedTests=false -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+          -Dsurefire.failIfNoSpecifiedTests=false -Dspotless.check.skip=true -Dquarkus.quinoa=false
 
   # Static analysis and coverage reports (docs/quality.md). No SonarQube server in CI: the reports are artifacts.
   quality:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -81,7 +77,7 @@ jobs:
         working-directory: floor42-web
 
       - name: Quality profile
-        run: ./mvnw -B -ntp -Pquality verify -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp -Pquality verify -Dspotless.check.skip=true -Dquarkus.quinoa=false
 
       - name: Mutation tests on the security code
         run: ./mvnw -B -ntp -Pquality -Dspotless.check.skip=true -Dquarkus.quinoa=false test-compile org.pitest:pitest-maven:mutationCoverage

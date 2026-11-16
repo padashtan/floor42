@@ -3,6 +3,7 @@
 **/node_modules
 floor42-web/dist
 .floor42
+docs/references
 spikes
 .idea
 .vscode

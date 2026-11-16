@@ -1,7 +1,7 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
+import static dev.floor42.domain.Fixture.DEHREN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -35,7 +35,7 @@ class RetroTest {
                 .hasMessageContaining("has not ended");
 
         MissionId m = ended();
-        assertThatThrownBy(() -> f.company.retros().open(f.system(), m, CHRIS, List.of(CHRIS, DARIUS), "facts"))
+        assertThatThrownBy(() -> f.company.retros().open(f.system(), m, CHRIS, List.of(CHRIS, DEHREN), "facts"))
                 .hasMessageContaining("did not work on");
         assertThatThrownBy(() -> f.company.retros().open(f.director(), m, CHRIS, List.of(CHRIS), "facts"))
                 .isInstanceOf(DomainException.class);
@@ -65,7 +65,7 @@ class RetroTest {
         Retro r = f.company.retros().find(m).orElseThrow();
         // The retrospective is the one session allowed on an ended mission, for a participant only.
         f.record(f.company.sessions().start(f.system(), "s-2", r.ticket(), CHRIS, "claude-haiku-5-5", "2.1"));
-        assertThatThrownBy(() -> f.company.sessions().start(f.system(), "s-3", r.ticket(), DARIUS, "m", "2.1"))
+        assertThatThrownBy(() -> f.company.sessions().start(f.system(), "s-3", r.ticket(), DEHREN, "m", "2.1"))
                 .isInstanceOf(DomainException.class);
         assertThatThrownBy(() -> f.company.retros().conclude(f.agent(CHRIS), m, List.of(), "x", null, List.of()))
                 .hasMessageContaining("not spoken");

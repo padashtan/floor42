@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Test;
  */
 class WorkflowScenariosTest {
 
-    private static final AgentId PLANNER = new AgentId("galen");
+    private static final AgentId PLANNER = new AgentId("geoffrey");
     private static final AgentId DEVELOPER = new AgentId("chris");
-    private static final AgentId REVIEWER = new AgentId("darius");
+    private static final AgentId REVIEWER = new AgentId("dehren");
 
     private final Company company = new Company();
     private final List<EventEnvelope> journal = new ArrayList<>();

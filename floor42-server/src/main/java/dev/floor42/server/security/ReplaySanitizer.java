@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
 /**
  * Cleans every text a mission replay writes into a file meant to leave the director's machine (ADR-0035). In order:
  * the session token, the machine's known folders (the repository, the agents' worktrees, Floor42's data directory, the
- * home folder) replaced by a named placeholder, any other local absolute path replaced by {@value #PATH}, what looks
+ * home folder) replaced by a named placeholder, any other local absolute path replaced by {@value #PATH}, an e-mail
+ * address by {@value #EMAIL} (sample and no-reply ones stay), what looks
  * like a secret masked by {@link SecretMasker}, then the text clipped. It counts each replacement, and where it was,
  * for the preview the director reads before confirming.
  *
@@ -27,6 +28,8 @@ public final class ReplaySanitizer {
         SECRET,
         /** A local absolute path. */
         PATH,
+        /** An e-mail address, other than a sample or a no-reply one. */
+        EMAIL,
         /** The daemon's session token. */
         TOKEN,
         /** A tool or check output cut at {@link #OUTPUT_MAX}. */
@@ -47,6 +50,7 @@ public final class ReplaySanitizer {
     public record Masked(int event, String field, Kind kind) {}
 
     public static final String PATH = "<path>";
+    public static final String EMAIL = "<email>";
     public static final int OUTPUT_MAX = 1500;
     public static final int TEXT_MAX = 2000;
     /** At most this many places are listed; every one is counted. */
@@ -65,6 +69,14 @@ public final class ReplaySanitizer {
             + "|(?:root|mnt|media|tmp|private|var|opt|srv)(?=/|\\s|$|[\"'<>|])"
             + "|[a-zA-Z](?=/(?i:users)/))"
             + "(?:/[^\\s\"'<>|]*)?");
+
+    /** An e-mail address; no match starts inside a run of its characters, so a long run is read once. */
+    private static final Pattern MAIL =
+            Pattern.compile("(?<![A-Za-z0-9._%+-])[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}(?![A-Za-z0-9-])");
+
+    /** Kept: the documentation domains (RFC 2606) and no-reply senders, which name nobody. */
+    private static final Pattern KEPT_MAIL =
+            Pattern.compile("(?i).*@(?:[a-z0-9-]+\\.)*example\\.(?:org|com|net)|.*no-?reply.*");
 
     private final String token;
     private final List<Map.Entry<Pattern, String>> roots = new ArrayList<>();
@@ -134,6 +146,7 @@ public final class ReplaySanitizer {
         out = replace(out, WINDOWS, PATH, event, field, Kind.PATH);
         out = replace(out, UNC, PATH, event, field, Kind.PATH);
         out = replace(out, POSIX, PATH, event, field, Kind.PATH);
+        out = emails(out, event, field);
         int secrets = SecretMasker.count(out);
         if (secrets > 0) {
             out = SecretMasker.maskText(out);
@@ -159,6 +172,21 @@ public final class ReplaySanitizer {
         if (n == 0) return s;
         m.appendTail(out);
         note(event, field, kind, n);
+        return out.toString();
+    }
+
+    private String emails(String s, int event, String field) {
+        Matcher m = MAIL.matcher(s);
+        StringBuilder out = new StringBuilder();
+        int n = 0;
+        while (m.find()) {
+            if (KEPT_MAIL.matcher(m.group()).matches()) continue;
+            m.appendReplacement(out, EMAIL);
+            n++;
+        }
+        if (n == 0) return s;
+        m.appendTail(out);
+        note(event, field, Kind.EMAIL, n);
         return out.toString();
     }
 

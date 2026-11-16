@@ -55,22 +55,6 @@ class ConfinementTest {
         assertThat(call("Glob", Map.of("pattern", "**/*.java"))).isEmpty();
     }
 
-    /** CodeQL java/polynomial-redos: a name an agent writes is judged in linear time, however long and odd. */
-    @Test
-    void aPathologicalNameIsJudgedFast() {
-        String tildes = "~0".repeat(100_000);
-        // Dots, not spaces: Windows refuses a name that ends with a space before the name is judged.
-        String dots = "x" + ".".repeat(200_000) + "y";
-        org.junit.jupiter.api.Assertions.assertTimeoutPreemptively(java.time.Duration.ofSeconds(5), () -> {
-            // The line break made ".*~\\d.*" try every start again, and hid the short name from it.
-            assertThat(Confinement.check(tildes + "\n", worktree, true)).isPresent();
-            assertThat(Confinement.check(tildes, worktree, true)).isPresent();
-            assertThat(Confinement.check(dots, worktree, true)).isEmpty();
-            assertThat(Confinement.refusal(worktree, dots + "/.git" + ".".repeat(200_000), ConfinedPath.Mode.READ))
-                    .hasValueSatisfying(why -> assertThat(why).endsWith("is git's own data"));
-        });
-    }
-
     @Test
     void windowsSpellingsOfProtectedFoldersAreProtected() throws Exception {
         // Windows drops trailing dots and spaces and resolves 8.3 short names: ".git." and "GIT~1" are ".git".

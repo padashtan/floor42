@@ -70,26 +70,6 @@ class GitTest {
         assertThat(git.resolve(repo, "HEAD")).get().asString().matches("[0-9a-f]{40,64}");
     }
 
-    /** CodeQL java/command-line-injection: git gets a list of arguments, never a shell line, and no option by name. */
-    @Test
-    void aValueIsNeverReadAsAnOptionOrByAShell() throws IOException {
-        // "--git-dir" alone prints the git directory: taken for a revision, it must name nothing.
-        assertThat(git.resolve(repo, "--git-dir")).isEmpty();
-        assertThat(git.resolve(repo, "-h")).isEmpty();
-        assertThat(git.resolve(repo, null)).isEmpty();
-        // A shell would run the second command; git gets one argument and finds no such revision.
-        Path proof = tmp.resolve("shell-ran");
-        assertThat(git.resolve(repo, "HEAD; touch " + proof + " & echo x > " + proof))
-                .isEmpty();
-        assertThat(proof).doesNotExist();
-        // The folder is the value of -C, whatever its name looks like.
-        Path odd = Files.createDirectory(tmp.resolve("--version"));
-        assertThat(GitProcess.command(odd, List.of("status")))
-                .containsSubsequence("git", "-C", odd.toString(), "status")
-                .doesNotContain("sh", "bash", "cmd", "cmd.exe");
-        assertThat(git.run(odd, "rev-parse", "--is-inside-work-tree").out()).doesNotContain("git version");
-    }
-
     @Test
     void statusIsReadWithItsExtraArguments() throws IOException {
         Files.writeString(repo.resolve("new file.txt"), "x");

@@ -18,13 +18,13 @@ describe('groupPreview', () => {
     entry('chris', 'BLOCKED', 'AGENT_BUSY'),
     entry('kora', 'STAYS'),
     entry('ada', 'LEAVES'),
-    entry('galen', 'BLOCKED', 'AGENT_NEEDED'),
+    entry('geoffrey', 'BLOCKED', 'AGENT_NEEDED'),
   ])
 
   it('sorts every agent into leaving, staying or blocked, by name', () => {
     expect(groups.leaving.map((e) => e.id)).toEqual(['ada', 'zoe'])
     expect(groups.staying.map((e) => e.id)).toEqual(['kora'])
-    expect(groups.blocked.map((e) => e.id)).toEqual(['chris', 'galen'])
+    expect(groups.blocked.map((e) => e.id)).toEqual(['chris', 'geoffrey'])
   })
 
   it('confirms only those shown as leaving: never a core member nor one at work', () => {

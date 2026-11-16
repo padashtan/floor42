@@ -37,16 +37,7 @@ class NativeChecksTest {
                 .filter(r -> r.id().equals("isolation"))
                 .findFirst()
                 .orElseThrow();
-        assertThat(isolation.command())
-                .startsWith("echo 'profile floor42-unshare /usr/bin/unshare flags=(unconfined) { userns, }'")
-                .contains(
-                        "sudo tee /etc/apparmor.d/floor42-unshare",
-                        "sudo apparmor_parser -r /etc/apparmor.d/floor42-unshare")
-                .endsWith("(persist it in /etc/sysctl.d/)");
-        assertThat(isolation.command().indexOf("apparmor_parser"))
-                .as("the profile comes first, the sysctl is the weaker alternative")
-                .isLessThan(
-                        isolation.command().indexOf("sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0"));
+        assertThat(isolation.command()).startsWith("sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0");
         assertThat(isolation.detail()).contains("AppArmor", "Ubuntu");
         assertThat(isolation.note())
                 .as("a note the screen shows, with the remedy")

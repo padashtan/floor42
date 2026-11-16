@@ -1,7 +1,7 @@
 # Security scanning
 
 Vulnerability scanning on top of the quality suite ([quality.md](quality.md)): what each tool covers, how to run it,
-where it runs in CI, and the baseline of 2026-11-09 (branch `q7-vulns`, built from the branch that became v1.0.0).
+where it runs in CI, and the baseline of 2026-11-09 (branch `q7-vulns`, built from `integ/1.17`).
 
 | Tool | Covers | Runs | Gate |
 |------|--------|------|------|
@@ -150,12 +150,12 @@ commit and rule; the history is never rewritten by the scan.
 | `.gitleaks.toml` | `[[allowlists]]` with `paths` and `targetRules` | proven false positives only, single files and the rules they trip |
 | `bearer.ignore` | JSON by fingerprint, `comment` and `false_positive` | each fingerprint carries its reason; a moved line changes it and the finding returns |
 
-### Baseline, 2026-11-09 (the branch that became v1.0.0)
+### Baseline, 2026-11-09 (`integ/1.17`)
 
 | Tool | Result |
 |------|--------|
 | OSV-Scanner 2.3.5 | 163 SBOM components, 231 npm packages, 8 packages of the Keycloak extension: 18 advisories, 14 fixed by a bump (below), 4 ignored with an expiry; 0 in the product jars and in npm. |
-| gitleaks 8.30.1 | Working tree: 39 findings. All false positives, 0 real secret. After `.gitleaks.toml`: 0. |
+| gitleaks 8.30.1 | History (873 commits, all refs): 47 findings. Working tree: 39. All false positives, 0 real secret. After `.gitleaks.toml`: 0 and 0. |
 | Bearer 1.51.0 | Security report: 87 findings (20 critical, 41 high, 10 medium, 16 low), 0 real, all in `bearer.ignore`. Privacy report: 4 data subjects detected (full name, password, physical address, unique identifier), 0 rule failures, 56 rules passed. |
 
 **OSV-Scanner.** The `pom.xml` files alone give 22 packages (the Quarkus BOM versions are not resolved), so the Maven side
@@ -173,13 +173,13 @@ image only.
 **gitleaks.** All hits are test or documentation values: fake client secrets of the throwaway test realm
 (`floor42-server/src/test/java/dev/floor42/server/iam/*`, `MappersIT`, the golden files), a fake JWT in
 `JournalMaskingTest`, GitHub and AWS token lookalikes planted in `fake-claude/leak.txt` and `ReplayExportApiTest` for the
-masking tests, `PET_SOUND_KEY` (a localStorage
+masking tests, sample secrets in `docs/superpowers/plans/2026-11-05-agent-identity.md` (in the history only, the file is gone from the tree), `PET_SOUND_KEY` (a localStorage
 key name, in `App.vue` and `useOfficeScene.ts`) and `iam/byo-keycloak-check.sh` (the `curl -u` secrets are shell variables
-filled by `openssl rand`). The allowlist names single files, per rule (21 files: 18 for `generic-api-key`, 2 for
+filled by `openssl rand`). The allowlist names single files, per rule (24 files: 19 for `generic-api-key`, 4 for
 `aws-access-token`, one each for `jwt` and `curl-auth-user`), plus the untracked `target/` and `node_modules/`
 folders that the working-tree scan would otherwise read. No folder of tests is allowlisted: a new test file with a
 secret is flagged. Checked on a scratch copy: a realistic fake AWS key in a new file under `src/test` is reported, with
-this config. Limit: a secret pasted into one of the 21 listed files is not. The rerun over
+this config. Limit: a secret pasted into one of the 24 listed files is not. The rerun over the whole history and over
 the tree gave 0.
 
 **Bearer.** The security report is a pattern scanner and flags code that is fine here:
@@ -204,74 +204,6 @@ finding that comes back after a refactor is triaged again, not ignored by defaul
 - The `kc-upgrade` of Keycloak to remove the four ignores before 2027-02-09.
 - OSV-Scanner on the Keycloak image and Bearer's `--exit-code` tuning on a faster runner: the first Linux CI run will
   tell how long Bearer takes there (20 minutes on the WSL bind mount).
-
-## Code scanning triage (v1.0.0)
-
-The first CodeQL and Scorecard runs on the public repository (2026-11-12, commit `0b685fc0`) opened 90 alerts: 80 from
-CodeQL (`security-extended`) and 10 from Scorecard. Each one was read with its data flow (the SARIF of the analysis)
-against the code. The numbers are the alert numbers of the Security tab. "Fixed" means the code changed and a test
-proves it; "justified" means the code is safe as it is, for the reason given, and was not bent to please the tool.
-
-Every `java/*` alert below starts at a REST resource. The API is the director's own: the daemon listens on loopback
-only and every `/api` route needs the director's session or token ([threat-model.md](threat-model.md), `LocalAccessGuard`).
-A value CodeQL calls "user-provided" is one the director sent to his own daemon. That bounds the impact; it is not
-the reason given below, which is each time the check in the code.
-
-### Fixed
-
-| Rule | Alerts | Where | What changed | Proof |
-|------|--------|-------|--------------|-------|
-| `java/polynomial-redos` | 14, 15 | `runtime/Confinement.java` (`protectedName`, `plain`) | `".*~\d.*"` with `matches()` and `"[. ]+$"` with `replaceAll()` were quadratic on a long name an agent writes in a tool call. Now a `find()` on `~\d` and a loop. The short-name check no longer misses a name that holds a line break | `ConfinementTest.aPathologicalNameIsJudgedFast` (100 000 `~0`, 200 000 dots, 5 s limit) |
-| `java/log-injection` | 77 to 90 | `GitProcess`, `WorkshopDiscard`, `ProofFolders`, `ProjectInit`, `MissionScheduler`, `MeetingVoices` (4), `DirectorTerminals`, `DeliverablesHome` (3), `ReplayExportResource` | `security/LogSafe.of` replaces every control character and line separator with `?` before the value is logged. Most of these values are ids already held to `[A-Za-z0-9._:-]` by `Identifier`; a folder path, a meeting id and a terminal id are not | `LogSafeTest` |
-| `java/toctou-race-condition` | 58 | `app/MissionGovernor.java` (`started`) | The resumed session was looked up in one synchronized call and the continuation recorded in a second one. Both are now in one command. The journal never removes a session, so the old code could not act on a stale answer; the single command says so in code | `ResumeApiTest` (unchanged, still green) |
-| `js/incomplete-sanitization` | 11 | `floor42-web/src/i18n/events.test.ts` | The test built a regex from a translation key and escaped only the dot. It now escapes every regex character | the test itself |
-| `js/unvalidated-dynamic-method-call` | 12 | `tools/demo/hero.mjs` | The answer of the local headless Chrome named a callback in a `Map`; the script now calls it only when it is a function it registered | `node --check` |
-
-### Justified: command lines
-
-| Rule | Alerts | Where | Why it is safe |
-|------|--------|-------|----------------|
-| `java/command-line-injection` | 57 | `runtime/GitProcess.java:258` | Git is started with `ProcessBuilder` and a list of arguments: no shell reads the line. The flagged values are the project folder, which is the value of `-C`, and a file path of the workshop, which `Confinement.relative` confined and which always follows `--` under `--literal-pathspecs`. Every revision or range follows `--end-of-options`. Hardened in the same change: `Git.resolve` answers empty for a revision that starts with `-`, and the pull request's diff range got its `--end-of-options`. `GitTest.aValueIsNeverReadAsAnOptionOrByAShell` |
-| `java/command-line-injection` | 56 | `runtime/ClaudeCodeRuntime.java:285` | The flagged value is not on the command line: it is the working directory of the session (`ProcessBuilder.directory`), the folder `<data>/workspaces/<mission>-research` that Floor42 made. The mission id matches `Identifier` and names an existing mission, whose ids Floor42 mints (`M-<n>`) |
-| `java/relative-path-command` | 59 to 76 | test sources only (`git`, `cmd`, `python3`, `unshare`, `wsl.exe`) | Tests build a throwaway repository or probe the sandbox with the tools of the developer's `PATH`, as the product does on purpose: git, Claude Code and WSL are the director's own installations, and an absolute path would differ on every machine. No test code ships in the jar |
-| `java/insufficient-key-size` | 55 | `iam/JwksTest.java:44` | The test makes a 1024-bit RSA key to prove that `Jwks` skips keys under 2048 bits (`Jwks.java:132`). The weak key is the test's subject |
-| `js/file-access-to-http` | 13 | `tools/demo/record.mjs:26` | The script reads the director's token from the file he names and sends it as the bearer of his own daemon (`FLOOR42_URL`, loopback by default) to record the demo tape. That is its purpose; the token is never printed and the tape holds answers only |
-
-### Justified: paths (`java/path-injection`, 16 to 54)
-
-No path from a request reaches the file system without one of these checks. The rule does not see them because they
-are a regex in a record's constructor, a lookup in a map, or `Confinement` itself.
-
-| Alerts | Where | The value | The check that guards it |
-|--------|-------|-----------|--------------------------|
-| 44, 45 | `runtime/Confinement.java:156,159` | any path of a tool call or of the director | This is the confinement check: it resolves the real path to refuse what leaves the root. It only asks whether the path exists |
-| 29 to 34, 37 | `Workshop` (207), `WorkshopFiles`, `WorkshopText`, `WorkshopDiscard`, `WorktreeScanner` | a file path inside a worktree or the project | `Confinement.relative(root, path, mode)` first (`Workshop.confined`, `WorkshopDiscard.discard`, `DirectorFileReader.entry`): inside the root on the real file system, no `.git`, no protected name. `ConfinementTest`, `ConfinedPathTest` |
-| 17 to 24 | `DocumentWriter`, `DeliveryDestination` | the mission id, then each delivered file's path | The mission exists (ids are minted `M-<n>`); the folder is `<destination>/<mission>` and is refused when a link leads elsewhere (`prepare`); each file goes through `Confinement.relative` and a second link check after its folder is created (`refusal`) |
-| 35, 36, 38 | `Workshop.java:366,367`, `Workspaces.java:144` | mission and agent ids | One file or folder name made of ids under Floor42's data directory (`patches/<mission>-<agent>-<time>.patch`, `workspaces/<mission>-research`). `Identifier` allows no separator, and since this triage neither `.` nor `..` (`IdentifierTest`) |
-| 39 to 43 | `iam/SecretVault.java` | the vault entry name, built from an agent or mission id | `file(name)` refuses a name that is not `[a-z0-9-]{1,80}`; the entry is `<data>/vault/<name>.bin` |
-| 25 to 27 | `app/MarketplaceStore.java:196-199` | a marketplace name | `Plugins.refresh` requires `MarketplaceStore.NAME` and a marketplace Claude Code already knows (`markets().get`), else 404 |
-| 46 to 54 | `runtime/GitProcess.java` (`checkLinks`, `checkNoPendingOperation`, `checkNoPopulatedGitlink`) | the project folder the director chose | These reads are the guard that runs before every git: they open `.git`, `commondir` and `gitdir` of the folder git is about to run in, to refuse a tampered one |
-| 16, 28 | `ProjectsResource.java:303`, `ProjectToolchain.java:185` | an absolute folder of the director's machine | By design: the folder picker and the readiness check read the folder the director names on his own machine. They list folder names and read fixed toolchain files under a size cap, write nothing, and answer the director only |
-
-### Scorecard
-
-| Check | Alert | Status |
-|-------|-------|--------|
-| Pinned-Dependencies | 3, 4 | Fixed: `iam/keycloak/Dockerfile` names the digest of `quay.io/keycloak/keycloak:26.8.1`, and Dependabot watches that folder |
-| Pinned-Dependencies | 6 | Fixed, though a false positive: `bin/floor42` piped the daemon's JSON answer into an inline `python3 -c` parser, which Scorecard read as download-then-run. The answer now goes through a variable |
-| Pinned-Dependencies | 5 | Justified: `Dockerfile:40` installs Claude Code with npm in the `claude` stage, at the version whoever builds passes (`CLAUDE_CODE_VERSION`). A global tool has no lock file to hash, and that stage is only in the image built on the director's machine: the published image (`--target floor42`) holds no Claude Code |
-| Security-Policy | 2 | Fixed: `SECURITY.md` was found but held relative links only; it now gives the absolute link of the private report form. A response time would raise the score further; it is a commitment for the maintainer to make |
-| Branch-Protection | 1 | Repository setting (below) |
-| Code-Review | 8 | Inherent to one maintainer: nobody else can approve a change. It moves once a second reviewer exists |
-| Maintained | 9 | Inherent: the repository is younger than 90 days. Scorecard scores it by itself after that |
-| CII-Best-Practices | 10 | A registration at bestpractices.dev by the maintainer, not a file |
-| Fuzzing | 7 | Justified: the parsers and guards are fuzzed with Jazzer every night ([quality.md](quality.md)) and the API with Schemathesis (below). Scorecard counts OSS-Fuzz, ClusterFuzzLite and a few language-native fuzzers, not Jazzer under JUnit |
-
-Repository settings, for the maintainer (nothing in the tree can set them):
-
-- protect `main`: require a pull request and the CI checks, forbid force pushes and deletion, include administrators;
-- enable private vulnerability reporting, which `SECURITY.md` points to;
-- optionally register the project at bestpractices.dev and add its badge.
 
 ## API contract fuzzing (Schemathesis)
 

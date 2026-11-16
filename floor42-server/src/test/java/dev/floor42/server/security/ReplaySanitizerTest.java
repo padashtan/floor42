@@ -172,4 +172,22 @@ class ReplaySanitizerTest {
         assertThat(new ReplaySanitizer(null, roots).text(1, "t", "keep this words as they are"))
                 .isEqualTo("keep this words as they are");
     }
+
+    @Test
+    void anEmailAddressInAnAgentMessageIsMasked() {
+        ReplaySanitizer s = sanitizer();
+        String out =
+                s.text(1, "text", "I wrote to jane.doe@corp-mail.test and Jane.Doe+ops@mail.corp-mail.test about it");
+
+        assertThat(out).doesNotContain("jane.doe").doesNotContain("Jane.Doe").doesNotContain("corp-mail.test");
+        assertThat(out)
+                .isEqualTo("I wrote to " + ReplaySanitizer.EMAIL + " and " + ReplaySanitizer.EMAIL + " about it");
+        assertThat(s.counts()).containsEntry(ReplaySanitizer.Kind.EMAIL, 2);
+    }
+
+    @Test
+    void sampleAndNoreplyAddressesStay() {
+        String kept = "from dev@example.org, 191577577+someone@users.noreply.github.com and noreply@corp.test";
+        assertThat(sanitizer().text(1, "text", kept)).isEqualTo(kept);
+    }
 }

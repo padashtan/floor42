@@ -136,7 +136,7 @@ async function sendDirective() {
   if (v) directive.value = "";
 }
 
-const { unticked, picked, accept, reject, discard } = useWorkshopDecisions({
+const { unticked, picked, accept, acceptRest, reject, discard } = useWorkshopDecisions({
   mission: m,
   agent, path,
   changes,
@@ -285,6 +285,7 @@ watch(
       :accepted="accepted"
       @send="sendDirective"
       @accept="accept"
+      @accept-rest="acceptRest"
       @reject="reject"
     />
   </div>

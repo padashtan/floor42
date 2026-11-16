@@ -11,6 +11,7 @@ import { tutorialEn } from './tutorial.en'
 import { meetingVoicesEn } from './meeting-voices.en'
 import { librariesEn } from './libraries.en'
 import { proofEn } from './proof.en'
+import { dossierEn } from './dossier.en'
 import { remoteEn } from './remote.en'
 import { missionFormEn } from './missionForm.en'
 
@@ -26,6 +27,7 @@ export const en = {
   ...meetingVoicesEn,
   ...librariesEn,
   ...proofEn,
+  ...dossierEn,
   ...remoteEn,
   ...missionFormEn,
 } as const

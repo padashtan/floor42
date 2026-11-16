@@ -13,7 +13,7 @@ describe('what counts as a draft', () => {
   it('is only what differs from a blank form, choices included', () => {
     resetAllDrafts()
     expect(missionDrafted()).toBe(false)
-    drafts.mission.letGalenPlan = false
+    drafts.mission.letGeoffreyPlan = false
     expect(missionDrafted()).toBe(true)
     resetMissionDraft()
     drafts.mission.panel = 'architecture'
@@ -36,12 +36,12 @@ describe('what counts as a draft', () => {
     drafts.mission.repository = 'C:/repo'
     drafts.mission.panel = 'idea'
     drafts.mission.seated = ['moderator', 'security']
-    drafts.mission.letGalenPlan = false
+    drafts.mission.letGeoffreyPlan = false
     expect(panelsWithDraft(['desk'])).toEqual(['desk'])
     resetMissionDraft()
     expect(drafts.mission.repository).toBe('')
     expect(drafts.mission.panel).toBe('none')
-    expect(drafts.mission.letGalenPlan).toBe(true)
+    expect(drafts.mission.letGeoffreyPlan).toBe(true)
     expect(drafts.mission.seated).toEqual(['security', 'developer'])
     expect(panelsWithDraft(['desk'])).toEqual([])
   })

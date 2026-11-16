@@ -17,12 +17,12 @@ const ev = (type: string, code: string, agent: string | null = 'bobi') => ({ typ
 describe('who stays in the office', () => {
   it('keeps those who worked on any mission in progress, whichever one is on the board', () => {
     const missions = [
-      mission('IN_PROGRESS', ['bobi', 'galen']),
-      mission('COMPLETED', ['darius']),
+      mission('IN_PROGRESS', ['bobi', 'geoffrey']),
+      mission('COMPLETED', ['dehren']),
       mission('AWAITING_APPROVAL', ['margaret']),
       mission('IN_PROGRESS', ['lucie', 'bobi']),
     ]
-    expect([...residentsOf(missions)].sort()).toEqual(['bobi', 'galen', 'lucie'])
+    expect([...residentsOf(missions)].sort()).toEqual(['bobi', 'geoffrey', 'lucie'])
   })
 
   it('keeps nobody when no mission is in progress', () => {

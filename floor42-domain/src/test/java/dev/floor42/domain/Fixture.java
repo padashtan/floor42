@@ -8,9 +8,9 @@ import java.util.List;
 /** A small company with three agents, used by the domain tests. Keeps every recorded event, like the journal would. */
 final class Fixture {
 
-    static final AgentId GALEN = new AgentId("galen");
+    static final AgentId GEOFFREY = new AgentId("geoffrey");
     static final AgentId CHRIS = new AgentId("chris");
-    static final AgentId DARIUS = new AgentId("darius");
+    static final AgentId DEHREN = new AgentId("dehren");
 
     /** The fixtures made by the test running on this thread, for its golden master (GoldenFixtureExtension). */
     private static final ThreadLocal<List<Fixture>> MADE = ThreadLocal.withInitial(ArrayList::new);
@@ -30,7 +30,7 @@ final class Fixture {
     Fixture(Origin origin) {
         this.origin = origin;
         MADE.get().add(this);
-        for (AgentId id : List.of(GALEN, CHRIS, DARIUS)) {
+        for (AgentId id : List.of(GEOFFREY, CHRIS, DEHREN)) {
             record(company.staff()
                     .hire(
                             director(),
@@ -91,7 +91,14 @@ final class Fixture {
 
     TicketId ticket(MissionId mission, String title, TicketId... dependsOn) {
         var events = record(company.tickets()
-                .create(agent(GALEN), mission, title, "", Priority.NORMAL, List.of(dependsOn), List.of("criterion")));
+                .create(
+                        agent(GEOFFREY),
+                        mission,
+                        title,
+                        "",
+                        Priority.NORMAL,
+                        List.of(dependsOn),
+                        List.of("criterion")));
         return ((dev.floor42.domain.event.TicketEvent.TicketCreated)
                         events.getFirst().event())
                 .ticket();
@@ -102,7 +109,7 @@ final class Fixture {
         MissionId m = mission();
         TicketId t = ticket(m, "Validate token audience");
         record(company.tickets().assign(director(), t, CHRIS));
-        record(company.missions().submitPlan(agent(GALEN), m));
+        record(company.missions().submitPlan(agent(GEOFFREY), m));
         if (origin == Origin.REAL) record(company.verification().setBudget(director(), m, null));
         record(company.missions().approvePlan(director(), m));
         record(company.tickets().start(agent(CHRIS), t));

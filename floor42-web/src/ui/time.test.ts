@@ -30,14 +30,14 @@ describe('ticketTiming', () => {
   it('separates the time agents worked from the time the ticket took', () => {
     const t = ticketTiming(
       ticket(at(0), at(30)),
-      [session('chris', 'T-1', 0, 10), session('darius', 'T-1', 12, 16), session('chris', 'T-2', 0, 50)],
+      [session('chris', 'T-1', 0, 10), session('dehren', 'T-1', 12, 16), session('chris', 'T-2', 0, 50)],
       Date.parse(at(60)),
     )
     expect(t.elapsedMs).toBe(30 * 60_000)
     expect(t.open).toBe(false)
     expect(t.work).toEqual([
       { agent: 'chris', ms: 10 * 60_000, running: false },
-      { agent: 'darius', ms: 4 * 60_000, running: false },
+      { agent: 'dehren', ms: 4 * 60_000, running: false },
     ])
     expect(t.workMs).toBe(14 * 60_000)
   })
@@ -51,9 +51,9 @@ describe('ticketTiming', () => {
 
   it('does not count a session left open by a stopped daemon as work', () => {
     // Seen on M-7: the review died at once, and the session was closed 52 minutes later, at the next startup.
-    const dead = { ...session('darius', 'T-1', 2, 54), failed: true, outcome: 'interrupted' }
-    const t = ticketTiming(ticket(at(0), at(60)), [session('darius', 'T-1', 55, 58), dead], Date.parse(at(60)))
-    expect(t.work).toEqual([{ agent: 'darius', ms: 3 * 60_000, running: false }])
+    const dead = { ...session('dehren', 'T-1', 2, 54), failed: true, outcome: 'interrupted' }
+    const t = ticketTiming(ticket(at(0), at(60)), [session('dehren', 'T-1', 55, 58), dead], Date.parse(at(60)))
+    expect(t.work).toEqual([{ agent: 'dehren', ms: 3 * 60_000, running: false }])
   })
 
   it('has no elapsed time before the ticket starts', () => {

@@ -24,7 +24,7 @@ They are in `floor42.backup.dir`, by default `<data folder>/backups`. Each one i
 
 A crash, `kill -9` or a power cut forgets the prepared restore: prepare it again. Events written after the copy are no longer on screen; they remain in the `before-restore-*` copy. Worktrees of missions newer than the copy stay on disk: the restored journal does not know them.
 
-**A start never restores anything.** A private build that predates v1.0.0 restored the copy named in `restore-pending.properties` at its next start. Agents can run as the daemon's own OS user (no sandbox, or in Docker), so an agent could write that file, then stop the daemon (`kill -TERM 1` in Docker, where `restart: unless-stopped` starts it again) and roll the journal back silently. Proven in a container of that build on 2026-11-01. Now a start that finds this file restores nothing. It moves the file aside as `restore-pending.refused.properties`, logs an error and shows a red banner. A restore prepared by such a build and not applied before upgrading is refused the same way: prepare it again.
+**A start never restores anything** (since 1.8.0). Floor42 1.7.0 restored the copy named in `restore-pending.properties` at its next start. Agents can run as the daemon's own OS user (no sandbox, or in Docker), so an agent could write that file, then stop the daemon (`kill -TERM 1` in Docker, where `restart: unless-stopped` starts it again) and roll the journal back silently. Proven in a 1.7.0 container on 2026-11-01. Now a start that finds this file restores nothing. It moves the file aside as `restore-pending.refused.properties`, logs an error and shows a red banner. A restore you prepared in 1.7.0 and did not apply before upgrading is refused the same way: prepare it again.
 
 The copy you prepare is fingerprinted (SHA-256) when you click. The stop reads it once into memory and restores those
 very bytes, only if they still match; a copy changed since ("changed since it was prepared") is not restored, and no
@@ -49,7 +49,7 @@ refused: the record is a file of the data folder, which that user could rewrite 
 
 The banner also says when nothing tells what the last run saw:
 - `FIRST_CHECK` (amber notice): `journal-continuity.properties` is missing on the very first check since an older
-  Floor42 last opened the journal. Expected once, after an upgrade from a build older than v1.0.0: check that the journal is the one you
+  Floor42 last opened the journal. Expected once, after an upgrade to 1.8.0: check that the journal is the one you
   expect and press "Seen". It is a hint (a flag in the journal), not a proof.
 - `MISSING` (red): the record is missing beside a journal that holds events, and this is not that first check. Never
   expected: the record was deleted or rewritten, and whether the journal went back in time cannot be told.

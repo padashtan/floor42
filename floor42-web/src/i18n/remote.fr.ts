@@ -13,4 +13,8 @@ export const remoteFr: Record<keyof typeof remoteEn, string> = {
   'remote.days.on': 'Jours de télétravail : oui',
   'remote.days.off': 'Jours de télétravail : non',
   'remote.days.title': "Environ un agent sur quatre est dessiné en télétravail chaque jour (décor seul : rien ne change dans le travail)",
+  'scene.light.auto': 'Lumière : horloge',
+  'scene.light.day': 'Lumière : jour',
+  'scene.light.night': 'Lumière : nuit',
+  'scene.light.title': 'Dessiner le bureau de jour, de nuit, ou selon votre horloge. Décor seulement (retenu dans ce navigateur).',
 }

@@ -58,9 +58,9 @@ class EventCodecTest {
     @Test
     void identifiersAreWrittenAsPlainStrings() throws Exception {
         String json = codec.encode(
-                new TicketEvent.TicketAssigned(new dev.floor42.domain.TicketId("T-1"), new AgentId("galen")));
+                new TicketEvent.TicketAssigned(new dev.floor42.domain.TicketId("T-1"), new AgentId("geoffrey")));
 
-        assertThat(json).isEqualTo("{\"ticket\":\"T-1\",\"agent\":\"galen\"}");
+        assertThat(json).isEqualTo("{\"ticket\":\"T-1\",\"agent\":\"geoffrey\"}");
     }
 
     /** Before 1.5.0, Floor42 was Office: its own tools' category was OFFICE, as journaled on M-9. */
@@ -345,7 +345,8 @@ class EventCodecTest {
         if (Identifier.class.isAssignableFrom(t))
             return t.getDeclaredConstructor(String.class).newInstance("id-1");
         if (t == PermissionRule.class)
-            return new PermissionRule(new AgentId("galen"), ActionCategory.EXECUTE, "Bash", "git status", Decision.ASK);
+            return new PermissionRule(
+                    new AgentId("geoffrey"), ActionCategory.EXECUTE, "Bash", "git status", Decision.ASK);
         if (t == dev.floor42.domain.ProofTarget.class) return proofTarget();
         if (t == dev.floor42.domain.Phrase.class) return dev.floor42.domain.Phrase.of("approval", "tool", "Bash");
         throw new IllegalStateException("No sample for " + t + " in " + c);

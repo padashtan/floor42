@@ -16,8 +16,6 @@ permissions:
 
 jobs:
   osv-scanner:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -37,8 +35,6 @@ jobs:
           retention-days: 30
 
   gitleaks:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       # The whole history: `gitleaks git` reads every commit of every ref.
@@ -55,8 +51,6 @@ jobs:
           retention-days: 30
 
   bearer:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

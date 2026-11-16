@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,7 +33,7 @@ class CommitteeTest {
                         .event())
                 .mission();
         TicketId ticket = f.ticket(id, "Decide: Gateway?");
-        f.record(f.company.tickets().assign(f.director(), ticket, GALEN));
+        f.record(f.company.tickets().assign(f.director(), ticket, GEOFFREY));
         f.record(f.company
                 .committees()
                 .convene(
@@ -41,12 +41,12 @@ class CommitteeTest {
                         id,
                         ticket,
                         "Should we put a gateway in front of the APIs?",
-                        List.of(GALEN, DARIUS, CHRIS),
+                        List.of(GEOFFREY, DEHREN, CHRIS),
                         List.of("Software architect", "Security specialist", "Senior developer")));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), id));
         f.record(f.company.verification().setBudget(f.director(), id, null));
         f.record(f.company.missions().approvePlan(f.director(), id));
-        f.record(f.company.tickets().start(f.agent(GALEN), ticket));
+        f.record(f.company.tickets().start(f.agent(GEOFFREY), ticket));
         return id;
     }
 
@@ -69,18 +69,18 @@ class CommitteeTest {
     }
 
     void analysisRound() {
-        say(GALEN, Committee.Kind.ANALYSIS, "Gateway", null);
-        say(DARIUS, Committee.Kind.ANALYSIS, "Gateway with mTLS", "Tokens are not validated per API");
+        say(GEOFFREY, Committee.Kind.ANALYSIS, "Gateway", null);
+        say(DEHREN, Committee.Kind.ANALYSIS, "Gateway with mTLS", "Tokens are not validated per API");
         say(CHRIS, Committee.Kind.ANALYSIS, "Gateway", null);
     }
 
     @Test
     void membersSitAndCanUseToolsWhileDeliberating() {
-        assertThat(f.company.queries().statusOf(DARIUS)).isEqualTo(AgentStatus.IN_COMMITTEE);
+        assertThat(f.company.queries().statusOf(DEHREN)).isEqualTo(AgentStatus.IN_COMMITTEE);
         f.allow(m, ActionCategory.READ, null, null);
         f.record(f.company
                 .actions()
-                .request(f.agent(DARIUS), new ActionId("a1"), m, t, DARIUS, ActionCategory.READ, "Read", "pom.xml"));
+                .request(f.agent(DEHREN), new ActionId("a1"), m, t, DEHREN, ActionCategory.READ, "Read", "pom.xml"));
 
         assertThat(f.company.actions().find(new ActionId("a1")).orElseThrow().stage())
                 .isEqualTo(ActionStage.AUTHORIZED);
@@ -88,14 +88,14 @@ class CommitteeTest {
 
     @Test
     void theAnalysisRoundEndsWhenEveryMemberHasSpoken() {
-        say(GALEN, Committee.Kind.ANALYSIS, "Gateway", null);
-        assertThat(committee().pending()).containsExactly(DARIUS, CHRIS);
+        say(GEOFFREY, Committee.Kind.ANALYSIS, "Gateway", null);
+        assertThat(committee().pending()).containsExactly(DEHREN, CHRIS);
         assertThatThrownBy(() -> f.company
                         .committees()
                         .contribute(
-                                f.agent(GALEN),
+                                f.agent(GEOFFREY),
                                 new CommitteeRef(m, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.ANALYSIS,
                                 "again",
                                 null,
@@ -107,7 +107,7 @@ class CommitteeTest {
                         .contribute(
                                 f.agent(CHRIS),
                                 new CommitteeRef(m, 1),
-                                DARIUS,
+                                DEHREN,
                                 Committee.Kind.ANALYSIS,
                                 "for them",
                                 null,
@@ -115,7 +115,7 @@ class CommitteeTest {
                                 null))
                 .hasMessageContaining("made by its member");
 
-        say(DARIUS, Committee.Kind.ANALYSIS, "Gateway", null);
+        say(DEHREN, Committee.Kind.ANALYSIS, "Gateway", null);
         say(CHRIS, Committee.Kind.ANALYSIS, "Gateway", null);
 
         assertThat(committee().stage()).isEqualTo(Committee.Stage.DEBATE);
@@ -123,9 +123,9 @@ class CommitteeTest {
         assertThatThrownBy(() -> f.company
                         .committees()
                         .contribute(
-                                f.agent(GALEN),
+                                f.agent(GEOFFREY),
                                 new CommitteeRef(m, 1),
-                                GALEN,
+                                GEOFFREY,
                                 Committee.Kind.ANALYSIS,
                                 "late",
                                 null,
@@ -137,18 +137,18 @@ class CommitteeTest {
     @Test
     void aStandingCriticalObjectionCannotBeOutvoted() {
         analysisRound();
-        say(GALEN, Committee.Kind.REBUTTAL, "Gateway", null);
-        say(DARIUS, Committee.Kind.REBUTTAL, "Gateway with mTLS", "Tokens are still not validated per API");
+        say(GEOFFREY, Committee.Kind.REBUTTAL, "Gateway", null);
+        say(DEHREN, Committee.Kind.REBUTTAL, "Gateway with mTLS", "Tokens are still not validated per API");
         say(CHRIS, Committee.Kind.REBUTTAL, "Gateway", null);
         assertThat(committee().stage()).isEqualTo(Committee.Stage.SYNTHESIS);
-        assertThat(committee().pending()).containsExactly(GALEN);
+        assertThat(committee().pending()).containsExactly(GEOFFREY);
 
         f.record(f.company
                 .committees()
                 .contribute(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         new CommitteeRef(m, 1),
-                        GALEN,
+                        GEOFFREY,
                         Committee.Kind.SYNTHESIS,
                         "# Decision record",
                         "Adopt a gateway",
@@ -163,8 +163,8 @@ class CommitteeTest {
                         "Adopt despite the critical objection",
                         "Adopt and implement (writes ask you first) despite the critical objection",
                         "Reject");
-        assertThat(q.context()).contains("darius (Security specialist): Tokens are still not validated per API");
-        assertThat(f.company.queries().statusOf(DARIUS)).isNotEqualTo(AgentStatus.IN_COMMITTEE);
+        assertThat(q.context()).contains("dehren (Security specialist): Tokens are still not validated per API");
+        assertThat(f.company.queries().statusOf(DEHREN)).isNotEqualTo(AgentStatus.IN_COMMITTEE);
 
         f.record(f.company.desk().answer(f.director(), q.id(), "Adopt despite the critical objection"));
 
@@ -179,8 +179,8 @@ class CommitteeTest {
         analysisRound();
         assertThat(committee().standingCriticalObjections()).hasSize(1);
 
-        say(GALEN, Committee.Kind.REBUTTAL, "Gateway with mTLS", null);
-        say(DARIUS, Committee.Kind.REBUTTAL, "Gateway with mTLS", null);
+        say(GEOFFREY, Committee.Kind.REBUTTAL, "Gateway with mTLS", null);
+        say(DEHREN, Committee.Kind.REBUTTAL, "Gateway with mTLS", null);
 
         assertThat(committee().standingCriticalObjections()).isEmpty();
     }
@@ -188,15 +188,15 @@ class CommitteeTest {
     @Test
     void theDirectorSendsTheDecisionBackWithAConstraint() {
         analysisRound();
-        say(GALEN, Committee.Kind.REBUTTAL, "Gateway", null);
-        say(DARIUS, Committee.Kind.REBUTTAL, "Gateway", null);
+        say(GEOFFREY, Committee.Kind.REBUTTAL, "Gateway", null);
+        say(DEHREN, Committee.Kind.REBUTTAL, "Gateway", null);
         say(CHRIS, Committee.Kind.REBUTTAL, "Gateway", null);
         f.record(f.company
                 .committees()
                 .contribute(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         new CommitteeRef(m, 1),
-                        GALEN,
+                        GEOFFREY,
                         Committee.Kind.SYNTHESIS,
                         "# Record",
                         "Adopt a gateway",
@@ -211,19 +211,19 @@ class CommitteeTest {
         assertThat(committee().stage()).isEqualTo(Committee.Stage.DEBATE);
         assertThat(committee().round()).isEqualTo(3);
         assertThat(committee().constraints()).containsExactly("No new paid product");
-        assertThat(committee().pending()).containsExactly(GALEN, DARIUS, CHRIS);
+        assertThat(committee().pending()).containsExactly(GEOFFREY, DEHREN, CHRIS);
     }
 
     @Test
     void rejectingCancelsTheDecisionTicket() {
         analysisRound();
-        for (AgentId a : List.of(GALEN, DARIUS, CHRIS)) say(a, Committee.Kind.REBUTTAL, "Gateway", null);
+        for (AgentId a : List.of(GEOFFREY, DEHREN, CHRIS)) say(a, Committee.Kind.REBUTTAL, "Gateway", null);
         f.record(f.company
                 .committees()
                 .contribute(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         new CommitteeRef(m, 1),
-                        GALEN,
+                        GEOFFREY,
                         Committee.Kind.SYNTHESIS,
                         "# Record",
                         "x",
@@ -246,27 +246,27 @@ class CommitteeTest {
                                 .event())
                 .mission();
         TicketId ticket = f.ticket(other, "Decide");
-        f.record(f.company.tickets().assign(f.director(), ticket, GALEN));
+        f.record(f.company.tickets().assign(f.director(), ticket, GEOFFREY));
 
         assertThatThrownBy(() -> f.company
                         .committees()
-                        .convene(f.director(), other, ticket, "x", List.of(GALEN), List.of("Software architect")))
+                        .convene(f.director(), other, ticket, "x", List.of(GEOFFREY), List.of("Software architect")))
                 .hasMessageContaining("at least two");
         assertThatThrownBy(() -> f.company
                         .committees()
-                        .convene(f.director(), other, ticket, "x", List.of(DARIUS, GALEN), List.of("a", "b")))
+                        .convene(f.director(), other, ticket, "x", List.of(DEHREN, GEOFFREY), List.of("a", "b")))
                 .hasMessageContaining("chair");
         assertThatThrownBy(() -> f.company
                         .committees()
-                        .convene(f.director(), m, t, "x", List.of(GALEN, DARIUS), List.of("a", "b")))
+                        .convene(f.director(), m, t, "x", List.of(GEOFFREY, DEHREN), List.of("a", "b")))
                 .hasMessageContaining("part of the plan");
     }
 
     @Test
     void anObjectionToARuledDecisionWithoutImplementationIsRefusedBeforeAnyEvent() {
         analysisRound();
-        for (AgentId a : List.of(GALEN, DARIUS, CHRIS)) say(a, Committee.Kind.REBUTTAL, "Gateway", null);
-        say(GALEN, Committee.Kind.SYNTHESIS, "Adopt a gateway", null);
+        for (AgentId a : List.of(GEOFFREY, DEHREN, CHRIS)) say(a, Committee.Kind.REBUTTAL, "Gateway", null);
+        say(GEOFFREY, Committee.Kind.SYNTHESIS, "Adopt a gateway", null);
         Question q = f.company.desk().open().getFirst();
         f.record(f.company.desk().answer(f.director(), q.id(), q.options().getFirst()));
         int before = f.journal.size();
@@ -291,11 +291,11 @@ class CommitteeTest {
 
         assertThat(replayed.stage()).isEqualTo(Committee.Stage.DEBATE);
         assertThat(replayed.contributions()).hasSize(3);
-        assertThat(replayed.roleOf(DARIUS)).isEqualTo("Security specialist");
-        assertThat(replayed.chair()).isEqualTo(GALEN);
+        assertThat(replayed.roleOf(DEHREN)).isEqualTo("Security specialist");
+        assertThat(replayed.chair()).isEqualTo(GEOFFREY);
     }
 
-    /** An idea committee: Galen moderates, Darius and Chris debate, Chris's seat is the director's double. */
+    /** An idea committee: Geoffrey moderates, Dehren and Chris debate, Chris's seat is the director's double. */
     MissionId ideaMission(int rounds) {
         MissionId id = ((MissionCreated) f.record(f.company
                                 .missions()
@@ -309,7 +309,7 @@ class CommitteeTest {
                         .event())
                 .mission();
         TicketId ticket = f.ticket(id, "Decide: Idea");
-        f.record(f.company.tickets().assign(f.director(), ticket, GALEN));
+        f.record(f.company.tickets().assign(f.director(), ticket, GEOFFREY));
         f.record(f.company
                 .committees()
                 .convene(
@@ -317,13 +317,13 @@ class CommitteeTest {
                         id,
                         ticket,
                         "A marketplace for second-hand tools?",
-                        List.of(GALEN, DARIUS, CHRIS),
+                        List.of(GEOFFREY, DEHREN, CHRIS),
                         List.of("Moderator", "Lawyer", "Your double"),
                         new Committee.Format("idea", true, rounds, CHRIS)));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), id));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), id));
         f.record(f.company.verification().setBudget(f.director(), id, null));
         f.record(f.company.missions().approvePlan(f.director(), id));
-        f.record(f.company.tickets().start(f.agent(GALEN), ticket));
+        f.record(f.company.tickets().start(f.agent(GEOFFREY), ticket));
         return id;
     }
 
@@ -345,44 +345,44 @@ class CommitteeTest {
     void aModeratorNeitherAnalysesNorDebatesAndTheDebateGoesOnUntilAgreement() {
         MissionId idea = ideaMission(3);
         Committee c = f.company.committees().latest(idea).orElseThrow();
-        assertThat(c.pending()).containsExactly(DARIUS, CHRIS);
+        assertThat(c.pending()).containsExactly(DEHREN, CHRIS);
 
-        speak(idea, DARIUS, Committee.Kind.ANALYSIS, "NEW", null);
+        speak(idea, DEHREN, Committee.Kind.ANALYSIS, "NEW", null);
         speak(idea, CHRIS, Committee.Kind.ANALYSIS, "NEW", null);
-        speak(idea, DARIUS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
+        speak(idea, DEHREN, Committee.Kind.REBUTTAL, "MAINTAINED", null);
         speak(idea, CHRIS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
         // Two proposals still stand: another round, not the record.
         assertThat(c.stage()).isEqualTo(Committee.Stage.DEBATE);
         assertThat(c.round()).isEqualTo(3);
 
-        speak(idea, DARIUS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
-        speak(idea, CHRIS, Committee.Kind.REBUTTAL, "ADOPTED the proposal of darius", null);
+        speak(idea, DEHREN, Committee.Kind.REBUTTAL, "MAINTAINED", null);
+        speak(idea, CHRIS, Committee.Kind.REBUTTAL, "ADOPTED the proposal of dehren", null);
 
-        assertThat(c.agreement()).contains(DARIUS);
+        assertThat(c.agreement()).contains(DEHREN);
         assertThat(c.stage()).isEqualTo(Committee.Stage.SYNTHESIS);
-        assertThat(c.pending()).containsExactly(GALEN);
+        assertThat(c.pending()).containsExactly(GEOFFREY);
         f.record(f.company
                 .committees()
                 .contribute(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         new CommitteeRef(idea, 1),
-                        GALEN,
+                        GEOFFREY,
                         Committee.Kind.SYNTHESIS,
                         "# Record",
                         "Go",
                         null,
                         null));
-        assertThat(f.company.desk().open().getFirst().context()).contains("agree on darius's proposal");
+        assertThat(f.company.desk().open().getFirst().context()).contains("agree on dehren's proposal");
     }
 
     @Test
     void withoutAgreementTheRecordComesAfterTheLastRoundAndSaysSo() {
         MissionId idea = ideaMission(2);
         Committee c = f.company.committees().latest(idea).orElseThrow();
-        speak(idea, DARIUS, Committee.Kind.ANALYSIS, "NEW", null);
+        speak(idea, DEHREN, Committee.Kind.ANALYSIS, "NEW", null);
         speak(idea, CHRIS, Committee.Kind.ANALYSIS, "NEW", null);
         for (int round = 0; round < 2; round++) {
-            speak(idea, DARIUS, Committee.Kind.REBUTTAL, "ADOPTED chris", "Liability for defective tools");
+            speak(idea, DEHREN, Committee.Kind.REBUTTAL, "ADOPTED chris", "Liability for defective tools");
             speak(idea, CHRIS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
         }
         // Everyone stands behind Chris, but a critical objection stands: that is not agreement.
@@ -391,9 +391,9 @@ class CommitteeTest {
         f.record(f.company
                 .committees()
                 .contribute(
-                        f.agent(GALEN),
+                        f.agent(GEOFFREY),
                         new CommitteeRef(idea, 1),
-                        GALEN,
+                        GEOFFREY,
                         Committee.Kind.SYNTHESIS,
                         "# Record",
                         "Go",
@@ -410,7 +410,7 @@ class CommitteeTest {
         Committee c = f.company.committees().latest(idea).orElseThrow();
         assertThatThrownBy(() -> f.company
                         .committees()
-                        .contributeAsDirector(f.agent(DARIUS), new CommitteeRef(idea, 1), "me", null, null, null))
+                        .contributeAsDirector(f.agent(DEHREN), new CommitteeRef(idea, 1), "me", null, null, null))
                 .isInstanceOf(DomainException.class);
 
         f.record(f.company
@@ -418,16 +418,16 @@ class CommitteeTest {
                 .contributeAsDirector(
                         f.director(), new CommitteeRef(idea, 1), "My own analysis", "Rent, not sell", "NEW", null));
         // The double does not speak this round: its seat is taken.
-        assertThat(c.pending()).containsExactly(DARIUS);
-        speak(idea, DARIUS, Committee.Kind.ANALYSIS, "NEW", null);
+        assertThat(c.pending()).containsExactly(DEHREN);
+        speak(idea, DEHREN, Committee.Kind.ANALYSIS, "NEW", null);
         assertThat(c.stage()).isEqualTo(Committee.Stage.DEBATE);
 
         speak(idea, CHRIS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
         f.record(f.company
                 .committees()
                 .contributeAsDirector(
-                        f.director(), new CommitteeRef(idea, 1), "Changed my mind", null, "ADOPTED darius", null));
-        speak(idea, DARIUS, Committee.Kind.REBUTTAL, "MAINTAINED", null);
+                        f.director(), new CommitteeRef(idea, 1), "Changed my mind", null, "ADOPTED dehren", null));
+        speak(idea, DEHREN, Committee.Kind.REBUTTAL, "MAINTAINED", null);
 
         Committee.Contribution mine = c.latestPositions().stream()
                 .filter(x -> x.member().equals(CHRIS))
@@ -435,7 +435,7 @@ class CommitteeTest {
                 .orElseThrow();
         assertThat(mine.byDirector()).isTrue();
         assertThat(mine.text()).isEqualTo("Changed my mind");
-        assertThat(c.agreement()).contains(DARIUS);
+        assertThat(c.agreement()).contains(DEHREN);
         assertThat(Company.replay(f.journal)
                         .committees()
                         .latest(idea)
@@ -452,7 +452,7 @@ class CommitteeTest {
                                 .event())
                 .mission();
         TicketId ticket = f.ticket(other, "Decide");
-        f.record(f.company.tickets().assign(f.director(), ticket, GALEN));
+        f.record(f.company.tickets().assign(f.director(), ticket, GEOFFREY));
         assertThatThrownBy(() -> f.company
                         .committees()
                         .convene(
@@ -460,9 +460,9 @@ class CommitteeTest {
                                 other,
                                 ticket,
                                 "x",
-                                List.of(GALEN, DARIUS, CHRIS),
+                                List.of(GEOFFREY, DEHREN, CHRIS),
                                 List.of("a", "b", "c"),
-                                new Committee.Format("idea", true, 3, GALEN)))
+                                new Committee.Format("idea", true, 3, GEOFFREY)))
                 .hasMessageContaining("not the chair's");
         assertThatThrownBy(() -> f.company
                         .committees()
@@ -471,7 +471,7 @@ class CommitteeTest {
                                 other,
                                 ticket,
                                 "x",
-                                List.of(GALEN, DARIUS),
+                                List.of(GEOFFREY, DEHREN),
                                 List.of("a", "b"),
                                 new Committee.Format("idea", true, 3, null)))
                 .hasMessageContaining("besides the moderator");

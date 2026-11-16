@@ -23,8 +23,6 @@ concurrency:
 
 jobs:
   build:
-    # padashtan/floor42 on every event; any other copy (a fork) only when run by hand, to spare its Actions minutes.
-    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -81,14 +79,12 @@ jobs:
 
       # Format, build, every test. No test may call a paid model (ADR-0006). The archives take the tagged commit's own
       # time (reproducible builds); the aggregate CycloneDX SBOM is written to target/bom.json by the package phase.
-      # Two test JVMs of 2 GB, as ci.yml: the default six forks run a 2 vCPU, 7 GB runner out of memory (a 1.0.0-rc.1
-      # rehearsal was killed there after 17 minutes).
       - name: Build and test
-        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g" "-Dproject.build.outputTimestamp=$(git log -1 --format=%cI)"
+        run: ./mvnw -B -ntp verify "-Dproject.build.outputTimestamp=$(git log -1 --format=%cI)"
 
       # The tests tagged slow, left out of verify (docs/releases.md).
       - name: Slow tests
-        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false
 
       - name: Package the zip and the SBOMs
         env:

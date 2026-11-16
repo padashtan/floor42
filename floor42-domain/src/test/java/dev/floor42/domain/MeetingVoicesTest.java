@@ -1,8 +1,8 @@
 package dev.floor42.domain;
 
 import static dev.floor42.domain.Fixture.CHRIS;
-import static dev.floor42.domain.Fixture.DARIUS;
-import static dev.floor42.domain.Fixture.GALEN;
+import static dev.floor42.domain.Fixture.DEHREN;
+import static dev.floor42.domain.Fixture.GEOFFREY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,20 +39,20 @@ class MeetingVoicesTest {
                 .mission();
         TicketId t = f.ticket(m, "Write the release notes");
         f.record(f.company.tickets().assign(f.director(), t, CHRIS));
-        f.record(f.company.missions().submitPlan(f.agent(GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, null));
         f.record(f.company.missions().approvePlan(f.director(), m));
         f.record(f.company.tickets().start(f.agent(CHRIS), t));
         return m;
     }
 
-    /** Chris and Darius at the conference table, asked Darius first. */
+    /** Chris and Dehren at the conference table, asked Dehren first. */
     MeetingViewsAsked asked(MissionId m) {
         f.record(f.company
                 .meetings()
-                .call(f.director(), m, List.of(CHRIS, DARIUS), "Review the release notes", MeetingPlace.CONFERENCE));
+                .call(f.director(), m, List.of(CHRIS, DEHREN), "Review the release notes", MeetingPlace.CONFERENCE));
         List<EventEnvelope> events = f.record(
-                f.company.meetings().askForViews(f.director(), "MT-1", List.of(DARIUS, CHRIS), 0.5, " Is it good? "));
+                f.company.meetings().askForViews(f.director(), "MT-1", List.of(DEHREN, CHRIS), 0.5, " Is it good? "));
         return (MeetingViewsAsked) events.getFirst().event();
     }
 
@@ -62,7 +62,7 @@ class MeetingVoicesTest {
         MeetingViewsAsked e = asked(m);
         assertThat(e)
                 .isEqualTo(new MeetingViewsAsked(
-                        "MT-1", new TicketId("MT-1.turns"), 1, List.of(DARIUS, CHRIS), 0.5, "Is it good?"));
+                        "MT-1", new TicketId("MT-1.turns"), 1, List.of(DEHREN, CHRIS), 0.5, "Is it good?"));
         Ticket own = f.company.tickets().find(e.ticket()).orElseThrow();
         assertThat(own.kind()).isEqualTo(TicketKind.MEETING);
         assertThat(f.company.tickets().of(m))
@@ -77,25 +77,25 @@ class MeetingVoicesTest {
                         .meetings()
                         .recordTurn(f.system(), "MT-1", new SpokenTurn(1, CHRIS, null, "me first", null, null)),
                 "NOT_THEIR_TURN");
-        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DARIUS, "m", null));
+        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DEHREN, "m", null));
         f.record(f.company
                 .actions()
                 .request(
-                        f.agent(DARIUS),
+                        f.agent(DEHREN),
                         new ActionId("M-1:read"),
                         m,
                         e.ticket(),
-                        DARIUS,
+                        DEHREN,
                         ActionCategory.READ,
                         "Read",
                         "NOTES.md"));
-        assertThat(f.company.queries().statusOf(DARIUS))
+        assertThat(f.company.queries().statusOf(DEHREN))
                 .as("a read at the meeting keeps the speaker seated")
                 .isEqualTo(AgentStatus.IN_MEETING);
         f.record(f.company.sessions().end(f.system(), "s-d", false, "completed", 2, 10L, 5L, 0.12));
         f.record(f.company
                 .meetings()
-                .recordTurn(f.system(), "MT-1", new SpokenTurn(1, DARIUS, "s-d", " Tighten it. ", null, null)));
+                .recordTurn(f.system(), "MT-1", new SpokenTurn(1, DEHREN, "s-d", " Tighten it. ", null, null)));
         f.record(f.company
                 .meetings()
                 .recordTurn(f.system(), "MT-1", new SpokenTurn(1, CHRIS, null, null, "the cap is reached", null)));
@@ -106,7 +106,7 @@ class MeetingVoicesTest {
         assertThat(mt.rounds().getFirst().turns())
                 .extracting(MeetingTurn::attendee, MeetingTurn::answer, MeetingTurn::why)
                 .containsExactly(
-                        org.assertj.core.groups.Tuple.tuple(DARIUS, "Tighten it.", null),
+                        org.assertj.core.groups.Tuple.tuple(DEHREN, "Tighten it.", null),
                         org.assertj.core.groups.Tuple.tuple(CHRIS, null, "the cap is reached"));
         assertThat(f.company.meetings().spentUsdCharged(mt)).isEqualTo(0.12);
         assertThat(f.journal.stream().map(EventEnvelope::event).filter(MeetingTurnTaken.class::isInstance))
@@ -122,7 +122,7 @@ class MeetingVoicesTest {
         MeetingViewsAsked e = asked(m);
         f.record(f.company
                 .meetings()
-                .recordTurn(f.system(), "MT-1", new SpokenTurn(1, DARIUS, null, null, "not heard", null)));
+                .recordTurn(f.system(), "MT-1", new SpokenTurn(1, DEHREN, null, null, "not heard", null)));
         f.record(f.company.sessions().start(f.system(), "s-turn", e.ticket(), CHRIS, "m", null));
         f.record(f.company.sessions().end(f.system(), "s-turn", false, "completed", 1, 1L, 1L, 0.01));
 
@@ -134,8 +134,8 @@ class MeetingVoicesTest {
     @Test
     void refusalsSayWhy() {
         MissionId m = running();
-        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DARIUS), null));
-        assertRefused(() -> ask(List.of(GALEN), 1), "NOT_AN_ATTENDEE");
+        f.record(f.company.meetings().call(f.director(), m, List.of(CHRIS, DEHREN), null));
+        assertRefused(() -> ask(List.of(GEOFFREY), 1), "NOT_AN_ATTENDEE");
         assertRefused(() -> ask(List.of(), 1), "MISSING_SPEAKERS");
         assertRefused(() -> ask(List.of(CHRIS, CHRIS), 1), "INVALID_ARGUMENT");
         assertRefused(() -> ask(List.of(CHRIS), 0), "INVALID_ARGUMENT");
@@ -145,8 +145,8 @@ class MeetingVoicesTest {
                 "DIRECTOR_ONLY");
         MeetingViewsAsked e =
                 (MeetingViewsAsked) f.record(ask(List.of(CHRIS), 1)).getFirst().event();
-        assertRefused(() -> ask(List.of(DARIUS), 1), "ROUND_UNDER_WAY");
-        assertRefused(() -> f.company.tickets().assign(f.director(), e.ticket(), DARIUS), "MEETING_TICKET");
+        assertRefused(() -> ask(List.of(DEHREN), 1), "ROUND_UNDER_WAY");
+        assertRefused(() -> f.company.tickets().assign(f.director(), e.ticket(), DEHREN), "MEETING_TICKET");
         assertRefused(() -> f.company.tickets().cancel(f.director(), e.ticket(), "x"), "MEETING_TICKET");
         assertRefused(() -> f.company.workshop().checkDirective(f.director(), e.ticket()), "MEETING_TICKET");
         assertRefused(
@@ -191,10 +191,10 @@ class MeetingVoicesTest {
                 .isInstanceOf(MeetingCalled.class);
         assertThat(f.record(f.company
                         .meetings()
-                        .call(f.director(), running(), List.of(DARIUS), null, MeetingPlace.CONFERENCE)))
+                        .call(f.director(), running(), List.of(DEHREN), null, MeetingPlace.CONFERENCE)))
                 .extracting(EventEnvelope::event)
                 .containsExactly(
-                        new MeetingCalled("MT-2", new MissionId("M-2"), List.of(DARIUS), null),
+                        new MeetingCalled("MT-2", new MissionId("M-2"), List.of(DEHREN), null),
                         new MeetingRoomEvent.MeetingPlaced("MT-2", MeetingPlace.CONFERENCE));
         f.record(f.company.meetings().askForViews(f.director(), "MT-1", List.of(CHRIS), 1, null));
 
@@ -218,11 +218,11 @@ class MeetingVoicesTest {
     void aTurnWithoutAnEstimateIsChargedItsBudgetAndALongAnswerIsKeptCut() {
         MissionId m = running();
         MeetingViewsAsked e = asked(m);
-        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DARIUS, "m", null));
+        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DEHREN, "m", null));
         f.record(f.company.sessions().end(f.system(), "s-d", true, "failed", null, null, null, null));
         f.record(f.company
                 .meetings()
-                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DARIUS, "s-d", "the session failed", 0.4)));
+                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DEHREN, "s-d", "the session failed", 0.4)));
         Meeting mt = f.company.meetings().find("MT-1").orElseThrow();
         assertThat(f.company.meetings().spentUsdCharged(mt))
                 .as("no estimate: what it was allowed counts")
@@ -279,11 +279,11 @@ class MeetingVoicesTest {
         MissionId m = running();
         f.record(f.company.verification().setBudget(f.director(), m, 1.0));
         MeetingViewsAsked e = asked(m);
-        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DARIUS, "m", null));
+        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DEHREN, "m", null));
         f.record(f.company.sessions().end(f.system(), "s-d", true, "failed", null, null, null, null));
         f.record(f.company
                 .meetings()
-                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DARIUS, "s-d", "the session failed", 0.4)));
+                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DEHREN, "s-d", "the session failed", 0.4)));
 
         assertThat(f.company.verification().spentUsdEstimated(m))
                 .as("no estimate came")
@@ -301,11 +301,11 @@ class MeetingVoicesTest {
         MissionId m = running();
         f.record(f.company.verification().setBudget(f.director(), m, 1.0));
         MeetingViewsAsked e = asked(m);
-        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DARIUS, "m", null, 0.4));
+        f.record(f.company.sessions().start(f.system(), "s-d", e.ticket(), DEHREN, "m", null, 0.4));
         f.record(f.company.sessions().end(f.system(), "s-d", true, "killed", null, null, null, null, 0.4));
         f.record(f.company
                 .meetings()
-                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DARIUS, "s-d", "the session was stopped", 0.4)));
+                .recordTurn(f.system(), "MT-1", SpokenTurn.notHeard(1, DEHREN, "s-d", "the session was stopped", 0.4)));
 
         VerificationFacade v = f.company.verification();
         assertThat(v.spentUsdEstimated(m)).as("no estimate came").isZero();

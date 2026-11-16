@@ -3,7 +3,7 @@
 Date: 2026-10-20 · Status: Accepted. Visual spike (I1a, branch `spike/visual`) approved by the director on 2026-10-20.
 
 ## Context
-Visual direction: isometric, detailed pixel art, a dark teal and industrial grey palette with cyan and orange accents. Hand-drawn sprites need an artist for every object, orientation and animation frame; the project has none.
+Visual reference: Space Haven (isometric, detailed pixel art, dark teal and industrial grey palette with cyan and orange accents). Hand-drawn sprites need an artist for every object, orientation and animation frame; the project has none.
 
 ## Decision
 Three.js with an orthographic isometric camera, rendered to a low-resolution target and upscaled with nearest-neighbour filtering. Objects are built from code and data (primitives, palette) with dynamic lights and emissive indicators. A `Renderable` boundary allows replacing individual objects with artist sprites later.

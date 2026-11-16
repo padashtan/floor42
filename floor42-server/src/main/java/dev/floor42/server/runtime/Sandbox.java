@@ -34,8 +34,10 @@ public class Sandbox {
      * worktree, the repository's git directory is mounted read-only (its hooks, config and other branches cannot be
      * changed) and the worktree's own git directory read-write, so git works. Arguments: worktree (Linux path), command
      * (base64), network (on|off), the repository's git directory and the worktree's name in it ("none" when the
-     * worktree is not a linked one), and git's core.autocrlf as the director's git has it ("none" if unset), so git in
-     * Linux reads Windows line endings as the director's git does; then the wall time in seconds, the process cap and
+     * worktree is not a linked one), and the git settings read on the host (WorktreeGitDirs.gitConfig, base64 lines,
+     * "none" if unread): the repository's config is hidden behind a stand-in that holds only its format, and these
+     * settings come as GIT_CONFIG_*, so git in Linux reads modes and line endings as the director's git does and no
+     * remote, credential or helper is readable; then the wall time in seconds, the process cap and
      * the file size cap in bytes, and "ro" or "rw": "ro" mounts the worktree and its git directory read-only (a
      * reviewer's session, ADR-0046 amended 2026-11-05) or "proof" (the worktree writable, the git directory read-only;
      * a proof copy has no .git, so the source's git directory is mounted, and a plain repository's is given with the
@@ -84,6 +86,23 @@ public class Sandbox {
             mount -t tmpfs tmpfs /media
             cp "${10}" /media/.floor42-init
             cp "${10%/*}/sandbox-mounts.py" /media/.mounts.py; cp "${10%/*}/toolchain.list" /media/.tools
+            # The repository config names remotes (a token in a URL), credentials and helpers: git reads a stand-in with only
+            # the repository format; the allow-listed settings read on the host come as GIT_CONFIG_* ($5).
+            : > /media/.gitconfig
+            if [ "$5" != none ]; then
+              printf "%s" "$5" | base64 -d > /media/.gitkeys
+              i=0
+              while IFS="=" read -r k v; do
+                case "$k" in
+                  core.repositoryformatversion) printf "[core]\\n\\trepositoryformatversion = %s\\n" "$v" >> /media/.gitconfig;;
+                  extensions.*) printf "[extensions]\\n\\t%s = %s\\n" "${k#extensions.}" "$v" >> /media/.gitconfig;;
+                esac
+                export "GIT_CONFIG_KEY_$i=$k" "GIT_CONFIG_VALUE_$i=$v"
+                i=$((i + 1))
+              done < /media/.gitkeys
+              export GIT_CONFIG_COUNT=$i
+            fi
+            hide() { if [ -f "$1" ] && [ ! -L "$1" ]; then mount --bind /media/.gitconfig "$1"; rr "$1"; fi; }
             # Network off is a new namespace whose lo is down: bring it up (a private loopback; the loopback of the host stays out of reach).
             [ "$F42_NET" = on ] || python3 -I /media/.mounts.py loopback
             mkdir -p /media/work
@@ -93,6 +112,7 @@ public class Sandbox {
               mkdir -p /media/git
               mount --bind "$3" /media/git
               rr /media/git
+              hide /media/git/config
               if [ "$4" != - ]; then
                 mount --bind "$3/worktrees/$4" "/media/git/worktrees/$4"
                 # ro and proof: the whole folder is read-only first and nothing is created in the source repository.
@@ -106,7 +126,7 @@ public class Sandbox {
                 fi
               fi
             fi
-            if [ -e /media/work/.git ]; then ro /media/work/.git; fi; for p in .claude .mcp.json; do if [ -e "/media/work/$p" ]; then ro "/media/work/$p"; fi; done
+            if [ -e /media/work/.git ]; then ro /media/work/.git; hide /media/work/.git/config; fi; for p in .claude .mcp.json; do if [ -e "/media/work/$p" ]; then ro "/media/work/$p"; fi; done
             # A proof copy: the node_modules of the source worktree (git ignores them), nothing copied: overlays whose writes
             # (the temp files of vite) vanish, else read-only. Mounted from open folder handles, never following a link.
             [ -z "${11}" ] || python3 -I /media/.mounts.py deps "${12}" "${11}" /media/work /media
@@ -144,7 +164,6 @@ public class Sandbox {
             if [ "$9" != rw ]; then export GIT_OPTIONAL_LOCKS=0; fi
             if [ "$4" = - ]; then export GIT_DIR=/media/git GIT_WORK_TREE=/media/work
             elif [ "$3" != none ]; then export GIT_DIR="/media/git/worktrees/$4" GIT_WORK_TREE=/media/work; fi
-            if [ "$5" != none ]; then export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.autocrlf GIT_CONFIG_VALUE_0="$5"; fi
             printf "%s" "$2" | base64 -d > /tmp/.floor42-command
             exec unshare -Urm --propagation private setpriv --no-new-privs \\
               prlimit --nproc="$7" --fsize="$8" -- python3 -I /media/.floor42-init "$6" /bin/sh /tmp/.floor42-command
@@ -236,13 +255,19 @@ public class Sandbox {
         return SandboxHost.shellPrefix(osName, distro);
     }
 
-    /** The git mounts of a worktree: the repository's git directory, the worktree's name in it, core.autocrlf. */
+    /** The git mounts of a worktree: the repository's git directory, the worktree's name in it, its git settings. */
     private List<String> gitArgs(Path worktree) {
         var git = WorktreeGitDirs.gitDirs(worktree);
         return List.of(
                 git.map(g -> linux(g.common())).orElse("none"),
                 git.map(WorktreeGitDirs.GitDirs::name).orElse("none"),
-                WorktreeGitDirs.autocrlf(worktree));
+                config(worktree));
+    }
+
+    /** The allow-listed git settings (WorktreeGitDirs.gitConfig), base64 lines for run.sh $5, or "none". */
+    static String config(Path worktree) {
+        List<String> keys = WorktreeGitDirs.gitConfig(worktree);
+        return keys.isEmpty() ? "none" : b64(String.join("\n", keys) + "\n");
     }
 
     /** The arguments after {@code wsl.exe -d <distro> --exec}, with the git mounts already decided. */
@@ -307,7 +332,7 @@ public class Sandbox {
         Path dotGit = source.resolve(".git");
         if (WorktreeGitDirs.gitDirs(source).isEmpty()
                 && java.nio.file.Files.isDirectory(dotGit, java.nio.file.LinkOption.NOFOLLOW_LINKS)) {
-            return List.of(linux(dotGit), "-", WorktreeGitDirs.autocrlf(source));
+            return List.of(linux(dotGit), "-", config(source));
         }
         return gitArgs(source);
     }

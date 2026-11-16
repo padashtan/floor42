@@ -12,11 +12,11 @@ const say = (member: string, round: number, kind: ContributionView['kind'] = 'AN
 
 describe('the committee debate reads newest first', () => {
   it('shows the decision record, then the latest round, down to the first', () => {
-    const committee = { contributions: [say('ana', 1), say('bob', 1), say('ana', 2), say('galen', 3, 'SYNTHESIS')] } as unknown as CommitteeView
+    const committee = { contributions: [say('ana', 1), say('bob', 1), say('ana', 2), say('geoffrey', 3, 'SYNTHESIS')] } as unknown as CommitteeView
     const w = mount(CommitteeDebate, { props: { committee } })
     const heads = w.findAll('.round > .sub').map((n) => n.text())
     expect(heads).toHaveLength(3)
-    expect(heads[0]).toContain('galen')
+    expect(heads[0]).toContain('geoffrey')
     const members = w.findAll('.contribution .who b').map((n) => n.text())
     expect(members).toEqual(['ana', 'ana', 'bob'])
   })

@@ -48,9 +48,9 @@ class CompanyWorkflowsTest {
 
     @Test
     void onlyTheDirectorWritesTheCompanysWorkflows() {
-        assertThatThrownBy(() -> f.company.workflows().save(f.agent(Fixture.GALEN), light("Light"), false, null))
+        assertThatThrownBy(() -> f.company.workflows().save(f.agent(Fixture.GEOFFREY), light("Light"), false, null))
                 .isInstanceOf(DomainException.class);
-        assertThatThrownBy(() -> f.company.workflows().remove(f.agent(Fixture.GALEN), "Light"))
+        assertThatThrownBy(() -> f.company.workflows().remove(f.agent(Fixture.GEOFFREY), "Light"))
                 .isInstanceOf(DomainException.class);
     }
 
@@ -96,12 +96,12 @@ class CompanyWorkflowsTest {
         // Another agent of the mission is not its planner.
         assertThatThrownBy(() -> f.company.workflows().propose(f.agent(Fixture.CHRIS), m, light("Mine")))
                 .hasMessageContaining("Only the planner of " + m);
-        f.record(f.company.workflows().propose(f.agent(Fixture.GALEN), m, light("Quick")));
-        f.record(f.company.workflows().propose(f.agent(Fixture.GALEN), m, decide("Talk")));
+        f.record(f.company.workflows().propose(f.agent(Fixture.GEOFFREY), m, light("Quick")));
+        f.record(f.company.workflows().propose(f.agent(Fixture.GEOFFREY), m, decide("Talk")));
 
         List<WorkflowProposal> proposals = f.company.workflows().proposals();
         assertThat(proposals).extracting(WorkflowProposal::number).containsExactly(1, 2);
-        assertThat(proposals.getFirst().by()).isEqualTo("galen");
+        assertThat(proposals.getFirst().by()).isEqualTo("geoffrey");
         assertThat(proposals.getFirst().workflow()).contains(light("Quick"));
 
         // Adopted under the director's own name, edited: saved and closed in one command.
@@ -122,7 +122,7 @@ class CompanyWorkflowsTest {
     @Test
     void cancellingAMissionDismissesItsOpenProposals() {
         MissionId m = mission();
-        f.record(f.company.workflows().propose(f.agent(Fixture.GALEN), m, light("Quick")));
+        f.record(f.company.workflows().propose(f.agent(Fixture.GEOFFREY), m, light("Quick")));
 
         var batch = f.record(f.company.missions().cancel(f.director(), m, "stop"));
 
@@ -148,11 +148,11 @@ class CompanyWorkflowsTest {
     @Test
     void aProposalWithANameTheDirectorCouldNotGiveIsRefused() {
         MissionId m = mission();
-        assertThatThrownBy(() -> f.company.workflows().propose(f.agent(Fixture.GALEN), m, light("built-in")))
+        assertThatThrownBy(() -> f.company.workflows().propose(f.agent(Fixture.GEOFFREY), m, light("built-in")))
                 .hasMessageContaining("Floor42's own workflow");
     }
 
-    /** A mission whose planning ticket is Galen's: he is its planner. */
+    /** A mission whose planning ticket is Geoffrey's: he is its planner. */
     private MissionId mission() {
         MissionId m = ((MissionCreated)
                         f.record(f.company.missions().create(f.director(), "t", "o", "C:/repo", Workflow.BUILT_IN))
@@ -173,7 +173,7 @@ class CompanyWorkflowsTest {
                         .getFirst()
                         .event())
                 .ticket();
-        f.record(f.company.tickets().assign(f.director(), plan, Fixture.GALEN));
+        f.record(f.company.tickets().assign(f.director(), plan, Fixture.GEOFFREY));
         return m;
     }
 }

@@ -87,7 +87,7 @@ final class ApprovalPolicy {
         Mission m = view.mission(q.mission()).orElseThrow();
         for (Action a : waiting) {
             PermissionPolicy.Evaluation now =
-                    m.policy().evaluate(a.agent(), a.ticket(), a.category(), a.tool(), a.summary());
+                    m.policy().evaluate(a.agent(), a.ticket(), a.category(), a.tool(), a.decidedOn());
             // The world moved since the question was asked: an answer never authorises what the request would be
             // refused now.
             if (chosen.equals("ALLOW") && m.status != MissionStatus.IN_PROGRESS) {
@@ -145,9 +145,17 @@ final class ApprovalPolicy {
         if (answered == asked) return true;
         return answered.agent().equals(asked.agent())
                 && answered.tool().equals(asked.tool())
-                && (asked.category() != ActionCategory.EXECUTE
-                        // A summary cut at its length cap ("…") hides its end: it is never the same command.
-                        || (answered.summary().equals(asked.summary())
-                                && !asked.summary().endsWith("…")));
+                && (asked.category() != ActionCategory.EXECUTE || sameCommand(answered, asked));
+    }
+
+    /**
+     * The full commands when both are known: a summary flattens whitespace, so "ls
+     * rm x" reads as "ls rm x". A call
+     * replayed from the journal has only its summary (shortcut: compared on summaries, until the journal keeps a hash).
+     */
+    private static boolean sameCommand(Action answered, Action asked) {
+        if (answered.command != null && asked.command != null) return answered.command.equals(asked.command);
+        // A summary cut at its length cap ("…") hides its end: it is never the same command.
+        return answered.summary().equals(asked.summary()) && !asked.summary().endsWith("…");
     }
 }

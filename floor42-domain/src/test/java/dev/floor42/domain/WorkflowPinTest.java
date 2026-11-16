@@ -89,7 +89,7 @@ class WorkflowPinTest {
         MissionId m = unpinned();
         f.company.apply(pinEnvelope(m, "{\"of\":\"a later Floor42\"}", 7, Origin.REAL));
         f.ticket(m, "Work");
-        f.record(f.company.missions().submitPlan(f.agent(Fixture.GALEN), m));
+        f.record(f.company.missions().submitPlan(f.agent(Fixture.GEOFFREY), m));
         f.record(f.company.verification().setBudget(f.director(), m, 1.0));
 
         MissionWorkflow w = f.company.workflows().of(m);

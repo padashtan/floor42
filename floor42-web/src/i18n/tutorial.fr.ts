@@ -127,7 +127,7 @@ export const tutorialFr: Record<keyof typeof tutorialEn, string> = {
     'Dites en une phrase ce que la mission doit accomplir, puis lancez la mission d’entraînement. Une session enregistrée se rejoue : aucun modèle n’est appelé.',
   'tutorial.plan.title': 'Lire le plan et ses tickets',
   'tutorial.plan.body':
-    'Galen, l’architecte, a découpé l’objectif en tickets, chacun avec son responsable. Rien ne démarre avant votre approbation : lisez-le dans l’onglet Mission.',
+    'Geoffrey, l’architecte, a découpé l’objectif en tickets, chacun avec son responsable. Rien ne démarre avant votre approbation : lisez-le dans l’onglet Mission.',
   'tutorial.permissions.title': 'La table des permissions',
   'tutorial.permissions.body':
     'Chaque outil est autorisé d’office, demandé une fois, demandé à chaque fois ou refusé ; ce sont les hooks de Floor42 qui l’imposent, pas la bonne volonté de l’agent. Lisez-la dans l’onglet Permissions.',
