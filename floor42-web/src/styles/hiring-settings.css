@@ -1,0 +1,316 @@
+/* ---- Hiring and the night ----------------------------------------------------------------------------------- */
+/* The hire and core cards grow with their label ("Embaucher" ran out of a 74 px card). */
+.crew .card.hire {
+  width: auto;
+  min-width: 74px;
+  white-space: nowrap;
+}
+.crew .card.hire .face {
+  background: transparent;
+  border: 1px dashed var(--cyan);
+  color: var(--cyan);
+}
+.hire-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.hire-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hire-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hire-form input,
+.hire-form select {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+.hire-form .roles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hire-form .roles .role {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #1d4a57;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.hire-form .roles .role.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* ---- Settings ----------------------------------------------------------------------------------------------- */
+.settings-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* The director's meeting had no place of its own: it opened at the very top, its close button above the screen. */
+.panel.director-meeting {
+  top: 90px;
+  right: 24px;
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* The Workflows panel had no place of its own: it sat at the top edge, its close button off the screen. */
+.panel.workflows-panel {
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(980px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+/* Two panes (ADR-0052): the library, then the timeline; they stack on a narrow screen. */
+.workflow-panes {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  gap: 16px;
+}
+.workflow-library {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.workflow-library .lib-item {
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  color: inherit;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+.workflow-library .lib-item[aria-current='true'] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.workflow-library .lib-new {
+  margin-top: 8px;
+}
+.workflow-library .lib-template {
+  padding-left: 18px;
+}
+.workflow-detail .imp-problems {
+  border: 1px solid var(--amber, #c9a227);
+  padding: 6px 10px;
+  margin: 6px 0;
+}
+.workflow-detail .imp-problems ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+.workflow-detail .wf-versions {
+  margin: 8px 0;
+}
+.workflow-detail .wf-version-list {
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+}
+.workflow-detail .wf-version-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #1d4a57;
+}
+.workflow-detail .wf-version-list .hint {
+  flex-basis: 100%;
+}
+.workflow-detail .tl-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.workflow-detail .tl-back {
+  display: none;
+}
+.timeline {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid #1d4a57;
+}
+.timeline .tl-row {
+  position: relative;
+  padding: 6px 0 6px 12px;
+}
+.timeline .tl-dot {
+  position: absolute;
+  left: -21px;
+  top: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.timeline .tl-row.fixed .tl-dot {
+  background: var(--muted);
+}
+.timeline .tl-row.off {
+  opacity: 0.6;
+}
+.timeline .tl-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+.timeline .tl-title {
+  font-weight: bold;
+}
+.timeline .tl-desc {
+  color: var(--muted);
+}
+.timeline .tl-max input {
+  width: 4em;
+}
+.timeline .tl-lock {
+  position: relative;
+  margin-left: auto;
+}
+.timeline .lock {
+  display: inline-flex;
+  color: var(--muted);
+  cursor: help;
+  padding: 2px;
+}
+.timeline .lock:focus-visible {
+  outline: 2px solid var(--cyan);
+}
+/* The reason opens under its row, in the flow: it never covers another row. */
+.timeline .lock-why {
+  display: none;
+  margin: 2px 0 0;
+}
+.timeline .tl-row:has(.lock:hover) .lock-why,
+.timeline .tl-row:has(.lock:focus) .lock-why {
+  display: block;
+}
+.timeline .tl-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.timeline .tl-name input {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* The footer stays at the bottom of the scrolling panel: problems, Save and Cancel are always reachable. */
+.workflow-detail .tl-foot {
+  position: sticky;
+  bottom: 0;
+  background: #06161c;
+  padding: 8px 0;
+  border-top: 1px solid #1d4a57;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+@media (max-width: 720px) {
+  .workflow-panes {
+    grid-template-columns: 1fr;
+  }
+  .workflow-detail .tl-back {
+    display: inline-block;
+  }
+}
+.caps-panel {
+  top: 90px;
+  right: 24px;
+  width: min(460px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.caps-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 6px 0;
+}
+.caps-facts dt {
+  color: var(--muted);
+}
+.caps-facts dd {
+  margin: 0;
+}
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.settings-form .choices {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.settings-form .choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #1d4a57;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.settings-form .choice.on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.settings-form .setting {
+  border-top: 1px solid #1d4a57;
+  padding-top: 8px;
+}
+.settings-form .setting .facts {
+  color: var(--muted);
+  margin-left: 8px;
+}
+.settings-form .row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+.settings-form select,
+.settings-form input {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+.night-banner {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 22px;
+  max-width: min(720px, calc(100vw - 48px));
+  background: rgba(6, 12, 26, 0.92);
+  border: 2px solid #4b5fa8;
+  color: #d8def7;
+  font-size: 16px;
+  line-height: 1.45;
+  z-index: 3;
+}
+.night-banner .moon {
+  font-size: 34px;
+  color: #f3e6a6;
+}

@@ -1,0 +1,23 @@
+/* The UI's styles, one file per area. The order is the cascade: keep it. */
+@import './base.css';
+@import './pets.css';
+@import './workshop.css';
+@import './results.css';
+@import './meeting.css';
+@import './console.css';
+@import './tickets.css';
+@import './nametags.css';
+@import './board.css';
+@import './panels.css';
+@import './terminal.css';
+@import './hiring-settings.css';
+@import './panel-details.css';
+@import './themes.css';
+@import './permissions.css';
+@import './context-gauge.css';
+@import './topbar-palette.css';
+@import './dialogs.css';
+@import './responsive.css';
+@import './sections.css';
+@import './remote.css';
+@import './a11y.css';

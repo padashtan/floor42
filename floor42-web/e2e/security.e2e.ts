@@ -36,7 +36,7 @@ function attackerPage(daemon: string): Promise<{ server: Server; url: string }> 
   )
 }
 
-test('a page on another local port cannot drive the daemon with the director’s cookie', async ({ page, daemon }) => {
+test('a page on another local port cannot drive the daemon with the director’s cookie', { tag: '@iam' }, async ({ page, daemon }) => {
   await page.goto('/')
   await expect(page.locator('.badge.ready')).toHaveText(t['top.liveReady'])
   const { server, url } = await attackerPage(daemon.url)
@@ -53,7 +53,7 @@ test('a page on another local port cannot drive the daemon with the director’s
   expect(notes.map((n) => n.text)).not.toContain('planted by another port')
 })
 
-test('the page runs under its strict policy, the terminal included', async ({ page, daemon }) => {
+test('the page runs under its strict policy, the terminal included', { tag: '@iam' }, async ({ page, daemon }) => {
   const response = await page.goto('/')
   const csp = response?.headers()['content-security-policy'] ?? ''
   expect(csp).toContain("script-src 'self';")
@@ -77,7 +77,7 @@ test('the page runs under its strict policy, the terminal included', async ({ pa
   await page.keyboard.press('Escape')
 })
 
-test('a script token is shown once, works within its scope, and stops when revoked', async ({ page }) => {
+test('a script token is shown once, works within its scope, and stops when revoked', { tag: '@iam' }, async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('.badge.ready')).toHaveText(t['top.liveReady'])
   await runFromMenu(page, t, ACTIONS.find((a) => a.id === 'sessions')!)

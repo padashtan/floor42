@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator('.badge.ready')).toHaveText(t['top.liveReady'])
 })
 
-test('every action of the bar names the panel it opens', () => {
+test('every action of the bar names the panel it opens', { tag: '@ui' }, () => {
   expect(PANEL_ACTIONS.filter((a) => !PANEL_OF[a.id]).map((a) => a.id), 'actions without a panel in e2e/bar.ts').toEqual(
     [],
   )
@@ -22,7 +22,7 @@ test('every action of the bar names the panel it opens', () => {
  * after the other replace each other, ui/panelLayout.ts), keeps its close button reachable and closes with Escape
  * (pressed on some panels only, to leave the others open under the next one).
  */
-test('each panel opens from its menu, replaces the others and closes with Escape', async ({ page }) => {
+test('each panel opens from its menu, replaces the others and closes with Escape', { tag: '@ui' }, async ({ page }) => {
   // All the main panels of the bar in one locator (the tutorial card is none).
   const MAIN_PANELS = PANEL_ACTIONS.filter((x) => x.id !== 'tutorial')
     .map((x) => PANEL_OF[x.id])
@@ -71,7 +71,7 @@ test('each panel opens from its menu, replaces the others and closes with Escape
 })
 
 /** Journey 3b: the same panels through the command palette (Ctrl+K, the label, Enter). */
-test('each panel opens from the palette and closes with Escape', async ({ page }) => {
+test('each panel opens from the palette and closes with Escape', { tag: '@ui' }, async ({ page }) => {
   const misranked: string[] = []
   for (const a of PANEL_ACTIONS) {
     await test.step(a.id, async () => {

@@ -8,8 +8,9 @@ Each open item is one line starting with `- [ ] D<n>`; a paid item becomes `- [x
 
 ## Open
 
-- [ ] D29 `SecretMasker` still leaves two spellings of a secret query parameter: a percent-encoded name (`%74oken=abc`) and a value with a blank inside (`?token=abc1 2xyz`, only `abc1` goes). Both need a URL decoder or a grammar of the line, not a pattern; found by the Opus recheck of the Jazzer branch.
+- [ ] D29 `SecretMasker` still leaves one spelling of a secret query parameter: a value with a blank inside (`?token=abc1 2xyz`, only `abc1` goes); it needs a grammar of the line, not a pattern. Percent-encoded names (`%74oken=abc`), `sig=` signatures and `Cookie:` lines are masked since the v1.1 security batch. Found by the Opus recheck of the Jazzer branch.
 - [ ] D28 The robot can come to rest inside furniture, and the cat can come within a body of an agent, under some floor plans: with one more footprint in the compute room (the identity server at x 12.5, z 5.0 or 6.6, or x 11.6, z 7.4) the seeded twenty-minute walks of `src/scene/mascots.test.ts` ("keep to free floor", robot at rest in the meeting table at 4.893, 7.573) and `src/scene/pets.test.ts` ("keep clear ... whatever the seed", seed 1, tick 10204) fail, deterministically, far from the new footprint. The server stands at x 12.5, z 2.6, where both pass; the cause in the mascots' walk is not found (2026-11-05, found while placing the identity server).
+- [ ] D30 Inside the shell sandbox `config.worktree` is still readable when a repository uses `extensions.worktreeConfig` (the repository `config` is hidden since a3d96496): it can hold per-worktree settings, rarely a secret. Cover it like `config`, with the format keys only, once a repository needs it.
 
 ## Paid
 

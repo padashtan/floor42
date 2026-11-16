@@ -47,7 +47,8 @@ public final class IdentityAudit {
             String tokenId,
             String decision,
             String reason,
-            String audience) {}
+            String audience,
+            String eventId) {}
 
     public enum Kind {
         DIRECTOR_SIGN_IN,
@@ -132,7 +133,7 @@ public final class IdentityAudit {
 
     private static Line line(
             EventEnvelope e, AgentId agent, String jti, String decision, String reason, String audience) {
-        return new Line(e.occurredAt(), who(agent), "director", jti, decision, reason, audience);
+        return new Line(e.occurredAt(), who(agent), "director", jti, decision, reason, audience, e.eventId());
     }
 
     /** One JSON object per line. */

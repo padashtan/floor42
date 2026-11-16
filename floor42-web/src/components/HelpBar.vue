@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { t } from '../i18n'
+import { dayNight, toggleDayNight } from '../state/dayNight'
 import { remote, toggleRemote } from '../state/remote'
 
 defineProps<{ petSound: boolean; perf: string }>()
@@ -19,6 +20,9 @@ defineEmits<{ togglePetSound: [] }>()
     </button>
     <button class="pet-sound remote-days" type="button" :aria-pressed="remote.on" :title="t('remote.days.title')" @click="toggleRemote">
       {{ remote.on ? t('remote.days.on') : t('remote.days.off') }}
+    </button>
+    <button class="pet-sound day-night" type="button" :title="t('scene.light.title')" @click="toggleDayNight">
+      {{ t(`scene.light.${dayNight.mode}`) }}
     </button>
     <div class="fps">{{ perf }}</div>
   </div>

@@ -96,8 +96,7 @@ if ($Objective) {
     $ErrorActionPreference = 'Continue' # same 5.1 behaviour for git's stderr outside a repository
     $repository = (git rev-parse --show-toplevel 2>$null)
     if (-not $repository) { throw 'Run floor42 "..." from inside a git repository: agents work on it.' }
-    $title = if ($text.Length -gt 60) { $text.Substring(0, 57) + '...' } else { $text }
-    $body = @{ title = $title; objective = $text; repository = (Resolve-Path $repository).Path } | ConvertTo-Json
+    $body = @{ objective = $text; repository = (Resolve-Path $repository).Path } | ConvertTo-Json
     $mission = Invoke-RestMethod "$Base/api/missions" -Method Post -ContentType 'application/json' -Body $body `
         -Headers @{ Authorization = "Bearer $token" }
     Write-Host "Mission $($mission.id) proposed on $($mission.workspace)."

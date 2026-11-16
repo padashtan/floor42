@@ -1,16 +1,16 @@
 /**
- * The top bar's room on screen, as style.css lays it out: the bar starts at the left edge and, above
+ * The top bar's room on screen, as styles/*.css lays it out: the bar starts at the left edge and, above
  * {@link LOG_BESIDE_ABOVE} pixels, stops before the event log in the top right corner (below that the log moves down,
  * beside the crew). Its buttons never shrink, nor do the measured numbers (quota gauges, spend: `.measure`), whose
  * text must stay readable; the other status badges (build, daemon, mission) shrink to {@link BADGE_MIN} with an
  * ellipsis, their full text in their tooltip. The test checks, for every width from 1280 to 2560 and both languages,
  * that the buttons, the measures at their longest and the badges at their minimum fit: no button leaves the screen or
- * slides under the log, no measured number is cut. Keep these numbers in step with style.css (`.brand`, `.log`,
+ * slides under the log, no measured number is cut. Keep these numbers in step with styles/*.css (`.brand`, `.log`,
  * `.brand > .shrink`, `.brand > .measure`).
  */
 export const EDGE = 8
 export const LOG_WIDTH = 400
-/** style.css moves the log down at `max-width: 1700px` (1650 before the measured numbers stayed whole): wider than this, it sits beside the bar. */
+/** styles/*.css moves the log down at `max-width: 1700px` (1650 before the measured numbers stayed whole): wider than this, it sits beside the bar. */
 export const LOG_BESIDE_ABOVE = 1700
 /** The bar's padding (6px 10px) and border (2px), both sides. */
 export const BAR_CHROME = 24
@@ -29,7 +29,7 @@ export const BRAND = 100
  * is also in its menu), as the model below finds the label version too wide for the measured numbers: up to
  * {@link COMPACT_UPTO}, and, with the log beside the bar, from {@link LOG_BESIDE_ABOVE} + 1 to {@link COMPACT_BAND_END}
  * (both languages; French is the widest). Everywhere else the label sits beside the icon, the badges shrinking with
- * an ellipsis. style.css repeats the three numbers; where the labels show and the bar is tight (up to
+ * an ellipsis. styles/*.css repeats the three numbers; where the labels show and the bar is tight (up to
  * {@link HINT_HIDDEN_UPTO}) the session-time hint gives way.
  */
 export const COMPACT_UPTO = 1504

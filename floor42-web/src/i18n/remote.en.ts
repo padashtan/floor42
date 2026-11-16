@@ -11,4 +11,9 @@ export const remoteEn = {
   'remote.days.on': 'Remote days: on',
   'remote.days.off': 'Remote days: off',
   'remote.days.title': 'About one agent in four is drawn working from home each day (decor only: nothing changes in the work)',
+  // Day / night: a display choice of the scene (decor only).
+  'scene.light.auto': 'Light: clock',
+  'scene.light.day': 'Light: day',
+  'scene.light.night': 'Light: night',
+  'scene.light.title': 'Draw the office by day, by night, or by your clock. Decor only (kept in this browser).',
 } as const

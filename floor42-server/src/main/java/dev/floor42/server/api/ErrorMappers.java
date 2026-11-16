@@ -2,7 +2,7 @@ package dev.floor42.server.api;
 
 import dev.floor42.domain.DomainException;
 import dev.floor42.domain.Refusal;
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.RefusedException;
 import dev.floor42.server.journal.JournalException;
 import dev.floor42.server.runtime.GitFailure;
 import dev.floor42.server.runtime.OutsideWorkspace;

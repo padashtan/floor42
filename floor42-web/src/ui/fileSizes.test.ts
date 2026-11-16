@@ -5,12 +5,11 @@ import { describe, expect, it } from 'vitest'
  * A tolerance of 10 percent applies: up to 330 lines the test passes and warns, above 330 it fails.
  * The files below were already larger when the limit was enforced: each keeps the ceiling it had (same tolerance:
  * above it warns, above it plus 10 percent fails), and an entry goes as soon as its file is back at the limit. The language catalogues (i18n/*.en.ts, *.fr.ts) and the
- * API types (api/types.*.ts) are split by area, so they are under the limit like any other file (D27).
+ * API types (api/types.*.ts) are split by area and the API client (api/client/*.ts) by domain, so they are under the limit like any other file (D27).
  */
 const LIMIT = 300
 const TOLERANCE = 1.1
 const CEILINGS: Record<string, number> = {
-  'src/api/client.ts': 496,
   'src/scene/mascots.ts': 613,
   'src/scene/OfficeScene.ts': 467,
   'src/scene/wander.ts': 433,

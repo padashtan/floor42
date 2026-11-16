@@ -26,6 +26,7 @@ import type { Rect } from './nav'
 import { applyTheme, type ThemeId } from './palette'
 import { findRoot, type Hit, Picker, Selection } from './picking'
 import { PixelPipeline } from './pixelPipeline'
+import { EASE_SECONDS, eased, sceneHour, type DayNight } from './dayNight'
 import { RenderLoop } from './renderLoop'
 import { disposeDrawn } from './resources'
 import { Talk } from './talk'
@@ -70,6 +71,10 @@ export class OfficeScene {
   private readonly lights: OfficeLights
   private boardTimer = 0
   private moodTimer = 10
+  /** The director's day / night choice, the hour drawn now and the glide between two choices (decor only). */
+  private dayNightMode: DayNight = 'auto'
+  private hourFrom = 0
+  private hourProgress = 1
   private markTimer = 0
   private readonly mark = new THREE.Vector3()
   private readonly cleanup: (() => void)[] = []
@@ -176,7 +181,7 @@ export class OfficeScene {
     if (on === this.crew.night) return
     this.crew.night = on
     this.lights.setNight(on)
-    this.lights.mood(on)
+    this.lights.mood(on, this.hourNow())
     for (const desk of this.building.desks) {
       desk.traverse((o) => {
         if (o.userData.screen) o.visible = !on
@@ -189,6 +194,20 @@ export class OfficeScene {
   /** What the pets say, in the screen's language ("Miaou", "Ouaf", "z"). */
   setPetWords(words: PetWords): void {
     this.mascots.setWords(words)
+  }
+
+  /** Draws the scenery by day, by night, or by the clock; the hour glides to the new one (at once under reduced motion). */
+  setDayNight(mode: DayNight): void {
+    if (mode === this.dayNightMode) return
+    this.hourFrom = this.hourNow()
+    this.dayNightMode = mode
+    this.hourProgress = 0
+  }
+
+  /** The hour the scenery reads now. */
+  private hourNow(): number {
+    const target = sceneHour(this.dayNightMode, new Date())
+    return this.hourProgress >= 1 ? target : eased(this.hourFrom, target, this.hourProgress, this.calm)
   }
 
   /** Whether the pets make their synthesised sounds: off until the director turns it on, never under reduced motion. */
@@ -400,9 +419,13 @@ export class OfficeScene {
   /** The scenery this frame: machines, the city and the sky, the blur and haze of distance, the table, the board. */
   private scenery(t: number, dt: number): void {
     for (const m of this.building.machines.values()) m.update(t, dt)
-    const clock = new Date()
-    this.city.update(t, dt, clock.getHours() + clock.getMinutes() / 60)
-    this.sky.update(dt, clock.getHours() + clock.getMinutes() / 60, this.calm, this.loop.fps)
+    if (this.hourProgress < 1) {
+      this.hourProgress = Math.min(1, this.hourProgress + dt / EASE_SECONDS)
+      this.moodTimer = 10 // the light follows the glide
+    }
+    const hour = this.hourNow()
+    this.city.update(t, dt, hour)
+    this.sky.update(dt, hour, this.calm, this.loop.fps)
     // Zoomed in on the office everything is sharp; zoomed out, the city blurs and clouds pass in front of it.
     const away = THREE.MathUtils.smoothstep(this.rig.viewHeight, 16, 48)
     this.pipeline.setBlur(away)
@@ -456,7 +479,7 @@ export class OfficeScene {
     this.effects.update(dt)
     this.moodTimer += dt
     if (this.moodTimer > 5) {
-      this.lights.mood(this.crew.night)
+      this.lights.mood(this.crew.night, this.hourNow())
       this.moodTimer = 0
     }
     this.markMascots(dt)

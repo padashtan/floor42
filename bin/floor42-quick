@@ -1,47 +1,66 @@
 #!/usr/bin/env bash
-# The quick loop: only the tests a change touches, against HEAD (staged, unstaged and new files).
-#   bin/floor42-quick           Java: the changed test classes, and <Class>Test* for each changed main class; web: vitest --changed
+# The quick loop: only the tests a change calls for, against HEAD (staged, unstaged and new files).
+# The selection comes from the test map, tools/test-map.conf (ADR-0068): a feature package runs its own tests and
+# the core set, the shared core or an unknown path runs everything.
+#   bin/floor42-quick           Java: Surefire patterns from the map; web: Vitest on what the diff reaches; the browser
+#                               journeys of the touched domains are printed, not run
 #   bin/floor42-quick <ref>     the same against another ref (a branch, HEAD~1)
-# Not a gate: `make gate` is. A change to a pom or to a resource runs every test of the Java modules.
+#   bin/floor42-quick -n        print the selection and run nothing
+#   bin/floor42-quick --e2e     also package the daemon and run those journeys
+# Not a gate: `make gate` is.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
-REF="${1:-HEAD}"
-MVNW="./mvnw -B -ntp -q"
+REF=HEAD; DRY=false; E2E=false
+for a in "$@"; do
+  case "$a" in
+    -n) DRY=true ;;
+    --e2e) E2E=true ;;
+    -*) echo "usage: bin/floor42-quick [-n] [--e2e] [ref]" >&2; exit 2 ;;
+    *) REF="$a" ;;
+  esac
+done
+# Compile only the changed files (37 s to 17.5 s per round, measured 2026-11-12). shortcut: a changed signature or
+# constant does not recompile its dependents; the gate (`make verify`) compiles everything.
+MVNW="./mvnw -B -ntp -q -Dmaven.compiler.useIncrementalCompilation=false"
+JAVA="${JAVA_HOME:+$JAVA_HOME/bin/}java"
 
 changed="$( { git diff --name-only "$REF" --; git ls-files --others --exclude-standard; } | sort -u)"
 if [ -z "$changed" ]; then echo "quick: nothing changed since $REF."; exit 0; fi
 
-classes=()
-whole_java=false
-while IFS= read -r f; do
-  case "$f" in
-    pom.xml|floor42-*/pom.xml) whole_java=true ;;
-    floor42-domain/src/test/*.java|floor42-server/src/test/*.java)
-      classes+=("$(basename "$f" .java)") ;;
-    floor42-server/src/test/resources/*|floor42-server/src/main/resources/*) whole_java=true ;;
-    floor42-domain/src/main/*.java|floor42-server/src/main/*.java)
-      classes+=("$(basename "$f" .java)Test*") ;;
-  esac
-done <<< "$changed"
+# The map's reader is one JDK-only source file: run from its source, no build needed.
+selection="$(printf '%s\n' "$changed" | "$JAVA" floor42-server/src/test/java/dev/floor42/server/TestMap.java select)"
+java_tests="$(sed -n 's/^java=//p' <<< "$selection")"
+web_tests="$(sed -n 's/^web=//p' <<< "$selection")"
+journeys="$(sed -n 's/^e2e=//p' <<< "$selection")"
 
-if $whole_java || [ "${#classes[@]}" -gt 0 ]; then
-  args=(-pl floor42-server -am test -Dspotless.check.skip=true)
-  if ! $whole_java; then
-    list="$(IFS=,; echo "${classes[*]}")"
-    args+=("-Dtest=$list" -Dsurefire.failIfNoSpecifiedTests=false)
-    echo "quick: Java tests $list"
-  else
-    echo "quick: a pom or a resource changed, every Java test runs."
-  fi
-  $MVNW "${args[@]}"
-else
-  echo "quick: no Java change."
+case "$java_tests" in
+  "") echo "quick: no Java test."; java_cmd=() ;;
+  all) echo "quick: every Java test."
+    java_cmd=($MVNW -pl floor42-server -am test -Dspotless.check.skip=true) ;;
+  *) echo "quick: Java tests $java_tests"
+    java_cmd=($MVNW -pl floor42-server -am test -Dspotless.check.skip=true "-Dtest=$java_tests" -Dsurefire.failIfNoSpecifiedTests=false) ;;
+esac
+case "$web_tests" in
+  "") echo "quick: no web test."; web_cmd=() ;;
+  all) echo "quick: every web test."; web_cmd=(npx vitest run) ;;
+  *) echo "quick: web tests the diff reaches."; web_cmd=(npx vitest run --changed "$REF" --passWithNoTests) ;;
+esac
+case "$journeys" in
+  "") e2e_cmd=() ;;
+  all) e2e_cmd=(npm run e2e) ;;
+  *) e2e_cmd=(npm run e2e:domain -- "$journeys") ;;
+esac
+if [ "${#e2e_cmd[@]}" -gt 0 ] && ! $E2E; then
+  echo "quick: journeys not run (--e2e runs them): cd floor42-web && $(printf '%q ' "${e2e_cmd[@]}")"
 fi
+if $DRY; then exit 0; fi
 
-if echo "$changed" | grep -q '^floor42-web/'; then
-  (cd floor42-web && npx vitest run --changed "$REF" --passWithNoTests)
-else
-  echo "quick: no web change."
+if [ "${#java_cmd[@]}" -gt 0 ]; then "${java_cmd[@]}"; fi
+if [ "${#web_cmd[@]}" -gt 0 ]; then (cd floor42-web && "${web_cmd[@]}"); fi
+if $E2E && [ "${#e2e_cmd[@]}" -gt 0 ]; then
+  # The journeys drive the packaged jar (CLAUDE.md, browser tests).
+  ./mvnw -B -ntp -q package -DskipTests
+  (cd floor42-web && "${e2e_cmd[@]}")
 fi

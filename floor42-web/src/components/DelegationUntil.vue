@@ -6,7 +6,8 @@ import type { DelegationView } from '../api/identity'
 import { request } from '../api/request'
 import { dateLocale, t } from '../i18n'
 import { iamOn } from '../ui/identities'
-import { clock, ending } from '../ui/sessionTime'
+import { DELEGATION_LEAD_MS } from '../ui/iamEndings'
+import { ending, when } from '../ui/sessionTime'
 
 const props = defineProps<{ mission: string }>()
 const until = ref<number | null>(null)
@@ -21,14 +22,14 @@ watch(
   },
   { immediate: true },
 )
-const time = () => clock(until.value ?? 0, dateLocale())
+const time = () => when(until.value ?? 0, dateLocale(), nowMs())
 </script>
 
 <template>
   <span
     v-if="until !== null"
     class="session-time"
-    :class="{ ending: ending(until, nowMs()) }"
+    :class="{ ending: ending(until, nowMs(), DELEGATION_LEAD_MS) }"
     :title="t('idn.deleg.untilTitle', { time: time() })"
     >{{ t('idn.deleg.until', { time: time() }) }}</span
   >

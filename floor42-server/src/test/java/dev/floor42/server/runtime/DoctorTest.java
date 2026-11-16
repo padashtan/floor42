@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  */
 class DoctorTest {
 
-    static final ClaudeCodeProbe.Availability CLAUDE = new ClaudeCodeProbe.Availability(true, "2.1.316", null);
+    static final ClaudeCodeProbe.Availability CLAUDE = new ClaudeCodeProbe.Availability(true, "2.1.316", null, null);
 
     /** wsl.exe -l -v writes UTF-16: the bytes as SandboxProbe.start reads them. */
     static String wslList(String distros) {

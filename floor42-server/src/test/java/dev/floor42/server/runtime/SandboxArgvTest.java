@@ -109,10 +109,10 @@ class SandboxArgvTest {
     void theDirectorsAutocrlfIsReadAsGitGivesItAndAnythingElseIsNone() throws Exception {
         Path repo = plainRepo();
         GitProcess.git(repo, List.of("config", "core.autocrlf", "TRUE"));
-        assertThat(WorktreeGitDirs.autocrlf(repo)).isEqualTo("true");
+        assertThat(WorktreeGitDirs.gitConfig(repo)).contains("core.autocrlf=true");
         GitProcess.git(repo, List.of("config", "core.autocrlf", "false"));
-        assertThat(WorktreeGitDirs.autocrlf(repo)).isEqualTo("false");
-        assertThat(WorktreeGitDirs.autocrlf(data.resolve("does-not-exist"))).isEqualTo("none");
+        assertThat(WorktreeGitDirs.gitConfig(repo)).contains("core.autocrlf=false");
+        assertThat(WorktreeGitDirs.gitConfig(data.resolve("does-not-exist"))).isEmpty();
     }
 
     @Test
@@ -121,7 +121,7 @@ class SandboxArgvTest {
         GitProcess.git(repo, List.of("config", "core.autocrlf", "true"));
         Thread.currentThread().interrupt();
         try {
-            assertThat(WorktreeGitDirs.autocrlf(repo)).isEqualTo("none");
+            assertThat(WorktreeGitDirs.gitConfig(repo)).isEmpty();
             assertThat(Thread.currentThread().isInterrupted()).isTrue();
         } finally {
             Thread.interrupted();

@@ -1,0 +1,43 @@
+/* ---- Improvement checklist --------------------------------------------------------------------------------------- */
+.note-form {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+.note-form input {
+  flex: 1;
+}
+.note {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  padding: 2px 0;
+}
+.note .text {
+  flex: 1;
+}
+.note.done .text {
+  text-decoration: line-through;
+  color: #6f8d96;
+}
+
+/* ---- Proposed tickets (ADR-0017) --------------------------------------------------------------------------------- */
+.proposal {
+  border-left: 2px solid #3a6f7d;
+  padding: 2px 0 4px 8px;
+  margin: 4px 0;
+}
+.proposal .head {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.edit-ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.proposal .criteria {
+  margin: 2px 0 0;
+  padding-left: 18px;
+}

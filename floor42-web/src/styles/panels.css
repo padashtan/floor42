@@ -1,0 +1,248 @@
+/* ---- Framed panels: the close button sits outside the frame; only the content scrolls --------------------------- */
+.panel > .title > button.close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: #071a21;
+  color: var(--text);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+}
+.panel > .title > button.close:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.panel.framed {
+  /* Above the event log and the selection panel. */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  padding: 14px 20px 16px;
+  background: #071a21;
+}
+.panel.framed > .title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  /* The buttons of the title bar never touch each other or the text. */
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.ticket-card.dropped {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+.delivery.abandoned {
+  border-color: var(--red);
+}
+.panel-scroll {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 8px;
+}
+.empty-state {
+  color: var(--muted);
+  padding: 18px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+/* ---- Desk tabs ------------------------------------------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #1d4a57;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.tabs .tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  padding: 8px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.tabs .tab:hover {
+  color: var(--text);
+}
+.tabs .tab.on {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+}
+.tabs .tab.alert .count {
+  background: var(--amber);
+  color: #061016;
+}
+.tabs .tab .count {
+  display: inline-block;
+  min-width: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  background: #12323c;
+  color: var(--text);
+  font-size: 12px;
+  text-align: center;
+}
+.desk-panel .question {
+  padding: 12px 14px;
+  margin: 10px 0;
+  line-height: 1.45;
+}
+.desk-panel .question .subject {
+  font-size: 16px;
+  margin: 6px 0;
+}
+.desk-panel .options {
+  margin-top: 10px;
+  gap: 8px;
+}
+.desk-panel .sub {
+  margin-top: 14px;
+}
+.desk-panel input,
+.desk-panel textarea {
+  font-size: 15px;
+  padding: 6px 8px;
+}
+
+/* ---- Requests, profile and machine outputs ------------------------------------------------------------------ */
+.requests-panel,
+.profile-panel,
+.machine-panel {
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-height: calc(100vh - 170px);
+  z-index: 22;
+}
+/* A crew card's double click opens both: the profile on the left, what the agent waits for on the right. */
+.hud:has(> .requests-panel) > .profile-panel {
+  left: 24px;
+  transform: none;
+}
+.profile-panel ~ .requests-panel {
+  left: auto;
+  right: 24px;
+  transform: none;
+}
+.requests-panel {
+  width: min(640px, calc(100vw - 48px));
+  border-color: var(--amber);
+}
+.requests-panel .question {
+  padding: 12px 14px;
+  margin: 8px 0;
+}
+.requests-panel .question .subject {
+  font-size: 16px;
+  margin: 6px 0;
+}
+.profile-panel {
+  width: min(720px, calc(100vw - 48px));
+  line-height: 1.45;
+}
+.machine-panel {
+  width: min(1000px, calc(100vw - 48px));
+}
+.profile-head {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.profile-head .portrait {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #061016;
+}
+.profile-head .profile-name {
+  font-size: 20px;
+  color: var(--cyan);
+}
+.profile-head .profile-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.kv {
+  border-collapse: collapse;
+  width: 100%;
+}
+.kv td {
+  padding: 4px 8px 4px 0;
+  vertical-align: top;
+}
+.kv td:first-child {
+  color: var(--muted);
+  width: 160px;
+}
+.chip {
+  display: inline-block;
+  padding: 1px 8px;
+  margin: 0 4px 4px 0;
+  border: 1px solid #1d4a57;
+  background: #0b2530;
+}
+.fact {
+  padding: 6px 10px;
+  margin: 4px 0;
+  border-left: 3px solid var(--muted);
+  background: #0b2530;
+}
+.fact.strength {
+  border-left-color: var(--green);
+}
+.fact.watch {
+  border-left-color: var(--amber);
+}
+.fact .fact-kind {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-right: 6px;
+  color: var(--muted);
+}
+.fact.strength .fact-kind {
+  color: var(--green);
+}
+.fact.watch .fact-kind {
+  color: var(--amber);
+}
+.machine-panel .run {
+  border: 1px solid #12323c;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+.machine-panel .machine-tools {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.machine-panel .machine-tools input {
+  font-size: 14px;
+  padding: 4px 8px;
+  min-width: 220px;
+}

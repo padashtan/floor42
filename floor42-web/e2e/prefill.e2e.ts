@@ -8,7 +8,7 @@ const t = CATALOGS.en
 const SKILLS = PANEL_ACTIONS.find((a) => a.id === 'skills')!
 const TERMINAL = PANEL_ACTIONS.find((a) => a.id === 'terminal')!
 
-test('a skill of the catalogue is prepared in the director’s console without Enter', async ({ page, daemon }) => {
+test('a skill of the catalogue is prepared in the director’s console without Enter', { tag: '@plugins' }, async ({ page, daemon }) => {
   // A skill of the director's, in the Claude home the daemon reads for its catalogue (daemon.ts).
   const skill = join(daemon.dataDir, '..', 'claude-home', 'skills', 'demo-skill')
   mkdirSync(skill, { recursive: true })

@@ -12,6 +12,7 @@ import { tutorialFr } from './tutorial.fr'
 import { meetingVoicesFr } from './meeting-voices.fr'
 import { librariesFr } from './libraries.fr'
 import { proofFr } from './proof.fr'
+import { dossierFr } from './dossier.fr'
 import { remoteFr } from './remote.fr'
 import { missionFormFr } from './missionForm.fr'
 
@@ -27,6 +28,7 @@ export const fr: Record<keyof typeof en, string> = {
   ...meetingVoicesFr,
   ...librariesFr,
   ...proofFr,
+  ...dossierFr,
   ...remoteFr,
   ...missionFormFr,
 }

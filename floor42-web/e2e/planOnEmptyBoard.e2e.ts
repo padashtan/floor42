@@ -6,7 +6,7 @@ const t = CATALOGS.en
  * Pilot, M-17: the director left the board empty after an archive, then proposed a mission in graph mode. The plan
  * waiting for approval must be reachable: the To do row leads to the desk's Mission tab with the plan and its cap.
  */
-test('a plan proposed after the board was left empty is shown for approval', async ({ page, daemon }) => {
+test('a plan proposed after the board was left empty is shown for approval', { tag: '@tickets' }, async ({ page, daemon }) => {
   test.setTimeout(120_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })

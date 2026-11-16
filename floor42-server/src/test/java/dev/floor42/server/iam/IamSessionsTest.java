@@ -153,6 +153,16 @@ class IamSessionsTest {
         assertThat(r.launch()).isNotBlank();
     }
 
+    /** Characterisation (v1.1, session time): a token past its end is refused as expired, and nothing renews it. */
+    @Test
+    void anAgentTokenPastItsEndIsRefusedAsExpiredAndNotRenewed() {
+        String t = registered();
+        String past =
+                kc.forge(t, b -> b.put("exp", Instant.now().minusSeconds(120).getEpochSecond()));
+        assertThat(refusal(sessions.authenticate(past, REMOTE, LOCAL))).isEqualTo(TokenRefusal.EXPIRED);
+        assertThat(refusal(sessions.authenticate(past, REMOTE, LOCAL))).isEqualTo(TokenRefusal.EXPIRED);
+    }
+
     @Test
     void aTokenWhoseJtiIsNotTheRecordedOneIsAnEndedSession() {
         String t = token();

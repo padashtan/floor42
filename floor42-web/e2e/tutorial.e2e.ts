@@ -37,7 +37,7 @@ async function deskTab(page: Page, tab: string): Promise<void> {
  * director's own clicks on the real screen. The mission is simulated on Floor42's sample repository: every event of
  * it is SIMULATED, and the costs read 0.
  */
-test('the guided first mission goes from the offer to going real', async ({ page }) => {
+test('the guided first mission goes from the offer to going real', { tag: '@ui' }, async ({ page }) => {
   test.setTimeout(240_000)
   page.on('dialog', (d) => void d.accept())
   await page.setViewportSize({ width: 1600, height: 900 })
@@ -165,7 +165,7 @@ test('the guided first mission goes from the offer to going real', async ({ page
   expect(ofMission.filter((e) => e.origin !== 'SIMULATED').map((e) => e.type)).toEqual([])
 })
 
-test('the tutorial resumes after a reload, and the palette skips or restarts it', async ({ page }) => {
+test('the tutorial resumes after a reload, and the palette skips or restarts it', { tag: '@ui' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')
@@ -190,7 +190,7 @@ test('the tutorial resumes after a reload, and the palette skips or restarts it'
   await expect(card).toHaveCount(0)
 })
 
-test('Escape in the guide hides the guide, even over a panel opened after the settings', async ({ page }) => {
+test('Escape in the guide hides the guide, even over a panel opened after the settings', { tag: '@ui' }, async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')
   await page.goto('/')

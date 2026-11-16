@@ -45,6 +45,12 @@ class ShellGuardTest {
     }
 
     @Test
+    void aCommandNamingTheProofDossierIsRefused() {
+        assertThat(bash("curl http://127.0.0.1:7420/api/missions/M-1/proof-dossier"))
+                .hasValueSatisfying(v -> assertThat(v).contains("only the director exports"));
+    }
+
+    @Test
     void theDataDirectoryIsOffLimits() {
         assertThat(bash("cd ~/.floor42; cp floor42.db office-before-1.1.0.db")).isPresent();
         assertThat(bash("sqlite3 \"file:C:/Users/alice/.floor42/floor42.db?mode=ro\" .tables"))

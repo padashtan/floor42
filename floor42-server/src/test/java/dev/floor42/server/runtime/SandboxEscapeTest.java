@@ -227,9 +227,50 @@ class SandboxEscapeTest {
             "GIT_DIR",
             "GIT_WORK_TREE",
             "GIT_CONFIG_COUNT",
-            "GIT_CONFIG_KEY_0",
-            "GIT_CONFIG_VALUE_0",
             "MAVEN_ARGS");
+
+    /** The allowed names, the numbered GIT_CONFIG_KEY_n and GIT_CONFIG_VALUE_n (WorktreeGitDirs.gitConfig) included. */
+    static boolean allowed(String name) {
+        return ALLOWED.contains(name) || name.matches("GIT_CONFIG_(KEY|VALUE)_[0-9]+");
+    }
+
+    /** What a command reads of the repository's config, in the three layouts: a linked worktree, a plain repository, a proof copy. */
+    static final String READ_CONFIG = """
+            cat /media/git/config /media/work/.git/config "$GIT_DIR/config" "$GIT_DIR/../../config" 2>/dev/null
+            git config --list 2>&1
+            git remote -v 2>&1
+            if [ -z "$(git status --porcelain 2>&1)" ]; then echo git-clean; else git status --porcelain 2>&1; fi
+            echo config-end
+            """;
+
+    @Test
+    void theRepositoryConfigIsHiddenAndGitStillWorksInEveryLayout() throws Exception {
+        Path wt = linkedWorktree();
+        Path plain = SandboxGitConfigTest.repoWithSecrets(data);
+        Files.writeString(plain.resolve("p.txt"), "p\n");
+        GitProcess.git(plain, List.of("add", "p.txt"));
+        GitProcess.git(plain, List.of("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "p"));
+        for (List<String> kv : List.of(
+                List.of("remote.origin.url", "https://x:" + SandboxGitConfigTest.TOKEN + "@example.invalid/r.git"),
+                List.of("credential.helper", "store --file=/tmp/" + SandboxGitConfigTest.TOKEN))) {
+            GitProcess.git(data.resolve("repo"), List.of("config", kv.get(0), kv.get(1)));
+        }
+        Path copy = Files.createDirectory(data.resolve("copy"));
+        Files.copy(plain.resolve("p.txt"), copy.resolve("p.txt"));
+        Sandbox sandbox = sandbox(120, 2048, 4_294_967_296L);
+
+        for (List<String> argv : List.of(
+                sandbox.argv(wt, READ_CONFIG),
+                sandbox.argv(wt, READ_CONFIG, 120, true),
+                sandbox.argv(plain, READ_CONFIG),
+                sandbox.argvOffline(copy, READ_CONFIG, 120, plain))) {
+            Result r = run(argv, 180);
+            assertThat(r.out()).as("the script ran to its end").contains("config-end");
+            assertThat(r.out()).as("no secret of the config is readable").doesNotContain(SandboxGitConfigTest.TOKEN);
+            assertThat(r.out()).as("no remote, no credential helper").doesNotContain("remote.", "credential.");
+            assertThat(r.out()).as("git works and sees no mode change").contains("git-clean");
+        }
+    }
 
     @Test
     void onlyTheAllowedEnvironmentReachesTheCommandEvenWhenWslForwardsMore() throws Exception {
@@ -252,7 +293,7 @@ class SandboxEscapeTest {
                 .filter(l -> l.matches("[A-Za-z_][A-Za-z0-9_]*=.*"))
                 .map(l -> l.substring(0, l.indexOf('=')))
                 .toList();
-        assertThat(names).as(r.out()).isNotEmpty().allMatch(ALLOWED::contains);
+        assertThat(names).as(r.out()).isNotEmpty().allMatch(SandboxEscapeTest::allowed);
     }
 
     /** The director's Maven cache is a read-only tail: artifacts only, nothing else of ~/.m2, nothing written back. */

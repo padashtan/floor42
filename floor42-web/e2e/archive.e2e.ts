@@ -13,7 +13,7 @@ interface Summary {
  * closed missions", confirmed with its count and offered only the three missions it made (the daemon is shared with
  * the other journeys). Archived missions leave the board, the Work menu and the mission list.
  */
-test('closed missions go to the archives, one at a time or all at once, and come back', async ({ page, daemon }) => {
+test('closed missions go to the archives, one at a time or all at once, and come back', { tag: '@projects' }, async ({ page, daemon }) => {
   test.setTimeout(120_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })

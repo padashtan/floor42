@@ -24,7 +24,7 @@ targetRules = ["jwt"]
 
 [[allowlists]]
 description = "AWS and GitHub token lookalikes planted for the masking and leak tests"
-paths = ['''(^|/)floor42-server/src/test/java/dev/floor42/server/api/ReplayExportApiTest\.java$''', '''(^|/)floor42-server/src/test/resources/fake-claude/leak\.txt$''']
+paths = ['''(^|/)floor42-server/src/test/java/dev/floor42/server/api/ReplayExportApiTest\.java$''', '''(^|/)floor42-server/src/test/java/dev/floor42/server/api/journal/ReplayExportApiTest\.java$''', '''(^|/)floor42-server/src/test/resources/fake-claude/leak\.txt$''', '''(^|/)office-server/src/test/java/dev/office/server/api/ReplayExportApiTest\.java$''', '''(^|/)office-server/src/test/resources/fake-claude/leak\.txt$''']
 targetRules = ["aws-access-token"]
 
 [[allowlists]]

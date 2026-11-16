@@ -309,12 +309,48 @@
         },
         "type" : "object"
       },
+      "Amount" : {
+        "properties" : {
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "usd" : {
+            "format" : "double",
+            "type" : [ "number", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "AnswerRequest" : {
         "properties" : {
           "answer" : {
             "type" : [ "string", "null" ]
           },
           "askAgain" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "ApprovalFact" : {
+        "properties" : {
+          "actor" : {
+            "type" : [ "string", "null" ]
+          },
+          "at" : {
+            "type" : [ "string", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "text" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -643,6 +679,18 @@
         },
         "type" : "object"
       },
+      "BasisCount" : {
+        "properties" : {
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "BranchLine" : {
         "properties" : {
           "agent" : {
@@ -660,6 +708,39 @@
               "$ref" : "#/components/schemas/CommitLine"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "BrokerFact" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "audience" : {
+            "type" : [ "string", "null" ]
+          },
+          "exchangedJti" : {
+            "type" : [ "string", "null" ]
+          },
+          "method" : {
+            "type" : [ "string", "null" ]
+          },
+          "path" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "resource" : {
+            "type" : [ "string", "null" ]
+          },
+          "status" : {
+            "type" : [ "string", "null" ]
           }
         },
         "type" : "object"
@@ -796,6 +877,47 @@
             "type" : [ "integer", "null" ]
           },
           "status" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "CheckFact" : {
+        "properties" : {
+          "at" : {
+            "type" : [ "string", "null" ]
+          },
+          "command" : {
+            "type" : [ "string", "null" ]
+          },
+          "durationMs" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "exitCode" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "head" : {
+            "type" : [ "string", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "timedOut" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "trigger" : {
+            "type" : [ "string", "null" ]
+          },
+          "workspace" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -1460,6 +1582,22 @@
         },
         "type" : "object"
       },
+      "CostBound1" : {
+        "properties" : {
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "sessions" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "usd" : {
+            "format" : "double",
+            "type" : [ "number", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "CostLine" : {
         "properties" : {
           "costBasis" : {
@@ -1504,6 +1642,42 @@
           "usdEstimated" : {
             "format" : "double",
             "type" : [ "number", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "CostPart" : {
+        "properties" : {
+          "bound" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/CostBound1"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "budgetRef" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "budgetUsd" : {
+            "format" : "double",
+            "type" : [ "number", "null" ]
+          },
+          "sessions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SessionCost"
+            },
+            "type" : "array"
+          },
+          "total" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Amount"
+            }, {
+              "type" : "null"
+            } ]
           }
         },
         "type" : "object"
@@ -1562,6 +1736,33 @@
           },
           "tool" : {
             "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "DelegationFact" : {
+        "properties" : {
+          "expiresAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "grantedAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "resources" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "revoked" : {
+            "type" : [ "boolean", "null" ]
           }
         },
         "type" : "object"
@@ -1894,6 +2095,34 @@
         },
         "type" : "object"
       },
+      "DeliveryFact" : {
+        "properties" : {
+          "at" : {
+            "type" : [ "string", "null" ]
+          },
+          "commit" : {
+            "type" : [ "string", "null" ]
+          },
+          "files" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "text" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "DeliveryHomeView" : {
         "properties" : {
           "copy" : {
@@ -1920,6 +2149,35 @@
             }, {
               "type" : "null"
             } ]
+          }
+        },
+        "type" : "object"
+      },
+      "DiffFact" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "branch" : {
+            "type" : [ "string", "null" ]
+          },
+          "commits" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "readable" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "uncommitted" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
           }
         },
         "type" : "object"
@@ -2045,6 +2303,21 @@
             "type" : [ "string", "null" ]
           },
           "step" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "EventRef" : {
+        "properties" : {
+          "eventId" : {
+            "type" : [ "string", "null" ]
+          },
+          "seq" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "type" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -2492,6 +2765,51 @@
           },
           "savedEnabled" : {
             "type" : [ "boolean", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "IdentityFact" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "client" : {
+            "type" : [ "string", "null" ]
+          },
+          "derived" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "expiresAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "issuer" : {
+            "type" : [ "string", "null" ]
+          },
+          "jti" : {
+            "type" : [ "string", "null" ]
+          },
+          "onBehalfOf" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "session" : {
+            "type" : [ "string", "null" ]
+          },
+          "ticket" : {
+            "type" : [ "string", "null" ]
+          },
+          "tokenAudience" : {
+            "type" : [ "string", "null" ]
           }
         },
         "type" : "object"
@@ -2994,6 +3312,23 @@
         },
         "type" : "object"
       },
+      "LineView" : {
+        "properties" : {
+          "code" : {
+            "type" : [ "string", "null" ]
+          },
+          "level" : {
+            "type" : [ "string", "null" ]
+          },
+          "params" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : [ "object", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "Link" : {
         "properties" : {
           "at" : {
@@ -3064,6 +3399,18 @@
         "type" : "object"
       },
       "MaskCount" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "MaskCount1" : {
         "properties" : {
           "count" : {
             "format" : "int32",
@@ -3298,6 +3645,41 @@
               "$ref" : "#/components/schemas/CostLine"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "MissionPart" : {
+        "properties" : {
+          "events" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "id" : {
+            "type" : [ "string", "null" ]
+          },
+          "objective" : {
+            "type" : [ "string", "null" ]
+          },
+          "origin" : {
+            "type" : [ "string", "null" ]
+          },
+          "outcome" : {
+            "type" : [ "string", "null" ]
+          },
+          "real" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "simulated" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "status" : {
+            "type" : [ "string", "null" ]
+          },
+          "title" : {
+            "type" : [ "string", "null" ]
           }
         },
         "type" : "object"
@@ -4199,6 +4581,30 @@
         },
         "type" : "object"
       },
+      "PreflightView" : {
+        "properties" : {
+          "lines" : {
+            "items" : {
+              "$ref" : "#/components/schemas/LineView"
+            },
+            "type" : "array"
+          },
+          "profile" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/ProfileView"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "project" : {
+            "type" : [ "string", "null" ]
+          },
+          "verdict" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "Problem" : {
         "description" : "Every error body: a stable code and a readable message, never a stack trace.",
         "properties" : {
@@ -4222,6 +4628,29 @@
           },
           "nonDumpableRequested" : {
             "type" : [ "boolean", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "ProfileView" : {
+        "properties" : {
+          "branch" : {
+            "type" : [ "string", "null" ]
+          },
+          "buildTool" : {
+            "type" : [ "string", "null" ]
+          },
+          "files" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "lastChecks" : {
+            "type" : [ "string", "null" ]
+          },
+          "suggestedChecks" : {
+            "type" : [ "string", "null" ]
           }
         },
         "type" : "object"
@@ -4304,6 +4733,121 @@
             "type" : [ "string", "null" ]
           },
           "token" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "ProofDossier" : {
+        "properties" : {
+          "approvals" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionApprovalFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "authorized" : {
+            "items" : {
+              "$ref" : "#/components/schemas/BasisCount"
+            },
+            "type" : "array"
+          },
+          "brokerCalls" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionBrokerFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "checks" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionCheckFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "costs" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/CostPart"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "delegation" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/DelegationFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "deliverables" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionDeliveryFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "diff" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionDiffFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "format" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "generatedAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "generator" : {
+            "type" : [ "string", "null" ]
+          },
+          "gitReadAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "iam" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "identities" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionIdentityFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "limits" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "masked" : {
+            "items" : {
+              "$ref" : "#/components/schemas/MaskCount"
+            },
+            "type" : "array"
+          },
+          "mission" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/MissionPart"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "refusals" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SectionRefusalFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "statement" : {
+            "type" : [ "string", "null" ]
+          },
+          "version" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -4962,6 +5506,65 @@
         },
         "type" : "object"
       },
+      "Ref" : {
+        "properties" : {
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "events" : {
+            "items" : {
+              "$ref" : "#/components/schemas/EventRef"
+            },
+            "type" : "array"
+          },
+          "origin" : {
+            "type" : [ "string", "null" ]
+          },
+          "source" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "RefusalFact" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "at" : {
+            "type" : [ "string", "null" ]
+          },
+          "category" : {
+            "type" : [ "string", "null" ]
+          },
+          "detail" : {
+            "type" : [ "string", "null" ]
+          },
+          "identity" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "reason" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "summary" : {
+            "type" : [ "string", "null" ]
+          },
+          "ticket" : {
+            "type" : [ "string", "null" ]
+          },
+          "tool" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "RefusalView" : {
         "properties" : {
           "at" : {
@@ -5052,7 +5655,7 @@
           },
           "masked" : {
             "items" : {
-              "$ref" : "#/components/schemas/MaskCount"
+              "$ref" : "#/components/schemas/MaskCount1"
             },
             "type" : "array"
           },
@@ -6093,6 +6696,111 @@
         },
         "type" : "object"
       },
+      "SectionApprovalFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ApprovalFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionBrokerFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/BrokerFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionCheckFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/CheckFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionDeliveryFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/DeliveryFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionDiffFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/DiffFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionIdentityFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/IdentityFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "SectionRefusalFact" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RefusalFact"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
       "SendBackRequest" : {
         "properties" : {
           "agent" : {
@@ -6111,6 +6819,31 @@
           },
           "ticket" : {
             "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "SessionCost" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Ref"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "session" : {
+            "type" : [ "string", "null" ]
+          },
+          "usd" : {
+            "format" : "double",
+            "type" : [ "number", "null" ]
           }
         },
         "type" : "object"
@@ -7310,7 +8043,7 @@
       "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
     },
     "title" : "Floor42 API",
-    "version" : "1.0.0"
+    "version" : "1.1.0"
   },
   "openapi" : "3.1.0",
   "paths" : {
@@ -7671,7 +8404,7 @@
                 "reason" : "Role no longer needed"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason"
+                "$ref" : "#/components/schemas/Reason1"
               }
             }
           },
@@ -7837,7 +8570,7 @@
                 "reason" : "Too many rejected reviews"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason"
+                "$ref" : "#/components/schemas/Reason1"
               }
             }
           },
@@ -10119,7 +10852,7 @@
                 "reason" : "Only true for that repository"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason1"
+                "$ref" : "#/components/schemas/Reason"
               }
             }
           },
@@ -10192,7 +10925,7 @@
                 "reason" : "Obsolete since ADR-0023"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason1"
+                "$ref" : "#/components/schemas/Reason"
               }
             }
           },
@@ -11302,7 +12035,7 @@
                 "reason" : "Priorities changed"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason"
+                "$ref" : "#/components/schemas/Reason1"
               }
             }
           },
@@ -12786,6 +13519,61 @@
         "tags" : [ "Missions" ]
       }
     },
+    "/api/missions/{id}/proof-dossier" : {
+      "get" : {
+        "description" : "What the mission did, read from its journal, with the source of every fact (`JOURNAL`, `GIT`, `STATE` or `DERIVED`) (ADR-0071): identities, delegation, broker calls, refusals, approvals, costs, checks, deliverables and diff, each list capped with its full `count`. Always masked by the replay export's sanitizer: no parameter turns that off. Read only, journals nothing, never cached. Behind the session token agents never receive; the shell guard refuses a command naming this route. `download` true adds a `Content-Disposition` header to save it as a file. The body is refused (empty 500) if it would hold the session token.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "True to answer as a file to save (Content-Disposition attachment).",
+          "in" : "query",
+          "name" : "download",
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProofDossier"
+                }
+              }
+            },
+            "description" : "The mission's proof dossier, always masked"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The mission's proof dossier, for the director",
+        "tags" : [ "Missions" ],
+        "x-stability" : "unstable"
+      }
+    },
     "/api/missions/{id}/proof/acceptance" : {
       "get" : {
         "description" : "The proof state an acceptance must be told about (ADR-0058): `state` null when the delivery is proven (every Floor42 step passed on the current code and a current `PROVEN` verdict) or has no producer worktree; else `NO_RECIPE`, `FAILED`, `NOT_RUN`, `NOT_PROVEN` or `NO_VERDICT`. `POST /complete` is refused (409 `UNPROVEN_DELIVERY`) unless it carries this `token` as `proofAcknowledged`; a state that changed since gives another token. Nothing is recorded.",
@@ -13418,7 +14206,7 @@
                 "reason" : "Wrong repository"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason"
+                "$ref" : "#/components/schemas/Reason1"
               }
             }
           },
@@ -13544,7 +14332,7 @@
     },
     "/api/missions/{id}/replay-export/preview" : {
       "get" : {
-        "description" : "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`). Builds no file; `digest` names this content for the export.",
+        "description" : "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `EMAIL`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`), e-mail addresses by `<email>` (sample and no-reply ones stay). Builds no file; `digest` names this content for the export.",
         "parameters" : [ {
           "in" : "path",
           "name" : "id",
@@ -15529,6 +16317,60 @@
         "x-stability" : "unstable"
       }
     },
+    "/api/preflight" : {
+      "get" : {
+        "description" : "Before the click (ADR-0070): the folder's profile read from its files (`project`, required: an absolute folder; `check`, optional: the checks command typed in the form), a proposed checks command (never run) and one list of `lines`, each a `code`, a `level` (`BLOCK`, `WARN`, `INFO` or `OK`) and the `params` the screen puts in its text. `verdict`: `BLOCKED`, `WARNINGS` or `READY`. A Claude Code that cannot run is a `claude.<reason>` line (`notFound`, `noAnswer`, `unexpectedAnswer`, `tooOld`, `interrupted`, `notChecked`). The two blockers mirror refusals made anyway at the creation of the mission. Nothing is measured (the sandbox tools come from the last measure in the journal) and nothing is recorded. 400 without `project`, 404 for a path that is not a folder.",
+        "parameters" : [ {
+          "description" : "The checks command typed in the form; empty when none.",
+          "in" : "query",
+          "name" : "check",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "An absolute folder path: the project a mission would work on.",
+          "in" : "query",
+          "name" : "project",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PreflightView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "What stands in the way of a real mission on a folder",
+        "tags" : [ "Missions" ]
+      }
+    },
     "/api/progress" : {
       "get" : {
         "description" : "For every mission not ended: what runs now (open sessions, `SILENT` after 10 minutes without a sign), what waits for you and since when (`since`; for a question an agent asked with ask_director, `deadline` is when Floor42 withdraws it unanswered), and `stall`, the dispatcher's own reading: `STUCK` only when it would start a task now (`work`, `ticket`, `agent`) yet nothing of the mission ran or happened for the `STALL_MINUTES` setting (5 by default); otherwise `RUNNING`, `DUE` (the same, for less long), `WAITING` with the reason (`QUESTION`, `HELD_PATCH`, `COMMITTEE_DIRECTOR`, `PROPOSED`, `RESTING` until `until`, `AGENT_BUSY` on mission `elsewhere`) or `IDLE`. A stuck mission is also listed under `stuck`. Floor42's reading of its journal and worktrees, computed on each call; nothing is recorded.",
@@ -16948,7 +17790,7 @@
                 "reason" : "Covered by T-28"
               },
               "schema" : {
-                "$ref" : "#/components/schemas/Reason"
+                "$ref" : "#/components/schemas/Reason1"
               }
             }
           },

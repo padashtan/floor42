@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 /** The boxes of the visible main panels never intersect, whatever opened them. */
-test('no two visible main panels overlap', async ({ page }) => {
+test('no two visible main panels overlap', { tag: '@ui' }, async ({ page }) => {
   for (const a of ACTIONS.filter((x) => ['board', 'desk', 'costs', 'settings'].includes(x.id))) {
     await runFromMenu(page, t, a)
   }
@@ -35,8 +35,8 @@ test('no two visible main panels overlap', async ({ page }) => {
   }
 })
 
-/** The Workflows panel keeps its own place over the frame's defaults (style.css): below the top bar, stacked at 24. */
-test('the Workflows panel sits below the top bar, at its own stacking level', async ({ page }) => {
+/** The Workflows panel keeps its own place over the frame's defaults (styles/*.css): below the top bar, stacked at 24. */
+test('the Workflows panel sits below the top bar, at its own stacking level', { tag: '@ui' }, async ({ page }) => {
   await runFromMenu(page, t, ACTIONS.find((a) => a.id === 'workflows')!)
   const panel = page.locator(PANEL_OF.workflows)
   await expect(panel).toBeVisible()
@@ -52,7 +52,7 @@ test('the Workflows panel sits below the top bar, at its own stacking level', as
  * At 600 px (F1, F2, F3, F16 of the UI audit): every menu of the bar on screen, every panel inside the window with its
  * close button reachable, the keyboard help out of the way, the settings sections all on screen.
  */
-test('at 600 px every menu is reachable and every panel fits the window', async ({ page }) => {
+test('at 600 px every menu is reachable and every panel fits the window', { tag: '@ui' }, async ({ page }) => {
   await page.setViewportSize({ width: 600, height: 900 })
   for (const group of new Set(ACTIONS.map((a) => a.group))) await expectOnScreen(menuButton(page, group), `the ${group} menu`)
   await expect(page.locator('.hud > .panel.help'), 'the keyboard help gives way').toBeHidden()
@@ -73,7 +73,7 @@ test('at 600 px every menu is reachable and every panel fits the window', async 
 })
 
 /** A panel opened from the keyboard takes the focus on its frame, and the frame shows it (F6): a visible ring. */
-test('a panel opened from the keyboard shows a focus ring on its frame', async ({ page }) => {
+test('a panel opened from the keyboard shows a focus ring on its frame', { tag: '@ui' }, async ({ page }) => {
   expect(await runFromPalette(page, t, ACTIONS.find((a) => a.id === 'costs')!), 'the palette ran Costs').toBeNull()
   const panel = page.locator(PANEL_OF.costs)
   await expect(panel).toBeVisible()
@@ -86,7 +86,7 @@ test('a panel opened from the keyboard shows a focus ring on its frame', async (
 })
 
 /** A size saved on a wide screen never makes a panel wider than a narrow window (ui/panels.ts, sizedStyle). */
-test('a panel resized on a wide screen still fits a 600 px window', async ({ page }) => {
+test('a panel resized on a wide screen still fits a 600 px window', { tag: '@ui' }, async ({ page }) => {
   await page.evaluate(() => localStorage.setItem('floor42.panel-sizes', JSON.stringify({ 'board-panel': { width: 1400, height: 700 } })))
   await page.reload()
   await expect(page.locator('.badge.ready')).toHaveText(t['top.liveReady'])

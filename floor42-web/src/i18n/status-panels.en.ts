@@ -190,6 +190,7 @@ export const statusPanelsEn = {
   'replayExport.nothingMasked': 'Nothing needed masking.',
   'replayExport.kind.SECRET': 'values that look like a secret: {count}',
   'replayExport.kind.PATH': 'local absolute paths, replaced by a placeholder: {count}',
+  'replayExport.kind.EMAIL': 'e-mail addresses, replaced by a placeholder: {count}',
   'replayExport.kind.TOKEN': 'the daemon’s session token: {count}',
   'replayExport.kind.OUTPUT_CLIPPED': 'outputs clipped: {count}',
   'replayExport.kind.TEXT_CLIPPED': 'texts clipped: {count}',

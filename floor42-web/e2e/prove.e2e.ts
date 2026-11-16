@@ -17,7 +17,7 @@ interface Mission {
  * the director records that one step works and the other does not, records the verdict "not proven", and "Send back
  * to the producer" puts the ticket back to work with the director's words. Each is journaled.
  */
-test('a delivery is proven step by step, and a failure goes back to its producer', async ({ page, daemon }) => {
+test('a delivery is proven step by step, and a failure goes back to its producer', { tag: '@delivery' }, async ({ page, daemon }) => {
   // On Linux the sandbox runs natively and works (ADR-0028): Floor42 then runs the steps itself, which this journey, built
   // on a machine with no WSL distribution, does not cover. The server tests cover the working sandbox.
   test.skip(process.platform === 'linux', 'the sandbox works on Linux: there is no "unavailable" recipe to journey through')
@@ -42,7 +42,7 @@ test('a delivery is proven step by step, and a failure goes back to its producer
     for (const q of m.questions.filter((x) => x.status === 'OPEN'))
       await page.request.post(`/api/questions/${q.id}/answer`, { headers, data: { answer: 'ALLOW' } })
     expect(m.tickets.map((x) => x.status)).toEqual(m.tickets.map(() => 'DONE'))
-  }).toPass({ timeout: 120_000, intervals: [1_000] })
+  }).toPass({ timeout: 120_000, intervals: [250] })
 
   await page.evaluate((m) => localStorage.setItem('floor42.board.mission', m), id)
   await page.reload()

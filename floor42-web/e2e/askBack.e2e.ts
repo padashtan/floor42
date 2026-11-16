@@ -16,7 +16,7 @@ interface Question {
  * cost (one more paid turn of the agent's session), the director sends a remark, the first question is withdrawn with
  * the director's words, the agent asks again, and the desk shows how many times it was asked back.
  */
-test('the director asks an agent back before answering it', async ({ page, daemon }) => {
+test('the director asks an agent back before answering it', { tag: '@tickets' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })
@@ -66,7 +66,7 @@ test('the director asks an agent back before answering it', async ({ page, daemo
     const q = (await (await page.request.get(`/api/missions/${id}`)).json()).questions as Question[]
     expect(q.find((x) => x.id === first.id)?.status).toBe('WITHDRAWN')
     expect(q.find((x) => x.id === first.id)?.askBack.text).toBe('Which brand guide do you follow?')
-  }).toPass({ timeout: 60_000, intervals: [1_000] })
+  }).toPass({ timeout: 60_000, intervals: [250] })
   await expect.poll(async () => (await open()).find((q) => q.subject === 'Blue or red then?')?.askBack.rounds, {
     timeout: 60_000,
   }).toBe(1)

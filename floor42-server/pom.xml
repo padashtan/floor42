@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.floor42</groupId>
         <artifactId>floor42-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>floor42-server</artifactId>
@@ -123,8 +123,10 @@
                 <configuration>
                     <!-- Several test JVMs side by side: each boots its own Quarkus apps, on a free port (test-port=0)
                          and a data folder of its own (${quarkus.uuid}), so the test classes share nothing. A JVM is
-                         kept for many classes (one boot per profile and fork, not per class). -Dfloor42.test.forks=1
-                         gives the sequential run back. -->
+                         kept for many classes, but Surefire hands them out one at a time, each as its own JUnit
+                         request, and Quarkus stops its application when a request ends: one boot per @QuarkusTest
+                         class (106 in verify, measured 2026-11-13; ADR-0068). -Dfloor42.test.forks=1 gives the
+                         sequential run back: one request, where Quarkus groups the classes by test profile. -->
                     <forkCount>${floor42.test.forks}</forkCount>
                     <reuseForks>true</reuseForks>
                     <!-- A fork that hangs at exit is killed after this delay instead of blocking the build. -->

@@ -17,7 +17,7 @@ const claims = {
  * is, then (the daemon runs with IAM off, so its /api/iam answers are stood in for) shows a token as decoded claims, a
  * simulated badge, and a refusal in red with its code on the trust chain, and never a token string.
  */
-test('the identity screens show decoded claims, the trust chain and a refusal in red', async ({ page }) => {
+test('the identity screens show decoded claims, the trust chain and a refusal in red', { tag: '@iam' }, async ({ page }) => {
   test.setTimeout(120_000)
   await page.setViewportSize({ width: 1600, height: 900 })
   await useLanguage(page, 'en')

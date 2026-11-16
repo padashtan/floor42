@@ -83,9 +83,8 @@ if [ $# -gt 0 ]; then
   fi
   text="$*"
   repository=$(git rev-parse --show-toplevel 2>/dev/null) || { echo 'Run floor42 "..." inside a git repository.' >&2; exit 1; }
-  title="${text:0:60}"
-  body=$(python3 -c 'import json,sys; print(json.dumps({"title": sys.argv[1], "objective": sys.argv[2], "repository": sys.argv[3]}))' \
-    "$title" "$text" "$repository")
+  body=$(python3 -c 'import json,sys; print(json.dumps({"objective": sys.argv[1], "repository": sys.argv[2]}))' \
+    "$text" "$repository")
   # The daemon's answer is data: kept in a variable and parsed, never piped into an interpreter.
   answer=$(curl -fsS -X POST "$BASE/api/missions" -H "Authorization: Bearer $token" -H 'Content-Type: application/json' -d "$body")
   python3 -c 'import json,sys; m=json.loads(sys.argv[1]); print(f"Mission {m[\"id\"]} proposed on {m[\"workspace\"]}.")' "$answer"

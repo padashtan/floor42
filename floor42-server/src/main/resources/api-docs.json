@@ -949,6 +949,16 @@
       "summary": "What a project needs and what the sandbox has",
       "description": "Reads the project's files (`project`, a folder; optional) and the checks command (`check`, optional) for the tools it needs, and compares them with the last measure of the sandbox in the journal. Nothing runs: without a measure (or since the sandbox was turned on) every state is `UNKNOWN`, never `MISSING`. `commands` are apt lines (Debian, Ubuntu) and, for a Node newer than the distribution's, the official tarball into /usr/local: for you to copy into a WSL terminal; Floor42 never runs them."
     },
+    "GET /api/preflight": {
+      "tag": "Missions",
+      "summary": "What stands in the way of a real mission on a folder",
+      "description": "Before the click (ADR-0070): the folder's profile read from its files (`project`, required: an absolute folder; `check`, optional: the checks command typed in the form), a proposed checks command (never run) and one list of `lines`, each a `code`, a `level` (`BLOCK`, `WARN`, `INFO` or `OK`) and the `params` the screen puts in its text. `verdict`: `BLOCKED`, `WARNINGS` or `READY`. A Claude Code that cannot run is a `claude.<reason>` line (`notFound`, `noAnswer`, `unexpectedAnswer`, `tooOld`, `interrupted`, `notChecked`). The two blockers mirror refusals made anyway at the creation of the mission. Nothing is measured (the sandbox tools come from the last measure in the journal) and nothing is recorded. 400 without `project`, 404 for a path that is not a folder."
+    },
+    "GET /api/missions/{id}/proof-dossier": {
+      "tag": "Missions",
+      "summary": "The mission's proof dossier, for the director",
+      "description": "What the mission did, read from its journal, with the source of every fact (`JOURNAL`, `GIT`, `STATE` or `DERIVED`) (ADR-0071): identities, delegation, broker calls, refusals, approvals, costs, checks, deliverables and diff, each list capped with its full `count`. Always masked by the replay export's sanitizer: no parameter turns that off. Read only, journals nothing, never cached. Behind the session token agents never receive; the shell guard refuses a command naming this route. `download` true adds a `Content-Disposition` header to save it as a file. The body is refused (empty 500) if it would hold the session token."
+    },
     "GET /api/sandbox/checklist": {
       "tag": "Sandbox",
       "summary": "What is missing on this machine",
@@ -972,7 +982,7 @@
     "GET /api/missions/{id}/replay-export/preview": {
       "tag": "Missions",
       "summary": "Preview a replay export",
-      "description": "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`). Builds no file; `digest` names this content for the export."
+      "description": "What a shareable replay file of the mission would hold (ADR-0035): its events (real and simulated), agents, tickets, clipped tool outputs and the session costs the journal holds (Claude Code's estimates), then everything masked or left out, by kind (`SECRET`, `PATH`, `EMAIL`, `TOKEN`, `OUTPUT_CLIPPED`, `TEXT_CLIPPED`, `SETTING_VALUE`, `DIRECTOR_FILE`) and where. Secrets are masked with the stream parser's patterns, local absolute paths replaced by placeholders (`<repository>`, `<worktree:agent>`, `<floor42-data>`, `<home>`, `<path>`), e-mail addresses by `<email>` (sample and no-reply ones stay). Builds no file; `digest` names this content for the export."
     },
     "POST /api/missions/{id}/replay-export": {
       "tag": "Missions",

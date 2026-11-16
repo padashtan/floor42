@@ -266,3 +266,32 @@ export interface CatalogueView {
   suggestions: SuggestionItem[]
   checked: string | null
 }
+
+/** The folder's profile read from its files (ADR-0070); nothing in it was run. */
+export interface PreflightProfile {
+  buildTool: string | null
+  files: string[]
+  /** Null when the folder is not a git work tree or HEAD is detached. */
+  branch: string | null
+  /** The table's checks command for the build tool: proposed, never run. */
+  suggestedChecks: string | null
+  /** The checks command of the newest real mission on this folder. */
+  lastChecks: string | null
+}
+
+export type PreflightLevel = 'BLOCK' | 'WARN' | 'INFO' | 'OK'
+
+/** One line of the preflight: `code` names its text on screen, `params` fill it. */
+export interface PreflightLine {
+  code: string
+  level: PreflightLevel
+  params: Record<string, string>
+}
+
+/** GET /api/preflight: blockers first, then warnings, then what is fine. Reading it measures and journals nothing. */
+export interface PreflightView {
+  project: string
+  verdict: 'BLOCKED' | 'WARNINGS' | 'READY'
+  profile: PreflightProfile
+  lines: PreflightLine[]
+}

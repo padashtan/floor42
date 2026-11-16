@@ -1,8 +1,8 @@
 import type { APIRequestContext } from '@playwright/test'
 import { GROUPS, grouped } from '../src/ui/actions'
 import { boardMission } from '../src/ui/recent'
-import { menuButton, menuItem, openMenuPanel } from './bar'
-import { blocker, CATALOGS, expect, expectOnScreen, type Lang, shot, test, useLanguage } from './fixtures'
+import { menuButton, menuProblems, openMenuPanel } from './bar'
+import { CATALOGS, expect, expectOnScreen, type Lang, offScreen, shot, test, useLanguage } from './fixtures'
 
 /**
  * The spend indicator reads the real mission on the board against its cap. Run after the mission journey, that mission
@@ -33,7 +33,7 @@ async function realCappedMissionOnBoard(request: APIRequestContext, daemonUrl: s
  */
 for (const width of [1280, 1600, 1920]) {
   for (const lang of ['en', 'fr'] as Lang[]) {
-    test(`the top bar and its menus are on screen at ${width} px in ${lang}`, async ({ page, daemon }) => {
+    test(`the top bar and its menus are on screen at ${width} px in ${lang}`, { tag: '@ui' }, async ({ page, daemon }) => {
       const t = CATALOGS[lang]
       await realCappedMissionOnBoard(page.request, daemon.url, daemon.gitRepository())
       await page.setViewportSize({ width, height: Math.round((width * 9) / 16) })
@@ -67,7 +67,7 @@ for (const width of [1280, 1600, 1920]) {
       await expectOnScreen(build, 'the version · commit badge')
       const gauges = brand.locator('.gauges .gauge')
       await expect(gauges.first()).toBeVisible()
-      for (let i = 0; i < (await gauges.count()); i++) await expectOnScreen(gauges.nth(i), `quota gauge ${i + 1}`)
+      expect.soft(await offScreen(gauges), 'quota gauges').toEqual([])
       // The fake Claude Code answered the daemon's probe: live agents are offered.
       await expect(brand.locator('.badge.ready')).toHaveText(t['top.liveReady'])
       // The measured numbers (quota gauges, spend) are never cut: whole, on screen, uncovered.
@@ -77,7 +77,7 @@ for (const width of [1280, 1600, 1920]) {
       const measuredCut = await brand
         .locator('.measure, .measure .gauge')
         .evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent?.trim()))
-      expect(measuredCut, 'measured numbers cut on the bar').toEqual([])
+      expect.soft(measuredCut, 'measured numbers cut on the bar').toEqual([])
       // Another badge that gives way is cut with an ellipsis: reported, not failed on (its tooltip keeps the text).
       const cut = await brand
         .locator('.shrink')
@@ -86,21 +86,19 @@ for (const width of [1280, 1600, 1920]) {
 
       // The direct buttons, the menus and the palette's button: all in view and clickable.
       const nav = brand.locator('.bar-nav > button')
-      for (let i = 0; i < (await nav.count()); i++) {
-        await expectOnScreen(nav.nth(i), `bar button "${(await nav.nth(i).innerText()).trim()}"`)
-      }
-      expect(await nav.count()).toBe(grouped().direct.length + GROUPS.length + 1)
+      expect.soft(await offScreen(nav), 'bar buttons').toEqual([])
+      expect.soft(await nav.count()).toBe(grouped().direct.length + GROUPS.length + 1)
       await shot(page, `1-topbar-${width}-${lang}`)
 
       // The crew's Hire and core cards hold their labels; the help strip does not run under the selection panel.
       const overflowing = await page
         .locator('.crew .card.hire')
         .evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => e.textContent?.trim()))
-      expect(overflowing, 'crew cards whose label runs out').toEqual([])
+      expect.soft(overflowing, 'crew cards whose label runs out').toEqual([])
       const selection = (await page.locator('.panel.selection').boundingBox())!
       const help = (await page.locator('.panel.help').boundingBox())!
       const overlap = selection.x + selection.width > help.x && selection.y + selection.height > help.y
-      expect(overlap, `the selection panel ${JSON.stringify(selection)} covers the help ${JSON.stringify(help)}`).toBe(
+      expect.soft(overlap, `the selection panel ${JSON.stringify(selection)} covers the help ${JSON.stringify(help)}`).toBe(
         false,
       )
 
@@ -108,15 +106,8 @@ for (const width of [1280, 1600, 1920]) {
       for (const m of grouped().menus) {
         await menuButton(page, m.group).click()
         await expect(openMenuPanel(page)).toBeVisible()
-        const covered: string[] = []
-        for (const a of m.items) {
-          const item = menuItem(page, t, a)
-          await item.scrollIntoViewIfNeeded()
-          await expect(item, `${m.group} › ${a.id}`).toBeVisible()
-          const by = await blocker(item)
-          if (by !== null) covered.push(`${a.id} (${by})`)
-        }
-        expect(covered, `entries of the ${m.group} menu that cannot be clicked`).toEqual([])
+        const covered = await menuProblems(page, t, m.items)
+        expect.soft(covered, `entries of the ${m.group} menu that cannot be clicked`).toEqual([])
         await shot(page, `1-menu-${m.group}-${width}-${lang}`)
         await page.keyboard.press('Escape')
         await expect(openMenuPanel(page)).toHaveCount(0)

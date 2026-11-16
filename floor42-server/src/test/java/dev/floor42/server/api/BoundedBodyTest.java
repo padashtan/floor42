@@ -3,7 +3,7 @@ package dev.floor42.server.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.RefusedException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

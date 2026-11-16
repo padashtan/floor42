@@ -1,0 +1,148 @@
+/* ---- Pets: the small speech bubbles over the cat and the dog (a meow, a bark, a sleeper's z) ------------------- */
+.pet-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-style: italic;
+  color: #1b2a30;
+  background: #f4efe2;
+  border-radius: 9px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pet-bubble {
+    transition: none;
+  }
+}
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--panel);
+  border: 1px solid var(--cyan);
+  padding: 2px 6px;
+}
+.confirm-scrim.login-scrim {
+  z-index: 1;
+}
+.login {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 620px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  box-sizing: border-box;
+  overflow: auto;
+  border-color: var(--amber);
+  /* Nothing works before the sign-in: it stands above every panel. */
+  z-index: 45;
+}
+.error {
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  max-height: 30vh;
+  overflow: auto;
+  box-sizing: border-box;
+  border-color: var(--red);
+  display: flex;
+  gap: 8px;
+  z-index: 45;
+}
+
+/* permission table */
+.permissions {
+  border-collapse: collapse;
+  width: 100%;
+}
+.permissions th {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  padding: 2px 4px;
+}
+.permissions th:first-child,
+.permissions td.tool {
+  text-align: left;
+}
+.permissions td {
+  padding: 3px 4px 0;
+}
+.permissions td.choice {
+  text-align: center;
+}
+.permissions .category {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: 6px;
+}
+.permissions tr.details td {
+  padding: 0 4px 4px;
+  border-bottom: 1px solid #12323c;
+  font-size: 12px;
+  color: var(--muted);
+}
+.permissions .remembered {
+  color: var(--text);
+}
+button.radio {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 2px solid var(--line);
+  background: #0d2630;
+}
+button.radio.on.allow {
+  background: var(--green);
+  border-color: var(--green);
+}
+button.radio.on.ask,
+button.radio.on.ask_always {
+  background: var(--amber);
+  border-color: var(--amber);
+}
+button.radio.on.deny {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* mission control */
+.new-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.new-mission .field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+.new-mission .notice {
+  margin-top: 6px;
+}
+.new-mission .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.new-mission input,
+.new-mission textarea {
+  font: inherit;
+  color: var(--text);
+  background: #0d2630;
+  border: 1px solid var(--line);
+  padding: 3px 6px;
+}
+.plan {
+  border-left: 3px solid var(--amber);
+  padding: 4px 8px;
+  margin: 4px 0;
+}

@@ -57,7 +57,7 @@ const naturalWidth = (img: Locator) => img.evaluate((e) => (e as HTMLImageElemen
  * a PDF in the browser's own viewer, a file of no known kind as a "no preview, download" card, and an SVG whose script
  * and onload never run. A file named .png holding HTML is refused by the daemon, never sent as HTML nor as an image.
  */
-test("the viewer previews an image, a PDF and an SVG, and offers Download for the rest", async ({ page, daemon }) => {
+test("the viewer previews an image, a PDF and an SVG, and offers Download for the rest", { tag: '@delivery' }, async ({ page, daemon }) => {
   test.setTimeout(120_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   const repo = daemon.gitRepository()

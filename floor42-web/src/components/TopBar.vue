@@ -10,6 +10,7 @@ import BarIcon from './BarIcon.vue'
 import BrandBadges from './BrandBadges.vue'
 import CrewStrip from './CrewStrip.vue'
 import SpendIndicator from './SpendIndicator.vue'
+import IamEndings from './IamEndings.vue'
 import SessionNote from './SessionNote.vue'
 import WaitingBanner from './WaitingBanner.vue'
 import { grouped, type Action, type Group } from '../ui/actions'
@@ -152,6 +153,7 @@ const pendingTitle = computed(() =>
     <!-- A status like the quotas: what the real mission on the board has spent; a click opens the costs panel. -->
     <SpendIndicator class="measure" @open="emit('action', 'costs')" />
     <SessionNote />
+    <IamEndings />
     <!-- Every button comes from ui/actions.ts: a new panel is one line there, none here. -->
     <nav class="bar-nav" :aria-label="t('palette.nav')">
       <button
@@ -163,7 +165,7 @@ const pendingTitle = computed(() =>
         :aria-label="t(a.label)"
         @click="emit('action', a.id)"
       >
-        <!-- Narrower than ui/topBarLayout COMPACT_UPTO, a direct button shows its icon alone (style.css). -->
+        <!-- Narrower than ui/topBarLayout COMPACT_UPTO, a direct button shows its icon alone (styles/*.css). -->
         <BarIcon :name="a.id" />
         <span class="direct-label" :class="{ keyed: !!a.key }">{{ t(a.label) }}</span>
         <span v-if="badges[a.id]" class="count" :class="{ 'stuck-badge': a.id === 'progress' }">{{ badges[a.id] }}</span>

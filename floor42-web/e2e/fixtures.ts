@@ -11,6 +11,13 @@ import type { Key } from '../src/i18n'
 import { type Daemon, startDaemon } from './daemon'
 
 export type Lang = 'en' | 'fr'
+
+/**
+ * The functional domains a test is tagged with, as the API client's types.*.ts split them (delivery, meetings, office,
+ * plugins, projects, reports, settings, tickets, workflows), plus iam (sign-in, identity, security), scene (the 3D
+ * office) and ui (the frame: bar, panels, layout, tutorial). `npm run e2e:domain -- @iam` runs one.
+ */
+export const DOMAINS = ['delivery', 'iam', 'meetings', 'office', 'plugins', 'projects', 'reports', 'scene', 'settings', 'tickets', 'ui', 'workflows'] as const
 export const CATALOGS = {
   en: { ...en, ...identityEn, ...unsafeEn },
   fr: { ...fr, ...identityFr, ...unsafeFr },
@@ -57,20 +64,53 @@ export async function expectOnScreen(locator: Locator, what: string): Promise<vo
  * hides it).
  */
 export async function blocker(locator: Locator): Promise<string | null> {
-  return locator.evaluate((el) => {
-    const r = el.getBoundingClientRect()
-    const x = r.left + r.width / 2
-    const y = r.top + r.height / 2
-    if (x < 0 || y < 0 || x > innerWidth || y > innerHeight) return 'clipped (outside the window)'
-    const top = document.elementFromPoint(x, y)
-    if (top === el || (top && el.contains(top))) return null
-    if (!top) return 'nothing'
-    const panel = top.closest('.panel')
-    const name = (e: Element) => `${e.tagName.toLowerCase()}.${[...e.classList].join('.')}`
-    // Hidden by its own scrolling strip: the point falls on an ancestor of the element.
-    if (top.contains(el)) return `clipped by ${name(top)}`
-    return panel ? name(panel) : name(top)
+  await installBlocker(locator.page())
+  return locator.evaluate((el) => (window as unknown as PageBlocker).__blockerOf(el))
+}
+
+type PageBlocker = { __blockerOf: (el: Element) => string | null }
+
+/**
+ * Puts `blocker`'s in-page test on the window once, so a batch (`offScreen`, `menuProblems`) can run it on many
+ * elements in one round trip: each round trip costs a frame of the busy scene. Re-installed after a reload.
+ */
+export async function installBlocker(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    const w = window as unknown as PageBlocker
+    w.__blockerOf ??= (el) => {
+      const r = el.getBoundingClientRect()
+      const x = r.left + r.width / 2
+      const y = r.top + r.height / 2
+      if (x < 0 || y < 0 || x > innerWidth || y > innerHeight) return 'clipped (outside the window)'
+      const top = document.elementFromPoint(x, y)
+      if (top === el || (top && el.contains(top))) return null
+      if (!top) return 'nothing'
+      const panel = top.closest('.panel')
+      const name = (e: Element) => `${e.tagName.toLowerCase()}.${[...e.classList].join('.')}`
+      // Hidden by its own scrolling strip: the point falls on an ancestor of the element.
+      if (top.contains(el)) return `clipped by ${name(top)}`
+      return panel ? name(panel) : name(top)
+    }
   })
+}
+
+/**
+ * `expectOnScreen` for every element the locator matches, in one round trip instead of three per element: the names
+ * of the ones that are hidden, outside the viewport or covered.
+ */
+export async function offScreen(locator: Locator): Promise<string[]> {
+  await installBlocker(locator.page())
+  return locator.evaluateAll((els) =>
+    els.flatMap((el) => {
+      const r = el.getBoundingClientRect()
+      const name = (el.textContent ?? '').trim().slice(0, 40)
+      if (r.width === 0 || r.height === 0) return [`${name} is not visible`]
+      const inside = r.left >= 0 && r.top >= 0 && r.right <= innerWidth + 0.5 && r.bottom <= innerHeight + 0.5
+      if (!inside) return [`${name} outside the window`]
+      const by = (window as unknown as PageBlocker).__blockerOf(el)
+      return by === null ? [] : [`${name} is covered by ${by}`]
+    }),
+  )
 }
 
 interface WorkerFixtures {
@@ -84,6 +124,8 @@ interface TestFixtures {
   consoleErrors: string[]
   /** Cancels what a journey left under way, once it ended. */
   tidy: void
+  /** Fails a test that carries no domain tag, so a new test cannot forget it. */
+  domainTag: void
 }
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
@@ -146,6 +188,18 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     { auto: true },
   ],
 
+  domainTag: [
+    async ({}, use, testInfo) => {
+      const known = DOMAINS.map((d) => `@${d}`)
+      expect(
+        testInfo.tags.filter((t) => known.includes(t)),
+        `tag the test with a domain: { tag: '@ui' }, one of ${known.join(' ')}`,
+      ).not.toHaveLength(0)
+      await use()
+    },
+    { auto: true },
+  ],
+
   consoleErrors: [
     async ({ page }, use) => {
       const errors: string[] = []
@@ -155,6 +209,9 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       page.on('pageerror', (e) => errors.push(`page: ${e.message}`))
       // The page's Content-Security-Policy (ADR-0044): every refusal fails the journey, named by its directive.
       await page.exposeFunction('__floor42CspViolation', (v: string) => errors.push(`CSP: ${v}`))
+      // "Remote today" draws about one agent in four per calendar day: off, or a journey fails on the days its agent is
+      // drawn (lively and meetingVoices did on 2026-11-13). remote.e2e.ts turns it back on with a forced draw.
+      await page.addInitScript(() => window.localStorage?.setItem('floor42.remoteDays', '0'))
       await page.addInitScript(() => {
         document.addEventListener('securitypolicyviolation', (e) => {
           const report = (window as unknown as { __floor42CspViolation: (v: string) => void }).__floor42CspViolation

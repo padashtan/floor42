@@ -9,7 +9,7 @@ const t = CATALOGS.en
  * A new folder from the mission form's folder browser: the director browses a folder, names a new one, and the browser
  * opens it, ready to be chosen. A name Floor42 refuses says why, in the director's language, and creates nothing.
  */
-test('the folder browser creates a folder and opens it', async ({ page, consoleErrors }) => {
+test('the folder browser creates a folder and opens it', { tag: '@projects' }, async ({ page, consoleErrors }) => {
   const parent = realpathSync(mkdtempSync(join(tmpdir(), 'floor42-e2e-folders-')))
   try {
     await page.setViewportSize({ width: 1600, height: 900 })

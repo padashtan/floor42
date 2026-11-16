@@ -14,7 +14,7 @@ interface Mission {
  * Journey 12: a lively office. Once its session has ended, the developer of a mission still in progress does not leave:
  * its status is available (nothing is being done), yet the scene keeps it at its desk, idle, as the canvas data says.
  */
-test('an agent stays at its desk after its session ends, while the mission is in progress', async ({ page, daemon }) => {
+test('an agent stays at its desk after its session ends, while the mission is in progress', { tag: '@scene' }, async ({ page, daemon }) => {
   test.setTimeout(240_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })
@@ -40,7 +40,7 @@ test('an agent stays at its desk after its session ends, while the mission is in
     }
     expect(m.tickets.length).toBeGreaterThan(0)
     expect(m.tickets.every((x) => x.status === 'DONE') && m.sessions.every((s) => !s.open)).toBe(true)
-  }).toPass({ timeout: 120_000, intervals: [1_000] })
+  }).toPass({ timeout: 120_000, intervals: [250] })
   const worker = (await mission()).tickets[0].assignee!
   expect((await mission()).status).toBe('IN_PROGRESS')
   const agents: { id: string; status: string }[] = await (await page.request.get('/api/agents')).json()

@@ -3,3 +3,12 @@
 *.png binary
 *.jpg binary
 *.gif binary
+
+# Registry files edited by every branch (docs/adr/0003 study, 2026-11-12: 79 merges on CHANGELOG.md, 51 on openapi.json).
+# The changelog only gains lines: keep both sides.
+CHANGELOG.md merge=union
+# Generated files: keep our side at a merge, then regenerate them (`./mvnw verify -Dfloor42.openapi.write=true`,
+# `-Dfloor42.golden.record=true`). The `ours` driver is declared once per clone by `make setup-git`.
+floor42-web/src/api/openapi.json merge=ours
+floor42-server/src/test/resources/golden/*.txt merge=ours
+floor42-domain/src/test/resources/golden/** merge=ours

@@ -3,8 +3,8 @@ package dev.floor42.server.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dev.floor42.server.app.Delivered.Blob;
-import dev.floor42.server.app.RefusedException;
+import dev.floor42.server.app.core.RefusedException;
+import dev.floor42.server.app.delivery.Delivered.Blob;
 import jakarta.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /** What the viewer is sent, decided by the bytes and not by the name alone (ADR-0051). */
-class FileResponsesTest {
+public class FileResponsesTest {
 
-    static final byte[] PNG = {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n', 0, 0, 0, 0};
+    public static final byte[] PNG = {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n', 0, 0, 0, 0};
     static final byte[] JPEG = {(byte) 0xff, (byte) 0xd8, (byte) 0xff, (byte) 0xe0, 0, 0x10, 'J', 'F', 'I', 'F'};
 
     @TempDir

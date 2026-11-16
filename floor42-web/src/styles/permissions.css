@@ -1,0 +1,167 @@
+/* ---- Default permissions for new missions (D3) ---------------------------------------------------------------- */
+.settings-form table.defaults {
+  border-collapse: collapse;
+  width: 100%;
+}
+.settings-form table.defaults td {
+  padding: 3px 8px 3px 0;
+  border-top: 1px solid #1d4a57;
+}
+.settings-form table.defaults .facts {
+  color: var(--muted);
+  font-size: 12px;
+}
+.settings-form button.link {
+  background: none;
+  border: none;
+  color: var(--cyan);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* The online demo's ribbon (ADR-0031): always visible, never in the way of a click. */
+.demo-ribbon {
+  position: fixed;
+  left: 50%;
+  bottom: 64px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  max-width: min(760px, calc(100vw - 32px));
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(20, 12, 36, 0.88);
+  color: #ffd319;
+  font-size: 13px;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* Sandbox readiness (ADR-0033) */
+.sandbox-panel {
+  top: 90px;
+  right: 24px;
+  width: min(620px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.sandbox-readiness {
+  margin: 6px 0;
+}
+.sandbox-tools {
+  border-collapse: collapse;
+  width: 100%;
+}
+.sandbox-tools th,
+.sandbox-tools td {
+  text-align: left;
+  vertical-align: top;
+  padding: 2px 8px 2px 0;
+}
+.sandbox-tools th {
+  color: var(--muted);
+  font-weight: normal;
+}
+.sandbox-tools .state-present {
+  color: var(--green);
+}
+.sandbox-tools .state-older {
+  color: var(--amber);
+}
+.sandbox-tools .state-missing {
+  color: var(--red, #e66);
+}
+.sandbox-tools .state-unknown {
+  color: var(--muted);
+}
+.sandbox-tools .state-optional {
+  color: var(--amber);
+}
+.machine-checklist {
+  margin-bottom: 8px;
+}
+.checklist-command {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+  margin-bottom: 2px;
+}
+.sandbox-commands {
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+  margin: 0;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Skills and agents (W3): installed, reaching the sessions, to add */
+.skills-panel {
+  top: 90px;
+  right: 24px;
+  width: min(760px, calc(100vw - 48px));
+  max-height: calc(100vh - 170px);
+  z-index: 24;
+}
+.skills-filter {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+.skills-filter input {
+  flex: 1;
+}
+.skills-group {
+  margin-top: 8px;
+  color: var(--cyan);
+}
+.skills-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.skills-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 8px 3px 0;
+  border-top: 1px solid rgba(111, 141, 150, 0.2);
+}
+.skills-table td:first-child {
+  width: 26%;
+  word-break: break-word;
+}
+.skills-table td:last-child {
+  width: 24%;
+}
+.skills-flags {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+.skills-session {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.skills-panel button.prefill {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85em;
+}
+.skills-session button.prefill {
+  display: inline;
+  margin: 0 0 0 4px;
+}
+.skills-suggestion {
+  margin: 8px 0;
+  padding: 6px 0;
+  border-top: 1px solid rgba(111, 141, 150, 0.2);
+}
+.reach-available {
+  color: var(--green);
+}
+.reach-not_available {
+  color: var(--amber);
+}
+.reach-unknown {
+  color: var(--muted);
+}

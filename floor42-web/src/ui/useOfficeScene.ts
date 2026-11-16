@@ -7,6 +7,7 @@ import { boardColumns } from '../scene/mapping'
 import { participantsOf } from '../scene/ceremony'
 import { residentsOf } from '../scene/presence'
 import { OfficeScene, type SceneCallbacks } from '../scene/OfficeScene'
+import { dayNight } from '../state/dayNight'
 import { library, loadLibrary, spineColors } from '../state/library'
 import { office, onLiveEvent } from '../state/office'
 import { refreshDay, remoteIds } from '../state/remote'
@@ -93,6 +94,7 @@ export function useOfficeScene(
     built.setLanguage(lang.value)
     built.setPetWords(petWords())
     built.setPetSound(petSound.value)
+    built.setDayNight(dayNight.mode)
     if (night.value !== undefined) built.setNight(!!night.value)
     built.setAgents(agentList())
     built.setBoard(boardColumns(office.mission?.tickets ?? []))
@@ -149,6 +151,7 @@ export function useOfficeScene(
     // A new mission can bring a project, and a pin or a forgotten folder moves it: read the list again.
     watch(() => [office.needsLogin, office.missions.length], () => !office.needsLogin && void loadLibrary(), { immediate: true })
     watch(night, (n) => scene.value?.setNight(!!n), { immediate: true })
+    watch(() => dayNight.mode, (m) => scene.value?.setDayNight(m))
     watch(() => office.needsLogin, (n) => !n && void readIdentity())
     watch(
       () => waits.stuckAgents.join(','),

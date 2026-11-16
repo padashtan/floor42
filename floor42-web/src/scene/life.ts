@@ -47,7 +47,7 @@ export function toolRunning(status: AgentStatus): boolean {
 
 /**
  * The room's mood from the director's local clock, like the city's windows: `warmth` 0 in the day, 1 in the evening;
- * `level` scales the ambient light (1 in the day). Scenery only; the quota's night (setNight) overrides it.
+ * `level` scales the ambient light (1 in the day, about 0.4 in the dark of the night). Scenery only; the quota's night (setNight) overrides it.
  */
 export function daylight(hour: number): { warmth: number; level: number } {
   const h = ((hour % 24) + 24) % 24
@@ -58,7 +58,9 @@ export function daylight(hour: number): { warmth: number; level: number } {
   else if (h < 17) warmth = 0
   else if (h < 20) warmth = ramp(17, 20)
   else warmth = 1 - 0.2 * ramp(20, 24)
-  return { warmth, level: 1 - 0.18 * warmth }
+  // Truly dark from 22:00 to 05:00, easing in over the evening and out over the early morning.
+  const dark = h >= 22 || h < 5 ? 1 : h >= 20 ? ramp(20, 22) : h >= 5 && h < 7 ? 1 - ramp(5, 7) : 0
+  return { warmth, level: 1 - 0.18 * warmth - 0.45 * dark }
 }
 
 // ---- easing ----------------------------------------------------------------------------------------------------

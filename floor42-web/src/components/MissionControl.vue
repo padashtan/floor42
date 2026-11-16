@@ -46,6 +46,8 @@ const checks = toRef(drafts.mission, 'checks')
 const kind = ref<'existing' | 'new'>('existing')
 /** Set when the chosen folder has no git (or no commit yet): creating the mission initialises it first. */
 const initPreview = ref<InitPreview | null>(null)
+/** The preflight's reason while a blocker stands (Claude Code missing, the sandbox required and not working), else ''. */
+const preflightBlocked = ref('')
 /** Creating the mission would initialise the folder; a folder meant as an existing project must not be made one by surprise. */
 const creating = computed(() => !!initPreview.value && !initPreview.value.refused)
 const mismatch = computed(() => creating.value && kind.value === 'existing')
@@ -215,6 +217,8 @@ async function run(action: () => Promise<boolean>, reset = false) {
       v-model:repository="repository"
       v-model:preview="initPreview"
       v-model:kind="kind"
+      v-model:checks="checks"
+      v-model:blocked="preflightBlocked"
       :objective="objective"
       :optional="panel === 'idea'"
     />
@@ -237,11 +241,12 @@ async function run(action: () => Promise<boolean>, reset = false) {
       <button
         class="action"
         type="submit"
-        :disabled="busy || !!initPreview?.refused || mismatch || (withCommittee && seated.length < (panel === 'idea' ? 2 : 1))"
+        :disabled="busy || !!initPreview?.refused || mismatch || !!preflightBlocked || (withCommittee && seated.length < (panel === 'idea' ? 2 : 1))"
         :title="
           why(
             [!!initPreview?.refused, t('why.initRefused')],
             [mismatch, t('mission.notRepository')],
+            [!!preflightBlocked, preflightBlocked],
             [withCommittee && seated.length < (panel === 'idea' ? 2 : 1), t('why.seats', { count: panel === 'idea' ? 2 : 1 })],
           )
         "

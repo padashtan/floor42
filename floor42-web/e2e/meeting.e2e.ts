@@ -15,7 +15,7 @@ interface Mission {
  * files until the hook refuses a call for a meeting). The director calls the developer at work to the table from the
  * Work menu, sees it seated, tells it something, closes the meeting, and the developer goes back to work.
  */
-test('the director calls a developer at work to the table, then sends it back', async ({ page, daemon }) => {
+test('the director calls a developer at work to the table, then sends it back', { tag: '@meetings' }, async ({ page, daemon }) => {
   test.setTimeout(180_000)
   const headers = { 'X-Floor42-Request': '1', Origin: daemon.url }
   await page.setViewportSize({ width: 1600, height: 900 })
