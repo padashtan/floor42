@@ -44,6 +44,21 @@ test(
           },
         ],
       }
+      // A seeded IAM session of v1.2: its claims are recorded, `sub` already cut to 8 characters by the server.
+      body.iam = true
+      body.identities = {
+        count: 1,
+        items: [
+          {
+            agent: 'ada', client: 'floor42-agent-ada', onBehalfOf: 'director', tokenAudience: 'floor42-api', session: 'L1', ticket: 'T-1',
+            issuer: 'http://kc/realms/floor42', expiresAt: '2026-11-13T18:00:00Z', jti: 'jti-1',
+            subject: '7f3c9a10…', authorizedParty: 'floor42-agent-ada', actor: 'floor42-agent-ada', scopes: ['openid', 'profile'],
+            derived: ['client', 'onBehalfOf', 'tokenAudience'],
+            ref: { source: 'JOURNAL', origin: 'REAL', events: [{ seq: 1, eventId: 'e1', type: 'AgentTokenIssued' }] },
+          },
+        ],
+      }
+      body.limits = (body.limits as string[]).filter((l) => l !== 'identity.claimsNotJournaled')
       await route.fulfill({ response, json: body })
     })
     await page.reload()
@@ -53,7 +68,10 @@ test(
     const panel = page.locator('.dossier-panel')
     await expect(panel).toBeVisible()
     await expect(panel.getByText(t['dossier.statement']).first()).toBeVisible()
-    await expect.soft(panel.getByText(t['dossier.iamOff'])).toBeVisible()
+    await expect.soft(panel.getByText(`${t['dossier.claim.sub']}: 7f3c9a10…`)).toBeVisible()
+    await expect.soft(panel.getByText(`${t['dossier.claim.scopes']}: openid profile`)).toBeVisible()
+    await expect.soft(panel.getByText(t['dossier.claim.recorded']).first()).toBeVisible()
+    await shot(page, 'dossier-claims')
     await panel.locator('[data-section-tab="refusals"]').click()
     await expect.soft(panel.locator('.dossier-row')).toHaveCount(1)
     await expect.soft(panel.locator('.dossier-row').first()).toContainText('#3 ActionDenied')

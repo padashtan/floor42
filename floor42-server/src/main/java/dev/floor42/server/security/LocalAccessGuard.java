@@ -63,8 +63,13 @@ public class LocalAccessGuard {
             Pattern.compile("/api/missions/[^/]+/(approve|reject|nudge|tickets/approve|workshop/directive)"),
             Pattern.compile("/api/questions/[^/]+/answer"));
 
+    /** The director's MCP endpoint (ADR-0073): the one POST a {@code read} token may send. */
+    static final String DIRECTOR_MCP = "/api/mcp";
+
     /** Where the guard leaves the caller's scope for the routes that refine it ({@link #scopeOf}). */
     private static final String SCOPE_KEY = "floor42.scope";
+
+    private static final String VIA_KEY = "floor42.via";
 
     /** Where the guard leaves the caller's session for the routes that act on it ({@link #sessionOf}). */
     private static final String SESSION_KEY = "floor42.session";
@@ -80,6 +85,9 @@ public class LocalAccessGuard {
 
     @Inject
     AgentCredentials agents;
+
+    @Inject
+    dev.floor42.server.iam.IamSettings iam;
 
     /** Quarkus's mapper: the error body is written by Jackson, like every other one. */
     @Inject
@@ -132,7 +140,7 @@ public class LocalAccessGuard {
             deny(rc, d.status(), d.code(), d.message());
             return;
         }
-        String path = rc.normalizedPath();
+        String path = ScriptTokensInIam.withoutTrailingSlash(rc.normalizedPath());
         boolean socket = path.startsWith("/ws/");
         boolean api = path.equals("/api") || path.startsWith("/api/") || socket || quarkusPage(path);
         if (!api || OPEN_API.contains(path)) {
@@ -146,6 +154,7 @@ public class LocalAccessGuard {
             return;
         }
         rc.put(SCOPE_KEY, caller.scope());
+        rc.put(VIA_KEY, caller.via());
         if (caller.session() != null) rc.put(SESSION_KEY, caller.session());
         rc.next();
     }
@@ -197,11 +206,26 @@ public class LocalAccessGuard {
                 return new Denial(403, "FORBIDDEN", "Missing " + REQUEST_HEADER + ": 1 (sent by Floor42's own page)");
             }
         }
-        if (!allowedByScope(caller.scope(), path, changes || path.startsWith("/ws/terminal"))) {
+        if (caller.session() != null
+                && caller.session().kind() == SessionRegistry.Kind.SCRIPT
+                && iam.enabled()
+                && !ScriptTokensInIam.mayCall(rc.request().method(), path)) {
+            return new Denial(403, ScriptTokensInIam.REFUSED, ScriptTokensInIam.MESSAGE);
+        }
+        // The director's MCP endpoint takes a POST of any scope: it checks the credential and the scope per tool
+        // itself.
+        boolean directorMcp = path.equals(DIRECTOR_MCP) && rc.request().method() == HttpMethod.POST;
+        if (!directorMcp && !allowedByScope(caller.scope(), path, changes || path.startsWith("/ws/terminal"))) {
             return new Denial(
                     403, "SCOPE", "This token's scope (" + caller.scope().wire() + ") does not allow this request");
         }
         return null;
+    }
+
+    /** How the director's credential came on this request: the browser's cookie, or a token. Unknown reads as a token. */
+    public static Via viaOf(RoutingContext rc) {
+        Object via = rc == null ? null : rc.get(VIA_KEY);
+        return via instanceof Via v ? v : Via.BEARER;
     }
 
     /**
@@ -266,7 +290,7 @@ public class LocalAccessGuard {
                     .map(s -> new Caller(Via.BEARER, s.scope(), s))
                     .orElse(null);
         }
-        String cookie = cookieOf(rc.request().getHeader(HttpHeaders.COOKIE));
+        String cookie = RequestCredentials.cookieOf(rc.request().getHeader(HttpHeaders.COOKIE));
         if (cookie == null) return null;
         return sessions.authenticate(cookie)
                 .filter(s -> s.kind() == SessionRegistry.Kind.BROWSER)
@@ -342,33 +366,7 @@ public class LocalAccessGuard {
     }
 
     static String bearer(RoutingContext rc) {
-        return bearerOf(rc.request().getHeader(HttpHeaders.AUTHORIZATION));
-    }
-
-    /** The bearer secret of an Authorization header; null when there is none. */
-    public static String bearerOf(String header) {
-        return header != null && header.startsWith("Bearer ") ? header.substring(7) : null;
-    }
-
-    /** The session cookie of a Cookie header; null when there is none. */
-    public static String cookieOf(String header) {
-        if (header == null) return null;
-        for (io.netty.handler.codec.http.cookie.Cookie c :
-                io.netty.handler.codec.http.cookie.ServerCookieDecoder.STRICT.decode(header)) {
-            if (c.name().equals(COOKIE)) return c.value();
-        }
-        return null;
-    }
-
-    /** What a request presents, read from its raw headers: the one reading, for the guard and for the sockets. */
-    public record Credential(boolean bearer, String secret) {}
-
-    /** The credential of a request: a bearer wins over a cookie, as in the guard; null when it carries neither. */
-    public static Credential credentialOf(String authorization, String cookieHeader) {
-        String bearer = bearerOf(authorization);
-        if (bearer != null) return new Credential(true, bearer);
-        String cookie = cookieOf(cookieHeader);
-        return cookie == null ? null : new Credential(false, cookie);
+        return RequestCredentials.bearerOf(rc.request().getHeader(HttpHeaders.AUTHORIZATION));
     }
 
     /** The API's documented error shape, {@code {code, message}}, written by Jackson. */

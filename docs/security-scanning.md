@@ -192,6 +192,7 @@ the tree gave 0.
 - `python_lang_*` in `tools/` (42 of the 87): developer scripts run by hand, never shipped. In
   `sandbox-init.py` and `sandbox-mounts.py` (4): paths and the command come from the daemon, not from a request.
 - `*_observable_timing` (10): comparisons of hashes of public rows, sets, ids and UI tokens, never of a secret by a remote caller.
+- 2026-11-16 (v1.2): `java_lang_hardcoded_secret` on the `CHECKPOINT_KEY` failure code, `java_lang_sqli` on `scalar`/`scalarText` in `JournalChain` and `JournalIntegrity` (constant SQL, only a long sequence number concatenated), `java_lang_observable_timing` on three hash comparisons (`McpServers` tool hash, journal row hashes): all in `bearer.ignore`. gitleaks `curl-auth-header` on `OversightComposerTest` (fake key in the masking fixture): allowlisted in `.gitleaks.toml`.
 - `javascript_lang_insufficiently_random_values` (15): scene animation and a toast key.
 - `javascript_lang_dangerous_insert_html`, `manual_html_sanitization`, `logger_leak` (3): `createElement` plus
   `textContent`; `escapeHtml` first; a page count printed by a developer script.

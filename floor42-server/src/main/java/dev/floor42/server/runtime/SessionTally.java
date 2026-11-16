@@ -168,6 +168,11 @@ final class SessionTally implements Governor {
     }
 
     @Override
+    public boolean authorized(String toolUseId, String tool) {
+        return inner.authorized(toolUseId, tool);
+    }
+
+    @Override
     public String explain(String toolUseId) {
         String own = refused.get(toolUseId);
         return own != null ? own : inner.explain(toolUseId);

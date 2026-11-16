@@ -5,6 +5,7 @@ import type {
   UsageView,
   CostsOverview,
   MissionCosts,
+  OversightReport,
   ProofDossier,
 } from '../types'
 import { request } from '../request'
@@ -21,4 +22,7 @@ export const reportsApi = {
   // proof-dossier (ADR-0071): always masked by the daemon
   proofDossier: (mission: string) =>
     request<ProofDossier>('GET', `/api/missions/${encodeURIComponent(mission)}/proof-dossier`),
+  // oversight-report (ADR-0075): always masked by the daemon
+  oversightReport: (mission: string) =>
+    request<OversightReport>('GET', `/api/missions/${encodeURIComponent(mission)}/oversight-report`),
 }

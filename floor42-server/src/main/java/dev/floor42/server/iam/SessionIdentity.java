@@ -27,14 +27,24 @@ public class SessionIdentity {
     public static final TicketId NO_TICKET = new TicketId("T-0");
 
     /** The token and what the journal may know of it; {@code toString} never shows the token. */
-    public record Minted(String token, String jti, String issuer, Instant expiresAt, Instant since) {
+    public record Minted(
+            String token,
+            String jti,
+            String issuer,
+            Instant expiresAt,
+            Instant since,
+            RuntimeEvent.TokenClaims claims) {
         /** {@code since}: when the checks that let this session start began; a revoke after it must bite. */
         public Minted(String token, String jti, String issuer, Instant expiresAt) {
             this(token, jti, issuer, expiresAt, Instant.now());
         }
 
+        public Minted(String token, String jti, String issuer, Instant expiresAt, Instant since) {
+            this(token, jti, issuer, expiresAt, since, RuntimeEvent.TokenClaims.NONE);
+        }
+
         public RuntimeEvent.TokenIssued event() {
-            return new RuntimeEvent.TokenIssued(issuer, expiresAt, jti);
+            return new RuntimeEvent.TokenIssued(issuer, expiresAt, jti, claims);
         }
 
         @Override
@@ -182,7 +192,23 @@ public class SessionIdentity {
                 || !ok.claims().equals(claims)
                 || !AgentTokenVerifier.onlyOurAudience(ok.payload().path("aud")))
             throw new IdentityUnavailableException("Floor42 would refuse the token Keycloak gave");
-        return new Minted(jwt, ok.jti(), ok.issuer(), ok.expiresAt(), since);
+        return new Minted(jwt, ok.jti(), ok.issuer(), ok.expiresAt(), since, claimsOf(ok));
+    }
+
+    /** What the journal records of the verified token (ADR-0074); {@code act} and {@code azp} as the verifier read them. */
+    static RuntimeEvent.TokenClaims claimsOf(Ok ok) {
+        var scope = java.util.Arrays.stream(
+                        ok.payload().path("scope").asText("").split("\\s+"))
+                .filter(s -> !s.isEmpty())
+                .sorted()
+                .distinct()
+                .toList();
+        String sub = ok.payload().path("sub").asText("");
+        return new RuntimeEvent.TokenClaims(
+                sub.isEmpty() ? null : sub,
+                ok.azp().isEmpty() ? null : ok.azp(),
+                ok.actClientId().isEmpty() ? null : ok.actClientId(),
+                scope.isEmpty() ? null : scope);
     }
 
     /** A simulated session's token (never accepted by a hook); empty when IAM mode is off. */
@@ -195,6 +221,12 @@ public class SessionIdentity {
                 jwt,
                 payload.path("jti").asText(),
                 SimulatedIssuer.ISSUER,
-                Instant.ofEpochSecond(payload.path("exp").asLong())));
+                Instant.ofEpochSecond(payload.path("exp").asLong()),
+                Instant.now(),
+                new RuntimeEvent.TokenClaims(
+                        payload.path("sub").asText(null),
+                        payload.path("azp").asText(null),
+                        payload.path("act").path("client_id").asText(null),
+                        null)));
     }
 }

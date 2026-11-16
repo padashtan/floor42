@@ -64,6 +64,13 @@ public class SqliteJournal implements Journal {
     @Inject
     ConfigGuard configGuard;
 
+    /** Rows between two signed checkpoints (ADR-0079). */
+    @ConfigProperty(name = "floor42.journal.checkpoint-every", defaultValue = "1000")
+    int checkpointEvery;
+
+    /** The hash chain's state; null until {@link #migrate()} ran (a journal built by a test chains rows all the same). */
+    volatile JournalIntegrity integrity;
+
     /** Appends share it; the restore at shutdown takes it alone, then the journal takes no more appends. */
     private final ReentrantReadWriteLock gate = new ReentrantReadWriteLock();
 
@@ -94,7 +101,31 @@ public class SqliteJournal implements Journal {
         backups.atStartup();
         flyway.migrate();
         refuseExtensionLoading();
+        JournalIntegrity i = new JournalIntegrity(dataSource, dataDir, checkpointEvery);
+        i.start();
+        integrity = i;
         checkContinuity();
+    }
+
+    /** The chain's last verification (ADR-0079); empty before the journal was opened. */
+    public Optional<JournalIntegrity.Status> integrityStatus() {
+        return Optional.ofNullable(integrity).map(JournalIntegrity::status);
+    }
+
+    /** Recomputes the whole chain, at the director's request. */
+    public JournalIntegrity.Status verifyIntegrity() {
+        return requireIntegrity().verifyAll();
+    }
+
+    /** The director has seen the first break: writes resume (ADR-0079). */
+    public JournalIntegrity.Status acknowledgeIntegrity() {
+        return requireIntegrity().acknowledge();
+    }
+
+    private JournalIntegrity requireIntegrity() {
+        JournalIntegrity i = integrity;
+        if (i == null) throw new JournalException("The journal's chain is not open", null);
+        return i;
     }
 
     /** Bound to the journal file this daemon opened; null until {@link #checkContinuity()}, and when it failed. */
@@ -222,9 +253,11 @@ public class SqliteJournal implements Journal {
     private void stopJournal(Optional<JournalBackups.Pending> pending) {
         ContinuityKeeper k = continuity;
         try {
+            if (integrity != null && pending.isEmpty()) integrity.checkpoint("SHUTDOWN");
             String displaced = k == null ? null : k.keepDisplaced(backups.store());
             boolean restored = false;
             if (pending.isPresent()) restored = restore(k, pending.get());
+            if (restored && integrity != null) integrity.forgetAnchor();
             if (k != null) k.atStop(displaced, restored);
         } catch (SQLException | IOException e) {
             // Handled: logged; the journal is left as it was
@@ -283,8 +316,19 @@ public class SqliteJournal implements Journal {
         gate.readLock().lock();
         try {
             if (closed != null) throw new JournalException("The journal takes no more events: " + closed, null);
-            write(events);
+            JournalIntegrity i = integrity;
+            if (i != null && i.refusing()) {
+                throw new JournalChainBrokenException("The journal's hash chain is broken: nothing was recorded."
+                        + " Look at GET /api/journal/integrity, then acknowledge it as the director");
+            }
+            try {
+                write(events, i);
+            } catch (JournalChainBrokenException e) {
+                if (i != null && !i.refusing()) i.verifyAll(); // a malformed hash: the status must say so
+                throw e;
+            }
             locked = null;
+            if (i != null) i.afterAppend();
             ContinuityKeeper k = continuity;
             if (k != null) k.markSoon();
         } finally {
@@ -292,15 +336,20 @@ public class SqliteJournal implements Journal {
         }
     }
 
-    private void write(List<EventEnvelope> events) {
+    private void write(List<EventEnvelope> events, JournalIntegrity i) {
         try (Connection c = dataSource.getConnection()) {
             c.setAutoCommit(false);
+            // Rows another program left after the chain's end are never adopted at runtime (ADR-0079): a break, unless
+            // acknowledged. Without the chain's state (a test's journal) they are chained as adopted.
+            if (i != null) i.guardTail(c);
+            else JournalChain.chainPending(c, true);
             try (PreparedStatement ps = c.prepareStatement(INSERT)) {
                 for (EventEnvelope e : events) {
                     JournalRows.bind(ps, e, codec);
                     ps.addBatch();
                 }
                 ps.executeBatch();
+                JournalChain.chainPending(c, false);
                 c.commit();
             } catch (SQLException | RuntimeException ex) {
                 c.rollback();

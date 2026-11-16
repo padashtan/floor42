@@ -27,6 +27,7 @@ import dev.floor42.domain.event.SessionEvent.AgentSessionEnded;
 import dev.floor42.domain.event.SessionEvent.AgentSessionStarted;
 import dev.floor42.domain.event.SessionEvent.AgentTokenIssued;
 import dev.floor42.domain.event.VerificationEvent.ChecksRan;
+import dev.floor42.domain.event.WorkbenchEvent.PatchAccepted;
 import dev.floor42.server.app.delivery.MissionReports;
 import dev.floor42.server.app.delivery.MissionReports.CostBound;
 import dev.floor42.server.app.delivery.MissionReports.Measure;
@@ -107,6 +108,7 @@ class ProofDossiersTest {
                 events,
                 report,
                 delegation,
+                Map.of(),
                 new ReplaySanitizer("tok-secret-value", Map.of()),
                 "1.1.0",
                 T0.plusSeconds(3600));
@@ -179,13 +181,55 @@ class ProofDossiersTest {
         assertThat(asJson(out).toString()).doesNotContain("vault-entry-name");
     }
 
+    private static final String SUB = "7f3c9a10-1111-2222-3333-444455556666";
+
+    private static List<EventEnvelope> withClaims() {
+        List<EventEnvelope> out = new ArrayList<>(IAM);
+        out.set(
+                0,
+                env(
+                        1,
+                        new AgentTokenIssued(
+                                "L1",
+                                ADA,
+                                M,
+                                T,
+                                "http://kc/realms/floor42",
+                                "2026-11-13T18:00:00Z",
+                                "jti-1",
+                                SUB,
+                                "floor42-agent-ada",
+                                "floor42-agent-ada",
+                                List.of("openid", "profile"))));
+        return out;
+    }
+
     @Test
-    void claimsNotInTheJournalAreALimitNotAValue() {
+    void claimsAreShownAsRecorded() {
+        ProofDossier out = compose(withClaims());
+        ProofDossier.IdentityFact f = out.identities().items().getFirst();
+        assertThat(f.authorizedParty()).isEqualTo("floor42-agent-ada");
+        assertThat(f.actor()).isEqualTo("floor42-agent-ada");
+        assertThat(f.scopes()).containsExactly("openid", "profile");
+        assertThat(f.ref().source()).isEqualTo("JOURNAL");
+        assertThat(out.limits()).doesNotContain("identity.claimsNotJournaled");
+    }
+
+    @Test
+    void anOlderSessionKeepsTheLimit() {
         ProofDossier out = compose(IAM);
-        List<String> keys = new ArrayList<>();
-        fieldNames(asJson(out), keys);
-        assertThat(keys).doesNotContain("sub", "act", "azp", "scope", "scopes", "claims");
+        ProofDossier.IdentityFact f = out.identities().items().getFirst();
+        assertThat(f.subject()).isNull();
+        assertThat(f.scopes()).isNull();
+        assertThat(f.derived()).containsExactly("client", "onBehalfOf", "tokenAudience");
         assertThat(out.limits()).contains("identity.claimsNotJournaled");
+    }
+
+    @Test
+    void theSubjectIsShortenedInTheDossier() {
+        ProofDossier out = compose(withClaims());
+        assertThat(out.identities().items().getFirst().subject()).isEqualTo("7f3c9a10…");
+        assertThat(asJson(out).toString()).doesNotContain(SUB);
     }
 
     @Test
@@ -333,5 +377,28 @@ class ProofDossiersTest {
     private static void journalRefs(JsonNode n, List<JsonNode> out) {
         if (n.has("source") && "JOURNAL".equals(n.get("source").asText())) out.add(n);
         n.forEach(c -> journalRefs(c, out));
+    }
+
+    @Test
+    void anAcceptedCommitShowsWhatGitSaidOfItsSignature() {
+        String sha = "a".repeat(40);
+        String other = "b".repeat(40);
+        List<EventEnvelope> events = List.of(
+                env(1, new PatchAccepted(M, ADA, sha, "one", List.of("a.txt"))),
+                env(2, new PatchAccepted(M, ADA, other, "two", List.of("b.txt"))));
+        ProofDossier d = ProofDossiers.compose(
+                mission(Origin.REAL),
+                events,
+                report(totals(null, null), List.of()),
+                Optional.empty(),
+                Map.of(sha, new ProofDossier.SignatureFact("VERIFIED", "ada", false)),
+                new ReplaySanitizer("tok-secret-value", Map.of()),
+                "1.3.0",
+                T0.plusSeconds(3600));
+        List<ProofDossier.DeliveryFact> items = d.deliverables().items();
+        assertThat(items.get(0).signature().status()).isEqualTo("VERIFIED");
+        assertThat(items.get(0).signature().agent()).isEqualTo("ada");
+        // No word from git, no claim: the line carries no signature at all
+        assertThat(items.get(1).signature()).isNull();
     }
 }

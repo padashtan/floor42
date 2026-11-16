@@ -158,6 +158,12 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
       await page.evaluate(() => localStorage.setItem('floor42.tutorial.offered', '1'))
       // The machine checklist opens once per browser too: seen here; the settings journey opens it on purpose.
       await page.evaluate(() => localStorage.setItem('floor42.checklist.shown', '1'))
+      // The standup opens by itself once a day after 09:00 (ADR-0078): already shown today, so it never covers a journey.
+      await page.evaluate(() => {
+        const d = new Date()
+        const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+        localStorage.setItem('floor42.standup.shown', day)
+      })
       // No acknowledged journal sequence is kept: each journey opens as a first visit, where "While you were away"
       // starts from now. Kept, it held the sequence of this sign-in, and a journey opened over the summary of every
       // journey that ran before it on the shared daemon (the panels loop then ended with that summary on screen).

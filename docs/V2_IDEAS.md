@@ -64,3 +64,4 @@ Each one is a proposal to weigh against real campaigns, in rough order of value.
 - **Smaller.** Explicit performance budgets (startup, replay, event to screen); a history of configuration changes; a
   compact keyboard-driven operations view beside the 3D office; an agent runtime contract with a second runtime; the
   broker and the vault out of the daemon; Keycloak manages and OpenFGA decides (ADR-0065).
+- The real Jira, through the Atlassian MCP server declared with the MCP feature (no code of Floor42's own): creating and updating issues, links, epics and a two-way sync. v1.2 only exports a CSV.

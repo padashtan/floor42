@@ -95,6 +95,37 @@ class WorkshopSelectionTest extends ApiTestBase {
                 .body("interventions[-1].files", org.hamcrest.Matchers.contains("one.txt"));
     }
 
+    /** git older than 2.34, an ssh-keygen that refuses the key, a retire between the key and the commit. */
+    @Test
+    void aSigningFailureAtCommitTimeStillCommitsTheAcceptedPatchUnsigned() throws Exception {
+        Ready r = ready();
+        QuarkusMock.installMockForType(
+                new dev.floor42.server.app.workspace.signing.AgentSigning(Files.createTempDirectory("nosign"), git) {
+                    @Override
+                    public java.util.List<String> signArgs(dev.floor42.domain.AgentId agent) {
+                        return java.util.List.of(
+                                "-c",
+                                "gpg.format=ssh",
+                                "-c",
+                                "gpg.ssh.program=/no/such/ssh-keygen",
+                                "-c",
+                                "user.signingkey=/no/such/key",
+                                "-c",
+                                "commit.gpgsign=true");
+                    }
+                },
+                dev.floor42.server.app.workspace.signing.AgentSigning.class);
+
+        accept(r, "[\"one.txt\"]").then().statusCode(200);
+
+        assertThat(WorkshopHoldTest.out(r.worktree(), "log", "-1", "--format=%s"))
+                .isEqualTo("Pick");
+        assertThat(WorkshopHoldTest.out(r.worktree(), "log", "-1", "--format=%G?"))
+                .isEqualTo("N");
+        assertThat(WorkshopHoldTest.out(r.worktree(), "show", "--name-only", "--format=", "HEAD"))
+                .isEqualTo("one.txt");
+    }
+
     @Test
     void aPathThatIsNotPendingOrLiesOutsideIsRefusedAndNothingIsCommitted() throws Exception {
         Ready r = ready();

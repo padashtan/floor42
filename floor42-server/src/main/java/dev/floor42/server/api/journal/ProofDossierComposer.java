@@ -45,6 +45,7 @@ import dev.floor42.server.api.journal.ProofDossier.MissionPart;
 import dev.floor42.server.api.journal.ProofDossier.Ref;
 import dev.floor42.server.api.journal.ProofDossier.RefusalFact;
 import dev.floor42.server.api.journal.ProofDossier.SessionCost;
+import dev.floor42.server.api.journal.ProofDossier.SignatureFact;
 import dev.floor42.server.app.delivery.MissionReports;
 import dev.floor42.server.app.delivery.MissionReports.MissionReport;
 import dev.floor42.server.iam.AgentTokenVerifier;
@@ -77,6 +78,7 @@ final class ProofDossierComposer {
     private final List<EventEnvelope> events;
     private final MissionReport report;
     private final ReplaySanitizer clean;
+    private final Map<String, SignatureFact> signatures;
     private final Map<String, Integer> seqOf = new HashMap<>();
     private final Map<ActionId, EventEnvelope> asked = new HashMap<>();
     private final Map<String, AgentSessionStarted> started = new HashMap<>();
@@ -92,11 +94,17 @@ final class ProofDossierComposer {
     private Double budget;
     private EventEnvelope budgetEvent;
 
-    ProofDossierComposer(Mission m, List<EventEnvelope> events, MissionReport report, ReplaySanitizer clean) {
+    ProofDossierComposer(
+            Mission m,
+            List<EventEnvelope> events,
+            MissionReport report,
+            ReplaySanitizer clean,
+            Map<String, SignatureFact> signatures) {
         this.m = m;
         this.events = events;
         this.report = report;
         this.clean = clean;
+        this.signatures = signatures;
         for (int i = 0; i < events.size(); i++) seqOf.put(events.get(i).eventId(), i + 1);
     }
 
@@ -142,7 +150,15 @@ final class ProofDossierComposer {
                 ProofDossiers.section(diff()),
                 report.readAt(),
                 maskCounts(),
-                List.of("identity.claimsNotJournaled", "diff.noLineCounts", "personal.freeText"));
+                limits());
+    }
+
+    /** The claims are a limit only while a session of the mission ran before they were recorded (ADR-0074). */
+    private List<String> limits() {
+        boolean older = identities.isEmpty() || identities.stream().anyMatch(i -> i.subject() == null);
+        return older
+                ? List.of("identity.claimsNotJournaled", "diff.noLineCounts", "personal.freeText")
+                : List.of("diff.noLineCounts", "personal.freeText");
     }
 
     /** What later events look up: the request of an action, the start of a session, the identity refusals. */
@@ -186,6 +202,10 @@ final class ProofDossierComposer {
                 text(e, "issuer", t.issuer()),
                 t.expiresAt(),
                 text(e, "jti", t.tokenId()),
+                text(e, "subject", ReplaySanitizer.shortSubject(t.subject())),
+                text(e, "authorizedParty", t.authorizedParty()),
+                text(e, "actor", t.actor()),
+                t.scopes(),
                 List.of("client", "onBehalfOf", "tokenAudience"),
                 ref(null, e)));
     }
@@ -303,7 +323,8 @@ final class ProofDossierComposer {
                         "PATCH_ACCEPTED",
                         text(e, "message", p.message()),
                         ProofDossiers.shortCommit(p.commit()),
-                        p.files() == null ? 0 : p.files().size());
+                        p.files() == null ? 0 : p.files().size(),
+                        signatures.get(p.commit()));
             default -> merge(e);
         }
     }
@@ -329,7 +350,13 @@ final class ProofDossierComposer {
     }
 
     private void delivered(EventEnvelope e, String kind, String text, String commit, Integer files) {
-        deliverables.add(new DeliveryFact(e.occurredAt().toString(), kind, text, commit, files, ref(null, e)));
+        delivered(e, kind, text, commit, files, null);
+    }
+
+    private void delivered(
+            EventEnvelope e, String kind, String text, String commit, Integer files, SignatureFact signature) {
+        deliverables.add(
+                new DeliveryFact(e.occurredAt().toString(), kind, text, commit, files, signature, ref(null, e)));
     }
 
     /** Counted last: every text of the dossier has passed through the sanitizer by then. */

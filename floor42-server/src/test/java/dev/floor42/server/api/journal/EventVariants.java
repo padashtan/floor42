@@ -98,6 +98,18 @@ final class EventVariants {
         }
         all.add(new dev.floor42.domain.event.SessionEvent.AgentTokenIssued(
                 "s-123456789", A, M, T, "https://id.test/realms/floor42", "2026-10-20T16:00:00Z", "jti-1"));
+        all.add(new dev.floor42.domain.event.SessionEvent.AgentTokenIssued(
+                "s-123456789",
+                A,
+                M,
+                T,
+                "https://id.test/realms/floor42",
+                "2026-10-20T16:00:00Z",
+                "jti-1",
+                "7f3c9a10-1111-2222-3333-444455556666",
+                "floor42-agent-chris",
+                "floor42-agent-chris",
+                List.of("openid", "profile")));
         all.add(new dev.floor42.domain.event.SessionEvent.SessionRiskRaised(
                 "s-r",
                 A,

@@ -2,6 +2,7 @@ package dev.floor42.server.runtime;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.floor42.domain.ActionCategory;
+import dev.floor42.server.security.SecretMasker;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,8 @@ import java.util.Objects;
 public final class ToolCatalog {
 
     public static final String FLOOR42_TOOL_PREFIX = "mcp__floor42__";
+    /** A tool of a remote MCP server through Floor42 (ADR-0072): reaches outside, so NETWORK and in the table. */
+    public static final String CALL_MCP = FLOOR42_TOOL_PREFIX + "call_mcp";
     /** The MCP server was named "office" before 1.5.0: the journal keeps the tool names as they were called. */
     static final String LEGACY_TOOL_PREFIX = "mcp__office__";
 
@@ -17,12 +20,13 @@ public final class ToolCatalog {
      * Claude Code finds; Agent starts a subagent, whose own tool calls reach Floor42's hook like the agent's (checked on
      * Claude Code 2.1.312: same session, with the subagent's id and type).
      */
-    public static final List<String> GOVERNED_TOOLS =
-            List.of("Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "WebSearch", "Skill", "Agent");
+    public static final List<String> GOVERNED_TOOLS = List.of(
+            "Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "WebSearch", "Skill", "Agent", CALL_MCP);
 
     private ToolCatalog() {}
 
     public static ActionCategory category(String tool) {
+        if (tool.equals(CALL_MCP)) return ActionCategory.NETWORK;
         if (tool.startsWith(FLOOR42_TOOL_PREFIX) || tool.startsWith(LEGACY_TOOL_PREFIX)) return ActionCategory.FLOOR42;
         return switch (tool) {
             case "Read", "Glob", "Grep", "LS" -> ActionCategory.READ;
@@ -47,7 +51,7 @@ public final class ToolCatalog {
                 tool.equals("Glob") || tool.equals("Grep")
                         ? searchSummary(input, workdir)
                         : firstOf(input, "file_path", "notebook_path", "path", "pattern");
-            case NETWORK -> firstOf(input, "url", "query");
+            case NETWORK -> tool.equals(CALL_MCP) ? callMcp(input) : firstOf(input, "url", "query");
             // Asking the director reads as the question itself (ADR-0027).
             case FLOOR42 -> tool.endsWith("ask_director") ? firstOf(input, "question") : input.toString();
             case OTHER ->
@@ -64,6 +68,12 @@ public final class ToolCatalog {
         if (c == ActionCategory.READ || c == ActionCategory.WRITE)
             s = Objects.requireNonNullElse(inside(s, workdir), s);
         return StreamJsonParser.abbreviate(s, 300);
+    }
+
+    /** "server tool arguments", the arguments with every secret masked: the journal row never holds what the agent typed. */
+    private static String callMcp(JsonNode input) {
+        return SecretMasker.maskText(input.path("server").asText("") + " "
+                + input.path("tool").asText("") + " " + SecretMasker.mask(input.path("arguments")));
     }
 
     /** A shell call's command exactly as sent, which rules and approvals decide on; null for any other tool. */

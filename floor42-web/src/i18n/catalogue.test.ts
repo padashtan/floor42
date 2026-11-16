@@ -60,6 +60,12 @@ describe('the event catalogues', () => {
     expect([...new Set(wrong)]).toEqual([])
   })
 
+  it('hold every mcp.* key in both languages, with the same placeholders', () => {
+    const keys = Object.keys(en).filter((key) => key.startsWith('mcp.'))
+    expect(keys.length).toBeGreaterThan(20)
+    expect(keys.filter((key) => !(key in fr) || placeholders(en[key]).join() !== placeholders(fr[key]).join())).toEqual([])
+  })
+
   it('have no line the server never emits', () => {
     const emitted = new Set(Object.keys(EMITTED).map((code) => `ev.${code}`))
     const dead = Object.keys(en).filter((key) => key.startsWith('ev.') && !key.startsWith('ev.more.') && !emitted.has(key))

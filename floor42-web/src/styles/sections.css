@@ -5,7 +5,9 @@
 .panel.meeting.sectioned-panel,
 .panel.mission-end,
 .panel.prove-panel,
-.panel.dossier-panel {
+.panel.dossier-panel,
+.panel.standup-panel,
+.panel.oversight-panel {
   top: 90px;
   left: 50%;
   right: auto;

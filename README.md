@@ -289,6 +289,12 @@ or a script token. It is the director's API, on loopback.
 - Errors are `{code, message}`; every success is `200`, creates and deletes included, except the calls that only start something: `POST /api/demo/practice` and `POST /auth/open` answer `202` (accepted), and the sign-in link answers `303`.
 - Stability: routes marked `x-stability: unstable` may change in any release; the rest is the stable core.
 
+### Without the scene
+
+A Claude Code session of your own can use the desk as tools: `POST /api/mcp` takes a script token and offers missions,
+questions and costs, never an approval. Steps, tool list and limits: [`docs/headless.md`](docs/headless.md),
+[ADR-0073](docs/adr/0073-director-mcp-endpoint.md).
+
 ## Quality and security assurance
 
 Every layer below has one command, a threshold or an oracle, and a place where the report lands. `make assurance` runs

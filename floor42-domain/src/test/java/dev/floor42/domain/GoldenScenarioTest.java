@@ -95,6 +95,24 @@ class GoldenScenarioTest {
         graphNodes();
         unsafeMode();
         sessionRisk();
+        identityClaims();
+    }
+
+    /** The claims of a token (ADR-0074), last so the day recorded before stays as it was. */
+    void identityClaims() {
+        s.run(
+                "a simulated token issued with its claims",
+                () -> c.sessions()
+                        .tokenIssued(
+                                s.system(SIMULATED),
+                                "sim-iam",
+                                "urn:floor42:simulated",
+                                java.time.Instant.parse("2026-10-21T02:00:00Z"),
+                                "sim-jti-2",
+                                "simulated-director",
+                                "simulated-chris",
+                                "simulated-chris",
+                                null));
     }
 
     /** A real session's risk goes up (ADR-0066), last so the day recorded before stays as it was. */

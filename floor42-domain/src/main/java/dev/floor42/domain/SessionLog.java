@@ -110,13 +110,31 @@ final class SessionLog {
     }
 
     List<EventEnvelope> tokenIssued(
-            CommandContext ctx, String sessionId, String issuer, Instant expiresAt, String tokenId) {
+            CommandContext ctx,
+            String sessionId,
+            String issuer,
+            Instant expiresAt,
+            String tokenId,
+            String subject,
+            String authorizedParty,
+            String actor,
+            List<String> scopes) {
         AgentSession s = open(ctx, sessionId);
         requireText(issuer, "issuer");
         requireText(tokenId, "tokenId");
         return view.record(ctx, s.mission())
                 .emit(new AgentTokenIssued(
-                        sessionId, s.agent(), s.mission(), s.ticket(), issuer, expiresAt.toString(), tokenId))
+                        sessionId,
+                        s.agent(),
+                        s.mission(),
+                        s.ticket(),
+                        issuer,
+                        expiresAt.toString(),
+                        tokenId,
+                        subject,
+                        authorizedParty,
+                        actor,
+                        scopes))
                 .events();
     }
 

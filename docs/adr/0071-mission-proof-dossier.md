@@ -64,5 +64,7 @@ events, the mission report, the delegation and the sanitizer.
   and leaves out git author names. An e-mail pattern added to `ReplaySanitizer` also applies here, because the dossier
   uses the same sanitizer.
 - `openapi.json` must be regenerated for the route, then the `ProofDossier` line enabled in `contract.ts`.
+- *Note 2026-11-16 (v1.2, ADR-0074): the claims entered the journal. A session of v1.2 shows `sub` (shortened), `azp`,
+  `act` and the scopes as `JOURNAL` facts; the limit stays for older sessions.*
 - Reopen when claims enter the journal (identity rows become `JOURNAL` facts), or when someone needs to verify a
   dossier without trusting the daemon that wrote it (signing).

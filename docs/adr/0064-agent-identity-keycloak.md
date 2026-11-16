@@ -57,6 +57,8 @@ The mode is opt-in (IAM mode). Off, Floor42 behaves as before and has no new run
    environment. IAM mode refuses to start otherwise (`IAM_NEEDS_SANDBOX`).
 10. **Event.** `AgentTokenIssued(session, agent, mission, ticket, issuer, expiresAt, tokenId)`: the `jti` and a summary,
     never the token. Refusals use the existing denial path with a reason code. Reader and writer ship together in 1.17.
+    *Note 2026-11-16 (v1.2, ADR-0074): the event also records `subject`, `authorizedParty`, `actor` and `scopes`, all
+    optional; still never the token.*
 11. **Token broker, `call_resource`.** An agent never holds a credential for an external resource. The MCP tool
     `call_resource(name, method, path, body)` goes through the PreToolUse hook like any Floor42 tool.
     - One Token Exchange per call, for one audience, narrowest scope, at most 300 s. The token is never returned,
@@ -84,6 +86,18 @@ The mode is opt-in (IAM mode). Off, Floor42 behaves as before and has no new run
   and until when.
 - Identity only restricts. It proves which session acts and for whom, not what the model intends: a prompt-injected
   agent acts with its real identity. The permission table stays in force. See ADR-0066 for the session risk watch.
+
+## 1.2.0 note: script tokens in IAM mode
+
+In IAM mode a script token (any scope) starts no agent work without a human, as plan approval already required (a
+browser signed in through Keycloak). `LocalAccessGuard` applies a default deny, before the scope is looked at, with a
+trailing slash stripped: a script token may only read (GET, HEAD, except `/api/terminals`, `/ws/**` and the three GETs that run git in a folder the caller names:
+`/api/preflight`, `/api/projects/folders`, `/api/projects/init`), `POST /api/missions` (a proposal, with only objective,
+repository and title: a committee, plan, panel, workflow, destination or mode is refused) and `POST /api/mcp`. Everything else answers 403 `IAM_SCRIPT_TOKEN_REFUSED`: approving,
+answering, nudging, directing, resuming, staffing, the terminal and its tickets, the committee, the graph, and the IAM
+settings and secrets. On `/api/mcp`, `DirectorMcpResource` allows the four read tools and `create_mission`;
+`answer_question` is refused. The director's own token, a Keycloak browser session and everything outside IAM mode are
+unchanged. No new event. Tokens bound to a mission and an agent come in 1.3.0.
 
 ## Known limits
 - Committee and auto-approved missions have no plan approval by the director, so no delegation: in IAM mode they are

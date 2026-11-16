@@ -98,6 +98,15 @@ public final class ReplaySanitizer {
                 .forEach(r -> this.roots.add(Map.entry(root(r.getKey()), r.getValue())));
     }
 
+    /** What an export shows of a token's {@code sub} (ADR-0074): its first {@value #SUBJECT_SHOWN} characters. */
+    public static String shortSubject(String subject) {
+        return subject == null || subject.length() <= SUBJECT_SHOWN
+                ? subject
+                : subject.substring(0, SUBJECT_SHOWN) + "…";
+    }
+
+    static final int SUBJECT_SHOWN = 8;
+
     /** A text: an event's line, a title, an objective. Clipped at {@link #TEXT_MAX}. */
     public String text(int event, String field, String s) {
         return clip(event, field, clean(event, field, s), TEXT_MAX, Kind.TEXT_CLIPPED);

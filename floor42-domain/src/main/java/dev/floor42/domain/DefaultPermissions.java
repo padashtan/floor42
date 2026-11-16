@@ -24,7 +24,9 @@ public final class DefaultPermissions {
             Map.entry("WebFetch", Decision.DENY),
             Map.entry("WebSearch", Decision.DENY),
             Map.entry("Skill", Decision.ALLOW),
-            Map.entry("Agent", Decision.ALLOW));
+            Map.entry("Agent", Decision.ALLOW),
+            // A tool of a remote MCP server (ADR-0072): asks first, though the grant and the ticked tools limit it.
+            Map.entry("mcp__floor42__call_mcp", Decision.ASK));
 
     private DefaultPermissions() {}
 

@@ -21,6 +21,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.UnaryOperator;
 
 /**
  * Calls an external resource for an agent that must never hold a credential: one Token Exchange per call to exactly
@@ -37,7 +38,10 @@ public class ResourceBroker {
     static final Duration DEADLINE = Duration.ofSeconds(30);
 
     private static final Set<String> KEPT =
-            Set.of("content-type", "content-length", "etag", "last-modified", "retry-after");
+            Set.of("content-type", "content-length", "etag", "last-modified", "retry-after", "mcp-session-id");
+    /** The only request headers a caller may add (an MCP call); never Authorization, Host or Cookie. */
+    private static final Set<String> SENDABLE = Set.of("accept", "mcp-session-id", "mcp-protocol-version");
+
     private static final long SKEW = AgentTokenVerifier.SKEW.toSeconds();
 
     /** The refusal codes the tool shows: RESOURCE_UNKNOWN, RESOURCE_NOT_GRANTED, the SafeUrls ones, IDENTITY_REFUSED (Floor42's decision), IDENTITY_UNAVAILABLE (the provider failed)... */
@@ -61,9 +65,26 @@ public class ResourceBroker {
 
     /** Never prints the body: it is the resource's, and the answer builder is the only place that shows it. */
     public record BrokerResult(
-            int status, Map<String, String> headers, String body, boolean truncated, String jti, String audience) {
+            int status,
+            Map<String, String> headers,
+            String body,
+            boolean truncated,
+            String jti,
+            String audience,
+            UnaryOperator<String> scrubber) {
         public BrokerResult {
             headers = headers == null ? null : Collections.unmodifiableMap(new LinkedHashMap<>(headers));
+            scrubber = scrubber == null ? UnaryOperator.identity() : scrubber;
+        }
+
+        public BrokerResult(
+                int status, Map<String, String> headers, String body, boolean truncated, String jti, String audience) {
+            this(status, headers, body, truncated, jti, audience, null);
+        }
+
+        /** The text with this call's token removed: for text taken out of the body after it was decoded. */
+        public String scrub(String text) {
+            return scrubber.apply(text);
         }
 
         @Override
@@ -125,6 +146,20 @@ public class ResourceBroker {
     }
 
     public BrokerResult call(SessionClaims caller, String resource, String method, String path, String body) {
+        return call(caller, resource, method, path, body, Map.of());
+    }
+
+    /** As above with request headers; only {@code Accept}, {@code Mcp-Session-Id} and {@code MCP-Protocol-Version}. */
+    public BrokerResult call(
+            SessionClaims caller,
+            String resource,
+            String method,
+            String path,
+            String body,
+            Map<String, String> headers) {
+        for (String h : headers.keySet())
+            if (!SENDABLE.contains(h.toLowerCase(Locale.ROOT)))
+                throw new IllegalArgumentException("Request header not allowed: " + h);
         Resource r = catalogue
                 .find(resource == null ? "" : resource)
                 .orElseThrow(() -> new Refusal("RESOURCE_UNKNOWN", "No resource named " + resource));
@@ -139,6 +174,7 @@ public class ResourceBroker {
                 .timeout(timeLimit)
                 .header("Authorization", "Bearer " + token)
                 .header("Accept", "*/*");
+        headers.forEach(req::setHeader);
         if (pinned.hostHeader() != null) req.header("Host", pinned.hostHeader());
         boolean sends = body != null && !body.isEmpty() && !verb.equals("GET") && !verb.equals("DELETE");
         if (sends) req.header("Content-Type", "application/json");
@@ -225,7 +261,7 @@ public class ResourceBroker {
         byte[] bytes = res.body();
         boolean cut = bytes.length > r.maxResponseBytes();
         String body = cutAndScrub(bytes, r.maxResponseBytes(), token);
-        return new BrokerResult(res.statusCode(), headers, body, cut, jti, r.audience());
+        return new BrokerResult(res.statusCode(), headers, body, cut, jti, r.audience(), text -> scrub(text, token));
     }
 
     /** The body for the agent: the token scrubbed first, then cut, then any token prefix left at the cut masked. */

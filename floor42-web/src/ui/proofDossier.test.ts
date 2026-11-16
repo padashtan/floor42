@@ -62,7 +62,7 @@ function dossier(over: Partial<ProofDossier> = {}): ProofDossier {
       bound: { usd: 2, sessions: 1, basis: 'UPPER_BOUND' },
     },
     checks: { count: 1, items: [{ at: 'x', workspace: 'ada', command: 'mvn test', exitCode: 0, timedOut: false, durationMs: 1200, trigger: 'manual', kind: 'CHECK', ref: journal('MEASURED', [7, 'ChecksRan']) }] },
-    deliverables: { count: 1, items: [{ at: 'x', kind: 'PATCH_ACCEPTED', text: 'fix', commit: 'abc123', files: 2, ref: journal(null, [8, 'PatchAccepted']) }] },
+    deliverables: { count: 1, items: [{ at: 'x', kind: 'PATCH_ACCEPTED', text: 'fix', commit: 'abc123', files: 2, signature: { status: 'VERIFIED', agent: 'ada', retired: false }, ref: journal(null, [8, 'PatchAccepted']) }] },
     diff: { count: 1, items: [{ agent: 'ada', branch: 'floor42/ada', readable: true, commits: 2, uncommitted: 1, ref: { source: 'GIT', events: [] } }] },
     gitReadAt: '2026-11-13T11:00:00Z',
     masked: [{ kind: 'SECRET', count: 2 }],
@@ -108,6 +108,24 @@ describe('the proof dossier as Markdown', () => {
     expect(line).not.toMatch(/(^|[^\\])\|/)
     expect(line).not.toMatch(/(^|[^\\])`/)
     expect(inert('![x](http://h/p)')).toBe('\\!\\[x\\]\\(http:\\/\\/h/p\\)')
+  })
+
+  it('shows the four claims as recorded in the journal, with no older-session line', () => {
+    const base = dossier()
+    const item = { ...base.identities.items[0]!, subject: '7f3c9a10…', authorizedParty: 'floor42-agent-ada', actor: 'floor42-agent-ada', scopes: ['openid', 'profile'] }
+    const rows = parts(dossier({ identities: { count: 1, items: [item] } }), t)[0]!.rows
+    const text = rows.map((r) => r.text)
+    expect(text).toContain('On behalf of (sub): 7f3c9a10…')
+    expect(text).toContain('Authorized party (azp): floor42-agent-ada')
+    expect(text).toContain('Acting as (act): floor42-agent-ada')
+    expect(text).toContain('Scopes: openid profile')
+    expect(text.some((x) => x.startsWith('Not recorded'))).toBe(false)
+    expect(rows.find((r) => r.text.startsWith('Scopes'))!.notes).toContain('recorded in the journal')
+  })
+
+  it('says an older session did not record its claims', () => {
+    const rows = parts(dossier(), t)[0]!.rows
+    expect(rows.map((r) => r.text)).toContain('Not recorded: this session ran before v1.2')
   })
 
   it('says IAM was off and prints no identity row', () => {

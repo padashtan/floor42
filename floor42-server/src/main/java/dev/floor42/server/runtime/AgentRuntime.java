@@ -193,6 +193,11 @@ public interface AgentRuntime {
             return false;
         }
 
+        /** As above, and the authorized call is for {@code tool}: an id the hook gave to another tool buys nothing. */
+        default boolean authorized(String toolUseId, String tool) {
+            return authorized(toolUseId);
+        }
+
         /** The journal id of a tool call of this session, or null when the governor keeps none. */
         default ActionId actionId(String toolUseId) {
             return null;

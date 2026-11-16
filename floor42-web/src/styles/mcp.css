@@ -1,0 +1,125 @@
+/* The MCP servers panel: a list beside one server's detail, then the tools beside the try form. */
+.mcp-panel {
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1300px, calc(100vw - 32px));
+  height: calc(100vh - 150px);
+  z-index: 24;
+}
+.mcp-panel .mcp-split {
+  display: flex;
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+}
+.mcp-panel .mcp-list {
+  flex: 0 0 300px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-right: 1px solid #12323c;
+  padding-right: 8px;
+}
+.mcp-panel .mcp-detail {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding-right: 8px;
+}
+.mcp-panel .server-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 6px 8px;
+  background: none;
+  border: 1px solid transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mcp-panel .server-item:hover,
+.mcp-panel .server-item.selected {
+  border-color: var(--cyan);
+  background: #0f3140;
+}
+.mcp-panel .server-item .name {
+  font-weight: 700;
+}
+.mcp-panel .server-item .amber,
+.mcp-panel .tool.changed {
+  color: var(--amber);
+}
+.mcp-panel .add-form,
+.mcp-panel .refresh-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.mcp-panel .field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mcp-panel .refused {
+  margin-top: 6px;
+}
+.mcp-panel .tools-and-try {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.mcp-panel table.tools {
+  flex: 1;
+  min-width: 0;
+  border-collapse: collapse;
+}
+.mcp-panel table.tools td,
+.mcp-panel table.tools th {
+  text-align: left;
+  vertical-align: top;
+  padding: 3px 8px;
+  border-bottom: 1px solid #12323c;
+}
+.mcp-panel .mcp-try {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 1px solid #12323c;
+  padding-left: 12px;
+}
+.mcp-panel .try-actions {
+  display: flex;
+  gap: 24px;
+}
+.mcp-panel .try-result pre {
+  max-height: 240px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+.mcp-panel .remove-row {
+  margin-top: 28px;
+}
+@media (max-width: 900px) {
+  .mcp-panel .mcp-split,
+  .mcp-panel .tools-and-try {
+    flex-direction: column;
+  }
+  .mcp-panel .mcp-list {
+    flex: none;
+    max-height: 30vh;
+    border-right: none;
+    border-bottom: 1px solid #12323c;
+  }
+  .mcp-panel .mcp-try {
+    flex: none;
+    border-left: none;
+    padding-left: 0;
+  }
+}

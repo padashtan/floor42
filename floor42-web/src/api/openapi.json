@@ -268,6 +268,35 @@
         },
         "type" : "object"
       },
+      "AgentStandup" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "blocked" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Line1"
+            },
+            "type" : "array"
+          },
+          "name" : {
+            "type" : [ "string", "null" ]
+          },
+          "today" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Line1"
+            },
+            "type" : "array"
+          },
+          "yesterday" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Line1"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
       "AgentView" : {
         "properties" : {
           "atWork" : {
@@ -1052,6 +1081,33 @@
         "enum" : [ "PRESENT", "MISSING", "OPTIONAL", "UNKNOWN" ],
         "type" : "string"
       },
+      "CheckpointView" : {
+        "properties" : {
+          "check" : {
+            "type" : [ "string", "null" ]
+          },
+          "hash" : {
+            "type" : [ "string", "null" ]
+          },
+          "keyId" : {
+            "type" : [ "string", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "sequence" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "signature" : {
+            "type" : [ "string", "null" ]
+          },
+          "signedAt" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "ChecksRequest" : {
         "properties" : {
           "automatic" : {
@@ -1720,6 +1776,17 @@
         },
         "type" : "object"
       },
+      "DeclareRequest" : {
+        "properties" : {
+          "path" : {
+            "type" : [ "string", "null" ]
+          },
+          "resource" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "DefaultPermissionView" : {
         "properties" : {
           "builtIn" : {
@@ -2117,6 +2184,13 @@
               "type" : "null"
             } ]
           },
+          "signature" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/SignatureFact"
+            }, {
+              "type" : "null"
+            } ]
+          },
           "text" : {
             "type" : [ "string", "null" ]
           }
@@ -2309,6 +2383,21 @@
         "type" : "object"
       },
       "EventRef" : {
+        "properties" : {
+          "eventId" : {
+            "type" : [ "string", "null" ]
+          },
+          "seq" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "type" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "EventRef1" : {
         "properties" : {
           "eventId" : {
             "type" : [ "string", "null" ]
@@ -2771,7 +2860,13 @@
       },
       "IdentityFact" : {
         "properties" : {
+          "actor" : {
+            "type" : [ "string", "null" ]
+          },
           "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "authorizedParty" : {
             "type" : [ "string", "null" ]
           },
           "client" : {
@@ -2802,7 +2897,16 @@
               "type" : "null"
             } ]
           },
+          "scopes" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
           "session" : {
+            "type" : [ "string", "null" ]
+          },
+          "subject" : {
             "type" : [ "string", "null" ]
           },
           "ticket" : {
@@ -2990,6 +3094,83 @@
         "examples" : [ "2022-03-10T16:15:50Z" ],
         "format" : "date-time",
         "type" : "string"
+      },
+      "IntegrityView" : {
+        "properties" : {
+          "acknowledgedBreaks" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "adoptedRows" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "brokenSequence" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "chainedRows" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "checkedAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "checkpoints" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "keyId" : {
+            "type" : [ "string", "null" ]
+          },
+          "keyProblem" : {
+            "type" : [ "string", "null" ]
+          },
+          "lastCheckpoint" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/CheckpointView"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "origin" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Origin"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "pendingRows" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "reason" : {
+            "type" : [ "string", "null" ]
+          },
+          "rows" : {
+            "format" : "int64",
+            "type" : [ "integer", "null" ]
+          },
+          "signaturesInvalid" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "signaturesOtherKey" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "signaturesVerified" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "status" : {
+            "type" : [ "string", "null" ]
+          },
+          "writesRefused" : {
+            "type" : [ "boolean", "null" ]
+          }
+        },
+        "type" : "object"
       },
       "InterventionView" : {
         "properties" : {
@@ -3312,6 +3493,62 @@
         },
         "type" : "object"
       },
+      "Line" : {
+        "properties" : {
+          "actor" : {
+            "type" : [ "string", "null" ]
+          },
+          "at" : {
+            "type" : [ "string", "null" ]
+          },
+          "basis" : {
+            "type" : [ "string", "null" ]
+          },
+          "code" : {
+            "type" : [ "string", "null" ]
+          },
+          "events" : {
+            "items" : {
+              "$ref" : "#/components/schemas/EventRef"
+            },
+            "type" : "array"
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "origin" : {
+            "type" : [ "string", "null" ]
+          },
+          "scope" : {
+            "type" : [ "string", "null" ]
+          },
+          "text" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "Line1" : {
+        "properties" : {
+          "code" : {
+            "type" : [ "string", "null" ]
+          },
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "mission" : {
+            "type" : [ "string", "null" ]
+          },
+          "text" : {
+            "type" : [ "string", "null" ]
+          },
+          "ticket" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "LineView" : {
         "properties" : {
           "code" : {
@@ -3398,6 +3635,18 @@
         },
         "type" : "object"
       },
+      "Mask" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "MaskCount" : {
         "properties" : {
           "count" : {
@@ -3436,6 +3685,70 @@
           },
           "type" : {
             "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "McpServer" : {
+        "properties" : {
+          "audience" : {
+            "type" : [ "string", "null" ]
+          },
+          "baseUrl" : {
+            "type" : [ "string", "null" ]
+          },
+          "path" : {
+            "type" : [ "string", "null" ]
+          },
+          "pinnedAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "resource" : {
+            "type" : [ "string", "null" ]
+          },
+          "tools" : {
+            "items" : {
+              "$ref" : "#/components/schemas/McpTool"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "McpServersView" : {
+        "properties" : {
+          "servers" : {
+            "items" : {
+              "$ref" : "#/components/schemas/McpServer"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "McpTool" : {
+        "properties" : {
+          "changed" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "description" : {
+            "type" : [ "string", "null" ]
+          },
+          "inputSchema" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/JsonNode"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "name" : {
+            "type" : [ "string", "null" ]
+          },
+          "sha256" : {
+            "type" : [ "string", "null" ]
+          },
+          "ticked" : {
+            "type" : [ "boolean", "null" ]
           }
         },
         "type" : "object"
@@ -3650,6 +3963,35 @@
         "type" : "object"
       },
       "MissionPart" : {
+        "properties" : {
+          "events" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "id" : {
+            "type" : [ "string", "null" ]
+          },
+          "origin" : {
+            "type" : [ "string", "null" ]
+          },
+          "real" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "simulated" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "status" : {
+            "type" : [ "string", "null" ]
+          },
+          "title" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "MissionPart1" : {
         "properties" : {
           "events" : {
             "format" : "int32",
@@ -4352,6 +4694,74 @@
         "enum" : [ "SIMULATED", "REAL" ],
         "type" : "string"
       },
+      "OversightReport" : {
+        "properties" : {
+          "actions" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Section"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "capabilities" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Section"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "format" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "generatedAt" : {
+            "type" : [ "string", "null" ]
+          },
+          "generator" : {
+            "type" : [ "string", "null" ]
+          },
+          "limits" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "masked" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Mask"
+            },
+            "type" : "array"
+          },
+          "mission" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/MissionPart"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "overrides" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Section"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "statement" : {
+            "type" : [ "string", "null" ]
+          },
+          "supervision" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Section"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "version" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "PinRequest" : {
         "properties" : {
           "path" : {
@@ -4832,7 +5242,7 @@
           },
           "mission" : {
             "anyOf" : [ {
-              "$ref" : "#/components/schemas/MissionPart"
+              "$ref" : "#/components/schemas/MissionPart1"
             }, {
               "type" : "null"
             } ]
@@ -5513,7 +5923,7 @@
           },
           "events" : {
             "items" : {
-              "$ref" : "#/components/schemas/EventRef"
+              "$ref" : "#/components/schemas/EventRef1"
             },
             "type" : "array"
           },
@@ -5521,6 +5931,17 @@
             "type" : [ "string", "null" ]
           },
           "source" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "RefreshRequest" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "mission" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -6696,6 +7117,21 @@
         },
         "type" : "object"
       },
+      "Section" : {
+        "properties" : {
+          "count" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Line"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
       "SectionApprovalFact" : {
         "properties" : {
           "count" : {
@@ -6998,6 +7434,20 @@
         },
         "type" : "object"
       },
+      "SignatureFact" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "retired" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "status" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "StallView" : {
         "properties" : {
           "agent" : {
@@ -7022,6 +7472,26 @@
             "type" : [ "string", "null" ]
           },
           "work" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "Standup" : {
+        "properties" : {
+          "agents" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AgentStandup"
+            },
+            "type" : "array"
+          },
+          "date" : {
+            "type" : [ "string", "null" ]
+          },
+          "previousDay" : {
+            "type" : [ "string", "null" ]
+          },
+          "zone" : {
             "type" : [ "string", "null" ]
           }
         },
@@ -7280,6 +7750,17 @@
         },
         "type" : "object"
       },
+      "Tick" : {
+        "properties" : {
+          "name" : {
+            "type" : [ "string", "null" ]
+          },
+          "sha256" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "TicketEdit" : {
         "properties" : {
           "acceptanceCriteria" : {
@@ -7426,6 +7907,17 @@
         },
         "type" : "object"
       },
+      "TicksRequest" : {
+        "properties" : {
+          "ticks" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Tick"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
       "ToTicket" : {
         "properties" : {
           "mission" : {
@@ -7559,6 +8051,47 @@
               "$ref" : "#/components/schemas/Link"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TryAnswer" : {
+        "properties" : {
+          "body" : {
+            "type" : [ "string", "null" ]
+          },
+          "firstLine" : {
+            "type" : [ "string", "null" ]
+          },
+          "ok" : {
+            "type" : [ "boolean", "null" ]
+          },
+          "refusal" : {
+            "type" : [ "string", "null" ]
+          },
+          "truncated" : {
+            "type" : [ "boolean", "null" ]
+          }
+        },
+        "type" : "object"
+      },
+      "TryRequest" : {
+        "properties" : {
+          "agent" : {
+            "type" : [ "string", "null" ]
+          },
+          "arguments" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/JsonNode"
+            }, {
+              "type" : "null"
+            } ]
+          },
+          "mission" : {
+            "type" : [ "string", "null" ]
+          },
+          "tool" : {
+            "type" : [ "string", "null" ]
           }
         },
         "type" : "object"
@@ -8043,7 +8576,7 @@
       "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
     },
     "title" : "Floor42 API",
-    "version" : "1.1.0"
+    "version" : "1.2.0"
   },
   "openapi" : "3.1.0",
   "paths" : {
@@ -9941,6 +10474,374 @@
         "x-stability" : "unstable"
       }
     },
+    "/api/iam/mcp-servers" : {
+      "get" : {
+        "description" : "Each remote MCP server agents may use (a catalogue resource and the path of its endpoint) with the tools last refreshed: name, description and input schema as the server gave them, their SHA-256, `ticked` (an agent may call it) and `changed` (its definition changed since it was ticked, so it is unticked). A file in the data folder, not journaled.",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/McpServersView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The declared MCP servers and their pinned tools",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      },
+      "put" : {
+        "description" : "The resource must exist, allow POST and have a path prefix that covers `path`; one server per resource, and its pinned tools stay when the path is the same. 400 `UNKNOWN_RESOURCE`, `INVALID_MCP_SERVER`, `MCP_RESOURCE_UNFIT`. Calling it needs IAM mode: without it the agent's tools answer `IDENTITY_UNAVAILABLE`.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "path" : "/mcp",
+                "resource" : "target-mcp"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/DeclareRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/McpServer"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Declare the MCP server of a catalogue resource",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/iam/mcp-servers/{resource}" : {
+      "delete" : {
+        "description" : "Its pinned tools go with it; the catalogue resource stays. 404 `UNKNOWN_MCP_SERVER`.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "resource",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/McpServersView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Remove a declared MCP server",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/iam/mcp-servers/{resource}/tools" : {
+      "put" : {
+        "description" : "Replaces the ticked set with `ticks`: each a pinned tool `name` with the `sha256` of the definition the director saw (as the server's view shows it); ticking approves that definition. A tool whose hash moved on since is refused. Who ticked what is not in the journal. 404 `UNKNOWN_MCP_SERVER`; 400 `UNKNOWN_MCP_TOOL`, `MCP_TOOL_CHANGED`; 409 `MCP_ENDPOINT_CHANGED` (the resource's address or audience is not the one the tools were pinned at: refresh first) and `MCP_CATALOGUE_DAMAGED`.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "resource",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "ticks" : [ {
+                  "name" : "search",
+                  "sha256" : "9f2c0d5b7a1e4c3d8b6a5f0e2d1c4b3a9f8e7d6c5b4a39281706f5e4d3c2b1a0"
+                } ]
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/TicksRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/McpServer"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Tick the tools agents may call",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/iam/mcp-servers/{resource}/tools/refresh" : {
+      "post" : {
+        "description" : "Calls `initialize`, `notifications/initialized` and `tools/list` with the token of the chosen agent for the chosen mission, on the director's behalf (the agent needs the grant and the mission the delegation). A new tool arrives unticked; a ticked tool whose definition changed is unticked and flagged `changed`; when the resource's address or audience is not the one the tools were pinned at, every tool is unticked and flagged `changed`. A name listed twice by the server is not pinned. The view's `baseUrl` and `audience` say where the tools were read. Recorded by the API console and the Keycloak exchanges, not by the journal. 409 with the refusal's code (`RESOURCE_NOT_GRANTED`, `HOST_NOT_ALLOWED`, `MCP_PROTOCOL`, `IDENTITY_UNAVAILABLE`...), 409 `IAM_OFF`, 404 `UNKNOWN_MCP_SERVER`, `UNKNOWN_AGENT`.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "resource",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "agent" : "ada",
+                "mission" : "M-3"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/McpServer"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Pin the tools the server lists now",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/iam/mcp-servers/{resource}/try" : {
+      "post" : {
+        "description" : "Runs the same code as an agent's call (grant, delegation, ticked tool, address checks, one token exchange per request) with the chosen agent's token for the chosen mission, on the director's behalf, without the permission hook. Always 200 once the request is well formed: `ok` is false and `refusal` holds the code when Floor42 refused, `body` is the server's own text, which is data. Recorded by the API console and the Keycloak exchanges, not by the journal.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "resource",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "agent" : "ada",
+                "arguments" : {
+                  "query" : "release notes"
+                },
+                "mission" : "M-3",
+                "tool" : "search"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/TryRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TryAnswer"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Try a ticked tool as an agent would",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
     "/api/iam/missions/{id}/consent" : {
       "get" : {
         "description" : "The consent shown before the Approve click in IAM mode: the mission's agents act on Floor42 for the director until the date given or until the mission ends, and Keycloak asks for the password again. `resources` (comma-separated) names what the approval would grant. 400 `INVALID_RESOURCES`, 409 `IAM_OFF`.",
@@ -10632,6 +11533,123 @@
         "x-stability" : "unstable"
       }
     },
+    "/api/journal/integrity" : {
+      "get" : {
+        "description" : "Result of the last verification (at start, or the last POST verify): status OK, ACKNOWLEDGED, BROKEN or UNCHECKED; the first broken row (brokenSequence, reason) when there is one; how many rows are chained, how many were adopted after the fact (the chain proves nothing about them before that), the signed checkpoints and how many verify, and writesRefused. While status is BROKEN, every append is refused with 503 JOURNAL_CHAIN_BROKEN. Sequences, hashes and counts only, never a payload. Detection against edits made without recomputing the chain and without the signing key; a process of the daemon's OS user that can read the key file can forge both (ADR-0079).",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntegrityView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The journal's hash chain and signed checkpoints",
+        "tags" : [ "Journal" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/journal/integrity/acknowledge" : {
+      "post" : {
+        "description" : "The director has seen the first break: appends resume, the chain continues from the stored hashes and the status keeps naming the break as acknowledged. A later, different break is reported again and refuses appends until acknowledged in turn. Nothing is repaired or restored. A status that is not BROKEN changes nothing.",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntegrityView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Acknowledge a broken hash chain",
+        "tags" : [ "Journal" ],
+        "x-stability" : "unstable"
+      }
+    },
+    "/api/journal/integrity/verify" : {
+      "post" : {
+        "description" : "Recomputes every row's hash and checks every checkpoint, then keeps the result as the status. Reads the whole journal: use it on request, not in a loop.",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntegrityView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Verify the journal's hash chain now",
+        "tags" : [ "Journal" ],
+        "x-stability" : "unstable"
+      }
+    },
     "/api/journal/summary" : {
       "get" : {
         "description" : "What happened after journal sequence `since` (exclusive): tickets delivered, work merged (changes you accepted, branches Floor42 merged), sessions run and failed, and their cost only when Claude Code reported one (`costUsdEstimated`, an estimate; null when none was recorded). Also what waits for you now (open questions) and the missions blocked now (`STUCK` by the dispatcher's rule, or `SUSPENDED`). Simulated events are left out. At most 20000 events are read: `more` is then true and `until` says where the summary stopped. Without `since`, only the journal's latest sequence (`until`). Acknowledge by keeping `until`: nothing is recorded in the journal.",
@@ -10978,6 +11996,103 @@
         "summary" : "Retire",
         "tags" : [ "Lessons" ],
         "x-stability" : "unstable"
+      }
+    },
+    "/api/mcp" : {
+      "get" : {
+        "description" : "Refused (405): each MCP request is answered in its own response; no server-sent stream is opened.",
+        "responses" : {
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "405" : {
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            },
+            "description" : "Refused: no stream"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "No stream from the director's MCP endpoint",
+        "tags" : [ "Director MCP" ]
+      },
+      "post" : {
+        "description" : "JSON-RPC over HTTP (initialize, ping, tools/list, tools/call), for a model that works for you, with a script token as a bearer (never the browser's cookie nor the director's token). Tools: list_missions, get_mission, list_questions, get_costs (scope read); create_mission, answer_question (scope missions:write; only a question of kind OPEN: an approval answers HUMAN_ONLY). Agent-written text comes back inside an UNTRUSTED envelope. docs/headless.md.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "id" : 1,
+                "jsonrpc" : "2.0",
+                "method" : "tools/call",
+                "params" : {
+                  "arguments" : { },
+                  "name" : "list_missions"
+                }
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The director's MCP endpoint",
+        "tags" : [ "Director MCP" ]
       }
     },
     "/api/meetings" : {
@@ -13472,6 +14587,69 @@
         "tags" : [ "Missions" ]
       }
     },
+    "/api/missions/{id}/oversight-report" : {
+      "get" : {
+        "description" : "The journal's facts grouped under four questions (ADR-0075): who supervised (`supervision`), what the agents could do (`capabilities`, the permission table as approved), what they did (`actions`) and what humans overrode (`overrides`). Each line names its journal events (`events`, numbered from 1 among the mission's events, as in the replay export) and its origin; each list is capped with its full `count`. A fact the journal does not hold is a code in `limits`, never a guess. Always masked by the replay export's sanitizer: no parameter turns that off. `format` is `json` (the default) or `md`, a Markdown file with fixed English words in which agent text is inert. `download` true adds a `Content-Disposition` header to save it as a file. Read only, journals nothing, never cached. Behind the session token agents never receive; the shell guard refuses a command naming this route. The body is refused (empty 500) if it would hold the session token.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "True to answer as a file to save (Content-Disposition attachment).",
+          "in" : "query",
+          "name" : "download",
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "description" : "json (the default) or md, the same report as a Markdown file.",
+          "in" : "query",
+          "name" : "format",
+          "schema" : {
+            "default" : "json",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OversightReport"
+                }
+              }
+            },
+            "description" : "The mission's oversight report, always masked"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The mission's human oversight report, for the director",
+        "tags" : [ "Missions" ],
+        "x-stability" : "unstable"
+      }
+    },
     "/api/missions/{id}/proof" : {
       "get" : {
         "description" : "Each producer's `PROVE.md` (ADR-0058), read now, with the code it is about (`head`, `changesDigest` of the work not committed, streamed, a new file over 16 MiB named by its size and time; `head` null when Floor42 cannot tell, which the acceptance asks about, never a failure): `state` `FOUND`, `MISSING` or `UNKNOWN`, its `steps` as the producer wrote them with who runs each (`runner` `FLOOR42` or `DIRECTOR`, and the `reason` a step goes to the director) and `problems` that keep a step from running (`HIDDEN_CHARACTER`: bidirectional, zero-width or control characters; never offered to copy). `lastRun` is Floor42's last journaled run (`ProofRan`), `stale` when the recipe, the commit or the uncommitted work changed since; `witnesses` and `verdict` are the director's, on the current recipe and code only. `running` and `runError` follow a run. `status`: `NO_RECIPE`, `FAILED`, `NOT_RUN` or `PASSED`. Nothing runs and nothing is recorded.",
@@ -14722,6 +15900,49 @@
         "summary" : "Ask: reinforce the team?",
         "tags" : [ "Missions" ],
         "x-stability" : "unstable"
+      }
+    },
+    "/api/missions/{id}/tickets.csv" : {
+      "get" : {
+        "description" : "One row per ticket, as `text/csv; charset=utf-8` (RFC 4180, CRLF, no BOM) saved as `floor42-<mission>-tickets.csv`: `Issue ID`, `Summary`, `Description` (with the acceptance criteria, the dependencies and the deliverable), `Issue Type` (`Task`), `Priority` and `Status` as Floor42 names them (mapped in Jira's import screen), `Labels` (`floor42 <mission> agent-<assignee>`), `Created` and `Resolved` (UTC). No assignee column: an agent is not a Jira user. Free text is masked as in any export leaving the machine, and a cell starting with `=`, `+`, `-`, `@`, a tab or a carriage return gets a leading apostrophe. A snapshot read now: nothing is sent to Jira, nothing is journaled. 404 `UNKNOWN_MISSION`.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/csv; charset=utf-8" : { }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The mission's tickets as a Jira import file",
+        "tags" : [ "Missions" ]
       }
     },
     "/api/missions/{id}/tickets/approve" : {
@@ -17481,6 +18702,53 @@
         "tags" : [ "Settings" ]
       }
     },
+    "/api/standup" : {
+      "get" : {
+        "description" : "Per agent on the staff: yesterday (the last local day before today that holds a real event, named by `previousDay`: submitted and completed tickets, sessions run and failed), today (tickets assigned to it in progress, in review or queued; sessions since 00:00) and blocked (assignments suspended, blocking questions still open, queued tickets whose dependencies are not done). Built from the real events of the journal only: no model call, simulated events left out, nothing journaled, no mood or persona. A line carries a `code` for the page to translate, a ticket or question id, and a title or subject cut to 120 characters. `zone` is an IANA id (400 when unknown); without it the daemon's zone.",
+        "parameters" : [ {
+          "description" : "An IANA time zone id (the browser's); the daemon's own zone when absent.",
+          "in" : "query",
+          "name" : "zone",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Standup"
+                }
+              }
+            },
+            "description" : "Per agent: yesterday, today and blocked, from the real events of the journal"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "The 9 o'clock standup",
+        "tags" : [ "Cockpit" ]
+      }
+    },
     "/api/status" : {
       "get" : {
         "description" : "Open without a token so the mode banner shows before login. `runtime.unfamiliar` lists kinds of stream line Claude Code sent that Floor42 does not know: its protocol changed. `build` is the commit the daemon was built from (null fields for a build without a git checkout).",
@@ -18523,6 +19791,9 @@
   }, {
     "description" : "Claude Code's PreToolUse hook: not for scripts. Unstable: this whole group may change in any release (x-stability: unstable).",
     "name" : "Hook"
+  }, {
+    "description" : "The director's API as MCP tools for a model (ADR-0073), with a script token: missions, questions and costs. It never approves anything.",
+    "name" : "Director MCP"
   }, {
     "description" : "Plugins from a marketplace, installed only on your click and confirmation (ADR-0040), either for Floor42 only (its own folder) or into your own Claude Code; and which installed skills and agents each mission's sessions receive. Operations marked x-stability: unstable in this group may change in any release.",
     "name" : "Plugins"

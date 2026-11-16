@@ -3,6 +3,7 @@ import type {
   BackupsView,
   UnreadableEventView,
   JournalAlertsView,
+  IntegrityView,
   SettingView,
   ToolDecision,
   DefaultPermissionView,
@@ -35,6 +36,9 @@ export const settingsApi = {
   unreadableEvents: () => request<UnreadableEventView[]>('GET', '/api/journal/unreadable'),
   journalAlerts: () => request<JournalAlertsView>('GET', '/api/journal/alerts'),
   acknowledgeContinuity: () => request<JournalAlertsView>('POST', '/api/journal/alerts/continuity/acknowledge'),
+  /** The journal's hash chain (ADR-0079): the last verification; the director acknowledges a break. */
+  journalIntegrity: () => request<IntegrityView>('GET', '/api/journal/integrity'),
+  acknowledgeIntegrity: () => request<IntegrityView>('POST', '/api/journal/integrity/acknowledge'),
   /** The journal's copies, newest first, and a restore waiting for the next start. */
   backups: () => request<BackupsView>('GET', '/api/backups'),
   backUpNow: () => request<BackupsView>('POST', '/api/backups'),

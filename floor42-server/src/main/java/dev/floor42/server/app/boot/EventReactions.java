@@ -35,6 +35,7 @@ import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.app.delivery.NoteArchive;
 import dev.floor42.server.app.mission.DirectorAnswers;
 import dev.floor42.server.app.mission.Dispatcher;
+import dev.floor42.server.app.workspace.signing.AgentSigning;
 import dev.floor42.server.iam.AgentClients;
 import dev.floor42.server.iam.Delegations;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -62,6 +63,11 @@ public class EventReactions {
     private final NoteArchive notes;
     private final MissionInterpreter workflow;
     private final AgentClients identities;
+
+    /** A dismissed agent's signing key is retired with its access (ADR-0077). */
+    @Inject
+    AgentSigning signing;
+
     private final Delegations delegations;
     private final RetroDelegations retroDelegations;
     private final Retrospectives retros;
@@ -199,6 +205,7 @@ public class EventReactions {
                 (e, hired, b) -> scheduler.fork("iam-hired-" + hired.agent(), () -> identities.hired(hired.agent())));
         on(AgentDismissed.class, (e, gone, b) -> {
             identities.revokeLocally(gone.agent());
+            signing.retire(gone.agent());
             scheduler.fork("iam-dismissed-" + gone.agent(), () -> identities.dismissed(gone.agent()));
         });
         // A delegation never outlives its mission: cut off here at once, Keycloak told afterwards.

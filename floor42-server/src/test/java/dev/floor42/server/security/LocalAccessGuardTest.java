@@ -232,4 +232,45 @@ class LocalAccessGuardTest {
         assertThat(LocalAccessGuard.signInBase("evil.example", 7420)).isEqualTo("http://127.0.0.1:7420");
         assertThat(LocalAccessGuard.signInBase(null, 7420)).isEqualTo("http://127.0.0.1:7420");
     }
+
+    /** ADR-0073: a read token's one POST is the director's MCP endpoint (which checks the scope per tool). */
+    @Test
+    void aReadTokenReachesTheDirectorMcpOnly() {
+        String read = given().header("Authorization", "Bearer " + token.value())
+                .contentType("application/json")
+                .body("{\"scope\":\"read\",\"days\":1}")
+                .post("/api/auth/tokens")
+                .then()
+                .statusCode(201)
+                .extract()
+                .path("token");
+        given().header("Authorization", "Bearer " + read)
+                .contentType("application/json")
+                .body("{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"ping\"}")
+                .post("/api/mcp")
+                .then()
+                .statusCode(200);
+        given().header("Authorization", "Bearer " + read)
+                .contentType("application/json")
+                .body("{}")
+                .post("/api/missions")
+                .then()
+                .statusCode(403)
+                .body("code", equalTo("SCOPE"));
+        // Only the exact path and the POST method: another method or a sub-path is any other route.
+        given().header("Authorization", "Bearer " + read)
+                .contentType("application/json")
+                .body("{}")
+                .put("/api/mcp")
+                .then()
+                .statusCode(403)
+                .body("code", equalTo("SCOPE"));
+        given().header("Authorization", "Bearer " + read)
+                .contentType("application/json")
+                .body("{}")
+                .post("/api/mcp/x")
+                .then()
+                .statusCode(403)
+                .body("code", equalTo("SCOPE"));
+    }
 }

@@ -96,6 +96,8 @@ export const missionsEn = {
   'perm.title': 'Tool permissions',
   'perm.none': 'No mission in progress.',
   'perm.tool': 'Tool',
+  'perm.label.mcp__floor42__call_mcp': 'External MCP tools',
+  'perm.hint.mcp__floor42__call_mcp': 'Calls a tool of a declared MCP server, with the agent’s own short-lived token',
   'perm.ALLOW': 'Auto',
   'perm.ALLOW.hint': 'The agent uses the tool without asking',
   'perm.ASK': 'Ask once',

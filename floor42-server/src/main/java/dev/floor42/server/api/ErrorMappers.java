@@ -160,6 +160,12 @@ public class ErrorMappers {
         return problem(Response.Status.SERVICE_UNAVAILABLE.getStatusCode(), "JOURNAL_LOCKED", e.getMessage());
     }
 
+    /** The journal's hash chain is broken and not acknowledged: nothing is written (ADR-0079). */
+    @ServerExceptionMapper
+    public Response chainBroken(dev.floor42.server.journal.JournalChainBrokenException e) {
+        return problem(Response.Status.SERVICE_UNAVAILABLE.getStatusCode(), "JOURNAL_CHAIN_BROKEN", e.getMessage());
+    }
+
     /**
      * Anything no other mapper took: 500 {@code INTERNAL_ERROR} with a generic sentence. The detail (class, message,
      * stack) goes to the log, never to the body.

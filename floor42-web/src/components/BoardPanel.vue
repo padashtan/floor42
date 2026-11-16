@@ -165,6 +165,8 @@ watch(() => [mission.value?.id, mission.value?.status, deliverable.value], loadR
       <button v-if="mission" class="action" :title="t('deliverables.topTitle')" @click="emit('deliverables')">
         {{ t('deliverables.open') }}
       </button>
+      <a v-if="mission && tickets.length" class="action jira-export" :href="api.ticketsCsvUrl(mission.id)" download :title="t('board.exportJiraTitle')">{{ t('board.exportJira') }}</a>
+      <button v-else-if="mission" class="action jira-export" disabled :title="t('board.exportJiraNone')">{{ t('board.exportJira') }}</button>
       <DelegationUntil v-if="mission" :mission="mission.id" />
       <AbandonMissionButton v-if="mission" :mission="mission" />
       <ArchiveMissionButton v-if="mission" :mission="mission" />

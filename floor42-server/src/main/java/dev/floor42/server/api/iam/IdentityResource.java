@@ -5,6 +5,7 @@ import static dev.floor42.server.api.DirectorRequests.parse;
 import dev.floor42.domain.AgentId;
 import dev.floor42.domain.MissionId;
 import dev.floor42.server.app.core.RefusedException;
+import dev.floor42.server.app.workspace.signing.AgentSigning;
 import dev.floor42.server.iam.AgentClients;
 import dev.floor42.server.iam.Delegations;
 import dev.floor42.server.iam.IamSessions;
@@ -17,6 +18,7 @@ import dev.floor42.server.iam.IdpRefusedException;
 import dev.floor42.server.iam.IdpUnavailableException;
 import dev.floor42.server.iam.SecretVault;
 import dev.floor42.server.journal.Journal;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -94,6 +96,11 @@ public class IdentityResource {
     private final IamSettings settings;
     private final IamStatus status;
     private final AgentClients clients;
+
+    /** The revoked agent's signing key is retired with its access (ADR-0077). */
+    @Inject
+    AgentSigning signing;
+
     private final SecretVault vault;
     private final Delegations delegations;
     private final IamSessions sessions;
@@ -276,6 +283,7 @@ public class IdentityResource {
         AgentId agent = known(id);
         return live(() -> {
             clients.revoke(agent);
+            signing.retire(agent);
             return new IamSettingsAnswer(false);
         });
     }

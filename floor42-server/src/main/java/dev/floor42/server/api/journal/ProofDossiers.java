@@ -3,10 +3,13 @@ package dev.floor42.server.api.journal;
 import dev.floor42.domain.Mission;
 import dev.floor42.domain.MissionId;
 import dev.floor42.domain.event.EventEnvelope;
+import dev.floor42.domain.event.WorkbenchEvent.PatchAccepted;
 import dev.floor42.server.api.journal.ProofDossier.Section;
+import dev.floor42.server.api.journal.ProofDossier.SignatureFact;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.app.delivery.MissionReports;
 import dev.floor42.server.app.delivery.MissionReports.MissionReport;
+import dev.floor42.server.app.workspace.signing.AgentSigning;
 import dev.floor42.server.iam.Delegations;
 import dev.floor42.server.iam.MissionDelegation;
 import dev.floor42.server.journal.Journal;
@@ -15,8 +18,11 @@ import dev.floor42.server.security.SessionToken;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import java.nio.file.Path;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -52,6 +58,9 @@ public class ProofDossiers {
     @Inject
     Delegations delegations;
 
+    @Inject
+    AgentSigning signing;
+
     ProofDossier build(String id) {
         MissionId mission;
         try {
@@ -66,7 +75,29 @@ public class ProofDossiers {
                 .toList();
         ReplaySanitizer clean = new ReplaySanitizer(token.value(), exports.roots(m, events));
         MissionReport report = reports.report(mission);
-        return compose(m, events, report, delegations.find(mission), clean, exports.version(), Instant.now());
+        return compose(
+                m,
+                events,
+                report,
+                delegations.find(mission),
+                signatures(mission, events),
+                clean,
+                exports.version(),
+                Instant.now());
+    }
+
+    /** Git's word on each accepted commit's signature, read now from the agent's worktree (ADR-0077). */
+    private Map<String, SignatureFact> signatures(MissionId mission, List<EventEnvelope> events) {
+        Map<String, SignatureFact> out = new HashMap<>();
+        for (EventEnvelope e : events) {
+            if (!(e.event() instanceof PatchAccepted p) || p.commit() == null) continue;
+            Optional<Path> dir = office.query(c -> c.workshop().workspace(mission, p.workspace()))
+                    .map(w -> Path.of(w.path()));
+            AgentSigning.Verdict v = dir.map(d -> signing.verdict(d, p.commit()))
+                    .orElse(new AgentSigning.Verdict("UNCHECKABLE", null, false));
+            out.put(p.commit(), new SignatureFact(v.status(), v.agent(), v.retired()));
+        }
+        return out;
     }
 
     /** Pure: no I/O. Event numbers are the position among the mission's events from 1, as in the replay export. */
@@ -75,10 +106,11 @@ public class ProofDossiers {
             List<EventEnvelope> events,
             MissionReport report,
             Optional<MissionDelegation> delegation,
+            Map<String, SignatureFact> signatures,
             ReplaySanitizer clean,
             String version,
             Instant now) {
-        return new ProofDossierComposer(m, events, report, clean).compose(delegation, version, now);
+        return new ProofDossierComposer(m, events, report, clean, signatures).compose(delegation, version, now);
     }
 
     static <T> Section<T> section(List<T> all) {

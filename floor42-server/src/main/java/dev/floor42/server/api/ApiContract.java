@@ -29,7 +29,7 @@ final class ApiContract {
             Pattern.compile("/api/agents/dismiss-all-but-core"),
             Pattern.compile("/api/missions/[^/]+/(retro/.*|staffing|held|nudge|uncommitted|graph/extend)"),
             Pattern.compile("/api/missions/[^/]+/replay-export.*"),
-            Pattern.compile("/api/missions/[^/]+/proof-dossier"),
+            Pattern.compile("/api/missions/[^/]+/(proof-dossier|oversight-report)"),
             Pattern.compile("/mcp"),
             Pattern.compile("/hooks/.*"));
 

@@ -56,6 +56,7 @@ class LocalAccessGuardHandlersTest {
         guard.signIn = signIn;
         guard.sessions = registry;
         guard.agents = AGENT::equals;
+        guard.iam = dev.floor42.server.iam.IamSettingsOff.in(dir);
         guard.json = new ObjectMapper();
         guard.extraOrigins = Optional.empty();
         guard.consoleSignIns = (Event<ConsoleSignIn>) Proxy.newProxyInstance(

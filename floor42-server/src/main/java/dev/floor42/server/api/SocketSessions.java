@@ -1,7 +1,6 @@
 package dev.floor42.server.api;
 
 import dev.floor42.server.app.terminal.DirectorTerminals;
-import dev.floor42.server.security.LocalAccessGuard;
 import dev.floor42.server.security.SessionRegistry;
 import dev.floor42.server.security.SessionToken;
 import dev.floor42.server.security.SessionsEnded;
@@ -84,9 +83,10 @@ public class SocketSessions {
      */
     public boolean bind(WebSocketConnection connection) {
         if (beforeBind != null) beforeBind.run();
-        LocalAccessGuard.Credential credential = LocalAccessGuard.credentialOf(
-                connection.handshakeRequest().header("Authorization"),
-                connection.handshakeRequest().header("Cookie"));
+        dev.floor42.server.security.RequestCredentials.Credential credential =
+                dev.floor42.server.security.RequestCredentials.credentialOf(
+                        connection.handshakeRequest().header("Authorization"),
+                        connection.handshakeRequest().header("Cookie"));
         if (credential == null) return refuse(connection);
         Bound b = new Bound(connection, credential.secret(), credential.bearer() && token.matches(credential.secret()));
         bound.put(connection.id(), b);

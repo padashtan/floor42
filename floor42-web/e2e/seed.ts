@@ -186,6 +186,6 @@ export async function seedSandbox(page: Page): Promise<void> {
 export async function clearAway(page: Page): Promise<void> {
   await page.locator('.away-panel').first().waitFor({ state: 'visible', timeout: 2500 }).catch(() => undefined)
   const close = page.locator('.away-panel button.action', { hasText: CATALOGS.en['away.close'] })
-  if (await close.count()) await close.first().click()
+  if (await close.count()) await close.first().click({ timeout: 3_000 }).catch(() => undefined)
   await page.locator('.away-panel').waitFor({ state: 'detached', timeout: 3000 }).catch(() => undefined)
 }

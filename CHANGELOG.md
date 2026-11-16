@@ -7,6 +7,34 @@ before v1.0.0: that work is not published as versions, and the decision records 
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-16
+
+### Added
+- Browser tests: `use.actionTimeout` is 20 s, overridable by `FLOOR42_E2E_ACTION_TIMEOUT`; three count-then-act clicks got a bounded wait.
+- Identity claims in the journal (ADR-0074): `AgentTokenIssued` records `sub`, `azp`, `act` and the scopes of the verified token (all optional, never the token); the proof dossier shows them as recorded (`sub` cut to 8 characters in every export), the identity audit export carries them, older sessions keep the "not recorded" limit. A v1.2 journal row with claims is set aside by an older binary (`NEWER_VERSION`).
+- Export for Jira (CSV): a button in the board panel downloads the tickets as a Jira import file (`GET /api/missions/{id}/tickets.csv`, RFC 4180). Masked like any export, a cell that would start a formula gets a leading apostrophe, no assignee column. A snapshot: nothing is sent to Jira. No new event.
+- The director's MCP endpoint (ADR-0073): `POST /api/mcp` gives a model six tools (missions, questions, costs; create a mission, answer an agent's open question) with a script token, scope per tool. It never approves anything, whatever the scope; agent-written text comes back in the untrusted envelope. See `docs/headless.md`.
+- Governed MCP servers (ADR-0072): a remote MCP server is a catalogue resource with an endpoint path (`/api/iam/mcp-servers`); the director pins its tools by hash, ticks the ones agents may call, and an agent runs them with its own short-lived token through the new Floor42 tools `list_mcp_tools` and `call_mcp` (permission table line "External MCP tools", built-in ASK). IAM mode only; who ticked which tool is not in the journal.
+- `Untrusted.quote(source, text)`: the nonce envelope for untrusted text, taken out of `McpResource` (answers unchanged).
+- MCP servers panel (System menu, IAM mode, ADR-0072): declare a catalogue resource as an MCP server, read its tools as an agent ("Refresh tools as"), tick the tools agents may call, and try one with a form built from its schema. Refresh and Try use the chosen agent's own token on the director's behalf, and the screen says so; server text is shown as text, marked untrusted. Web only, no new event.
+- The journal is hash-chained in a side table, with signed Ed25519 checkpoints, `GET /api/journal/integrity`, and appends refused (`JOURNAL_CHAIN_BROKEN`) on a broken chain until the director acknowledges ([ADR-0079](docs/adr/0079-hash-chained-journal.md)).
+- Commits the director accepts in the workshop are signed with the agent's own SSH key (kept under the data folder, retired when the agent is revoked or dismissed); the proof dossier shows "signed by <agent>, verified" or why not ([ADR-0077](docs/adr/0077-commits-signed-by-the-agent.md)).
+- Human oversight report (`GET /api/missions/{id}/oversight-report`, `?format=md`, and an Oversight report panel in the Work menu): who supervised, what the agents could do, what they did, what humans overrode, from the journal, masked, every line naming its events, what is absent listed as a limit ([ADR-0075](docs/adr/0075-human-oversight-report.md)).
+- The 9 o'clock standup (ADR-0078): `GET /api/standup` and a Standup panel (Work menu) give each agent's yesterday, today and blocked, built from the journal only (no model call, no mood); it opens once a day after 09:00 local, dismissal kept in the browser, nothing journaled.
+
+### Changed
+- `AgentTokenIssued` carries four optional identity fields (ADR-0074); older rows read with nulls.
+
+### Fixed
+- Browser tests no longer wait the whole test timeout on an element that left the page.
+- Crash recovery: at startup, calls authorized without outcome, approvals whose hook died and worktrees with unexplained changes are recorded once as To do rows, never with an invented outcome ([ADR-0076](docs/adr/0076-crash-recovery-reconciliation.md)).
+
+### Security
+- Governed MCP servers: allow-list of servers and tools pinned by hash, SSRF guard, no secret in a brief or a logged answer, every call through the hook and the permission table (ADR-0072).
+- The director's MCP endpoint: scope checked per tool, approvals human only (ADR-0073).
+- Jira CSV export: a cell that starts a formula is neutralised.
+- IAM mode: a script token (any scope) is denied by default: it may only read, create a mission and call the MCP read tools and `create_mission`; approving, answering, resuming, the terminal and the IAM settings answer 403 `IAM_SCRIPT_TOKEN_REFUSED` (ADR-0064 note).
+
 ## [1.1.0] - 2026-11-19
 
 ### Added

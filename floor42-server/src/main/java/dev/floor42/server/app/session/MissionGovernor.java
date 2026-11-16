@@ -193,7 +193,15 @@ public final class MissionGovernor implements Governor {
         if (record == null) return;
         office.execute(c -> c.sessions()
                 .tokenIssued(
-                        office.context(Actor.system(), spec.origin()), record, t.issuer(), t.expiresAt(), t.jti()));
+                        office.context(Actor.system(), spec.origin()),
+                        record,
+                        t.issuer(),
+                        t.expiresAt(),
+                        t.jti(),
+                        t.claims().subject(),
+                        t.claims().authorizedParty(),
+                        t.claims().actor(),
+                        t.claims().scopes()));
     }
 
     /** A call whose caller's identity token failed: journaled as requested and refused upstream, never decided. */
@@ -312,6 +320,14 @@ public final class MissionGovernor implements Governor {
         return office.query(c -> c.actions()
                 .find(actionId(toolUseId))
                 .filter(a -> a.stage() == ActionStage.AUTHORIZED)
+                .isPresent());
+    }
+
+    @Override
+    public boolean authorized(String toolUseId, String tool) {
+        return office.query(c -> c.actions()
+                .find(actionId(toolUseId))
+                .filter(a -> a.stage() == ActionStage.AUTHORIZED && a.tool().equals(tool))
                 .isPresent());
     }
 

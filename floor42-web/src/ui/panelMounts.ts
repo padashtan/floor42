@@ -18,11 +18,13 @@ import DirectorTerminal from '../components/DirectorTerminal.vue'
 import EventLog from '../components/EventLog.vue'
 import FileViewerPanel from '../components/FileViewerPanel.vue'
 import HireAgent from '../components/HireAgent.vue'
+import McpPanel from '../components/McpPanel.vue'
 import MachinePanel from '../components/MachinePanel.vue'
 import MeetingRoom from '../components/MeetingRoom.vue'
 import MissionEnd from '../components/MissionEnd.vue'
 import ObjectionsPanel from '../components/ObjectionsPanel.vue'
 import ProgressPanel from '../components/ProgressPanel.vue'
+import OversightPanel from '../components/OversightPanel.vue'
 import ProofDossierPanel from '../components/ProofDossierPanel.vue'
 import ProvePanel from '../components/ProvePanel.vue'
 import ResumePanel from '../components/ResumePanel.vue'
@@ -33,6 +35,7 @@ import IdpExchangesPanel from '../components/IdpExchangesPanel.vue'
 import SessionsPanel from '../components/SessionsPanel.vue'
 import SettingsPanel from '../components/SettingsPanel.vue'
 import SkillsCatalogue from '../components/SkillsCatalogue.vue'
+import StandupPanel from '../components/StandupPanel.vue'
 import RemoteStrip from '../components/RemoteStrip.vue'
 import TodoPanel from '../components/TodoPanel.vue'
 import UsagePanel from '../components/UsagePanel.vue'
@@ -46,6 +49,7 @@ import { isPinned } from '../state/pinned'
 import { remoteTiles } from '../state/remote'
 import { viewing } from '../state/viewer'
 import { awayActions, awayShown } from './away'
+import { due, markShown } from './standup'
 import { closeWorkflows } from './workflowGuard'
 
 /** A listener of a panel's event: its argument, if any, is the panel's own (an id, a question). */
@@ -113,9 +117,30 @@ const toAgent = (c: PanelContext, id: string) => (agent: string) => {
   c.selectAgent(agent)
 }
 
+/**
+ * The standup (ADR-0078) opens by itself once a day, on the first load after 09:00 local with agents on the staff. The
+ * day is kept in this browser only; it is marked as it opens, so a dismissal or a reload does not bring it back.
+ */
+function openStandupOnce(): void {
+  let done = false
+  watch(
+    () => !office.needsLogin && office.agents.length > 0,
+    (ready) => {
+      if (!ready || done) return
+      done = true
+      const now = new Date()
+      if (!due(now)) return
+      markShown(now)
+      setPanel('standup', true)
+    },
+    { immediate: true },
+  )
+}
+
 /** The panels of the director's floor and of the work. */
 function workPanels(c: PanelContext): PanelMount[] {
   const mission = () => office.mission?.workspace ?? null
+  openStandupOnce()
   return [
     flagged('hire', HireAgent),
     flagged('core', CoreDismissal),
@@ -129,10 +154,12 @@ function workPanels(c: PanelContext): PanelMount[] {
     flagged('costs', CostsPanel),
     flagged('sessions', SessionsPanel),
     flagged('identities', IdentitiesPanel),
+    flagged('mcp', McpPanel),
     flagged('iamExchanges', IdpExchangesPanel),
     flagged('sandbox', SandboxReadiness, { props: () => ({ framed: true, project: mission(), check: office.mission?.checkCommand ?? null }) }),
     { id: 'away', component: AwayPanel, shown: () => !office.needsLogin, close: () => awayActions.close(), escapable: () => awayShown.value, on: { progress: open('progress'), desk: () => c.openDesk(null) } },
     flagged('terminal', DirectorTerminal, { props: () => ({ project: mission() }) }),
+    flagged('standup', StandupPanel),
     flagged('skills', SkillsCatalogue, { props: () => ({ mission: office.mission?.id ?? null }) }),
     { id: 'log', component: EventLog, shown: () => true, on: { agent: (id: string) => c.selectAgent(id), question: (q: string) => c.openDesk(q) } },
     { id: 'todo', component: TodoPanel, shown: () => true, on: { question: (q: string) => c.openDesk(q), workshop: open('workshop'), report: (id: string) => (c.reportOf.value = id), progress: open('progress') } },
@@ -175,6 +202,8 @@ function resultPanels(c: PanelContext): PanelMount[] {
     flagged('prove', ProvePanel, { props: () => ({ mission: (requestOf('prove') === proveRequest ? proveOf.value : null) ?? office.mission?.id ?? null }) }),
     // The mission's proof dossier (ADR-0071), from the Work menu: read from the journal, masked, to download.
     flagged('dossier', ProofDossierPanel, { props: () => ({ mission: office.mission?.id ?? null }) }),
+    // The mission's human oversight report (ADR-0075), from the Work menu: read from the journal, masked, to download.
+    flagged('oversight', OversightPanel, { props: () => ({ mission: office.mission?.id ?? null }) }),
     held('profile', AgentProfile, c.profileOf, 'agent', {
       on: {
         settings: () => (c.settingsFor.value = c.profileOf.value),
@@ -202,7 +231,7 @@ export function panelTable(c: PanelContext): PanelMount[] {
 
 /** The order Escape closes panels in, before the last one opened (state/openPanels.ts). */
 const ESCAPE_ORDER = [
-  'viewer', 'report', 'prove', 'dossier', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills',
+  'viewer', 'report', 'prove', 'dossier', 'oversight', 'standup', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills', 'mcp',
   'requests', 'profile', 'machine', 'deliverables', 'board', 'archive', 'usage', 'console', 'callMeeting', 'meeting', 'workshop', 'desk',
 ]
 

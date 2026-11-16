@@ -75,21 +75,28 @@ public final class ShellGuard {
             return Optional.of("the command climbs out of the agent's worktree into Floor42's data directory");
         }
 
-        if (command.contains("session.token")) {
-            return Optional.of("the command names the director's token: agents never act as the director");
-        }
-        if (command.contains("proof-dossier")) {
-            return Optional.of("the command names the proof dossier: only the director exports a mission");
-        }
-        if (command.contains("replay-export")) {
-            return Optional.of("the command names the replay export: only the director exports a mission");
-        }
+        Optional<String> named = names(command);
+        if (named.isPresent()) return named;
         Pattern segment = Pattern.compile("(^|[/~\\s'\"=:])" + Pattern.quote(data) + "($|[/\\s'\";|&)])");
         if (segment.matcher(command).find()) {
             return Optional.of("the command reaches Floor42's data directory (" + data
                     + "): journal, token, installed daemon and other agents' work are off limits");
         }
         return programs(command, daemonPid);
+    }
+
+    /** Floor42's own credentials and exports: only the director holds them. */
+    private static Optional<String> names(String command) {
+        if (command.contains("session.token")) {
+            return Optional.of("the command names the director's token: agents never act as the director");
+        }
+        for (String export : List.of("proof-dossier", "oversight-report", "replay-export")) {
+            if (command.contains(export)) {
+                return Optional.of(
+                        "the command names the " + export.replace('-', ' ') + ": only the director exports a mission");
+            }
+        }
+        return Optional.empty();
     }
 
     /** The programs a command may not run: git push, gh, Claude plugins, a kill of Java or of the daemon. */

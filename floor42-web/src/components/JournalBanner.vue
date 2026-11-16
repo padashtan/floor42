@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { api } from '../api/client'
-import type { JournalAlertsView, UnreadableEventView } from '../api/types'
+import type { IntegrityView, JournalAlertsView, UnreadableEventView } from '../api/types'
 import { t, tr, dateLocale } from '../i18n'
 import { office } from '../state/office'
 
@@ -30,6 +30,17 @@ async function acknowledge() {
     await readAlerts()
   }
 }
+/** ADR-0079: a broken hash chain refuses appends until the director has seen it; an acknowledged one stays said. */
+const chain = ref<IntegrityView | null>(null)
+const chainShown = computed(() => chain.value?.status === 'BROKEN' || chain.value?.status === 'ACKNOWLEDGED')
+
+async function acknowledgeChain() {
+  try {
+    chain.value = await api.acknowledgeIntegrity()
+  } catch {
+    await readAlerts()
+  }
+}
 let timer: ReturnType<typeof setInterval> | undefined
 
 async function readAlerts() {
@@ -37,6 +48,11 @@ async function readAlerts() {
     alerts.value = await api.journalAlerts()
   } catch {
     alerts.value = null
+  }
+  try {
+    chain.value = await api.journalIntegrity()
+  } catch {
+    chain.value = null
   }
 }
 
@@ -82,6 +98,12 @@ onUnmounted(() => clearInterval(timer))
       {{ t('journal.continuity.detection') }}</span
     >
     <button class="action" type="button" @click="acknowledge">{{ t('journal.continuity.acknowledge') }}</button>
+  </div>
+  <div v-if="chainShown && chain" class="journal-banner" :class="{ notice: chain.status === 'ACKNOWLEDGED' }" role="alert">
+    <b>{{ t(chain.status === 'BROKEN' ? 'journal.chain.BROKEN' : 'journal.chain.ACKNOWLEDGED', { row: chain.brokenSequence ?? '?', reason: tr(`journal.chain.reason.${chain.reason}`, chain.reason ?? '?') }) }}</b>
+    <button v-if="chain.status === 'BROKEN'" class="action" type="button" @click="acknowledgeChain">
+      {{ t('journal.continuity.acknowledge') }}
+    </button>
   </div>
   <div v-if="alerts?.configFiles?.length" class="journal-banner" role="alert">
     <b>{{ t('journal.configFiles', { files: alerts.configFiles.join(', ') }) }}</b>

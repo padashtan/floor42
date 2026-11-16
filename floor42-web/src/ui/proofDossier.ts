@@ -1,4 +1,4 @@
-import type { DossierRef, ProofDossier } from '../api/types'
+import type { DossierDelivery, DossierIdentity, DossierRef, ProofDossier } from '../api/types'
 import type { Key } from '../i18n'
 
 /**
@@ -58,12 +58,28 @@ function notes(ref: DossierRef | null | undefined, d: ProofDossier, t: Translate
 const usd = (n: number) => n.toFixed(4).replace(/\.?0+$/, '') || '0'
 const dash = (s: string | null | undefined) => s ?? ''
 
+/** The token's claims as the journal recorded them (ADR-0074); one line for a session that ran before. */
+function claims(i: DossierIdentity, d: ProofDossier, t: Translate): Row[] {
+  if (!i.subject) return [{ text: t('dossier.claim.older'), notes: [sourceWords(null, d, t)] }]
+  const recorded = notes(i.ref, d, t, [t('dossier.claim.recorded')])
+  const claim = (label: Key, value: string | null | undefined): Row => ({ text: `${t(label)}: ${dash(value)}`, notes: recorded })
+  return [
+    claim('dossier.claim.sub', i.subject),
+    claim('dossier.claim.azp', i.authorizedParty),
+    claim('dossier.claim.act', i.actor),
+    claim('dossier.claim.scopes', i.scopes?.join(' ')),
+  ]
+}
+
 function identities(d: ProofDossier, t: Translate): Row[] {
   if (!d.iam) return [{ text: t('dossier.iamOff'), notes: [sourceWords(null, d, t)] }]
-  const rows: Row[] = d.identities.items.map((i) => ({
-    text: t('dossier.identity', { agent: i.agent, client: i.client, jti: i.jti, issuer: i.issuer, expires: i.expiresAt }),
-    notes: notes(i.ref, d, t, [`${sourceWords(null, d, t)}: ${i.derived.join(', ')}`]),
-  }))
+  const rows: Row[] = d.identities.items.flatMap((i) => [
+    {
+      text: t('dossier.identity', { agent: i.agent, client: i.client, jti: i.jti, issuer: i.issuer, expires: i.expiresAt }),
+      notes: notes(i.ref, d, t, [`${sourceWords(null, d, t)}: ${i.derived.join(', ')}`]),
+    },
+    ...claims(i, d, t),
+  ])
   for (const b of d.brokerCalls.items) {
     rows.push({
       text: t('dossier.broker', { agent: b.agent, resource: b.resource, method: b.method, path: b.path, status: b.status, audience: b.audience }),
@@ -129,9 +145,21 @@ function checks(d: ProofDossier, t: Translate): Row[] {
   }))
 }
 
+/** Git's word on a commit's signature, as a phrase; null where the dossier holds none (ADR-0077). */
+function signature(s: DossierDelivery['signature'], t: Translate): string | null {
+  if (!s) return null
+  const retired = s.status === 'VERIFIED' && s.retired
+  return t(key(`dossier.signature.${s.status}${retired ? '.retired' : ''}`), { agent: s.agent ?? '' })
+}
+
 function deliverables(d: ProofDossier, t: Translate): Row[] {
   return d.deliverables.items.map((x) => {
-    const parts = [x.text, x.commit ? `commit ${x.commit}` : null, x.files != null ? `${x.files} file(s)` : null].filter(Boolean)
+    const parts = [
+      x.text,
+      x.commit ? `commit ${x.commit}` : null,
+      x.files != null ? `${x.files} file(s)` : null,
+      signature(x.signature, t),
+    ].filter(Boolean)
     return { text: `${t(key(`dossier.kind.${x.kind}`))}${parts.length ? `: ${parts.join(', ')}` : ''}`, notes: notes(x.ref, d, t) }
   })
 }

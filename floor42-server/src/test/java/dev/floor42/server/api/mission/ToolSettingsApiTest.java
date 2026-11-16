@@ -58,7 +58,17 @@ class ToolSettingsApiTest {
         assertThat(rows)
                 .extracting(ToolSettingView::tool)
                 .containsExactly(
-                        "Read", "Glob", "Grep", "Write", "Edit", "Bash", "WebFetch", "WebSearch", "Skill", "Agent");
+                        "Read",
+                        "Glob",
+                        "Grep",
+                        "Write",
+                        "Edit",
+                        "Bash",
+                        "WebFetch",
+                        "WebSearch",
+                        "Skill",
+                        "Agent",
+                        "mcp__floor42__call_mcp");
         ToolSettingView write = row(m, "Write");
         assertThat(write.decision()).isEqualTo("ASK");
         assertThat(write.source()).contains("mission rule");

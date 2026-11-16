@@ -186,6 +186,47 @@ class SessionIdentityTest {
     }
 
     @Test
+    void theClaimsComeFromTheVerifiedToken() {
+        directorSignedIn();
+        statuses.put(M, MissionStatus.PLANNING);
+        Minted m = identity.mint(spec(T), launch());
+        Ok ok = (Ok) verifier.verify(m.token());
+        assertThat(m.claims().subject())
+                .isEqualTo(ok.payload().path("sub").asText())
+                .isNotBlank();
+        assertThat(m.claims().authorizedParty()).isEqualTo("floor42-agent-ada");
+        assertThat(m.claims().actor()).isEqualTo("floor42-agent-ada");
+        assertThat(m.event().claims()).isEqualTo(m.claims());
+        // no claim of the record holds the token itself
+        assertThat(m.claims().toString()).doesNotContain(m.token());
+    }
+
+    @Test
+    void scopesAreSplitSortedAndDeduplicatedAndAbsentWhenBlank() {
+        var json = new ObjectMapper();
+        Ok ok = new Ok(
+                "j",
+                "iss",
+                "floor42-agent-ada",
+                "floor42-agent-ada",
+                new SessionClaims("L", ADA, M, T),
+                Instant.now(),
+                json.createObjectNode(),
+                json.createObjectNode().put("sub", "u-1").put("scope", "profile  openid profile"));
+        assertThat(SessionIdentity.claimsOf(ok).scopes()).containsExactly("openid", "profile");
+        Ok bare = new Ok(
+                "j",
+                "iss",
+                "",
+                "",
+                new SessionClaims("L", ADA, M, T),
+                Instant.now(),
+                json.createObjectNode(),
+                json.createObjectNode());
+        assertThat(SessionIdentity.claimsOf(bare)).isEqualTo(dev.floor42.server.runtime.RuntimeEvent.TokenClaims.NONE);
+    }
+
+    @Test
     void aSessionWithoutATicketCarriesTheNoTicketMarker() {
         directorSignedIn();
         Minted m = identity.mint(spec(null), launch());

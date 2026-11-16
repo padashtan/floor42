@@ -16,7 +16,7 @@ change is in git and `CHANGELOG.md`; the reasons are in the decision records.
   (`floor42-web`). Agents are Claude Code sessions, never direct model calls.
 - Agent identity with Keycloak (IAM mode, opt-in, ADR-0064; `iam/README.md`), the token broker, the mandatory WSL
   sandbox for REAL missions with a journaled unsafe mode (ADR-0063), session risk detection (ADR-0066, detection and
-  alerts only), the OIDC conformance run, the assurance chain (`docs/quality.md`, `docs/security-scanning.md`).
+  alerts only), 1.2.0: a script token starts no agent work in IAM mode (`LocalAccessGuard.scriptMayInIam`, default deny, 403 `IAM_SCRIPT_TOKEN_REFUSED`, ADR-0064 note), the OIDC conformance run, the assurance chain (`docs/quality.md`, `docs/security-scanning.md`).
 - The 90 code scanning alerts of the first public run (CodeQL, Scorecard) are triaged one by one in
   `docs/security-scanning.md` ("Code scanning triage (v1.0.0)"): fixed with a test, or justified by the check that
   guards the value. A value from a request is logged through `security/LogSafe`.

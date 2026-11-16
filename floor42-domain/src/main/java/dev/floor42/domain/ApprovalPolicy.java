@@ -145,7 +145,18 @@ final class ApprovalPolicy {
         if (answered == asked) return true;
         return answered.agent().equals(asked.agent())
                 && answered.tool().equals(asked.tool())
-                && (asked.category() != ActionCategory.EXECUTE || sameCommand(answered, asked));
+                && (asked.category() != ActionCategory.EXECUTE || sameCommand(answered, asked))
+                && (!EXTERNAL_MCP_TOOL.equals(asked.tool()) || sameRemoteTool(answered, asked));
+    }
+
+    /** The one tool that reaches a remote MCP server (ADR-0072): its summary starts with "server tool". */
+    private static final String EXTERNAL_MCP_TOOL = "mcp__floor42__call_mcp";
+
+    /** An approval of an external MCP tool covers that server and that remote tool, not the others. */
+    private static boolean sameRemoteTool(Action answered, Action asked) {
+        String[] a = answered.summary().split(" ", 3);
+        String[] b = asked.summary().split(" ", 3);
+        return a.length >= 2 && b.length >= 2 && a[0].equals(b[0]) && a[1].equals(b[1]);
     }
 
     /**

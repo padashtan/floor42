@@ -131,7 +131,22 @@ public final class SessionsFacade {
     /** Floor42's runtime records the identity token it obtained for an open session (never the token itself). */
     public List<EventEnvelope> tokenIssued(
             CommandContext ctx, String sessionId, String issuer, Instant expiresAt, String tokenId) {
-        return sessionLog.tokenIssued(ctx, sessionId, issuer, expiresAt, tokenId);
+        return sessionLog.tokenIssued(ctx, sessionId, issuer, expiresAt, tokenId, null, null, null, null);
+    }
+
+    /** The same, with the claims of the verified token (ADR-0074); a claim the token lacked is null. */
+    public List<EventEnvelope> tokenIssued(
+            CommandContext ctx,
+            String sessionId,
+            String issuer,
+            Instant expiresAt,
+            String tokenId,
+            String subject,
+            String authorizedParty,
+            String actor,
+            List<String> scopes) {
+        return sessionLog.tokenIssued(
+                ctx, sessionId, issuer, expiresAt, tokenId, subject, authorizedParty, actor, scopes);
     }
 
     /** Floor42's runtime records that an open session's risk went up (never down); codes and ids, no content. */
