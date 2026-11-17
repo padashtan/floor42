@@ -1,0 +1,32 @@
+model
+  schema 1.1
+
+type user
+
+type agent
+
+type role
+  relations
+    define member: [user]
+
+type office
+  relations
+    define director: [user]
+    define reviewer: [role#member]
+    define countersigner: reviewer but not director
+
+type mission
+  relations
+    define runner: [agent]
+
+type resource
+  relations
+    define granted: [agent]
+    define delegated: [mission]
+    define can_call: granted and runner from delegated
+
+type mcp_tool
+  relations
+    define server: [resource]
+    define enabled: [agent:*]
+    define can_call: enabled and can_call from server

@@ -1,0 +1,33 @@
+name: Authorization model
+
+# iam/openfga/model.fga is the policy as code: its tests run with the OpenFGA CLI (v0.9.0, image pinned by digest) and the
+# JSON Floor42 loads must be what `fga model transform` makes of it. Linux only (Docker image).
+on:
+  push:
+    branches: [main]
+    paths: ['iam/openfga/**', '.github/workflows/model.yml']
+  pull_request:
+    paths: ['iam/openfga/**', '.github/workflows/model.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FGA_CLI: openfga/cli@sha256:7a7f9fb0a27a788a0fa7907eb5fc751c3134ca0776245578308e011606b61091 # fga v0.9.0
+
+jobs:
+  model:
+    if: ${{ github.repository == 'padashtan/floor42' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Model tests
+        run: docker run --rm -v "$PWD/iam/openfga:/m" -w /m "$FGA_CLI" model test --tests model.fga.yaml
+
+      - name: model.json is the transform of model.fga
+        run: |
+          docker run --rm -v "$PWD/iam/openfga:/m" -w /m "$FGA_CLI" model transform --file model.fga > /tmp/model.json
+          diff /tmp/model.json iam/openfga/model.json

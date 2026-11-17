@@ -12,10 +12,11 @@ import type {
   TerminalView,
   TerminalsView,
   DirectorSessionView,
+  BoundTokenStep,
   IssuedScriptToken,
   TokenScope,
 } from '../types'
-import { noContent, request } from '../request'
+import { followStepUp, noContent, request } from '../request'
 
 export const settingsApi = {
   // The director's sessions and script tokens (ADR-0044): in the daemon's memory only.
@@ -23,6 +24,9 @@ export const settingsApi = {
   endSession: (id: string) => noContent('DELETE', `/api/auth/sessions/${encodeURIComponent(id)}`),
   issueToken: (scope: TokenScope, days: number, label: string | null) =>
     request<IssuedScriptToken>('POST', '/api/auth/tokens', { scope, days, label }),
+  /** IAM mode: goes to the Keycloak password step-up; the page that follows shows the token once (ADR-0083). */
+  issueBoundToken: (scope: TokenScope, days: number, label: string | null) =>
+    request<BoundTokenStep>('POST', '/api/auth/tokens/bound', { scope, days, label }).then(followStepUp),
   signOut: () => noContent('POST', '/api/auth/sign-out'),
   signOutEverywhere: () => noContent('POST', '/api/auth/sign-out-everywhere'),
   // The director's own terminal (ADR-0041): opened on the director's click only.
@@ -51,7 +55,7 @@ export const settingsApi = {
   settings: () => request<SettingView[]>('GET', '/api/settings'),
   /** `value` null goes back to the daemon's default. */
   changeSetting: (key: SettingView['key'], value: string | null) =>
-    request<SettingView[]>('PUT', `/api/settings/${encodeURIComponent(key)}`, { value }),
+    request<SettingView[]>('PUT', `/api/settings/${encodeURIComponent(key)}`, { value }).then(followStepUp),
   toolSettings: (mission: string) =>
     request<ToolSettingView[]>('GET', `/api/missions/${encodeURIComponent(mission)}/tools`),
   defaultPermissions: () => request<DefaultPermissionView[]>('GET', '/api/permissions/defaults'),

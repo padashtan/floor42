@@ -102,7 +102,7 @@ public class QuarantineResource {
 
     private boolean revoke(MissionId m) {
         if (!iam.enabled() || delegations.find(m).filter(d -> !d.revoked()).isEmpty()) return false;
-        delegations.revokeLocally(m);
+        delegations.revokeLocally(m, "QUARANTINE");
         try {
             delegations.revokeRemote(m);
         } catch (RuntimeException e) {

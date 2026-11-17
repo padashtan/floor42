@@ -176,6 +176,7 @@ export const meetingVoicesEn = {
   'basis.ruleAgentTicket': 'rule: {decision} {target} for {agent} on {ticket}',
   'basis.missionNotActive': 'mission is {status}',
   'basis.missionCancelled': 'mission cancelled',
+  'basis.trustShadow': 'shadow mode: proposed to the director',
   'basis.notOnTicket': '{agent} is neither working on nor reviewing {ticket}',
   'basis.word.ALLOW': 'ALLOW',
   'basis.word.ASK': 'ASK',

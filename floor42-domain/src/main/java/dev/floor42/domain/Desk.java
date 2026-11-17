@@ -7,6 +7,7 @@ import static dev.floor42.domain.Rules.requireText;
 
 import dev.floor42.domain.event.DeskEvent;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.DeskEvent.QuestionAnswered;
 import dev.floor42.domain.event.DeskEvent.QuestionAsked;
 import dev.floor42.domain.event.DeskEvent.QuestionWithdrawn;
@@ -209,7 +210,14 @@ final class Desk {
 
     /** Records the answer checked by {@link #checkAnswer}; what it settles elsewhere follows on the same recorder. */
     Recorder recordAnswer(CommandContext ctx, Question q, String chosen) {
-        return view.record(ctx, q.mission()).emit(new QuestionAnswered(q.id(), chosen));
+        return recordAnswer(ctx, q, chosen, List.of());
+    }
+
+    /** The same, the signatures that carried the answer recorded first, in the same command (ADR-0081). */
+    Recorder recordAnswer(CommandContext ctx, Question q, String chosen, List<ApprovalSigned> signed) {
+        Recorder r = view.record(ctx, q.mission());
+        signed.forEach(r::emit);
+        return r.emit(new QuestionAnswered(q.id(), chosen));
     }
 
     List<EventEnvelope> withdraw(CommandContext ctx, QuestionId id, String reason) {
@@ -289,6 +297,8 @@ final class Desk {
             case QuestionAnswered e -> on(e);
             case QuestionWithdrawn e -> on(e, envelope);
             case ApprovalForgotten e -> on(e);
+            // A signature is a fact of the journal, not state: what it carried changed the state by its own event.
+            case ApprovalSigned e -> {}
         }
     }
 

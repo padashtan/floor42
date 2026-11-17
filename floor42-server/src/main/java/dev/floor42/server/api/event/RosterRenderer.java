@@ -12,6 +12,7 @@ import dev.floor42.domain.event.RosterEvent.AgentHired;
 import dev.floor42.domain.event.RosterEvent.AgentMarkedCore;
 import dev.floor42.domain.event.RosterEvent.AgentReconfigured;
 import dev.floor42.domain.event.RosterEvent.AgentRoleAssigned;
+import dev.floor42.domain.event.RosterEvent.AgentTrustChanged;
 import dev.floor42.domain.event.RosterEvent.AgentUnmarkedCore;
 
 /** The staff's lines: hiring, roles, models, leaving. */
@@ -37,6 +38,12 @@ final class RosterRenderer implements EventRenderer<RosterEvent> {
                 agent(e.agent()).param("reason", e.reason()).build();
             case AgentMarkedCore e -> agent(e.agent()).build();
             case AgentUnmarkedCore e -> agent(e.agent()).build();
+            case AgentTrustChanged e ->
+                agent(e.agent())
+                        .param("from", e.from())
+                        .param("to", e.to())
+                        .param("cause", e.cause())
+                        .build();
         };
     }
 

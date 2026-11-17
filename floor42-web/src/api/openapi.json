@@ -299,6 +299,10 @@
       },
       "AgentView" : {
         "properties" : {
+          "acceptedPatches" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
           "atWork" : {
             "type" : [ "boolean", "null" ]
           },
@@ -320,6 +324,13 @@
           "provider" : {
             "type" : [ "string", "null" ]
           },
+          "raiseAfter" : {
+            "format" : "int32",
+            "type" : [ "integer", "null" ]
+          },
+          "raiseProposed" : {
+            "type" : [ "boolean", "null" ]
+          },
           "role" : {
             "type" : [ "string", "null" ]
           },
@@ -331,6 +342,15 @@
           },
           "suspended" : {
             "type" : [ "boolean", "null" ]
+          },
+          "trust" : {
+            "type" : [ "string", "null" ]
+          },
+          "trustCause" : {
+            "type" : [ "string", "null" ]
+          },
+          "trustSince" : {
+            "type" : [ "string", "null" ]
           },
           "workRole" : {
             "type" : [ "string", "null" ]
@@ -528,6 +548,33 @@
               "type" : "string"
             },
             "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "AssuredWaiting" : {
+        "properties" : {
+          "firstSubject" : {
+            "type" : [ "string", "null" ]
+          },
+          "id" : {
+            "type" : [ "string", "null" ]
+          },
+          "kind" : {
+            "type" : [ "string", "null" ]
+          },
+          "path" : {
+            "type" : [ "string", "null" ]
+          },
+          "ref" : {
+            "type" : [ "string", "null" ]
+          },
+          "until" : {
+            "anyOf" : [ {
+              "$ref" : "#/components/schemas/Instant"
+            }, {
+              "type" : "null"
+            } ]
           }
         },
         "type" : "object"
@@ -8055,6 +8102,14 @@
         },
         "type" : "object"
       },
+      "TrustChange" : {
+        "properties" : {
+          "level" : {
+            "type" : [ "string", "null" ]
+          }
+        },
+        "type" : "object"
+      },
       "TryAnswer" : {
         "properties" : {
           "body" : {
@@ -8576,7 +8631,7 @@
       "url" : "https://www.apache.org/licenses/LICENSE-2.0.txt"
     },
     "title" : "Floor42 API",
-    "version" : "1.2.0"
+    "version" : "1.3.0"
   },
   "openapi" : "3.1.0",
   "paths" : {
@@ -9154,6 +9209,144 @@
         "tags" : [ "Team" ]
       }
     },
+    "/api/agents/{id}/trust/lower" : {
+      "post" : {
+        "description" : "Sets the level to SHADOW or PROBATION, below the current one; journaled as AgentTrustChanged (cause DIRECTOR). A plain click: narrowing never needs proof. In shadow mode the agent's writes, runs and network calls are denied and shown as proposals.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "level" : "SHADOW"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/TrustChange"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AgentView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Narrow an agent's trust level",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/api/agents/{id}/trust/raise" : {
+      "post" : {
+        "description" : "Sets the level above the current one. Needs the step-up proof; without it the answer is TRUST_RAISE_NEEDS_STEP_UP and nothing is recorded. Journaled as AgentTrustChanged (cause DIRECTOR).",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "level" : "STANDARD"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/TrustChange"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AgentView"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Widen an agent's trust level",
+        "tags" : [ "Team" ]
+      }
+    },
     "/api/auth/sessions" : {
       "get" : {
         "description" : "Every browser session and script token the daemon holds, oldest first, without any secret: kind, scope, when it was opened and last used, when it expires (a script token) or ends unless used (a browser: 8 h idle, 24 h at most, `floor42.sessions.*`), its user agent and label; `current` marks the one this request came with. Nothing is journaled.",
@@ -9387,6 +9580,67 @@
           "bearerToken" : [ ]
         } ],
         "summary" : "Issue a script token",
+        "tags" : [ "Sessions" ]
+      }
+    },
+    "/api/auth/tokens/bound" : {
+      "post" : {
+        "description" : "IAM mode only. Records a pending request (5 minutes, single use) for a script token of `scope` and `days` as in `POST /api/auth/tokens`, and answers `redirect`: the browser follows it, types the Keycloak password again, and the page that follows shows the token once. The token rests on its own Keycloak offline session, kept in the vault and never shown: it works while that session lives (Floor42 asks Keycloak at most once a minute), and a session ended in Keycloak gives 401 `SCRIPT_TOKEN_UNBOUND`. Unlike an unbound token it may approve tickets, nudge, give a directive, answer questions and resume; never approve a plan (403 `HUMAN_ONLY`). `ApiTokenIssued` records `subject` and `binding`. Refused with 403 `BOUND_TOKEN_NEEDS_SIGN_IN` to anything but a browser signed in through Keycloak, and with 409 `IAM_OFF` when IAM mode is off.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "days" : 7,
+                "label" : "night shift",
+                "scope" : "missions:write"
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/ScriptTokenRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "202" : {
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            },
+            "description" : "Accepted: where the browser goes to type the Keycloak password again"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "413" : {
+            "$ref" : "#/components/responses/TooLarge"
+          },
+          "415" : {
+            "$ref" : "#/components/responses/UnsupportedMedia"
+          },
+          "503" : {
+            "$ref" : "#/components/responses/Unavailable"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Ask for a script token bound to the Keycloak session",
         "tags" : [ "Sessions" ]
       }
     },
@@ -10434,6 +10688,46 @@
         "x-stability" : "unstable"
       }
     },
+    "/api/iam/assurance/waiting" : {
+      "get" : {
+        "description" : "The acts whose first signature stands and that wait for a countersignature (four eyes, ADR-0081): the kind and reference of the act, the first 8 characters of the first signer's subject, when the first signature expires (30 minutes), and the path the second person opens in a private window. Empty with IAM mode off.",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AssuredWaiting"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          }
+        },
+        "security" : [ {
+          "cookieAuth" : [ ]
+        }, {
+          "bearerToken" : [ ]
+        } ],
+        "summary" : "Acts waiting for a second signature",
+        "tags" : [ "Identity" ],
+        "x-stability" : "unstable"
+      }
+    },
     "/api/iam/exchanges" : {
       "get" : {
         "description" : "The last 300 calls Floor42 made to Keycloak (token, token exchange, introspection, revocation, admin, JWKS), newest last, each with its operation, method, URL, status, duration and the form it sent with every secret masked as `•••`. Kept in memory only: a restart empties it.",
@@ -11038,7 +11332,7 @@
     },
     "/api/iam/resources" : {
       "get" : {
-        "description" : "The external resources agents may call through the token broker, and which agents may use which (`grants`, by agent id). Files in the data folder, not journaled. A call also needs the mission's delegation to name the resource.",
+        "description" : "The external resources agents may call through the token broker, and which agents may use which (`grants`, by agent id). The catalogue is a file in the data folder; a grant is a tuple in OpenFGA, journaled as `AuthorizationChanged` (503 `FGA_UNAVAILABLE` when a write cannot reach OpenFGA, and `grants` is then empty). A call also needs the mission's delegation to name the resource (also a tuple).",
         "responses" : {
           "200" : {
             "content" : {
@@ -18059,7 +18353,7 @@
     },
     "/api/questions/{id}/answer" : {
       "post" : {
-        "description" : "Answers with one of the question's options, or free text when it has none. A permission request takes ALLOW or DENY.",
+        "description" : "Answers with one of the question's options, or free text when it has none. A permission request takes ALLOW or DENY. With IAM mode on, an ALLOW to a call that reaches outside (a remote MCP tool, any NETWORK tool that is not a plain read) is not recorded by this call: only a browser signed in through Keycloak may ask, it records a pending act (5 minutes, single use) and answers 202 `{redirect}`; the screen follows it, Keycloak asks for the password and the second factor (`acr_values=floor42-strong`), and the answer is recorded with its `ApprovalSigned` only when Floor42 checked the ID token itself (the strong `acr`, a fresh `auth_time`, the same user). A token, the director's own included, gets 403 `HUMAN_ONLY` with the RFC 9470 `WWW-Authenticate` challenge; a sign-in by the console link gets 403 `STEP_UP_NEEDS_SIGN_IN`. A DENY, a plain read (WebFetch, WebSearch) and every answer with IAM mode off keep the click.",
         "parameters" : [ {
           "in" : "path",
           "name" : "id",
@@ -18632,7 +18926,7 @@
     },
     "/api/settings/{key}" : {
       "put" : {
-        "description" : "Changes one setting; `value` null puts the daemon's default back. Setting the value already in force records nothing.",
+        "description" : "Changes one setting; `value` null puts the daemon's default back. Setting the value already in force records nothing. With IAM mode on, turning `FOUR_EYES` off is an act of two signatures: this call answers 202 `{redirect}` (403 `HUMAN_ONLY` for a token), the director signs, and a second person holding the reviewer role countersigns within 30 minutes; the setting changes then, with both signatures journaled.",
         "parameters" : [ {
           "in" : "path",
           "name" : "key",

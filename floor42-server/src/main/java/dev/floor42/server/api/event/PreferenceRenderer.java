@@ -5,12 +5,14 @@ import static dev.floor42.server.api.event.EventLine.line;
 import dev.floor42.domain.Company;
 import dev.floor42.domain.SandboxTools;
 import dev.floor42.domain.event.PreferenceEvent;
+import dev.floor42.domain.event.PreferenceEvent.AuthorizationChanged;
 import dev.floor42.domain.event.PreferenceEvent.BreakGlassSignIn;
 import dev.floor42.domain.event.PreferenceEvent.DefaultPermissionSet;
 import dev.floor42.domain.event.PreferenceEvent.SandboxToolsProbed;
 import dev.floor42.domain.event.PreferenceEvent.SettingChanged;
 import dev.floor42.domain.event.PreferenceEvent.UnsafeModeChanged;
 import java.util.List;
+import java.util.Locale;
 
 /** The director's company-wide choices and the sandbox measure. */
 final class PreferenceRenderer implements EventRenderer<PreferenceEvent> {
@@ -27,6 +29,13 @@ final class PreferenceRenderer implements EventRenderer<PreferenceEvent> {
             case UnsafeModeChanged e ->
                 line(e.on() ? "on" : "off").param("reason", e.reason()).build();
             case BreakGlassSignIn e -> line().param("session", e.session()).build();
+            case AuthorizationChanged e ->
+                line(e.reason().toLowerCase(Locale.ROOT))
+                        .param("writes", e.writes().size())
+                        .param("deletes", e.deletes().size())
+                        .param("what", what(e))
+                        .param("model", e.modelId())
+                        .build();
             case DefaultPermissionSet e ->
                 line(e.decision() == null ? "builtin" : "value")
                         .param("tool", e.tool())
@@ -34,6 +43,15 @@ final class PreferenceRenderer implements EventRenderer<PreferenceEvent> {
                         .param("decision", e.decision())
                         .build();
         };
+    }
+
+    /** The first tuples as "user relation object", ids only; the rest are counted. */
+    private static String what(AuthorizationChanged e) {
+        List<String> parts = new java.util.ArrayList<>();
+        e.writes().stream().limit(3).forEach(t -> parts.add("+ " + t.user() + " " + t.relation() + " " + t.object()));
+        e.deletes().stream().limit(3).forEach(t -> parts.add("- " + t.user() + " " + t.relation() + " " + t.object()));
+        int more = e.writes().size() + e.deletes().size() - parts.size();
+        return String.join(", ", parts) + (more > 0 ? " (+" + more + " more)" : "");
     }
 
     private static EventLine probed(SandboxToolsProbed e) {

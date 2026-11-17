@@ -7,6 +7,21 @@ before v1.0.0: that work is not published as versions, and the decision records 
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-16
+
+### Added
+- Script tokens bound to a Keycloak session (ADR-0083, IAM mode): issued after a password step-up and backed by their own offline session in the vault, they may approve tickets, nudge, direct, resume and answer agents, never approve a plan; unbound tokens keep the 1.2.0 default deny. A session ended in Keycloak refuses the token (401 `SCRIPT_TOKEN_UNBOUND`), checked at most once a minute. `ApiTokenIssued` gains optional `subject` and `binding`.
+- OpenFGA foundation (ADR-0080): the authorization model as code with its tests (`iam/openfga`, `fga model test` in a Linux CI job), a JDK client that fails closed and asks `HIGHER_CONSISTENCY` on every check, the store and the pinned model id kept in `iam/fga.json`, OpenFGA in `iam/compose.yaml`; IAM mode refuses to start without it (`IAM_NEEDS_FGA`, `FGA_UNAVAILABLE`, `FGA_MODEL_MISMATCH`).
+- Assured approvals ([ADR-0081](docs/adr/0081-assured-approvals.md)): in IAM mode an ALLOW to a call that reaches outside needs a fresh sign-in at the strong level (a code from your phone), checked by Floor42 itself and enforced in the domain; a token gets 403 `HUMAN_ONLY` with the RFC 9470 challenge. Four eyes (setting `FOUR_EYES`, off by default) adds a countersignature by a second person holding the reviewer role; turning it off needs two signatures. New event `ApprovalSigned`. Changing the IAM switch or the issuer is an assured act too; the director bearer token and a break-glass sign-in are refused on it.
+- OpenFGA decides at the brokers (ADR-0080): `call_resource` and `call_mcp` ask `can_call` (the agent's grant AND the mission's delegation, the session's agent and mission as a contextual `runner`), after the local revocation check, and fail closed (`FGA_UNAVAILABLE`); grants, delegations and MCP ticks are tuples (a tick's object id holds the tool's hash), each change one `AuthorizationChanged` row (new event type, ids only); the first 1.3.0 start imports `grants.json` and the ticks, journals it and renames the file to `grants.json.imported-1.3.0` (a downgrade to 1.2.0 then refuses every resource call; to restore, rename it back); a start reconciler journals what no row recorded (`reconciled: true`); a grants section per agent in the Identities panel; an allowed call's first line names `fga:<model id>`.
+- Trust levels (ADR-0082): each agent is SHADOW, PROBATION or STANDARD, a cap applied after the permission table that only ever narrows it. A shadow agent's write, run and network calls are denied and shown as proposals (Proposals panel, Work menu); an incident, an alert or a quarantine lowers the level at once; five accepted patches with no incident propose a raise as a To do row that only the director's proven click applies. New event `AgentTrustChanged`; staff already hired stay STANDARD, agents hired afterwards start on probation. A 1.2.0 binary sets the row aside and applies the director's table without the cap.
+
+### Security
+- The desk's Keycloak sign-in now requires the realm role `floor42-director` in the verified access token (401 `DESK_DIRECTOR_ONLY` otherwise, no session): any other realm user, a reviewer included, could open the desk with director powers and mint a bound token. Add the role to an existing director (`iam/bootstrap.sh` does); the countersignature of a reviewer is unchanged (ADR-0081). The role is checked again at every token refresh, which ends the desk session without it, and at the first seat of every step-up. `iam/bootstrap.sh` creates the role when an existing realm lacks it.
+
+### Fixed
+- Linux CI runs the server tests on one fork: two forks raced on Quarkus' test class index (DEBT D31).
+
 ## [1.2.0] - 2026-11-16
 
 ### Added

@@ -208,6 +208,7 @@ class WorkshopHoldTest extends ApiTestBase {
                 () -> office.query(c ->
                         c.sessions().of(m).stream().anyMatch(s -> s.ticket().equals(next))));
         api().body("{\"reason\":\"test over\"}").post("/api/missions/" + r.id() + "/cancel");
+        dismissWhenFree(other);
     }
 
     @Test

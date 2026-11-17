@@ -311,6 +311,16 @@
       "tokenId" : "sim-jti-2"
     }
   },
+  "AgentTrustChanged" : {
+    "line" : "chris: trust level STANDARD to PROBATION (INCIDENT)",
+    "params" : [ "agent", "cause", "from", "to" ],
+    "sample" : {
+      "agent" : "chris",
+      "cause" : "INCIDENT",
+      "from" : "STANDARD",
+      "to" : "PROBATION"
+    }
+  },
   "AgentUnmarkedCore" : {
     "line" : "chris is no longer a core member",
     "params" : [ "agent" ],
@@ -369,6 +379,88 @@
     "sample" : {
       "question" : "Q-1",
       "reason" : "asked for this call only"
+    }
+  },
+  "ApprovalSigned.first" : {
+    "line" : "sub-a signed SETTING FOUR_EYES at the strong level (floor42-strong), signed in at 2026-10-20T08:34:55Z",
+    "params" : [ "acr", "authTime", "kind", "ref", "subject" ],
+    "sample" : {
+      "acr" : "floor42-strong",
+      "authTime" : "2026-10-20T08:34:55Z",
+      "kind" : "SETTING",
+      "ref" : "FOUR_EYES",
+      "subject" : "sub-a"
+    }
+  },
+  "ApprovalSigned.second" : {
+    "line" : "sub-b countersigned SETTING FOUR_EYES at the strong level (floor42-strong), signed in at 2026-10-20T08:34:55Z",
+    "params" : [ "acr", "authTime", "kind", "ref", "subject" ],
+    "sample" : {
+      "acr" : "floor42-strong",
+      "authTime" : "2026-10-20T08:34:55Z",
+      "kind" : "SETTING",
+      "ref" : "FOUR_EYES",
+      "subject" : "sub-b"
+    }
+  },
+  "AuthorizationChanged.delegation" : {
+    "line" : "Floor42 changed a mission’s delegated resources for the director: + agent:ada granted resource:crm",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "01HMODEL",
+      "what" : "+ agent:ada granted resource:crm",
+      "writes" : "1"
+    }
+  },
+  "AuthorizationChanged.grant" : {
+    "line" : "The director changed what agents may use: + agent:A-1 granted resource:crm",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "model-1",
+      "what" : "+ agent:A-1 granted resource:crm",
+      "writes" : "1"
+    }
+  },
+  "AuthorizationChanged.import" : {
+    "line" : "Floor42 imported the grants and MCP ticks of the files into OpenFGA: 1 tuples (+ agent:ada granted resource:crm)",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "01HMODEL",
+      "what" : "+ agent:ada granted resource:crm",
+      "writes" : "1"
+    }
+  },
+  "AuthorizationChanged.mcp_tick" : {
+    "line" : "The director changed the MCP tools agents may call: + agent:ada granted resource:crm",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "01HMODEL",
+      "what" : "+ agent:ada granted resource:crm",
+      "writes" : "1"
+    }
+  },
+  "AuthorizationChanged.quarantine" : {
+    "line" : "A quarantine removed a mission’s delegated resources: 0 tuples (+ agent:ada granted resource:crm)",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "01HMODEL",
+      "what" : "+ agent:ada granted resource:crm",
+      "writes" : "1"
+    }
+  },
+  "AuthorizationChanged.reconcile" : {
+    "line" : "Floor42 found changes in OpenFGA that no row recorded: 1 added, 0 removed (+ agent:ada granted resource:crm)",
+    "params" : [ "deletes", "model", "what", "writes" ],
+    "sample" : {
+      "deletes" : "0",
+      "model" : "01HMODEL",
+      "what" : "+ agent:ada granted resource:crm",
+      "writes" : "1"
     }
   },
   "BranchesMerged.clean" : {

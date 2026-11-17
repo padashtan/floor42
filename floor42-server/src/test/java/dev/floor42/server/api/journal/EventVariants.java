@@ -3,6 +3,7 @@ package dev.floor42.server.api.journal;
 import dev.floor42.domain.ActionCategory;
 import dev.floor42.domain.ActionId;
 import dev.floor42.domain.AgentId;
+import dev.floor42.domain.AuthorizationTuple;
 import dev.floor42.domain.Committee;
 import dev.floor42.domain.ConsultationKind;
 import dev.floor42.domain.Decision;
@@ -24,11 +25,13 @@ import dev.floor42.domain.event.DeliveryEvent.PluginCommandRan;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestCheckState;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestOpened;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.DomainEvent;
 import dev.floor42.domain.event.MeetingEvent;
 import dev.floor42.domain.event.MissionEvent.BudgetSet;
 import dev.floor42.domain.event.MissionEvent.ChecksConfigured;
 import dev.floor42.domain.event.NotebookEvent.NoteChecked;
+import dev.floor42.domain.event.PreferenceEvent.AuthorizationChanged;
 import dev.floor42.domain.event.PreferenceEvent.BreakGlassSignIn;
 import dev.floor42.domain.event.PreferenceEvent.DefaultPermissionSet;
 import dev.floor42.domain.event.PreferenceEvent.SandboxToolsProbed;
@@ -126,6 +129,16 @@ final class EventVariants {
         all.add(new ApprovalForgotten(new QuestionId("Q-9"), "forgotten by the director"));
         all.add(new ApprovalForgotten(new QuestionId("Q-9"), "once"));
         all.add(new ApprovalForgotten(new QuestionId("Q-9"), "asked again by the director, answering Q-10"));
+        for (var seat : dev.floor42.domain.AssurancePolicy.Seat.values()) {
+            all.add(new ApprovalSigned(
+                    new dev.floor42.domain.AssurancePolicy.Act(
+                            dev.floor42.domain.AssurancePolicy.ActKind.QUESTION, "Q-9"),
+                    seat,
+                    "11111111-2222-3333-4444-555555555555",
+                    "floor42-strong",
+                    1_789_000_000L,
+                    "jti-1"));
+        }
         for (Committee.Stage s : Committee.Stage.values()) all.add(new CommitteeAdvanced(M, s, 2, 1));
         for (Committee.Kind k : Committee.Kind.values()) {
             for (Boolean director : java.util.Arrays.asList(null, false, true)) {
@@ -148,6 +161,15 @@ final class EventVariants {
         all.add(new UnsafeModeChanged(true, "WSL is not installed here"));
         all.add(new UnsafeModeChanged(false, null));
         all.add(new BreakGlassSignIn("S-3"));
+        var granted = new AuthorizationTuple("agent:ada", "granted", "resource:crm");
+        for (String reason : List.of("GRANT", "DELEGATION", "MCP_TICK", "IMPORT", "RECONCILE", "QUARANTINE"))
+            all.add(new AuthorizationChanged(
+                    List.of(granted),
+                    List.of(),
+                    "01HMODEL",
+                    reason,
+                    reason.equals("IMPORT"),
+                    reason.equals("RECONCILE")));
         all.add(new CommitteeClarified(M, List.of(), 1));
         all.add(new CommitteeClarified(M, List.of("yes"), 1));
         all.add(new LessonProposed("L-9", M, null, "t", null));

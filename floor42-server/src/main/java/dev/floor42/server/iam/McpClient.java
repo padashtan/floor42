@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dev.floor42.server.iam.McpServers.Listed;
 import dev.floor42.server.iam.McpServers.McpServer;
+import dev.floor42.server.iam.McpServers.McpTool;
 import dev.floor42.server.iam.ResourceBroker.BrokerResult;
 import dev.floor42.server.iam.ResourceBroker.Refusal;
+import dev.floor42.server.iam.fga.FgaException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.IOException;
@@ -38,11 +40,11 @@ public class McpClient {
     private static final Pattern SESSION = Pattern.compile("[!-~]{1,200}");
 
     /** What a tool call gave: the server's own text, flagged when it says it failed; the token facts of the call. */
-    public record Called(boolean error, String text, boolean truncated, String jti, String audience) {
-        /** The only line the journal keeps; the token itself is never in it. */
+    public record Called(boolean error, String text, boolean truncated, String jti, String audience, String basis) {
+        /** The only line the journal keeps; the token itself is never in it. {@code basis} is fga:<model id> when one is recorded. */
         public String firstLine(String server, String tool) {
             return "MCP " + server + " " + tool + " -> " + (error ? "error" : "ok") + " (exchanged token " + jti
-                    + " for " + audience + ")";
+                    + " for " + audience + (basis == null ? "" : ", " + basis) + ")";
         }
     }
 
@@ -83,15 +85,28 @@ public class McpClient {
     /** One call of a ticked tool; the caller is the session, the tool is checked against what the director ticked. */
     public Called callTool(SessionClaims caller, String server, String tool, JsonNode arguments) {
         McpServer s = declared(caller, server);
-        if (s.tool(tool == null ? "" : tool).filter(t -> t.ticked()).isEmpty())
+        McpTool pinned = servers.pinnedTool(s.resource(), tool).orElse(null);
+        boolean ticked;
+        try {
+            // The hash of the pinned definition is in the object id: a tool whose definition moved has no tuples
+            ticked = pinned != null
+                    && catalogue.toolAllowed(
+                            caller.agent(), caller.mission(), s.resource(), pinned.name(), pinned.sha256());
+        } catch (FgaException e) {
+            // Handled: OpenFGA could not decide, so the call is refused, and it is not the agent's doing
+            throw new Refusal(e.code(), "OpenFGA could not decide: the call is refused", e);
+        }
+        if (!ticked)
             throw new Refusal(
                     "MCP_TOOL_NOT_ALLOWED", "The director has not allowed " + s.resource() + " to run that tool");
         if (arguments != null && !arguments.isMissingNode() && !arguments.isNull() && !arguments.isObject())
             throw new Refusal("INVALID_ARGUMENTS", "arguments is a JSON object");
         ObjectNode params = json.createObjectNode().put("name", tool);
         params.set("arguments", arguments == null || !arguments.isObject() ? json.createObjectNode() : arguments);
-        Map<String, String> headers = handshake(caller, s);
-        Answer a = rpc(caller, s, 2, "tools/call", params, headers);
+        return called(rpc(caller, s, 2, "tools/call", params, handshake(caller, s)));
+    }
+
+    private static Called called(Answer a) {
         // The server may write the token back in an escaped form the broker could not see in the raw body.
         if (a.error() != null)
             return new Called(
@@ -101,14 +116,16 @@ public class McpClient {
                                     + a.error().path("message").asText("")),
                     a.truncated(),
                     a.jti(),
-                    a.audience());
+                    a.audience(),
+                    a.basis());
         JsonNode result = a.result();
         return new Called(
                 result.path("isError").asBoolean(false),
                 a.scrub().apply(contentText(result)),
                 a.truncated(),
                 a.jti(),
-                a.audience());
+                a.audience(),
+                a.basis());
     }
 
     /** The text blocks of a result, one per line; any other kind of block is named, not shown. */
@@ -129,8 +146,18 @@ public class McpClient {
         // A fixed message: what the agent typed is not echoed into an error the journal keeps in clear.
         McpServer s = servers.usable(server == null ? "" : server)
                 .orElseThrow(() -> new Refusal("MCP_SERVER_UNKNOWN", "No such MCP server is declared"));
-        if (!catalogue.allowed(caller.agent(), caller.mission(), s.resource()))
-            throw new Refusal("RESOURCE_NOT_GRANTED", "This agent or mission may not use " + s.resource());
+        boolean granted;
+        try {
+            granted = catalogue.allowed(caller.agent(), caller.mission(), s.resource());
+        } catch (FgaException e) {
+            // Handled: OpenFGA could not decide, so the call is refused, and it is not the agent's doing
+            throw new Refusal(e.code(), "OpenFGA could not decide: the call is refused", e);
+        }
+        if (!granted)
+            throw new Refusal(
+                    "RESOURCE_NOT_GRANTED",
+                    "This agent or mission may not use " + s.resource()
+                            + catalogue.basis().map(b -> " (" + b + ")").orElse(""));
         return s;
     }
 
@@ -174,6 +201,7 @@ public class McpClient {
             boolean truncated,
             String jti,
             String audience,
+            String basis,
             UnaryOperator<String> scrub) {}
 
     private Answer rpc(
@@ -199,6 +227,7 @@ public class McpClient {
                 r.truncated(),
                 r.jti(),
                 r.audience(),
+                r.basis(),
                 r::scrub);
     }
 

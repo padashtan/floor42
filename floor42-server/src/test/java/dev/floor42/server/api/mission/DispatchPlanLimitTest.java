@@ -35,10 +35,12 @@ class DispatchPlanLimitTest extends DispatchFixture {
         // A second ticket for a second developer: both are produced at once, then both wait for a review.
         TicketId second = ticket(m, "Deliver: more notes", "Write notes [fake:usage=0.97]", List.of());
         assign(second, "chris");
-        api().body("{\"name\":\"Runa\",\"workRole\":\"DEVELOPER\",\"model\":\"claude-haiku-5-5\"}")
+        String runa = api().body("{\"name\":\"Runa\",\"workRole\":\"DEVELOPER\",\"model\":\"claude-haiku-5-5\"}")
                 .post("/api/agents")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .path("id");
 
         await("both tickets done", Duration.ofSeconds(120), () -> {
             answerAll(m, "Run anyway");
@@ -48,6 +50,8 @@ class DispatchPlanLimitTest extends DispatchFixture {
                 .as("the director answered once for every task started together")
                 .isEqualTo(1);
         cancel(m);
+        // A cheap developer left free would take the light nodes of the classes that follow in the same app.
+        dismissWhenFree(runa);
     }
 
     @Tag("slow")

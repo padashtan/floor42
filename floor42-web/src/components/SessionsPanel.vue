@@ -5,6 +5,7 @@ import { api, ApiError } from '../api/client'
 import type { DirectorSessionView, IssuedScriptToken, TokenScope } from '../api/types'
 import { dateLocale, t } from '../i18n'
 import { confirmed } from '../state/confirm'
+import { iamOn } from '../ui/identities'
 
 const emit = defineEmits<{ close: [] }>()
 
@@ -17,6 +18,7 @@ const days = ref(7)
 const label = ref('')
 const issued = ref<IssuedScriptToken | null>(null)
 const copied = ref(false)
+const iam = ref(false)
 
 function when(iso: string | null): string {
   return iso ? new Date(iso).toLocaleString(dateLocale(), { dateStyle: 'short', timeStyle: 'short' }) : ''
@@ -56,6 +58,12 @@ async function issue(): Promise<void> {
   })
 }
 
+async function issueBound(): Promise<void> {
+  await run(async () => {
+    await api.issueBoundToken(scope.value, days.value, label.value.trim() || null)
+  })
+}
+
 async function copy(): Promise<void> {
   if (!issued.value) return
   await navigator.clipboard.writeText(issued.value.token).catch(() => {})
@@ -79,7 +87,10 @@ async function signOutEverywhere(): Promise<void> {
   })
 }
 
-onMounted(load)
+onMounted(async () => {
+  iam.value = await iamOn()
+  await load()
+})
 </script>
 
 <template>
@@ -130,7 +141,11 @@ onMounted(load)
           <input v-model="label" type="text" maxlength="80" />
         </label>
         <button type="submit">{{ t('sessions.issueButton') }}</button>
+        <button v-if="iam" type="button" :title="t('sessions.issueBoundHint')" @click="issueBound">
+          {{ t('sessions.issueBound') }}
+        </button>
       </form>
+      <div v-if="iam" class="hint">{{ t('sessions.issueBoundHint') }}</div>
       <div v-if="issued" class="issued-token">
         <div class="hint">{{ t('sessions.shownOnce') }}</div>
         <code>{{ issued.token }}</code>

@@ -18,6 +18,7 @@ import { remoteFr } from './remote.fr'
 import { missionFormFr } from './missionForm.fr'
 import { mcpFr } from './mcp.fr'
 import { standupFr } from './standup.fr'
+import { trustFr } from './trust.fr'
 
 export const fr: Record<keyof typeof en, string> = {
   ...shellFr,
@@ -37,4 +38,5 @@ export const fr: Record<keyof typeof en, string> = {
   ...missionFormFr,
   ...mcpFr,
   ...standupFr,
+  ...trustFr,
 }

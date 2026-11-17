@@ -178,6 +178,7 @@ export const meetingVoicesFr: Record<keyof typeof meetingVoicesEn, string> = {
   'basis.ruleAgentTicket': 'règle : {decision} {target} pour {agent} sur {ticket}',
   'basis.missionNotActive': 'la mission est {status}',
   'basis.missionCancelled': 'mission abandonnée',
+  'basis.trustShadow': 'mode ombre : proposé au directeur',
   'basis.notOnTicket': '{agent} ne travaille pas sur {ticket} et ne le relit pas',
   'basis.word.ALLOW': 'AUTORISER',
   'basis.word.ASK': 'DEMANDER',

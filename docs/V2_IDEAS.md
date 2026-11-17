@@ -65,3 +65,4 @@ Each one is a proposal to weigh against real campaigns, in rough order of value.
   compact keyboard-driven operations view beside the 3D office; an agent runtime contract with a second runtime; the
   broker and the vault out of the daemon; Keycloak manages and OpenFGA decides (ADR-0065).
 - The real Jira, through the Atlassian MCP server declared with the MCP feature (no code of Floor42's own): creating and updating issues, links, epics and a two-way sync. v1.2 only exports a CSV.
+- **CIBA and a phone passkey (ADR-0081).** Decoupled approval pushed to the phone (Keycloak's backchannel grant) needs a channel the phone reaches (LAN bind, tunnel or push relay): reopen with a remote access story. A passkey on the phone (WebAuthn hybrid transport) as an alternative to the TOTP code, once measured on Chrome and Edge with rp id `localhost`.

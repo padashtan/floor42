@@ -17,6 +17,7 @@ change is in git and `CHANGELOG.md`; the reasons are in the decision records.
 - Agent identity with Keycloak (IAM mode, opt-in, ADR-0064; `iam/README.md`), the token broker, the mandatory WSL
   sandbox for REAL missions with a journaled unsafe mode (ADR-0063), session risk detection (ADR-0066, detection and
   alerts only), 1.2.0: a script token starts no agent work in IAM mode (`LocalAccessGuard.scriptMayInIam`, default deny, 403 `IAM_SCRIPT_TOKEN_REFUSED`, ADR-0064 note), the OIDC conformance run, the assurance chain (`docs/quality.md`, `docs/security-scanning.md`).
+- 1.3.0 N3, assured approvals (ADR-0081): `AssurancePolicy` (domain table), `AssuredActs` (step-up and four eyes, `iam`), event `ApprovalSigned`, setting `FOUR_EYES`, realm LoA flow with Configure OTP disabled (`iam/enrol-window.sh`); the decision point is the port `Countersigners`, wired to N1's `Authorizer` at INT; unmeasured: a user without a factor against the real realm, a phone passkey.
 - The 90 code scanning alerts of the first public run (CodeQL, Scorecard) are triaged one by one in
   `docs/security-scanning.md` ("Code scanning triage (v1.0.0)"): fixed with a test, or justified by the check that
   guards the value. A value from a request is logged through `security/LogSafe`.

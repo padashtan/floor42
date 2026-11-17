@@ -3,6 +3,7 @@ import type {
   CoreDismissalReport,
   AgentProfileView,
   AgentView,
+  TrustLevel,
   ContextReading,
   NoteView,
   LessonView,
@@ -47,6 +48,10 @@ export const officeApi = {
     request<AgentView>('POST', `/api/agents/${encodeURIComponent(agent)}/dismiss`, { reason }),
   markCore: (agent: string, core: boolean) =>
     request<AgentView>('PUT', `/api/agents/${encodeURIComponent(agent)}/core`, { core }),
+  lowerTrust: (agent: string, level: TrustLevel) =>
+    request<AgentView>('POST', `/api/agents/${encodeURIComponent(agent)}/trust/lower`, { level }),
+  raiseTrust: (agent: string, level: TrustLevel) =>
+    request<AgentView>('POST', `/api/agents/${encodeURIComponent(agent)}/trust/raise`, { level }),
   coreDismissalPreview: () => request<CoreDismissalPreview>('GET', '/api/agents/dismiss-all-but-core'),
   dismissAllButCore: (agents: string[], reason: string) =>
     request<CoreDismissalReport>('POST', '/api/agents/dismiss-all-but-core', { agents, reason }),

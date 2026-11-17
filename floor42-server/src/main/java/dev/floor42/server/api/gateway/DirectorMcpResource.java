@@ -205,8 +205,10 @@ public class DirectorMcpResource {
         Tool tool =
                 tools().stream().filter(t -> t.name().equals(name)).findFirst().orElse(null);
         if (tool == null) return text("Unknown tool: " + name, true);
-        // IAM mode: a script token reads and creates a mission; anything that answers or starts work is the director's.
-        if (iam.enabled() && !tool.readsOrCreates()) return text(IAM_REFUSAL, true);
+        // IAM mode: a script token reads and creates a mission; anything that answers or starts work is the director's,
+        // unless the token is bound to a live Keycloak session (ADR-0083). The approvals stay human only, below.
+        if (iam.enabled() && !tool.readsOrCreates() && !LocalAccessGuard.boundOf(current.getCurrent()))
+            return text(IAM_REFUSAL, true);
         if (tool.needs() != Scope.READ && scope == Scope.READ) {
             return text("SCOPE: This token's scope (read) does not allow this tool", true);
         }
@@ -267,10 +269,7 @@ public class DirectorMcpResource {
                 .orElseThrow(() -> RefusedException.notFound("UNKNOWN_QUESTION", "No open question with this id"));
         // Only an agent's own free question (ask_director): Floor42's decision questions (a retry, a dropped ticket,
         // a container) carry agent-written context and start paid work or cancel tickets, so they stay human.
-        boolean agentAsk = "OPEN".equals(open.kind())
-                && open.action() == null
-                && open.askedBy() != null
-                && !"floor42".equals(open.askedBy());
+        boolean agentAsk = QuestionsResource.agentsFreeQuestion(open);
         if (!agentAsk) {
             throw new RefusedException(
                     403,

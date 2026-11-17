@@ -1,6 +1,6 @@
 // Governed external MCP servers (IAM mode): the views of /api/iam/mcp-servers. Hand-written from the shapes of the
 // server sheet (design-1-governed-mcp.md); contract.ts ties them to openapi.json once that is regenerated.
-import { request } from './request'
+import { followStepUp, request } from './request'
 
 export interface McpToolView {
   name: string
@@ -53,7 +53,8 @@ export const mcpApi = {
   remove: (resource: string) => request<McpServerList>('DELETE', of(resource)),
   /** Reads the tools with the chosen agent's own token, for the chosen mission, on the director's behalf. */
   refresh: (resource: string, agent: string, mission: string) => request<McpServerView>('POST', `${of(resource)}/tools/refresh`, { agent, mission }),
-  tick: (resource: string, ticks: McpTick[]) => request<McpServerView>('PUT', `${of(resource)}/tools`, { ticks }),
+  tick: (resource: string, ticks: McpTick[]) =>
+    request<McpServerView | { redirect: string }>('PUT', `${of(resource)}/tools`, { ticks }).then(followStepUp),
   tryCall: (resource: string, agent: string, mission: string, tool: string, args: Record<string, unknown>) =>
     request<McpTryResult>('POST', `${of(resource)}/try`, { agent, mission, tool, arguments: args }),
 }

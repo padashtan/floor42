@@ -1,5 +1,6 @@
 package dev.floor42.domain;
 
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.EventEnvelope;
 import java.util.List;
 
@@ -38,10 +39,22 @@ final class Answers {
 
     /** @param askAgain nullable: the remembered refusal the director lifts with this answer (see ApprovalPolicy) */
     List<EventEnvelope> answer(CommandContext ctx, QuestionId id, String answer, QuestionId askAgain) {
+        return answer(ctx, id, answer, askAgain, List.of());
+    }
+
+    /** What the answer needs on top of the click, for the screen and the routes (ADR-0081). */
+    AssurancePolicy.Level assuranceFor(Question q, String chosen) {
+        return approvals.assurance(q, chosen);
+    }
+
+    /** @param signed the signatures that carry the answer when {@link AssurancePolicy} asks for them, else empty */
+    List<EventEnvelope> answer(
+            CommandContext ctx, QuestionId id, String answer, QuestionId askAgain, List<ApprovalSigned> signed) {
         String chosen = desk.checkAnswer(ctx, id, answer);
         Question q = desk.existing(id);
         if (askAgain != null) approvals.checkLift(q, askAgain);
-        Recorder r = desk.recordAnswer(ctx, q, chosen);
+        List<ApprovalSigned> proofs = approvals.signaturesFor(ctx, q, chosen, signed);
+        Recorder r = desk.recordAnswer(ctx, q, chosen, proofs);
         if (askAgain != null) approvals.lift(r, q, askAgain);
         switch (q.kind()) {
             // The answer is the record; Floor42's runtime runs, schedules or drops a step held for the plan limit.

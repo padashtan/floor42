@@ -1,5 +1,5 @@
 import { ref, shallowRef } from 'vue'
-import { OneAtATime, prefillFor, prefillRefusal, type PrefillItem } from '../ui/prefill'
+import { OneAtATime, prefillFor, prefillRefusal, safeToType, type PrefillItem } from '../ui/prefill'
 import { setPanel } from './openPanels'
 
 /**
@@ -38,6 +38,21 @@ export function requestPrefill(item: PrefillItem, project: string | null, event:
   const refused = prefillRefusal(item)
   const text = prefillFor(item)
   if (refused || !text) return refused ?? 'badName'
+  const turn = prefillTurn.take()
+  if (turn === null) return 'busy'
+  pendingPrefill.value = { text, project, turn }
+  setPanel('terminal', true)
+  return 'ok'
+}
+
+/**
+ * A shadow proposal (ADR-0082) prepared in the terminal: the text of {@code ui/proposals.typedFor}, a real click of the
+ * director only, printable ASCII only, one preparation at a time, and never Enter: the terminal panel types it through
+ * its own screen and the director reads it and presses Enter himself.
+ */
+export function requestProposalPrefill(text: string, project: string | null, event: { isTrusted: boolean }): PrefillAnswer {
+  if (!event.isTrusted) return 'untrusted'
+  if (!safeToType(text)) return 'badName'
   const turn = prefillTurn.take()
   if (turn === null) return 'busy'
   pendingPrefill.value = { text, project, turn }

@@ -373,6 +373,10 @@ class EventCodecTest {
                                 2, "Look", "open it", "DIRECTOR", "a window", "FAILED", "blank", null, false, 0, ""));
             }
             if (generic.contains("ProofTarget")) return List.of(proofTarget());
+            if (generic.contains("AuthorizationTuple"))
+                return List.of(
+                        new dev.floor42.domain.AuthorizationTuple("agent:ada", "granted", "resource:crm"),
+                        new dev.floor42.domain.AuthorizationTuple("mission:M-1", "delegated", "resource:crm"));
             if (generic.contains("String")) return List.of("a", "b");
             throw new IllegalStateException("No list sample for " + generic + " in " + c);
         }
@@ -383,6 +387,9 @@ class EventCodecTest {
             return new PermissionRule(new AgentId("galen"), ActionCategory.EXECUTE, "Bash", "git status", Decision.ASK);
         if (t == dev.floor42.domain.ProofTarget.class) return proofTarget();
         if (t == dev.floor42.domain.Phrase.class) return dev.floor42.domain.Phrase.of("approval", "tool", "Bash");
+        if (t == dev.floor42.domain.AssurancePolicy.Act.class)
+            return new dev.floor42.domain.AssurancePolicy.Act(
+                    dev.floor42.domain.AssurancePolicy.ActKind.QUESTION, "Q-1");
         throw new IllegalStateException("No sample for " + t + " in " + c);
     }
 

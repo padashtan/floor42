@@ -26,6 +26,7 @@ class DecisionBasisTest {
         assertThat(read("director already denied every Write request from chris (Q-1)"))
                 .isEqualTo(Phrase.of("alreadyDeniedTool", "question", "Q-1", "tool", "Write", "agent", "chris"));
         assertThat(read(DecisionBasis.floor42Tools())).isEqualTo(Phrase.of("floor42Tools"));
+        assertThat(read(DecisionBasis.trustShadow())).isEqualTo(Phrase.of("trustShadow"));
     }
 
     @Test

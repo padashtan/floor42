@@ -117,14 +117,14 @@
     "denialReason" : null,
     "id" : "a1",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:37:00Z",
+    "requestedAt" : "2026-10-20T10:40:00Z",
     "result" : "<project/>",
     "runningSeconds" : null,
     "stage" : "CONFIRMED",
     "summary" : "pom.xml",
     "ticket" : "T-4",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T10:41:00Z"
+    "updatedAt" : "2026-10-20T10:44:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -140,14 +140,14 @@
     "denialReason" : null,
     "id" : "a2",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:42:00Z",
+    "requestedAt" : "2026-10-20T10:45:00Z",
     "result" : "BUILD FAILURE",
     "runningSeconds" : 10,
     "stage" : "FAILED",
     "summary" : "mvn test",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T10:46:00Z"
+    "updatedAt" : "2026-10-20T10:49:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -163,14 +163,14 @@
     "denialReason" : "POLICY",
     "id" : "a3",
     "ran" : false,
-    "requestedAt" : "2026-10-20T10:49:00Z",
+    "requestedAt" : "2026-10-20T10:52:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "TODO",
     "ticket" : "T-4",
     "tool" : "Grep",
-    "updatedAt" : "2026-10-20T10:49:00Z"
+    "updatedAt" : "2026-10-20T10:52:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -183,14 +183,14 @@
     "denialReason" : "DIRECTOR",
     "id" : "a4",
     "ran" : false,
-    "requestedAt" : "2026-10-20T10:50:00Z",
+    "requestedAt" : "2026-10-20T10:53:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "src\\App.java",
     "ticket" : "T-4",
     "tool" : "Write",
-    "updatedAt" : "2026-10-20T11:10:00Z"
+    "updatedAt" : "2026-10-20T11:13:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -206,14 +206,14 @@
     "denialReason" : null,
     "id" : "a5",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:51:00Z",
+    "requestedAt" : "2026-10-20T10:54:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "src/Other.java",
     "ticket" : "T-4",
     "tool" : "Write",
-    "updatedAt" : "2026-10-20T14:04:00Z"
+    "updatedAt" : "2026-10-20T14:07:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -224,14 +224,14 @@
     "denialReason" : null,
     "id" : "a6",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:52:00Z",
+    "requestedAt" : "2026-10-20T10:55:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "question",
     "ticket" : "T-4",
     "tool" : "mcp__floor42__ask",
-    "updatedAt" : "2026-10-20T14:05:00Z"
+    "updatedAt" : "2026-10-20T14:08:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -242,14 +242,14 @@
     "denialReason" : "OUTSIDE_WORKSPACE",
     "id" : "a7",
     "ran" : false,
-    "requestedAt" : "2026-10-20T10:53:00Z",
+    "requestedAt" : "2026-10-20T10:56:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "C:/secret",
     "ticket" : "T-4",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T10:53:00Z"
+    "updatedAt" : "2026-10-20T10:56:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -263,14 +263,14 @@
     "denialReason" : "POLICY",
     "id" : "a8",
     "ran" : false,
-    "requestedAt" : "2026-10-20T10:54:00Z",
+    "requestedAt" : "2026-10-20T10:57:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "x",
     "ticket" : "T-2",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T10:54:00Z"
+    "updatedAt" : "2026-10-20T10:57:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -283,14 +283,14 @@
     "denialReason" : null,
     "id" : "b1",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:58:00Z",
+    "requestedAt" : "2026-10-20T11:01:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:06:00Z"
+    "updatedAt" : "2026-10-20T14:09:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -303,14 +303,14 @@
     "denialReason" : null,
     "id" : "b2",
     "ran" : true,
-    "requestedAt" : "2026-10-20T10:59:00Z",
+    "requestedAt" : "2026-10-20T11:02:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:07:00Z"
+    "updatedAt" : "2026-10-20T14:10:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -323,14 +323,14 @@
     "denialReason" : "DIRECTOR",
     "id" : "b3",
     "ran" : false,
-    "requestedAt" : "2026-10-20T11:00:00Z",
+    "requestedAt" : "2026-10-20T11:03:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "git push",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:07:00Z"
+    "updatedAt" : "2026-10-20T11:10:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -343,14 +343,14 @@
     "denialReason" : null,
     "id" : "b4",
     "ran" : true,
-    "requestedAt" : "2026-10-20T11:01:00Z",
+    "requestedAt" : "2026-10-20T11:04:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "https://example.org",
     "ticket" : "T-4",
     "tool" : "WebFetch",
-    "updatedAt" : "2026-10-20T14:08:00Z"
+    "updatedAt" : "2026-10-20T14:11:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -363,14 +363,14 @@
     "denialReason" : null,
     "id" : "b5",
     "ran" : true,
-    "requestedAt" : "2026-10-20T11:02:00Z",
+    "requestedAt" : "2026-10-20T11:05:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "https://example.org",
     "ticket" : "T-4",
     "tool" : "WebFetch",
-    "updatedAt" : "2026-10-20T14:09:00Z"
+    "updatedAt" : "2026-10-20T14:12:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -384,14 +384,14 @@
     "denialReason" : null,
     "id" : "b6",
     "ran" : true,
-    "requestedAt" : "2026-10-20T11:11:00Z",
+    "requestedAt" : "2026-10-20T11:14:00Z",
     "result" : "stopped",
     "runningSeconds" : null,
     "stage" : "FAILED",
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:10:00Z"
+    "updatedAt" : "2026-10-20T14:13:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -405,14 +405,14 @@
     "denialReason" : "DIRECTOR",
     "id" : "b7",
     "ran" : false,
-    "requestedAt" : "2026-10-20T11:12:00Z",
+    "requestedAt" : "2026-10-20T11:15:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "git push",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:12:00Z"
+    "updatedAt" : "2026-10-20T11:15:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -423,14 +423,14 @@
     "denialReason" : "BLOCKED_UPSTREAM",
     "id" : "b8",
     "ran" : false,
-    "requestedAt" : "2026-10-20T11:16:00Z",
+    "requestedAt" : "2026-10-20T11:19:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:20:00Z"
+    "updatedAt" : "2026-10-20T11:23:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -441,14 +441,14 @@
     "denialReason" : "BLOCKED_UPSTREAM",
     "id" : "u1",
     "ran" : false,
-    "requestedAt" : "2026-10-20T11:22:00Z",
+    "requestedAt" : "2026-10-20T11:25:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "curl x",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:22:00Z"
+    "updatedAt" : "2026-10-20T11:25:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -459,14 +459,14 @@
     "denialReason" : null,
     "id" : "u2",
     "ran" : true,
-    "requestedAt" : "2026-10-20T11:24:00Z",
+    "requestedAt" : "2026-10-20T11:27:00Z",
     "result" : "200",
     "runningSeconds" : null,
     "stage" : "EXECUTED",
     "summary" : "curl y",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:24:00Z"
+    "updatedAt" : "2026-10-20T11:27:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -477,14 +477,14 @@
     "denialReason" : null,
     "id" : "u3",
     "ran" : true,
-    "requestedAt" : "2026-10-20T11:25:00Z",
+    "requestedAt" : "2026-10-20T11:28:00Z",
     "result" : "200",
     "runningSeconds" : null,
     "stage" : "EXECUTED",
     "summary" : "curl z",
     "ticket" : null,
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:25:00Z"
+    "updatedAt" : "2026-10-20T11:28:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -497,21 +497,21 @@
     "denialReason" : "MISSION_NOT_ACTIVE",
     "id" : "b9",
     "ran" : false,
-    "requestedAt" : "2026-10-20T11:29:00Z",
+    "requestedAt" : "2026-10-20T11:32:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "x",
     "ticket" : "T-4",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T11:29:00Z"
+    "updatedAt" : "2026-10-20T11:32:00Z"
   } ],
   "archived" : true,
   "budgetUsd" : null,
   "capDecided" : true,
   "checkCommand" : "mvn -q verify",
   "checkRuns" : [ {
-    "at" : "2026-10-20T12:46:00Z",
+    "at" : "2026-10-20T12:49:00Z",
     "command" : "mvn -q verify",
     "durationMs" : 12345,
     "exitCode" : 1,
@@ -522,7 +522,7 @@
     "trigger" : "manual",
     "workspace" : "chris"
   }, {
-    "at" : "2026-10-20T12:47:00Z",
+    "at" : "2026-10-20T12:50:00Z",
     "command" : "mvn -q verify",
     "durationMs" : 600000,
     "exitCode" : null,
@@ -534,7 +534,7 @@
     "workspace" : "chris"
   } ],
   "checksAutomatic" : true,
-  "closedAt" : "2026-10-20T14:12:00Z",
+  "closedAt" : "2026-10-20T14:15:00Z",
   "committee" : null,
   "committees" : [ ],
   "delivery" : null,
@@ -550,7 +550,7 @@
       "tool" : "Bash"
     },
     "id" : "I-1",
-    "raisedAt" : "2026-10-20T11:24:00Z"
+    "raisedAt" : "2026-10-20T11:27:00Z"
   }, {
     "action" : "u3",
     "criticality" : "CRITICAL",
@@ -562,7 +562,7 @@
       "tool" : "Bash"
     },
     "id" : "I-2",
-    "raisedAt" : "2026-10-20T11:25:00Z"
+    "raisedAt" : "2026-10-20T11:28:00Z"
   } ],
   "meeting" : null,
   "objective" : "Ship the app",
@@ -578,7 +578,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T10:50:00Z",
+    "askedAt" : "2026-10-20T10:53:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -615,7 +615,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T10:58:00Z",
+    "askedAt" : "2026-10-20T11:01:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -652,7 +652,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:00:00Z",
+    "askedAt" : "2026-10-20T11:03:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -689,7 +689,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:01:00Z",
+    "askedAt" : "2026-10-20T11:04:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -725,7 +725,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:02:00Z",
+    "askedAt" : "2026-10-20T11:05:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -761,7 +761,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:16:00Z",
+    "askedAt" : "2026-10-20T11:19:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -798,7 +798,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:31:00Z",
+    "askedAt" : "2026-10-20T11:34:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -829,7 +829,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T11:34:00Z",
+    "askedAt" : "2026-10-20T11:37:00Z",
     "askedBy" : "floor42",
     "blocking" : false,
     "causeBy" : null,
@@ -862,7 +862,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T12:19:00Z",
+    "askedAt" : "2026-10-20T12:22:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -897,7 +897,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T12:21:00Z",
+    "askedAt" : "2026-10-20T12:24:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -932,7 +932,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T12:24:00Z",
+    "askedAt" : "2026-10-20T12:27:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -967,7 +967,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:20:00Z",
+    "askedAt" : "2026-10-20T13:23:00Z",
     "askedBy" : "galen",
     "blocking" : false,
     "causeBy" : null,
@@ -1000,7 +1000,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:26:00Z",
+    "askedAt" : "2026-10-20T13:29:00Z",
     "askedBy" : "galen",
     "blocking" : false,
     "causeBy" : null,
@@ -1033,7 +1033,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:28:00Z",
+    "askedAt" : "2026-10-20T13:31:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1066,7 +1066,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:32:00Z",
+    "askedAt" : "2026-10-20T13:35:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1099,7 +1099,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:34:00Z",
+    "askedAt" : "2026-10-20T13:37:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1132,7 +1132,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:38:00Z",
+    "askedAt" : "2026-10-20T13:41:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1167,7 +1167,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:44:00Z",
+    "askedAt" : "2026-10-20T13:47:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1200,21 +1200,21 @@
     "conclusions" : [ "Keep tests first" ],
     "contributions" : [ {
       "agent" : "chris",
-      "at" : "2026-10-20T14:26:00Z",
+      "at" : "2026-10-20T14:29:00Z",
       "skipped" : null,
       "text" : "Good flow",
       "wentBadly" : [ ],
       "wentWell" : [ "Tests first" ]
     }, {
       "agent" : "darius",
-      "at" : "2026-10-20T14:29:00Z",
+      "at" : "2026-10-20T14:32:00Z",
       "skipped" : "usage window",
       "text" : null,
       "wentBadly" : [ ],
       "wentWell" : [ ]
     }, {
       "agent" : "galen",
-      "at" : "2026-10-20T14:31:00Z",
+      "at" : "2026-10-20T14:34:00Z",
       "skipped" : null,
       "text" : "Mostly fine",
       "wentBadly" : [ "Budget surprises" ],
@@ -1225,7 +1225,7 @@
       "audience" : "DEVELOPER",
       "id" : "L-1",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedAt" : "2026-10-20T14:37:00Z",
       "proposedBy" : "galen",
       "reason" : "Obvious now",
       "status" : "RETIRED",
@@ -1234,7 +1234,7 @@
       "audience" : null,
       "id" : "L-2",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedAt" : "2026-10-20T14:37:00Z",
       "proposedBy" : "galen",
       "reason" : null,
       "status" : "ACCEPTED",
@@ -1243,7 +1243,7 @@
       "audience" : "REVIEWER",
       "id" : "L-3",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:34:00Z",
+      "proposedAt" : "2026-10-20T14:37:00Z",
       "proposedBy" : "galen",
       "reason" : "rejected by the director",
       "status" : "REJECTED",
@@ -1330,7 +1330,7 @@
     "agent" : "galen",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.1,
-    "endedAt" : "2026-10-20T10:00:00Z",
+    "endedAt" : "2026-10-20T10:03:00Z",
     "failed" : false,
     "id" : "s-plan",
     "inputTokensProvided" : 1000,
@@ -1338,14 +1338,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 200,
-    "startedAt" : "2026-10-20T09:59:00Z",
+    "startedAt" : "2026-10-20T10:02:00Z",
     "ticket" : "T-1",
     "turns" : 3
   }, {
     "agent" : "chris",
     "costUsdBound" : null,
     "costUsdEstimated" : 1.25,
-    "endedAt" : "2026-10-20T11:43:00Z",
+    "endedAt" : "2026-10-20T11:46:00Z",
     "failed" : false,
     "id" : "s1",
     "inputTokensProvided" : 50000,
@@ -1353,14 +1353,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 4000,
-    "startedAt" : "2026-10-20T10:27:00Z",
+    "startedAt" : "2026-10-20T10:30:00Z",
     "ticket" : "T-4",
     "turns" : 12
   }, {
     "agent" : "chris",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.75,
-    "endedAt" : "2026-10-20T11:48:00Z",
+    "endedAt" : "2026-10-20T11:51:00Z",
     "failed" : true,
     "id" : "s2",
     "inputTokensProvided" : null,
@@ -1368,14 +1368,14 @@
     "open" : false,
     "outcome" : "error_max_turns",
     "outputTokensProvided" : null,
-    "startedAt" : "2026-10-20T11:46:00Z",
+    "startedAt" : "2026-10-20T11:49:00Z",
     "ticket" : "T-4",
     "turns" : 40
   }, {
     "agent" : "chris",
     "costUsdBound" : null,
     "costUsdEstimated" : null,
-    "endedAt" : "2026-10-20T11:56:00Z",
+    "endedAt" : "2026-10-20T11:59:00Z",
     "failed" : false,
     "id" : "s3",
     "inputTokensProvided" : 2000,
@@ -1383,14 +1383,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 300,
-    "startedAt" : "2026-10-20T11:52:00Z",
+    "startedAt" : "2026-10-20T11:55:00Z",
     "ticket" : "T-4",
     "turns" : 5
   }, {
     "agent" : "darius",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.3,
-    "endedAt" : "2026-10-20T12:15:00Z",
+    "endedAt" : "2026-10-20T12:18:00Z",
     "failed" : false,
     "id" : "s-rev",
     "inputTokensProvided" : 900,
@@ -1398,14 +1398,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 100,
-    "startedAt" : "2026-10-20T12:03:00Z",
+    "startedAt" : "2026-10-20T12:06:00Z",
     "ticket" : "T-4",
     "turns" : 4
   }, {
     "agent" : "ken",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.05,
-    "endedAt" : "2026-10-20T12:32:00Z",
+    "endedAt" : "2026-10-20T12:35:00Z",
     "failed" : false,
     "id" : "s-ken",
     "inputTokensProvided" : 100,
@@ -1413,14 +1413,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T12:30:00Z",
+    "startedAt" : "2026-10-20T12:33:00Z",
     "ticket" : "T-2",
     "turns" : 2
   }, {
     "agent" : "chris",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.01,
-    "endedAt" : "2026-10-20T14:24:00Z",
+    "endedAt" : "2026-10-20T14:27:00Z",
     "failed" : false,
     "id" : "s-retro",
     "inputTokensProvided" : 10,
@@ -1428,7 +1428,7 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T14:23:00Z",
+    "startedAt" : "2026-10-20T14:26:00Z",
     "ticket" : "T-12",
     "turns" : 1
   } ],
@@ -1441,19 +1441,19 @@
     "acceptanceCriteria" : [ "A plan" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T09:26:00Z",
+    "createdAt" : "2026-10-20T09:29:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T10:05:00Z",
+    "endedAt" : "2026-10-20T10:08:00Z",
     "environmentBlocker" : null,
     "id" : "T-1",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T09:58:00Z",
+    "startedAt" : "2026-10-20T10:01:00Z",
     "status" : "DONE",
     "title" : "Plan the work",
     "toRecheck" : false,
@@ -1462,19 +1462,19 @@
     "acceptanceCriteria" : [ "Builds" ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T09:27:00Z",
+    "createdAt" : "2026-10-20T09:30:00Z",
     "deliverable" : null,
     "dependsOn" : [ "T-1" ],
     "description" : "Build it",
     "directives" : [ "Use Gradle" ],
-    "endedAt" : "2026-10-20T13:58:00Z",
+    "endedAt" : "2026-10-20T14:01:00Z",
     "environmentBlocker" : null,
     "id" : "T-2",
     "kind" : "WORK",
     "node" : null,
     "priority" : "HIGH",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T12:29:00Z",
+    "startedAt" : "2026-10-20T12:32:00Z",
     "status" : "CANCELLED",
     "title" : "Build",
     "toRecheck" : false,
@@ -1483,12 +1483,12 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "ken",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T09:51:00Z",
+    "createdAt" : "2026-10-20T09:54:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:59:00Z",
+    "endedAt" : "2026-10-20T14:02:00Z",
     "environmentBlocker" : null,
     "id" : "T-3",
     "kind" : "WORK",
@@ -1520,12 +1520,12 @@
       "role" : null,
       "round" : 1
     } ],
-    "createdAt" : "2026-10-20T10:05:00Z",
+    "createdAt" : "2026-10-20T10:08:00Z",
     "deliverable" : "Third try",
     "dependsOn" : [ ],
     "description" : "The login page",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T12:25:00Z",
+    "endedAt" : "2026-10-20T12:28:00Z",
     "environmentBlocker" : null,
     "id" : "T-4",
     "kind" : "WORK",
@@ -1552,7 +1552,7 @@
       "reviewer" : "darius",
       "verdict" : "UNVERIFIABLE"
     } ],
-    "startedAt" : "2026-10-20T10:23:00Z",
+    "startedAt" : "2026-10-20T10:26:00Z",
     "status" : "DONE",
     "title" : "Login",
     "toRecheck" : false,
@@ -1561,12 +1561,12 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T10:05:00Z",
+    "createdAt" : "2026-10-20T10:08:00Z",
     "deliverable" : "Logout",
     "dependsOn" : [ "T-4" ],
     "description" : "",
     "directives" : [ "Add the expiry test" ],
-    "endedAt" : "2026-10-20T14:00:00Z",
+    "endedAt" : "2026-10-20T14:03:00Z",
     "environmentBlocker" : null,
     "id" : "T-5",
     "kind" : "WORK",
@@ -1578,7 +1578,7 @@
       "reviewer" : "darius",
       "verdict" : "VALIDATED_WITH_RESERVATIONS"
     } ],
-    "startedAt" : "2026-10-20T12:26:00Z",
+    "startedAt" : "2026-10-20T12:29:00Z",
     "status" : "CANCELLED",
     "title" : "Logout",
     "toRecheck" : false,
@@ -1587,12 +1587,12 @@
     "acceptanceCriteria" : [ "Shows it" ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T10:05:00Z",
+    "createdAt" : "2026-10-20T10:08:00Z",
     "deliverable" : null,
     "dependsOn" : [ "T-4", "T-5" ],
     "description" : "Show the profile",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T10:12:00Z",
+    "endedAt" : "2026-10-20T10:15:00Z",
     "environmentBlocker" : null,
     "id" : "T-6",
     "kind" : "WORK",
@@ -1608,19 +1608,19 @@
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:16:00Z",
+    "createdAt" : "2026-10-20T13:19:00Z",
     "deliverable" : "Two more developers",
     "dependsOn" : [ ],
     "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:20:00Z",
+    "endedAt" : "2026-10-20T13:23:00Z",
     "environmentBlocker" : null,
     "id" : "T-7",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T13:16:00Z",
+    "startedAt" : "2026-10-20T13:19:00Z",
     "status" : "DONE",
     "title" : "Staffing: should the team be reinforced?",
     "toRecheck" : false,
@@ -1629,19 +1629,19 @@
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:23:00Z",
+    "createdAt" : "2026-10-20T13:26:00Z",
     "deliverable" : "No measure yet",
     "dependsOn" : [ ],
     "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:24:00Z",
+    "endedAt" : "2026-10-20T13:27:00Z",
     "environmentBlocker" : null,
     "id" : "T-8",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T13:23:00Z",
+    "startedAt" : "2026-10-20T13:26:00Z",
     "status" : "DONE",
     "title" : "Staffing: should the team be reinforced?",
     "toRecheck" : false,
@@ -1650,19 +1650,19 @@
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:25:00Z",
+    "createdAt" : "2026-10-20T13:28:00Z",
     "deliverable" : "Not worth it",
     "dependsOn" : [ ],
     "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:26:00Z",
+    "endedAt" : "2026-10-20T13:29:00Z",
     "environmentBlocker" : null,
     "id" : "T-9",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T13:25:00Z",
+    "startedAt" : "2026-10-20T13:28:00Z",
     "status" : "DONE",
     "title" : "Staffing: should the team be reinforced?",
     "toRecheck" : false,
@@ -1671,12 +1671,12 @@
     "acceptanceCriteria" : [ "Done as the note asks: Make the board faster\nIt lags on big missions" ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:47:00Z",
+    "createdAt" : "2026-10-20T13:50:00Z",
     "deliverable" : "Faster board",
     "dependsOn" : [ ],
     "description" : "Make the board faster\nIt lags on big missions\n\nFrom the director's note N-1.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:54:00Z",
+    "endedAt" : "2026-10-20T13:57:00Z",
     "environmentBlocker" : null,
     "id" : "T-10",
     "kind" : "WORK",
@@ -1688,7 +1688,7 @@
       "reviewer" : "darius",
       "verdict" : "VALIDATED"
     } ],
-    "startedAt" : "2026-10-20T13:52:00Z",
+    "startedAt" : "2026-10-20T13:55:00Z",
     "status" : "DONE",
     "title" : "Make the board faster",
     "toRecheck" : false,
@@ -1697,12 +1697,12 @@
     "acceptanceCriteria" : [ "Done as the note asks: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ],
     "assignee" : null,
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:49:00Z",
+    "createdAt" : "2026-10-20T13:52:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nFrom the director's note N-3.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T14:01:00Z",
+    "endedAt" : "2026-10-20T14:04:00Z",
     "environmentBlocker" : null,
     "id" : "T-11",
     "kind" : "WORK",
@@ -1797,14 +1797,14 @@
     "denialReason" : "POLICY",
     "id" : "c1",
     "ran" : false,
-    "requestedAt" : "2026-10-20T15:36:00Z",
+    "requestedAt" : "2026-10-20T15:39:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "kong.yml",
     "ticket" : "T-14",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T15:36:00Z"
+    "updatedAt" : "2026-10-20T15:39:00Z"
   } ],
   "archived" : false,
   "budgetUsd" : null,
@@ -1812,7 +1812,7 @@
   "checkCommand" : null,
   "checkRuns" : [ ],
   "checksAutomatic" : false,
-  "closedAt" : "2026-10-20T15:38:00Z",
+  "closedAt" : "2026-10-20T15:41:00Z",
   "committee" : {
     "agreement" : null,
     "analyst" : null,
@@ -1820,7 +1820,7 @@
     "clarifications" : 2,
     "constraints" : [ "The director answered \"Which SLA?\": 99.9", "The director answered \"Which region?\": EU only", "Must run on-premises" ],
     "contributions" : [ {
-      "at" : "2026-10-20T15:03:00Z",
+      "at" : "2026-10-20T15:06:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "ANALYSIS",
@@ -1832,7 +1832,7 @@
       "round" : 1,
       "text" : "Gateway"
     }, {
-      "at" : "2026-10-20T15:04:00Z",
+      "at" : "2026-10-20T15:07:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens are not checked per API",
       "kind" : "ANALYSIS",
@@ -1844,7 +1844,7 @@
       "round" : 1,
       "text" : "mTLS"
     }, {
-      "at" : "2026-10-20T15:06:00Z",
+      "at" : "2026-10-20T15:09:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "ANALYSIS",
@@ -1856,7 +1856,7 @@
       "round" : 1,
       "text" : "Fine"
     }, {
-      "at" : "2026-10-20T15:08:00Z",
+      "at" : "2026-10-20T15:11:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1868,7 +1868,7 @@
       "round" : 2,
       "text" : "Still a gateway"
     }, {
-      "at" : "2026-10-20T15:09:00Z",
+      "at" : "2026-10-20T15:12:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
@@ -1880,7 +1880,7 @@
       "round" : 2,
       "text" : "Still"
     }, {
-      "at" : "2026-10-20T15:10:00Z",
+      "at" : "2026-10-20T15:13:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1892,7 +1892,7 @@
       "round" : 2,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:11:00Z",
+      "at" : "2026-10-20T15:14:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -1904,7 +1904,7 @@
       "round" : 2,
       "text" : "# Record"
     }, {
-      "at" : "2026-10-20T15:17:00Z",
+      "at" : "2026-10-20T15:20:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1916,7 +1916,7 @@
       "round" : 3,
       "text" : "With 99.9"
     }, {
-      "at" : "2026-10-20T15:18:00Z",
+      "at" : "2026-10-20T15:21:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
@@ -1928,7 +1928,7 @@
       "round" : 3,
       "text" : "Still"
     }, {
-      "at" : "2026-10-20T15:19:00Z",
+      "at" : "2026-10-20T15:22:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1940,7 +1940,7 @@
       "round" : 3,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:20:00Z",
+      "at" : "2026-10-20T15:23:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -1952,7 +1952,7 @@
       "round" : 3,
       "text" : "# Record 2"
     }, {
-      "at" : "2026-10-20T15:24:00Z",
+      "at" : "2026-10-20T15:27:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1964,7 +1964,7 @@
       "round" : 4,
       "text" : "On-prem gateway"
     }, {
-      "at" : "2026-10-20T15:25:00Z",
+      "at" : "2026-10-20T15:28:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1976,7 +1976,7 @@
       "round" : 4,
       "text" : "Fine with mTLS"
     }, {
-      "at" : "2026-10-20T15:26:00Z",
+      "at" : "2026-10-20T15:29:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1988,7 +1988,7 @@
       "round" : 4,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:27:00Z",
+      "at" : "2026-10-20T15:30:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -2054,7 +2054,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedAt" : "2026-10-20T15:16:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2085,7 +2085,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedAt" : "2026-10-20T15:16:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2116,7 +2116,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:13:00Z",
+    "askedAt" : "2026-10-20T15:16:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2147,7 +2147,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:21:00Z",
+    "askedAt" : "2026-10-20T15:24:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -2180,7 +2180,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:27:00Z",
+    "askedAt" : "2026-10-20T15:30:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -2213,7 +2213,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:34:00Z",
+    "askedAt" : "2026-10-20T15:37:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -2320,7 +2320,7 @@
     "agent" : "darius",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
-    "endedAt" : "2026-10-20T14:58:00Z",
+    "endedAt" : "2026-10-20T15:01:00Z",
     "failed" : false,
     "id" : "s-c1",
     "inputTokensProvided" : 10,
@@ -2328,14 +2328,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T14:57:00Z",
+    "startedAt" : "2026-10-20T15:00:00Z",
     "ticket" : "T-13",
     "turns" : 2
   }, {
     "agent" : "galen",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
-    "endedAt" : "2026-10-20T15:00:00Z",
+    "endedAt" : "2026-10-20T15:03:00Z",
     "failed" : false,
     "id" : "s-c2",
     "inputTokensProvided" : 10,
@@ -2343,7 +2343,7 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T14:59:00Z",
+    "startedAt" : "2026-10-20T15:02:00Z",
     "ticket" : "T-13",
     "turns" : 2
   } ],
@@ -2356,19 +2356,19 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T14:46:00Z",
+    "createdAt" : "2026-10-20T14:49:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T15:28:00Z",
+    "endedAt" : "2026-10-20T15:31:00Z",
     "environmentBlocker" : null,
     "id" : "T-13",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T14:56:00Z",
+    "startedAt" : "2026-10-20T14:59:00Z",
     "status" : "DONE",
     "title" : "Decide: gateway",
     "toRecheck" : false,
@@ -2377,19 +2377,19 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T15:30:00Z",
+    "createdAt" : "2026-10-20T15:33:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ "Use Kong" ],
-    "endedAt" : "2026-10-20T15:38:00Z",
+    "endedAt" : "2026-10-20T15:41:00Z",
     "environmentBlocker" : null,
     "id" : "T-14",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T15:35:00Z",
+    "startedAt" : "2026-10-20T15:38:00Z",
     "status" : "CANCELLED",
     "title" : "Implement the gateway",
     "toRecheck" : false,
@@ -2446,6 +2446,7 @@
 }
 == GET /api/agents -> 200
 [ {
+  "acceptedPatches" : 0,
   "atWork" : false,
   "core" : false,
   "effort" : "medium",
@@ -2453,12 +2454,18 @@
   "model" : "claude-sonnet-5-5",
   "name" : "Galen",
   "provider" : "anthropic",
+  "raiseAfter" : 5,
+  "raiseProposed" : false,
   "role" : "Planner",
   "status" : "ASSIGNED",
   "stays" : true,
   "suspended" : false,
+  "trust" : "STANDARD",
+  "trustCause" : null,
+  "trustSince" : null,
   "workRole" : "PLANNER"
 }, {
+  "acceptedPatches" : 1,
   "atWork" : true,
   "core" : false,
   "effort" : "xhigh",
@@ -2466,12 +2473,18 @@
   "model" : "claude-opus-5-5",
   "name" : "Chris",
   "provider" : "anthropic",
+  "raiseAfter" : 5,
+  "raiseProposed" : false,
   "role" : "Developer",
   "status" : "WORKING",
   "stays" : false,
   "suspended" : false,
+  "trust" : "SHADOW",
+  "trustCause" : "INCIDENT",
+  "trustSince" : "2026-10-20T11:28:00Z",
   "workRole" : "DEVELOPER"
 }, {
+  "acceptedPatches" : 0,
   "atWork" : false,
   "core" : true,
   "effort" : null,
@@ -2479,12 +2492,18 @@
   "model" : "claude-opus-5-5",
   "name" : "Darius",
   "provider" : "anthropic",
+  "raiseAfter" : 5,
+  "raiseProposed" : false,
   "role" : "Reviewer",
   "status" : "AVAILABLE",
   "stays" : false,
   "suspended" : false,
+  "trust" : "STANDARD",
+  "trustCause" : null,
+  "trustSince" : null,
   "workRole" : "REVIEWER"
 }, {
+  "acceptedPatches" : 0,
   "atWork" : false,
   "core" : false,
   "effort" : "medium",
@@ -2492,12 +2511,18 @@
   "model" : "claude-sonnet-5-5",
   "name" : "Ana",
   "provider" : "anthropic",
+  "raiseAfter" : 5,
+  "raiseProposed" : false,
   "role" : "Analyst",
   "status" : "AVAILABLE",
   "stays" : false,
   "suspended" : false,
+  "trust" : "STANDARD",
+  "trustCause" : null,
+  "trustSince" : null,
   "workRole" : "ANALYST"
 }, {
+  "acceptedPatches" : 0,
   "atWork" : false,
   "core" : false,
   "effort" : "medium",
@@ -2505,10 +2530,15 @@
   "model" : "claude-sonnet-5-5",
   "name" : "Rita",
   "provider" : "anthropic",
+  "raiseAfter" : 5,
+  "raiseProposed" : false,
   "role" : "Researcher",
   "status" : "AVAILABLE",
   "stays" : false,
   "suspended" : false,
+  "trust" : "STANDARD",
+  "trustCause" : null,
+  "trustSince" : null,
   "workRole" : "RESEARCHER"
 } ]
 == GET /api/agents/ana/profile -> 200
@@ -2918,7 +2948,7 @@
     "kind" : "SILENT",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:12:00Z",
+    "since" : "2026-10-20T18:15:00Z",
     "status" : null,
     "text" : null,
     "ticket" : "T-19"
@@ -2941,7 +2971,7 @@
     "kind" : "SESSION_RISK",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:26:00Z",
+    "since" : "2026-10-20T18:30:00Z",
     "status" : "ALERT",
     "text" : "OUTSIDE_WORKSPACE",
     "ticket" : "T-19"
@@ -3016,7 +3046,7 @@
     "kind" : "SESSION",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:20:00Z",
+    "since" : "2026-10-20T18:23:00Z",
     "status" : null,
     "text" : null,
     "ticket" : "T-24"
@@ -3041,7 +3071,7 @@
 {
   "askedBack" : [ ],
   "checks" : [ {
-    "at" : "2026-10-20T12:46:00Z",
+    "at" : "2026-10-20T12:49:00Z",
     "command" : "mvn -q verify",
     "durationMs" : 12345,
     "exitCode" : 1,
@@ -3050,7 +3080,7 @@
     "trigger" : "manual",
     "workspace" : "chris"
   }, {
-    "at" : "2026-10-20T12:47:00Z",
+    "at" : "2026-10-20T12:50:00Z",
     "command" : "mvn -q verify",
     "durationMs" : 600000,
     "exitCode" : null,
@@ -3719,14 +3749,14 @@
     "base" : "main",
     "branch" : "floor42/chris",
     "number" : 7,
-    "openedAt" : "2026-10-20T13:05:00Z",
+    "openedAt" : "2026-10-20T13:08:00Z",
     "url" : "https://github.com/o/r/pull/7"
   }, {
     "agent" : null,
     "base" : "main",
     "branch" : "director/work",
     "number" : 9,
-    "openedAt" : "2026-10-20T13:08:00Z",
+    "openedAt" : "2026-10-20T13:11:00Z",
     "url" : "https://github.com/o/r/pull/9"
   } ],
   "repository" : "C:/repo/app",
@@ -4325,7 +4355,7 @@
     "current" : true,
     "expectedIncrease" : null,
     "label" : "5-hour",
-    "observedAt" : "2026-10-20T11:38:00Z",
+    "observedAt" : "2026-10-20T11:41:00Z",
     "resetsAt" : "2027-01-15T08:00:00Z",
     "status" : "allowed",
     "utilization" : 0.42,
@@ -4334,7 +4364,7 @@
     "current" : true,
     "expectedIncrease" : null,
     "label" : "weekly",
-    "observedAt" : "2026-10-20T11:39:00Z",
+    "observedAt" : "2026-10-20T11:42:00Z",
     "resetsAt" : "2027-01-21T02:53:20Z",
     "status" : "allowed_warning",
     "utilization" : 0.61,
@@ -4349,7 +4379,7 @@
     "doingStatus" : "IN_PROGRESS",
     "doingTitle" : "Badge in",
     "id" : "M-11",
-    "lastActivity" : "2026-10-20T18:29:00Z",
+    "lastActivity" : "2026-10-20T18:33:00Z",
     "openQuestions" : 0,
     "origin" : "SIMULATED",
     "retryQuestion" : null,
@@ -4364,7 +4394,7 @@
     "doingStatus" : "IN_PROGRESS",
     "doingTitle" : "Write the release notes",
     "id" : "M-6",
-    "lastActivity" : "2026-10-20T18:28:00Z",
+    "lastActivity" : "2026-10-20T18:32:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4379,7 +4409,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-10",
-    "lastActivity" : "2026-10-20T18:08:00Z",
+    "lastActivity" : "2026-10-20T18:11:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4394,7 +4424,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-9",
-    "lastActivity" : "2026-10-20T18:04:00Z",
+    "lastActivity" : "2026-10-20T18:07:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4409,7 +4439,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-5",
-    "lastActivity" : "2026-10-20T17:59:00Z",
+    "lastActivity" : "2026-10-20T18:02:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4424,7 +4454,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-7",
-    "lastActivity" : "2026-10-20T17:28:00Z",
+    "lastActivity" : "2026-10-20T17:31:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4471,12 +4501,12 @@
     "kind" : "PATH",
     "type" : "ActionDenied"
   }, {
-    "event" : 130,
+    "event" : 132,
     "field" : "text",
     "kind" : "SECRET",
     "type" : "ConsultationRequested"
   }, {
-    "event" : 211,
+    "event" : 213,
     "field" : "text",
     "kind" : "SECRET",
     "type" : "TicketCreated"
@@ -4487,8 +4517,8 @@
     "type" : "Mission"
   } ],
   "detailsTruncated" : true,
-  "digest" : "e83c2c623738986e207bffc31ae331811b40c21ca60f0ff66bc8b7bc8a3f95c4",
-  "events" : 246,
+  "digest" : "4b1c8d5e3cb71680d88f33bdb9eefb66e4f5716250a547a60072beab9e89e876",
+  "events" : 248,
   "masked" : [ {
     "count" : 5,
     "kind" : "SECRET"
@@ -4502,7 +4532,7 @@
   "mission" : "M-1",
   "origin" : "REAL",
   "outputs" : 4,
-  "real" : 246,
+  "real" : 248,
   "simulated" : 0,
   "tickets" : 12,
   "title" : "App",
@@ -4527,7 +4557,7 @@
   "audience" : "DEVELOPER",
   "id" : "L-1",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedAt" : "2026-10-20T14:37:00Z",
   "proposedBy" : "galen",
   "reason" : "Obvious now",
   "status" : "RETIRED",
@@ -4536,7 +4566,7 @@
   "audience" : null,
   "id" : "L-2",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedAt" : "2026-10-20T14:37:00Z",
   "proposedBy" : "galen",
   "reason" : null,
   "status" : "ACCEPTED",
@@ -4545,7 +4575,7 @@
   "audience" : "REVIEWER",
   "id" : "L-3",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:34:00Z",
+  "proposedAt" : "2026-10-20T14:37:00Z",
   "proposedBy" : "galen",
   "reason" : "rejected by the director",
   "status" : "REJECTED",
@@ -4553,15 +4583,15 @@
 } ]
 == GET /api/notes -> 200
 [ {
-  "addedAt" : "2026-10-20T08:58:00Z",
+  "addedAt" : "2026-10-20T09:01:00Z",
   "commit" : null,
   "done" : true,
-  "doneAt" : "2026-10-20T13:55:00Z",
+  "doneAt" : "2026-10-20T13:58:00Z",
   "id" : "N-1",
   "text" : "Make the board faster\nIt lags on big missions",
   "ticket" : "T-10"
 }, {
-  "addedAt" : "2026-10-20T09:00:00Z",
+  "addedAt" : "2026-10-20T09:03:00Z",
   "commit" : null,
   "done" : false,
   "doneAt" : null,
@@ -4569,10 +4599,10 @@
   "text" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
   "ticket" : "T-11"
 }, {
-  "addedAt" : "2026-10-20T09:08:00Z",
+  "addedAt" : "2026-10-20T09:11:00Z",
   "commit" : "abcdef2",
   "done" : true,
-  "doneAt" : "2026-10-20T09:09:00Z",
+  "doneAt" : "2026-10-20T09:12:00Z",
   "id" : "N-4",
   "text" : "Ids are never reused",
   "ticket" : null

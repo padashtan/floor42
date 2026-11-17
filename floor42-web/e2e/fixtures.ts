@@ -114,6 +114,12 @@ export async function offScreen(locator: Locator): Promise<string[]> {
 }
 
 interface WorkerFixtures {
+  /**
+   * A journey that changes what the whole company is (an agent narrowed to shadow by the session risk, ADR-0082) sets
+   * `test.use({ isolatedDaemon: true })`: its file runs in a worker, so a daemon, of its own, and no other journey
+   * inherits the change (the tutorial saw chris in shadow mode and its writes were never asked).
+   */
+  isolatedDaemon: boolean
   daemon: Daemon
   /** A storage state signed in through the single-use link the daemon prints (ADR-0034). */
   signedIn: string
@@ -129,8 +135,10 @@ interface TestFixtures {
 }
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
+  isolatedDaemon: [false, { option: true, scope: 'worker' }],
+
   daemon: [
-    async ({}, use) => {
+    async ({ isolatedDaemon: _isolated }, use) => {
       const daemon = await startDaemon()
       try {
         await use(daemon)

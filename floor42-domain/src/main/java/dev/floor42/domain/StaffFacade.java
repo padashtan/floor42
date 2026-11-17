@@ -53,6 +53,31 @@ public final class StaffFacade {
         return roster.hire(ctx, id, displayName, role, workRole, model, effort);
     }
 
+    /** Staff Floor42 seeds on a fresh install (the planner, the chairs): STANDARD from the start (ADR-0082). */
+    public List<EventEnvelope> hireSeeded(
+            CommandContext ctx,
+            AgentId id,
+            String displayName,
+            String role,
+            String provider,
+            String model,
+            String effort,
+            List<String> skills) {
+        return roster.hire(ctx, id, displayName, role, provider, model, effort, skills, false);
+    }
+
+    /** As {@link #hireSeeded} for a work role. */
+    public List<EventEnvelope> hireSeeded(
+            CommandContext ctx,
+            AgentId id,
+            String displayName,
+            String role,
+            WorkRole workRole,
+            String model,
+            String effort) {
+        return roster.hire(ctx, id, displayName, role, workRole, model, effort, false);
+    }
+
     /**
      * The agent leaves: refused only while it is at work right now (an open session), so nothing is cut in the middle.
      * A ticket it had started goes back to the queue (its changes stay on its branch); a delivery it handed over stays
@@ -114,5 +139,18 @@ public final class StaffFacade {
     /** The ticket is a staffing review: worked by the planner alone, never by the dispatcher. */
     public boolean isStaffingTicket(TicketId ticket) {
         return staffingBoard.isStaffingTicket(ticket);
+    }
+
+    /** The director narrows an agent's trust level (ADR-0082): plain, restricting needs no proof. */
+    public List<EventEnvelope> lowerTrust(CommandContext ctx, AgentId id, TrustLevel to) {
+        return roster.lowerTrust(ctx, id, to);
+    }
+
+    /**
+     * The director widens an agent's trust level. {@code stepUp} says the strong proof was given (see
+     * {@code TrustRaiseStepUp} on the server); without it the domain refuses with {@code TRUST_RAISE_NEEDS_STEP_UP}.
+     */
+    public List<EventEnvelope> raiseTrust(CommandContext ctx, AgentId id, TrustLevel to, boolean stepUp) {
+        return roster.raiseTrust(ctx, id, to, stepUp);
     }
 }

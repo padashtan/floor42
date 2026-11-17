@@ -7,6 +7,7 @@ import static dev.floor42.server.api.DirectorRequests.parse;
 import dev.floor42.domain.AgentId;
 import dev.floor42.domain.Company;
 import dev.floor42.domain.Setting;
+import dev.floor42.domain.TrustLevel;
 import dev.floor42.domain.WorkRole;
 import dev.floor42.server.api.DirectorRequests.Reason;
 import dev.floor42.server.api.NoNullItems;
@@ -20,6 +21,7 @@ import dev.floor42.server.app.core.RefusedException;
 import dev.floor42.server.app.mission.Dismissals;
 import dev.floor42.server.app.mission.LiveMissions;
 import dev.floor42.server.app.mission.Staff;
+import dev.floor42.server.app.mission.TrustRaiseStepUp;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
@@ -51,14 +53,19 @@ public class AgentsResource {
 
     public record AgentSettings(String model, String effort) {}
 
+    /** The level an agent's trust is set to: SHADOW, PROBATION or STANDARD (ADR-0082). */
+    public record TrustChange(String level) {}
+
     private final OfficeService office;
     private final LiveMissions live;
     private final Dismissals dismissals;
+    private final TrustRaiseStepUp stepUp;
 
-    public AgentsResource(OfficeService office, LiveMissions live, Dismissals dismissals) {
+    public AgentsResource(OfficeService office, LiveMissions live, Dismissals dismissals, TrustRaiseStepUp stepUp) {
         this.office = office;
         this.live = live;
         this.dismissals = dismissals;
+        this.stepUp = stepUp;
     }
 
     /** The staff present: agents who left stay in the journal and in their profiles, not in the office. */
@@ -190,6 +197,42 @@ public class AgentsResource {
         if (mark == null || mark.core() == null) throw RefusedException.invalid("MISSING_FIELDS", "core is required");
         office.execute(c -> c.staff().markCore(asDirector(office), agent, mark.core()));
         return agentView(agent);
+    }
+
+    /** The director narrows an agent's trust level by hand: plain, restricting never needs proof (ADR-0082). */
+    @POST
+    @Path("/agents/{id}/trust/lower")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public AgentView lowerTrust(@PathParam("id") String id, TrustChange change) {
+        AgentId agent = parse(() -> new AgentId(id));
+        TrustLevel to = level(change);
+        office.execute(c -> c.staff().lowerTrust(asDirector(office), agent, to));
+        return agentView(agent);
+    }
+
+    /**
+     * The director widens an agent's trust level. Needs the proof of {@link TrustRaiseStepUp}; the domain refuses
+     * without it ({@code TRUST_RAISE_NEEDS_STEP_UP}).
+     */
+    @POST
+    @Path("/agents/{id}/trust/raise")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public AgentView raiseTrust(@PathParam("id") String id, TrustChange change) {
+        AgentId agent = parse(() -> new AgentId(id));
+        TrustLevel to = level(change);
+        boolean proven = stepUp.proven(agent, to);
+        office.execute(c -> c.staff().raiseTrust(asDirector(office), agent, to, proven));
+        return agentView(agent);
+    }
+
+    private static TrustLevel level(TrustChange change) {
+        if (change == null || blank(change.level()))
+            throw RefusedException.invalid("MISSING_FIELDS", "level is required");
+        try {
+            return TrustLevel.valueOf(change.level().strip());
+        } catch (IllegalArgumentException e) {
+            throw RefusedException.invalid("INVALID_ARGUMENT", "level is SHADOW, PROBATION or STANDARD", e);
+        }
     }
 
     /** Who "dismiss everyone except the core members" would let go, who stays, and who cannot leave now, and why. */

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import dev.floor42.server.iam.PinnedClients.Pinned;
 import dev.floor42.server.iam.ResourceCatalogue.Resource;
 import dev.floor42.server.iam.SafeUrls.Target;
+import dev.floor42.server.iam.fga.FgaException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.http.HttpClient;
@@ -71,7 +72,8 @@ public class ResourceBroker {
             boolean truncated,
             String jti,
             String audience,
-            UnaryOperator<String> scrubber) {
+            UnaryOperator<String> scrubber,
+            String basis) {
         public BrokerResult {
             headers = headers == null ? null : Collections.unmodifiableMap(new LinkedHashMap<>(headers));
             scrubber = scrubber == null ? UnaryOperator.identity() : scrubber;
@@ -79,7 +81,12 @@ public class ResourceBroker {
 
         public BrokerResult(
                 int status, Map<String, String> headers, String body, boolean truncated, String jti, String audience) {
-            this(status, headers, body, truncated, jti, audience, null);
+            this(status, headers, body, truncated, jti, audience, null, null);
+        }
+
+        /** The same answer with the decision's basis ({@code fga:<model id>}) the first line names. */
+        BrokerResult withBasis(String basis) {
+            return new BrokerResult(status, headers, body, truncated, jti, audience, scrubber, basis);
         }
 
         /** The text with this call's token removed: for text taken out of the body after it was decoded. */
@@ -163,13 +170,27 @@ public class ResourceBroker {
         Resource r = catalogue
                 .find(resource == null ? "" : resource)
                 .orElseThrow(() -> new Refusal("RESOURCE_UNKNOWN", "No resource named " + resource));
-        if (!catalogue.allowed(caller.agent(), caller.mission(), r.name()))
-            throw new Refusal("RESOURCE_NOT_GRANTED", "This agent or mission may not use " + r.name());
+        boolean granted;
+        try {
+            granted = catalogue.allowed(caller.agent(), caller.mission(), r.name());
+        } catch (FgaException e) {
+            // Handled: OpenFGA could not decide, so the call is refused, and it is not the agent's doing
+            throw new Refusal(e.code(), "OpenFGA could not decide: the call is refused", e);
+        }
+        String basis = catalogue.basis().orElse(null);
+        if (!granted)
+            throw new Refusal(
+                    "RESOURCE_NOT_GRANTED",
+                    "This agent or mission may not use " + r.name() + (basis == null ? "" : " (" + basis + ")"));
         Target target = build(r, method, path);
         Pinned pinned = pins.pin(r, target);
         String token = tokens.exchange(caller, r);
         String jti = checked(token, caller, r);
-        String verb = method.toUpperCase(Locale.ROOT);
+        HttpRequest req = request(pinned, method.toUpperCase(Locale.ROOT), body, headers, token);
+        return fetch(pinned.client(), req, r, token, jti).withBasis(basis);
+    }
+
+    private HttpRequest request(Pinned pinned, String verb, String body, Map<String, String> headers, String token) {
         HttpRequest.Builder req = HttpRequest.newBuilder(pinned.uri())
                 .timeout(timeLimit)
                 .header("Authorization", "Bearer " + token)
@@ -179,7 +200,7 @@ public class ResourceBroker {
         boolean sends = body != null && !body.isEmpty() && !verb.equals("GET") && !verb.equals("DELETE");
         if (sends) req.header("Content-Type", "application/json");
         req.method(verb, sends ? BodyPublishers.ofString(body) : BodyPublishers.noBody());
-        return fetch(pinned.client(), req.build(), r, token, jti);
+        return req.build();
     }
 
     /** The whole answer, body included, within the deadline: a server that drips bytes does not hold the session. */
@@ -261,7 +282,8 @@ public class ResourceBroker {
         byte[] bytes = res.body();
         boolean cut = bytes.length > r.maxResponseBytes();
         String body = cutAndScrub(bytes, r.maxResponseBytes(), token);
-        return new BrokerResult(res.statusCode(), headers, body, cut, jti, r.audience(), text -> scrub(text, token));
+        return new BrokerResult(
+                res.statusCode(), headers, body, cut, jti, r.audience(), text -> scrub(text, token), null);
     }
 
     /** The body for the agent: the token scrubbed first, then cut, then any token prefix left at the cut masked. */

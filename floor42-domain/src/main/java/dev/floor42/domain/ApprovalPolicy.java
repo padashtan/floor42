@@ -2,6 +2,7 @@ package dev.floor42.domain;
 
 import dev.floor42.domain.event.ActionEvent.ActionDenied;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.DeskEvent.QuestionAsked;
 import dev.floor42.domain.event.EventEnvelope;
 import java.util.List;
@@ -98,6 +99,24 @@ final class ApprovalPolicy {
             } else if (chosen.equals("ALLOW")) r.authorize(a.id(), DecisionBasis.directorAllowed(id), "question:" + id);
             else r.emit(new ActionDenied(a.id(), DenialReason.DIRECTOR, DecisionBasis.directorDenied(id)));
         }
+    }
+
+    /** What an answer to this question needs besides the click: STRONG for an ALLOW to a call that reaches outside. */
+    AssurancePolicy.Level assurance(Question q, String chosen) {
+        if (q.kind() != QuestionKind.ACTION_APPROVAL || !"ALLOW".equals(chosen) || q.action() == null)
+            return AssurancePolicy.Level.BASIC;
+        return view.action(q.action()).map(AssurancePolicy::forQuestion).orElse(AssurancePolicy.Level.BASIC);
+    }
+
+    /**
+     * The signatures an ALLOW to a risky question must carry, checked before anything is recorded
+     * ({@code ASSURANCE_MISSING} and the other refusals of {@link AssurancePolicy#verify}). Enforced only where a
+     * stronger proof exists (the context is assured).
+     */
+    List<ApprovalSigned> signaturesFor(CommandContext ctx, Question q, String chosen, List<ApprovalSigned> signed) {
+        AssurancePolicy.Level level = ctx.assured() ? assurance(q, chosen) : AssurancePolicy.Level.BASIC;
+        return AssurancePolicy.verify(
+                ctx, new AssurancePolicy.Act(AssurancePolicy.ActKind.QUESTION, q.id().value()), level, signed);
     }
 
     /** Why a lifted refusal no longer decides: the start of {@link ApprovalForgotten#reason}, for the screen. */

@@ -31,7 +31,7 @@ class RollbackEventTypesTest {
     @Test
     void release115AddsTheOneLinkEventToWhatRelease1141Knows() throws IOException {
         List<String> before = types("/event-types-1.14.1.txt");
-        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        List<String> now = types("/event-types-1.2.0.txt");
         assertThat(now).containsAll(before);
         assertThat(now.stream().filter(t -> !before.contains(t)))
                 .containsExactly(
@@ -52,7 +52,7 @@ class RollbackEventTypesTest {
     @Test
     void release116AddsTheOneNodeEventToWhatRelease1150Knows() throws IOException {
         List<String> before = types("/event-types-1.15.0.txt");
-        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        List<String> now = types("/event-types-1.2.0.txt");
         assertThat(now).containsAll(before);
         assertThat(now.stream().filter(t -> !before.contains(t)))
                 .containsExactly(
@@ -72,7 +72,7 @@ class RollbackEventTypesTest {
     @Test
     void release117AddsTheTokenTheUnsafeModeTheBreakGlassAndTheRiskEventsToWhatRelease1160Knows() throws IOException {
         List<String> before116 = types("/event-types-1.16.0.txt");
-        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        List<String> now = types("/event-types-1.2.0.txt");
         assertThat(now).containsAll(before116);
         assertThat(now.stream().filter(t -> !before116.contains(t)))
                 .containsExactly(
@@ -81,6 +81,23 @@ class RollbackEventTypesTest {
                         "BreakGlassSignIn",
                         "SessionRiskRaised",
                         "MissionQuarantined");
+    }
+
+    /**
+     * 1.3.0 (ADR-0080, ADR-0081, ADR-0082): three types over 1.2.0. {@code AuthorizationChanged} is written only in IAM
+     * mode, when a grant, a delegation or an MCP tick changes, and by the one-shot import of grants.json;
+     * {@code ApprovalSigned} records each signature of an assured act; {@code AgentTrustChanged} is written when an
+     * incident narrows an agent's level, a real hire starts one, or the director raises or lowers it. 1.2.0 sets these
+     * rows aside ({@code NEWER_VERSION}) and applies the director's permission table without the trust cap: it falls
+     * back to what the director approved, never beyond it. No journaled enumeration changed.
+     */
+    @Test
+    void release130AddsItsThreeEventsToWhatRelease120Knows() throws IOException {
+        List<String> before = types("/event-types-1.2.0.txt");
+        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        assertThat(now).containsAll(before);
+        assertThat(now.stream().filter(t -> !before.contains(t)))
+                .containsExactlyInAnyOrder("AuthorizationChanged", "ApprovalSigned", "AgentTrustChanged");
     }
 
     @Test

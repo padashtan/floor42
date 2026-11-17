@@ -97,7 +97,7 @@ repository and title: a committee, plan, panel, workflow, destination or mode is
 answering, nudging, directing, resuming, staffing, the terminal and its tickets, the committee, the graph, and the IAM
 settings and secrets. On `/api/mcp`, `DirectorMcpResource` allows the four read tools and `create_mission`;
 `answer_question` is refused. The director's own token, a Keycloak browser session and everything outside IAM mode are
-unchanged. No new event. Tokens bound to a mission and an agent come in 1.3.0.
+unchanged. No new event. Script tokens bound to a Keycloak session come in 1.3.0 (ADR-0083).
 
 ## Known limits
 - Committee and auto-approved missions have no plan approval by the director, so no delegation: in IAM mode they are

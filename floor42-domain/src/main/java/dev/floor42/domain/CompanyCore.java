@@ -144,6 +144,10 @@ final class CompanyCore {
         } else if (event instanceof MissionCancelled e) {
             // Older journals left the mission's open tickets open: they read cancelled with it (idempotent after).
             view.tickets(e.mission()).forEach(t -> t.cancelledWithMission(at));
+        } else if (event instanceof PatchAccepted e) {
+            roster.patchAccepted(e.workspace(), envelope);
+        } else if (event instanceof IncidentRaised e && e.action() != null) {
+            actionLog.action(e.action()).ifPresent(a -> roster.incidentRaised(a.agent(), envelope));
         }
     }
 

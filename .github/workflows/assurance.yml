@@ -188,7 +188,7 @@ jobs:
           unshare -Urm true
 
       - name: Format and every test
-        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp verify "-Dfloor42.test.forks=1" "-Dfloor42.test.heap=2g"
 
   verify-windows:
     needs: [semgrep, static-scan, trivy, actionlint, hadolint]

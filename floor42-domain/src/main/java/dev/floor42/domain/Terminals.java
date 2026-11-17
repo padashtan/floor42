@@ -27,6 +27,8 @@ final class Terminals {
     private static final Set<String> TOKEN_SCOPES = Set.of("read", "missions:write", "all");
     private static final Set<String> REVOCATIONS = Set.of("revoked", "everywhere");
     private static final String SHA_256 = "[0-9a-f]{64}";
+    /** The only binding of a script token to an identity (ADR-0083). */
+    static final String BINDING = "KEYCLOAK_OFFLINE_SESSION";
 
     private final CompanyView view;
     /** The director's own terminals now open: id to project. Ids are never reused. */
@@ -73,7 +75,14 @@ final class Terminals {
     }
 
     List<EventEnvelope> recordApiTokenIssued(
-            CommandContext ctx, String token, String sha256, String scope, String expiresAt, String label) {
+            CommandContext ctx,
+            String token,
+            String sha256,
+            String scope,
+            String expiresAt,
+            String label,
+            String subject,
+            String binding) {
         requireDirector(ctx);
         requireReal(ctx, "INVALID_ARGUMENT", "A token is real or nothing");
         requireText(token, "token");
@@ -86,8 +95,12 @@ final class Terminals {
                 Refusal.INVALID_ARGUMENT,
                 "A token's scope is read, missions:write or all");
         requireText(expiresAt, "expiresAt");
+        require(
+                (subject == null) == (binding == null) && (binding == null || BINDING.equals(binding)),
+                Refusal.INVALID_ARGUMENT,
+                "A bound token names its subject and the " + BINDING + " binding, an unbound one neither");
         return view.record(ctx, null)
-                .emit(new ApiTokenIssued(token, sha256, scope, expiresAt, label))
+                .emit(new ApiTokenIssued(token, sha256, scope, expiresAt, label, subject, binding))
                 .events();
     }
 

@@ -80,6 +80,10 @@ public class StepUpApprovals {
     @Inject
     ObjectMapper json;
 
+    /** The states of the other assured acts (ADR-0081) are answered there. */
+    @Inject
+    AssuredActs assured;
+
     Clock clock = Clock.systemUTC();
 
     private final Map<MissionId, Approval> approvals = new LinkedHashMap<>();
@@ -197,7 +201,7 @@ public class StepUpApprovals {
     boolean callback(RoutingContext rc) {
         String state = rc.request().getParam("state");
         Flow f = take(state);
-        if (f == null) return false;
+        if (f == null) return assured != null && assured.callback(rc);
         if (!PreSignIn.presented(rc, state, f.bind())) {
             reply(
                     rc,

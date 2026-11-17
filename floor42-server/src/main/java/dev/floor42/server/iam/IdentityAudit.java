@@ -98,8 +98,8 @@ public final class IdentityAudit {
     }
 
     /** What the first line of a broker result says: {@code Resource <name> <METHOD> <path> -> <status> (exchanged token <jti> for <audience>)}. */
-    private static final Pattern EXCHANGE =
-            Pattern.compile("^Resource \\S+ \\S+ \\S+ -> (\\d+) \\(exchanged token (\\S+) for (\\S+)\\)$");
+    private static final Pattern EXCHANGE = Pattern.compile(
+            "^Resource \\S+ \\S+ \\S+ -> (\\d+) \\(exchanged token (\\S+) for ([^\\s,]+)(?:, fga:[^\\s)]+)?\\)$");
 
     private static Optional<Matcher> exchange(ActionExecuted x) {
         String first = x.output() == null ? "" : x.output().lines().findFirst().orElse("");

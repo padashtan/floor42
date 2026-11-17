@@ -31,8 +31,9 @@ final class Fixture {
         this.origin = origin;
         MADE.get().add(this);
         for (AgentId id : List.of(GALEN, CHRIS, DARIUS)) {
+            // Seeded, not hired: the fixture's staff are STANDARD, so no trust event enters the goldens (ADR-0082).
             record(company.staff()
-                    .hire(
+                    .hireSeeded(
                             director(),
                             id,
                             id.value(),

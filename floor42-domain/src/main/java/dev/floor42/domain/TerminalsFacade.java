@@ -46,7 +46,19 @@ public final class TerminalsFacade {
      */
     public List<EventEnvelope> recordApiTokenIssued(
             CommandContext ctx, String token, String sha256, String scope, String expiresAt, String label) {
-        return terminals.recordApiTokenIssued(ctx, token, sha256, scope, expiresAt, label);
+        return terminals.recordApiTokenIssued(ctx, token, sha256, scope, expiresAt, label, null, null);
+    }
+
+    /** A bound token (ADR-0083): backed by a Keycloak offline session of {@code subject}. */
+    public List<EventEnvelope> recordBoundApiTokenIssued(
+            CommandContext ctx,
+            String token,
+            String sha256,
+            String scope,
+            String expiresAt,
+            String label,
+            String subject) {
+        return terminals.recordApiTokenIssued(ctx, token, sha256, scope, expiresAt, label, subject, Terminals.BINDING);
     }
 
     /** A script token stopped working: revoked alone, or with every session ({@code everywhere}). */

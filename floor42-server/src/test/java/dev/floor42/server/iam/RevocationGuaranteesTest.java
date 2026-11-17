@@ -134,7 +134,9 @@ class RevocationGuaranteesTest extends BrokerTestBase {
         assertThat(hook(running)).isEqualTo("OK");
         delegations.closeToWork(s.mission()); // MissionCompleted with a retrospective due
         assertThat(hook(running)).isEqualTo("REVOKED");
-        brokerRefused(s, "IDENTITY_REFUSED"); // Floor42's own decision, not a provider failure
+        brokerRefused(
+                s, "RESOURCE_NOT_GRANTED"); // closing the mission deletes its delegation tuples: the catalogue answers
+        // first (ADR-0080)
     }
 
     @Test

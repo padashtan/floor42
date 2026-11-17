@@ -71,8 +71,8 @@ import java.util.regex.Pattern;
 final class ProofDossierComposer {
 
     /** The first line of a broker result: {@code Resource <name> <METHOD> <path> -> <status> (exchanged token <jti> for <audience>)}. */
-    private static final Pattern BROKER =
-            Pattern.compile("^Resource (\\S+) (\\S+) (\\S+) -> (\\d+) \\(exchanged token (\\S+) for (\\S+)\\)$");
+    private static final Pattern BROKER = Pattern.compile(
+            "^Resource (\\S+) (\\S+) (\\S+) -> (\\d+) \\(exchanged token (\\S+) for ([^\\s,]+)(?:, fga:[^\\s)]+)?\\)$");
 
     private final Mission m;
     private final List<EventEnvelope> events;

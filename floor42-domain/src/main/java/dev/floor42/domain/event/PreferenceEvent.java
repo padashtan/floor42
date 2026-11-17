@@ -1,6 +1,7 @@
 package dev.floor42.domain.event;
 
 import dev.floor42.domain.ActionCategory;
+import dev.floor42.domain.AuthorizationTuple;
 import dev.floor42.domain.Decision;
 import dev.floor42.domain.Setting;
 import java.util.ArrayList;
@@ -55,4 +56,30 @@ public sealed interface PreferenceEvent extends DomainEvent {
      * goes back to Floor42's built-in line.
      */
     record DefaultPermissionSet(String tool, ActionCategory category, Decision decision) implements PreferenceEvent {}
+
+    /**
+     * The director's authorization of the brokers changed (ADR-0080): grants, mission delegations and MCP ticks are
+     * tuples in OpenFGA, and every change of them is one row here, ids only (never a token or a secret). At most 100
+     * tuples per list, one OpenFGA call.
+     *
+     * @param modelId the OpenFGA model the tuples were written against
+     * @param reason {@code GRANT}, {@code DELEGATION}, {@code MCP_TICK}, {@code IMPORT}, {@code RECONCILE} or
+     *     {@code QUARANTINE}
+     * @param imported the tuples come from the files of 1.2.0 (grants.json and the MCP ticks), written once
+     * @param reconciled Floor42 found the change in OpenFGA at start without its row (a crash between the write and
+     *     its journal row, or someone who wrote behind Floor42's back)
+     */
+    record AuthorizationChanged(
+            List<AuthorizationTuple> writes,
+            List<AuthorizationTuple> deletes,
+            String modelId,
+            String reason,
+            boolean imported,
+            boolean reconciled)
+            implements PreferenceEvent {
+        public AuthorizationChanged {
+            writes = writes == null ? List.of() : List.copyOf(writes);
+            deletes = deletes == null ? List.of() : List.copyOf(deletes);
+        }
+    }
 }

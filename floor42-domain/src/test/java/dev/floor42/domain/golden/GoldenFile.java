@@ -84,7 +84,9 @@ public final class GoldenFile {
                     .append(" cause=")
                     .append(e.causationId())
                     .append(' ')
-                    .append(Canonical.of(e.event()))
+                    // an event id inside a payload (AgentTrustChanged.causeEvent) is random like the envelope's
+                    .append(Canonical.of(e.event())
+                            .replaceAll("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "<id>"))
                     .append('\n');
         }
         return out.toString();

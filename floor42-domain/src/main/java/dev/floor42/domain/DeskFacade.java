@@ -1,5 +1,6 @@
 package dev.floor42.domain;
 
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.EventEnvelope;
 import java.util.List;
 import java.util.Optional;
@@ -102,6 +103,20 @@ public final class DeskFacade {
      */
     public List<EventEnvelope> answer(CommandContext ctx, QuestionId id, String answer, QuestionId askAgain) {
         return answers.answer(ctx, id, answer, askAgain);
+    }
+
+    /**
+     * The same, carried by the signatures an assured act needs (ADR-0081): an ALLOW to a call that reaches outside, in
+     * an assured context, is refused with {@code ASSURANCE_MISSING} (or the refusal of the signature) without them.
+     */
+    public List<EventEnvelope> answer(
+            CommandContext ctx, QuestionId id, String answer, QuestionId askAgain, List<ApprovalSigned> signed) {
+        return answers.answer(ctx, id, answer, askAgain, signed);
+    }
+
+    /** What answering {@code chosen} (as {@link #checkAnswer} returned it) needs besides the click. */
+    public AssurancePolicy.Level assuranceFor(QuestionId id, String chosen) {
+        return desk.question(id).map(q -> answers.assuranceFor(q, chosen)).orElse(AssurancePolicy.Level.BASIC);
     }
 
     /** The remembered refusals of the asking agent the director may lift while answering this open question. */

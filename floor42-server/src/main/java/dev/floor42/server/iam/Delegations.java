@@ -12,6 +12,7 @@ import io.quarkus.runtime.StartupEvent;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -68,6 +69,21 @@ public class Delegations {
 
     Clock clock = Clock.systemUTC();
 
+    /** Who is told when the resources a delegation names start or stop counting (ADR-0080); empty in unit tests. */
+    private Instance<DelegationSink> sinks;
+
+    private volatile DelegationSink sink;
+
+    /** A sink set by hand, for the tests that build this class themselves. */
+    void listen(DelegationSink sink) {
+        this.sink = sink;
+    }
+
+    private Optional<DelegationSink> sink() {
+        if (sink != null) return Optional.of(sink);
+        return sinks != null && sinks.isResolvable() ? Optional.of(sinks.get()) : Optional.empty();
+    }
+
     @Inject
     Delegations(
             @ConfigProperty(name = "floor42.data-dir") Path dataDir,
@@ -76,7 +92,8 @@ public class Delegations {
             IamSettings settings,
             IamStatus status,
             DirectorTokens directorTokens,
-            ObjectMapper json) {
+            ObjectMapper json,
+            Instance<DelegationSink> sinks) {
         this(
                 dataDir.resolve("iam").resolve("delegations.json"),
                 vault,
@@ -85,6 +102,8 @@ public class Delegations {
                 status::blocksSessions,
                 directorTokens,
                 json);
+        // Looked up at each call, not now: the sink needs the journal, which needs this class's own start first
+        this.sinks = sinks;
     }
 
     Delegations(
@@ -143,6 +162,12 @@ public class Delegations {
             throw e;
         }
         replaced.ifPresent(this::revokeAtKeycloak);
+        if (before != null && !before.revoked()) {
+            List<String> dropped =
+                    before.resources().stream().filter(r -> !clean.contains(r)).toList();
+            if (!dropped.isEmpty()) sink().ifPresent(k -> k.ended(m, dropped, "DELEGATION"));
+        }
+        sink().ifPresent(k -> k.granted(m, clean));
         return d;
     }
 
@@ -169,7 +194,7 @@ public class Delegations {
             return fresh.accessToken();
         } catch (IdpRefusedException e) {
             // Handled: Keycloak ended the offline session (revoked elsewhere, expired): over here too, then rethrown.
-            markRevoked(m);
+            markRevoked(m, "DELEGATION");
             throw e;
         }
     }
@@ -182,6 +207,12 @@ public class Delegations {
                 .toList();
     }
 
+    /** Not revoked, not expired and the mission still open to work: the only delegation whose tuples may stand. */
+    public synchronized boolean activeForWork(MissionId m) {
+        MissionDelegation d = held.get(m);
+        return d != null && !d.revoked() && d.expiresAt().isAfter(clock.instant()) && !isClosed(m);
+    }
+
     /** Both steps of the end of a delegation; used when the caller can wait for Keycloak. */
     public void revoke(MissionId m) {
         revokeLocally(m);
@@ -190,7 +221,12 @@ public class Delegations {
 
     /** Step one, local and immediate: from here on no token is given for the mission. */
     public synchronized void revokeLocally(MissionId m) {
-        markRevoked(m);
+        markRevoked(m, "DELEGATION");
+    }
+
+    /** As above, for a revocation with its own reason in the journal (QUARANTINE). */
+    public synchronized void revokeLocally(MissionId m, String reason) {
+        markRevoked(m, reason);
     }
 
     /** Step two: Keycloak revokes the offline token, then the vault entry goes. Unreachable Keycloak: kept, retried. */
@@ -250,7 +286,7 @@ public class Delegations {
         return directorTokens.any().map(Tokens::accessToken);
     }
 
-    private void markRevoked(MissionId m) {
+    private void markRevoked(MissionId m, String reason) {
         MissionDelegation d = held.get(m);
         if (d == null || d.revoked()) return;
         revokedAt.put(m, clock.instant());
@@ -262,6 +298,8 @@ public class Delegations {
             // Handled: the revoked flag stays in memory (and is refused at once); the file is saved at the next change.
             LOG.warn("The revocation of " + m + " is held in memory only: " + e.getMessage());
         }
+        // After the local flag, never before: a failed delete in OpenFGA cannot keep a revoked mission alive
+        sink().ifPresent(k -> k.ended(m, d.resources(), reason));
     }
 
     private boolean revokeAtKeycloak(String refreshToken) {
@@ -325,6 +363,8 @@ public class Delegations {
     /** The mission is completed: sessions that were running are cut, and only a retrospective may use the delegation. */
     public void closeToWork(MissionId m) {
         closedAt.put(m, clock.instant());
+        MissionDelegation d = find(m).orElse(null);
+        if (d != null && !d.revoked()) sink().ifPresent(k -> k.ended(m, d.resources(), "DELEGATION"));
     }
 
     /** True once the mission is completed: no resource token for the agents' tools any more. */

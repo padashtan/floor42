@@ -54,7 +54,11 @@ class ScriptTokenInIamTest extends ApiTestBase {
             new String[] {"GET", "/api/projects/folders"},
             new String[] {"GET", "/api/projects/init?path=x"},
             new String[] {"PUT", "/api/iam/settings"},
-            new String[] {"PUT", "/api/iam/secrets/admin"});
+            new String[] {"PUT", "/api/iam/secrets/admin"},
+            // grants and MCP ticks are OpenFGA tuples written by the director on screen only (ADR-0080)
+            new String[] {"PUT", "/api/iam/agents/chris/grants"},
+            new String[] {"PUT", "/api/iam/mcp-servers/demo-api/tools"},
+            new String[] {"DELETE", "/api/iam/resources/demo-api"});
 
     private static final List<String> READ_TOOLS =
             List.of("list_missions", "get_mission", "list_questions", "get_costs");

@@ -36,6 +36,16 @@ class DirectorTokensTest {
         }
         held = new DirectorTokens();
         held.sessions = registry;
+        held.settings = new IamSettings(
+                dir,
+                java.util.Optional.of(true),
+                java.util.Optional.of(kc.issuer().toString()),
+                java.util.Optional.empty(),
+                new ObjectMapper());
+        held.jwks = new Jwks(
+                java.net.URI.create(kc.issuer() + "/protocol/openid-connect/certs"),
+                java.net.http.HttpClient.newHttpClient(),
+                java.time.Clock.systemUTC());
         held.keycloak = new KeycloakClient(kc.issuer().toString(), new SecretVault(dir), new ObjectMapper());
         id = registry.openBrowser("ua").session().id();
     }
@@ -90,6 +100,21 @@ class DirectorTokensTest {
         assertThat(now.idToken()).isNotNull();
         assertThat(held.live(id)).contains(now);
         assertThat(refreshCalls()).as("the refreshed login is fresh").isEqualTo(1);
+    }
+
+    @Test
+    void aLoginThatLostTheDirectorRoleEndsAtTheNextRefresh() {
+        String refresh = kc.refreshTokenFor("director", "floor42-desk");
+        held.put(id, tokens("old-access", refresh, "old-id", 20));
+        kc.accessRoles("floor42-reviewer");
+        try {
+            assertThat(held.live(id)).isEmpty();
+        } finally {
+            kc.accessRoles("floor42-director");
+        }
+        assertThat(registry.find(id)).as("the desk session ends").isEmpty();
+        assertThat(held.loginEndsAt(id)).isEmpty();
+        assertThat(kc.requests()).anyMatch(r -> r.get("_path").endsWith("/logout"));
     }
 
     @Test

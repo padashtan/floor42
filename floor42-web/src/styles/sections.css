@@ -7,6 +7,7 @@
 .panel.prove-panel,
 .panel.dossier-panel,
 .panel.standup-panel,
+.panel.proposals-panel,
 .panel.oversight-panel {
   top: 90px;
   left: 50%;

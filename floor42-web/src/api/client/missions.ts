@@ -68,7 +68,9 @@ export const missionsApi = {
   closeRetro: (mission: string) => request<MissionView>('POST', `/api/missions/${mission}/retro/close`),
   openQuestions: () => request<QuestionView[]>('GET', '/api/questions'),
   answer: (id: string, answer: string, askAgain: string | null = null) =>
-    request<QuestionView>('POST', `/api/questions/${encodeURIComponent(id)}/answer`, askAgain ? { answer, askAgain } : { answer }),
+    request<QuestionView>('POST', `/api/questions/${encodeURIComponent(id)}/answer`, askAgain ? { answer, askAgain } : { answer }).then(
+      followStepUp,
+    ),
   createMission: (
     title: string,
     objective: string,

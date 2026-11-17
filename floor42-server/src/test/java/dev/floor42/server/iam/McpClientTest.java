@@ -69,6 +69,7 @@ class McpClientTest {
     final List<Map<String, String>> sentHeaders = new CopyOnWriteArrayList<>();
     final List<String> authorizations = new CopyOnWriteArrayList<>();
     String lastToken;
+    TestGrants grants;
 
     @BeforeEach
     void start() throws Exception {
@@ -84,11 +85,13 @@ class McpClientTest {
                 Optional::empty,
                 null,
                 JSON);
-        catalogue = new ResourceCatalogue(dir, JSON, delegations);
+        grants = new TestGrants();
+        delegations.listen(grants.tuples);
+        catalogue = new ResourceCatalogue(dir, JSON, delegations, grants.tuples);
         catalogue.put(local("mcp-demo"));
         catalogue.grant(new AgentId("ada"), List.of("mcp-demo"));
         delegations.grant(M, new Tokens("a", "refresh", null, Instant.now().plusSeconds(60)), List.of("mcp-demo"));
-        servers = new McpServers(dir, JSON, catalogue);
+        servers = new McpServers(dir, JSON, catalogue, grants.tuples);
         servers.put("mcp-demo", "/mcp");
         client = client(new SafeUrls());
     }
@@ -281,7 +284,7 @@ class McpClientTest {
         assertThat(c.error()).isFalse();
         assertThat(c.text()).isEqualTo("echo {\"q\":\"hi\"}");
         assertThat(c.firstLine("mcp-demo", "echo"))
-                .matches("MCP mcp-demo echo -> ok \\(exchanged token [0-9a-f-]+ for target-api\\)");
+                .matches("MCP mcp-demo echo -> ok \\(exchanged token [0-9a-f-]+ for target-api, fga:01TESTMODEL\\)");
         assertThat(c.firstLine("mcp-demo", "echo")).doesNotContain("eyJ");
     }
 

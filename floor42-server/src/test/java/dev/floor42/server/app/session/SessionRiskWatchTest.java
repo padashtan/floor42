@@ -6,6 +6,7 @@ import dev.floor42.domain.ActionCategory;
 import dev.floor42.domain.ActionId;
 import dev.floor42.domain.Actor;
 import dev.floor42.domain.AgentId;
+import dev.floor42.domain.DecisionBasis;
 import dev.floor42.domain.DenialReason;
 import dev.floor42.domain.MissionId;
 import dev.floor42.domain.Origin;
@@ -104,6 +105,20 @@ class SessionRiskWatchTest {
         assertThat(s.raises).hasSize(1);
         assertThat(s.raises.getFirst().level()).isEqualTo(RiskLevel.NOTICE);
         assertThat(s.raises.getFirst().reasons()).containsExactly(RiskReason.COMMAND_DENIED);
+    }
+
+    @Test
+    void aShadowDenialRaisesNoRisk() {
+        // Five shadow proposals in a minute: each is denied with the shadow basis, none is the agent's probing.
+        List<EventEnvelope> events = new ArrayList<>(List.of(start()));
+        for (int i = 0; i < 5; i++) {
+            events.add(request(i, "a" + i, "Bash", "mvn test"));
+            events.add(
+                    real(i, new ActionDenied(new ActionId("a" + i), DenialReason.POLICY, DecisionBasis.trustShadow())));
+        }
+        Spy s = spy(events.toArray(EventEnvelope[]::new));
+        assertThat(s.raises).isEmpty();
+        assertThat(s.inFlight()).isZero();
     }
 
     @Test

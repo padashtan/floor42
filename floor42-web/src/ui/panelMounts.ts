@@ -35,6 +35,7 @@ import IdpExchangesPanel from '../components/IdpExchangesPanel.vue'
 import SessionsPanel from '../components/SessionsPanel.vue'
 import SettingsPanel from '../components/SettingsPanel.vue'
 import SkillsCatalogue from '../components/SkillsCatalogue.vue'
+import ProposalsPanel from '../components/ProposalsPanel.vue'
 import StandupPanel from '../components/StandupPanel.vue'
 import RemoteStrip from '../components/RemoteStrip.vue'
 import TodoPanel from '../components/TodoPanel.vue'
@@ -159,10 +160,11 @@ function workPanels(c: PanelContext): PanelMount[] {
     flagged('sandbox', SandboxReadiness, { props: () => ({ framed: true, project: mission(), check: office.mission?.checkCommand ?? null }) }),
     { id: 'away', component: AwayPanel, shown: () => !office.needsLogin, close: () => awayActions.close(), escapable: () => awayShown.value, on: { progress: open('progress'), desk: () => c.openDesk(null) } },
     flagged('terminal', DirectorTerminal, { props: () => ({ project: mission() }) }),
+    flagged('proposals', ProposalsPanel),
     flagged('standup', StandupPanel),
     flagged('skills', SkillsCatalogue, { props: () => ({ mission: office.mission?.id ?? null }) }),
     { id: 'log', component: EventLog, shown: () => true, on: { agent: (id: string) => c.selectAgent(id), question: (q: string) => c.openDesk(q) } },
-    { id: 'todo', component: TodoPanel, shown: () => true, on: { question: (q: string) => c.openDesk(q), workshop: open('workshop'), report: (id: string) => (c.reportOf.value = id), progress: open('progress') } },
+    { id: 'todo', component: TodoPanel, shown: () => true, on: { question: (q: string) => c.openDesk(q), workshop: open('workshop'), report: (id: string) => (c.reportOf.value = id), progress: open('progress'), profile: (a: string) => (c.profileOf.value = a) } },
     { id: 'remote', component: RemoteStrip, shown: () => remoteTiles.value.length > 0, on: { agent: (id: string) => c.selectAgent(id) } },
     { id: 'selection', component: SelectionPanel, shown: () => true, props: () => ({ target: c.selected.value }), on: { desk: () => c.openDesk(null) } },
     flagged('desk', DirectorDesk, { props: () => ({ focus: c.deskFocus.value }), on: { agent: toAgent(c, 'desk') } }),
@@ -231,7 +233,7 @@ export function panelTable(c: PanelContext): PanelMount[] {
 
 /** The order Escape closes panels in, before the last one opened (state/openPanels.ts). */
 const ESCAPE_ORDER = [
-  'viewer', 'report', 'prove', 'dossier', 'oversight', 'standup', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills', 'mcp',
+  'viewer', 'report', 'prove', 'dossier', 'oversight', 'proposals', 'standup', 'objections', 'agent-settings', 'hire', 'core', 'settings', 'progress', 'resume', 'caps', 'workflows', 'costs', 'sandbox', 'skills', 'mcp',
   'requests', 'profile', 'machine', 'deliverables', 'board', 'archive', 'usage', 'console', 'callMeeting', 'meeting', 'workshop', 'desk',
 ]
 

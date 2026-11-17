@@ -1,5 +1,6 @@
 package dev.floor42.server.iam;
 
+import dev.floor42.server.iam.fga.FgaStore;
 import dev.floor42.server.runtime.ClaudeCodeRuntime;
 import dev.floor42.server.runtime.Sandbox;
 import io.quarkus.runtime.StartupEvent;
@@ -10,6 +11,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import org.jboss.logging.Logger;
 
 /**
@@ -46,6 +48,9 @@ public class IamStatus {
     private final AgentClients clients;
     private final KeycloakClient keycloak;
     private final BooleanSupplier sandboxWorking;
+    /** OpenFGA's readiness: a problem (code, reason) or empty. Checked once Keycloak is well; fail closed. */
+    private final Supplier<Optional<FgaStore.Problem>> fga;
+
     private volatile Health health = Health.OFF;
     private volatile String code;
     private volatile String reason;
@@ -60,8 +65,17 @@ public class IamStatus {
             Jwks jwks,
             AgentClients clients,
             KeycloakClient keycloak,
-            Sandbox sandbox) {
-        this(settings, vault, owners, jwks, clients, keycloak, () -> sandbox.enabled() && sandbox.available());
+            Sandbox sandbox,
+            FgaStore fga) {
+        this(
+                settings,
+                vault,
+                owners,
+                jwks,
+                clients,
+                keycloak,
+                () -> sandbox.enabled() && sandbox.available(),
+                fga::ensureReady);
     }
 
     IamStatus(
@@ -72,6 +86,19 @@ public class IamStatus {
             AgentClients clients,
             KeycloakClient keycloak,
             BooleanSupplier sandboxWorking) {
+        this(settings, vault, owners, jwks, clients, keycloak, sandboxWorking, Optional::empty);
+    }
+
+    IamStatus(
+            IamSettings settings,
+            SecretVault vault,
+            SocketOwners owners,
+            Jwks jwks,
+            AgentClients clients,
+            KeycloakClient keycloak,
+            BooleanSupplier sandboxWorking,
+            Supplier<Optional<FgaStore.Problem>> fga) {
+        this.fga = fga;
         this.settings = settings;
         this.vault = vault;
         this.owners = owners;
@@ -121,24 +148,36 @@ public class IamStatus {
                 set(Health.UNREACHABLE, null, "Keycloak does not answer at " + settings.issuer(), false);
                 return;
             }
-            try {
-                keycloak.probeIntrospection();
-            } catch (IdpRefusedException e) {
-                if (!e.aboutCaller()) throw e;
-                // Handled: told at start, not at the first session; the watch keeps asking and clears it when fixed
-                set(Health.REFUSED_TO_START, API_CREDENTIAL_REFUSED, API_CREDENTIAL_REASON, false);
-                return;
-            } catch (ApiSecretMissingException e) {
-                // Handled: told at start; the watch keeps asking and clears it when the secret is saved
-                set(Health.REFUSED_TO_START, API_SECRET_MISSING, API_SECRET_REASON, false);
+            if (!apiProbeOk()) return;
+            clients.ensureAll();
+            Optional<FgaStore.Problem> openfga = fga.get();
+            if (openfga.isPresent()) {
+                // Handled: told at start, and REFUSED (not UNREACHABLE) so the background Keycloak check cannot clear
+                // it
+                set(Health.REFUSED_TO_START, openfga.get().code(), openfga.get().reason(), false);
                 return;
             }
-            clients.ensureAll();
             set(Health.UP, null, null, true);
         } catch (RuntimeException e) {
             // Handled: reported as the state, sessions are refused until a restart finds Keycloak well
             set(Health.UNREACHABLE, null, "Keycloak is not usable: " + e.getMessage(), false);
         }
+    }
+
+    /** The floor42-api credential works; when it does not, the state is set and the caller stops. */
+    private boolean apiProbeOk() {
+        try {
+            keycloak.probeIntrospection();
+            return true;
+        } catch (IdpRefusedException e) {
+            if (!e.aboutCaller()) throw e;
+            // Handled: told at start, not at the first session; the watch keeps asking and clears it when fixed
+            set(Health.REFUSED_TO_START, API_CREDENTIAL_REFUSED, API_CREDENTIAL_REASON, false);
+        } catch (ApiSecretMissingException e) {
+            // Handled: told at start; the watch keeps asking and clears it when the secret is saved
+            set(Health.REFUSED_TO_START, API_SECRET_MISSING, API_SECRET_REASON, false);
+        }
+        return false;
     }
 
     private static final String API_CREDENTIAL_REASON =
@@ -201,7 +240,22 @@ public class IamStatus {
         else if (health == Health.UP) lastCheck = Instant.now();
     }
 
+    /** Set by CDI; null in the unit tests that build the status by hand. */
+    @Inject
+    jakarta.enterprise.inject.Instance<dev.floor42.server.iam.fga.GrantTuples> grantTuples;
+
     public View view() {
+        int behind = grantTuples == null || !grantTuples.isResolvable()
+                ? 0
+                : grantTuples.get().unjournaled();
+        if (behind > 0 && health == Health.UP)
+            return new View(
+                    health,
+                    "AUTHORIZATION_UNJOURNALED",
+                    behind + " authorization change(s) are in OpenFGA but not in the journal yet: Floor42 retries",
+                    lastCheck,
+                    failedChecks.get(),
+                    settings.restartNeeded());
         return new View(health, code, reason, lastCheck, failedChecks.get(), settings.restartNeeded());
     }
 

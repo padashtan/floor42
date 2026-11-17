@@ -27,13 +27,15 @@ class McpServersTest {
 
     ResourceCatalogue catalogue;
     McpServers servers;
+    TestGrants grants;
 
     @BeforeEach
     void start() {
         // The grant check is not used here: no delegations.
-        catalogue = new ResourceCatalogue(dir, JSON, null);
+        grants = new TestGrants();
+        catalogue = new ResourceCatalogue(dir, JSON, null, grants.tuples);
         catalogue.put(resource("mcp-demo", List.of("POST"), List.of("/mcp")));
-        servers = new McpServers(dir, JSON, catalogue);
+        servers = new McpServers(dir, JSON, catalogue, grants.tuples);
     }
 
     private static Resource resource(String name, List<String> methods, List<String> prefixes) {
@@ -172,12 +174,7 @@ class McpServersTest {
         servers.put("mcp-demo", "/mcp");
         servers.pin("mcp-demo", List.of(tool("echo", "Echoes")), Instant.now());
         McpTicks.tick(servers, "mcp-demo", "echo");
-        assertThat(servers.usable("mcp-demo")
-                        .orElseThrow()
-                        .tool("echo")
-                        .orElseThrow()
-                        .ticked())
-                .isTrue();
+        assertThat(pinned("echo").ticked()).isTrue();
 
         // the catalogue does not touch mcp-servers.json: the same name now points elsewhere
         catalogue.put(new Resource(

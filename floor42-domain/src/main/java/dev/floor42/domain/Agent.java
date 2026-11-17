@@ -16,6 +16,11 @@ public final class Agent {
     WorkRole workRole;
     boolean dismissed;
     boolean core;
+    TrustLevel trust = TrustLevel.STANDARD;
+    java.time.Instant trustSince;
+    TrustCause trustCause;
+    String trustCauseEvent;
+    int acceptedSinceTrustChange;
 
     Agent(
             AgentId id,
@@ -81,5 +86,35 @@ public final class Agent {
     /** True when the director suspended new assignments for this agent. */
     public boolean suspended() {
         return suspended;
+    }
+
+    /** The trust cap on this agent (ADR-0082): STANDARD for staff hired before levels existed. */
+    public TrustLevel trust() {
+        return trust;
+    }
+
+    /** When the level last changed; null while it never did. */
+    public java.time.Instant trustSince() {
+        return trustSince;
+    }
+
+    /** Why the level last changed; null while it never did. */
+    public TrustCause trustCause() {
+        return trustCause;
+    }
+
+    /** The id of the journal event that caused the last change; null when none did (a hand change, a hire). */
+    public String trustCauseEvent() {
+        return trustCauseEvent;
+    }
+
+    /** Patches the director accepted since the level last changed (an incident resets it). */
+    public int acceptedSinceTrustChange() {
+        return acceptedSinceTrustChange;
+    }
+
+    /** True when the record earned the director a proposal to raise the level one step. */
+    public boolean trustRaiseProposed() {
+        return !dismissed && Probation.raiseProposed(trust, acceptedSinceTrustChange);
     }
 }

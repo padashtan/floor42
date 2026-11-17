@@ -132,6 +132,49 @@ class KeycloakSignInTest {
     }
 
     @Test
+    void aReviewerCannotOpenTheDesk() throws Exception {
+        fake.accessRoles("floor42-reviewer");
+        try {
+            String cb = approvedCallback();
+            Response done = given().config(NO_REDIRECT).cookies(pre).get(cb);
+            done.then().statusCode(401).body("code", equalTo("DESK_DIRECTOR_ONLY"));
+            assertThat(done.getDetailedCookie(LocalAccessGuard.COOKIE)).isNull();
+        } finally {
+            fake.accessRoles("floor42-director");
+        }
+    }
+
+    private void assertRefusedAtTheDesk() throws Exception {
+        String cb = approvedCallback();
+        Response done = given().config(NO_REDIRECT).cookies(pre).get(cb);
+        done.then().statusCode(401).body("code", equalTo("DESK_DIRECTOR_ONLY"));
+        assertThat(done.getDetailedCookie(LocalAccessGuard.COOKIE)).isNull();
+        assertThat(fake.requests()).anyMatch(r -> r.get("_path").endsWith("/logout"));
+    }
+
+    @Test
+    void theDirectorRoleOnlyUnderResourceAccessDoesNotOpenTheDesk() throws Exception {
+        fake.accessRoles();
+        fake.clientRoles("floor42-desk", "floor42-director");
+        try {
+            assertRefusedAtTheDesk();
+        } finally {
+            fake.clientRoles("floor42-desk");
+            fake.accessRoles("floor42-director");
+        }
+    }
+
+    @Test
+    void anAccessTokenWithoutRolesDoesNotOpenTheDesk() throws Exception {
+        fake.accessRoles();
+        try {
+            assertRefusedAtTheDesk();
+        } finally {
+            fake.accessRoles("floor42-director");
+        }
+    }
+
+    @Test
     void replayedStateIsRefused() throws Exception {
         String callback = approvedCallback();
         given().config(NO_REDIRECT).cookies(pre).get(callback).then().statusCode(303);

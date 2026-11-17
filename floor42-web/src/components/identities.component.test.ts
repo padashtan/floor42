@@ -32,6 +32,7 @@ function serve(iss: string, origin: string) {
     '/api/iam/status': { enabled: true },
     '/api/iam/agents': [{ agent: 'ada', clientId: 'floor42-agent-ada', serviceAccountId: 's', enabled: true, revoked: false }],
     '/api/iam/tokens': [token(iss, origin)],
+    '/api/iam/resources': { resources: [], grants: {} },
     '/api/iam/refusals': [{ at: '2026-11-05T10:00:03Z', code: 'WRONG_PROCESS', jti: 'jti-1', launch: 'L1' }],
     '/api/sessions/L1/trust-chain': {
       links: [
@@ -84,6 +85,7 @@ describe('the identities panel', () => {
       '/api/agents': [{ id: 'ada', name: 'Ada' }],
       '/api/iam/tokens': [],
       '/api/iam/refusals': [],
+      '/api/iam/resources': { resources: [], grants: {} },
     }
     vi.stubGlobal('fetch', async (url: string) =>
       url === '/api/iam/agents' ? new Response('{}', { status: 503 }) : new Response(JSON.stringify(answers[url] ?? {}), { status: 200 }),
@@ -99,6 +101,7 @@ describe('the identities panel', () => {
     const answers: Record<string, unknown> = {
       '/api/iam/status': { enabled: true, health: 'UNREACHABLE' },
       '/api/agents': [{ id: 'ada', name: 'Ada' }],
+      '/api/iam/resources': { resources: [], grants: {} },
     }
     vi.stubGlobal('fetch', async (url: string) =>
       ['/api/iam/agents', '/api/iam/tokens', '/api/iam/refusals'].includes(url)

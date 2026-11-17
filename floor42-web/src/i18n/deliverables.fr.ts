@@ -98,6 +98,7 @@ export const deliverablesFr: Record<keyof typeof deliverablesEn, string> = {
   'core.done': 'Fermer',
   'ev.AgentMarkedCore': 'Le directeur a fait de {agent} un membre du noyau',
   'ev.AgentUnmarkedCore': '{agent} n’est plus membre du noyau',
+  'ev.AgentTrustChanged': '{agent} : niveau de confiance {from} puis {to} ({cause})',
   // recent-projects
   'recent.title': 'Projets récents (épinglés d’abord, puis par dernière activité) :',
   'recent.useTitle': 'Lancer une nouvelle mission sur {path}',

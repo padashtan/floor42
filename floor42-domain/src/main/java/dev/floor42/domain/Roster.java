@@ -15,6 +15,7 @@ import dev.floor42.domain.event.RosterEvent.AgentHired;
 import dev.floor42.domain.event.RosterEvent.AgentMarkedCore;
 import dev.floor42.domain.event.RosterEvent.AgentReconfigured;
 import dev.floor42.domain.event.RosterEvent.AgentRoleAssigned;
+import dev.floor42.domain.event.RosterEvent.AgentTrustChanged;
 import dev.floor42.domain.event.RosterEvent.AgentUnmarkedCore;
 import dev.floor42.domain.event.TicketEvent.TicketReleased;
 import java.util.ArrayList;
@@ -65,15 +66,95 @@ final class Roster {
             String model,
             String effort,
             List<String> skills) {
+        return hire(ctx, id, displayName, role, provider, model, effort, skills, true);
+    }
+
+    /** {@code probation} false for staff Floor42 seeds on a fresh install (planner, chairs): they start STANDARD. */
+    List<EventEnvelope> hire(
+            CommandContext ctx,
+            AgentId id,
+            String displayName,
+            String role,
+            String provider,
+            String model,
+            String effort,
+            List<String> skills,
+            boolean probation) {
         requireDirector(ctx);
         require(!agents.containsKey(id), Refusal.DUPLICATE_AGENT, "Agent " + id + " already exists");
         requireText(displayName, "displayName");
         requireText(role, "role");
         requireText(provider, "provider");
         requireText(model, "model");
+        Recorder r =
+                view.record(ctx, null).emit(new AgentHired(id, displayName, role, provider, model, effort, skills));
+        // Staff hired from now on start on probation (ADR-0082); a simulation has no real calls to cap.
+        if (probation && ctx.origin() == Origin.REAL) {
+            String hired = r.events().getLast().eventId();
+            r.as(Actor.system())
+                    .emit(new AgentTrustChanged(id, TrustLevel.STANDARD, TrustLevel.PROBATION, TrustCause.HIRE, hired));
+        }
+        return r.events();
+    }
+
+    /** The director narrows an agent's level by hand: restricting never needs proof, so no step-up. */
+    List<EventEnvelope> lowerTrust(CommandContext ctx, AgentId id, TrustLevel to) {
+        requireDirector(ctx);
+        Agent agent = existing(id);
+        require(!agent.dismissed, Refusal.AGENT_DISMISSED, id + " has left the company");
+        require(
+                to != null && to.compareTo(agent.trust) < 0,
+                Refusal.INVALID_TRANSITION,
+                id + " is already " + agent.trust + ": a hand change only narrows");
         return view.record(ctx, null)
-                .emit(new AgentHired(id, displayName, role, provider, model, effort, skills))
+                .emit(new AgentTrustChanged(id, agent.trust, to, TrustCause.DIRECTOR, null))
                 .events();
+    }
+
+    /**
+     * The director widens an agent's level. {@code stepUp} is the proof N3's mechanism gives (a fresh strong sign-in
+     * and, with four eyes on, the second signature); without it the raise is refused here, in the domain.
+     */
+    List<EventEnvelope> raiseTrust(CommandContext ctx, AgentId id, TrustLevel to, boolean stepUp) {
+        requireDirector(ctx);
+        Agent agent = existing(id);
+        require(!agent.dismissed, Refusal.AGENT_DISMISSED, id + " has left the company");
+        require(
+                to != null && to.compareTo(agent.trust) > 0,
+                Refusal.INVALID_TRANSITION,
+                id + " is already " + agent.trust + ": a raise widens");
+        require(
+                stepUp,
+                Refusal.TRUST_RAISE_NEEDS_STEP_UP,
+                "Widening an agent's rights needs a fresh strong sign-in (and a second signature when four eyes is on)");
+        return view.record(ctx, null)
+                .emit(new AgentTrustChanged(id, agent.trust, to, TrustCause.DIRECTOR, null))
+                .events();
+    }
+
+    /**
+     * An incident, a risk raise or a quarantine of this agent's session narrows its level by one, in the command that
+     * records the cause (same events list). A real fact only: a simulation lowers nothing. Nothing below SHADOW.
+     */
+    static void narrow(
+            CompanyView view, Recorder r, CommandContext ctx, AgentId id, TrustCause cause, String causeEvent) {
+        Agent a = view.agent(id).orElse(null);
+        if (ctx.origin() != Origin.REAL || a == null || a.dismissed || a.trust == TrustLevel.SHADOW) return;
+        r.as(Actor.system()).emit(new AgentTrustChanged(id, a.trust, a.trust.lowered(), cause, causeEvent));
+    }
+
+    /** The director accepted a patch of this agent: one more toward a proposal (never an agent's peer review). */
+    void patchAccepted(AgentId id, EventEnvelope envelope) {
+        Agent a = agents.get(id);
+        if (a != null && envelope.origin() == Origin.REAL && envelope.actor().isDirector()) {
+            a.acceptedSinceTrustChange++;
+        }
+    }
+
+    /** An incident starts the count again, even from SHADOW where there is nothing left to take away. */
+    void incidentRaised(AgentId id, EventEnvelope envelope) {
+        Agent a = agents.get(id);
+        if (a != null && envelope.origin() == Origin.REAL) a.acceptedSinceTrustChange = 0;
     }
 
     List<EventEnvelope> hire(
@@ -84,9 +165,21 @@ final class Roster {
             WorkRole workRole,
             String model,
             String effort) {
+        return hire(ctx, id, displayName, role, workRole, model, effort, true);
+    }
+
+    List<EventEnvelope> hire(
+            CommandContext ctx,
+            AgentId id,
+            String displayName,
+            String role,
+            WorkRole workRole,
+            String model,
+            String effort,
+            boolean probation) {
         require(workRole != null, Refusal.INVALID_ARGUMENT, "workRole is required");
         List<EventEnvelope> events =
-                new ArrayList<>(hire(ctx, id, displayName, role, "anthropic", model, effort, List.of()));
+                new ArrayList<>(hire(ctx, id, displayName, role, "anthropic", model, effort, List.of(), probation));
         events.addAll(
                 view.record(ctx, null).emit(new AgentRoleAssigned(id, workRole)).events());
         return events;
@@ -161,6 +254,7 @@ final class Roster {
             case AgentDismissed e -> on(e);
             case AgentMarkedCore e -> on(e);
             case AgentUnmarkedCore e -> on(e);
+            case AgentTrustChanged e -> on(e, envelope);
         }
     }
 
@@ -198,5 +292,14 @@ final class Roster {
 
     void on(AgentUnmarkedCore e) {
         agents.get(e.agent()).core = false;
+    }
+
+    void on(AgentTrustChanged e, EventEnvelope envelope) {
+        Agent a = agents.get(e.agent());
+        a.trust = e.to();
+        a.trustSince = envelope.occurredAt();
+        a.trustCause = e.cause();
+        a.trustCauseEvent = e.causeEvent();
+        a.acceptedSinceTrustChange = 0;
     }
 }
