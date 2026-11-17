@@ -75,19 +75,19 @@ revisit) and the evidence in the code are in [`2026-11-06-review.md`](2026-11-06
 | [0065](0065-container-broker.md) | Containers for missions through a per-mission broker, reached with an exchanged token | Proposed |
 | [0066](0066-session-risk-detection.md) | Session risk v1: detection, alerts and a quarantine the director applies | Accepted (v1.0.0) |
 | [0067](0067-feature-packages.md) | Feature packages in `app` and `api`, their dependencies checked by ArchUnit | Accepted |
-| [0068](0068-test-map.md) | A test map keyed by path, kept honest by a gate and an escape survey | Proposed |
+| [0068](0068-test-map.md) | A test map keyed by path, kept honest by a gate and an escape survey | Accepted |
 | [0069](0069-repository-layout-for-parallel-work.md) | A repository laid out for parallel work by several agents: one subject, one place | Accepted |
 | [0070](0070-repository-profile-and-preflight.md) | A repository profile and a preflight before a real mission; the sandbox refusal moves to creation | Accepted (v1.1) |
 | [0071](0071-mission-proof-dossier.md) | The mission proof dossier: facts from the journal with their source, always masked, no claim the journal does not hold | Accepted |
 | [0072](0072-governed-external-mcp.md) | Governed external MCP servers: a catalogue resource, tools pinned by hash, two Floor42 tools, the agent's own token (amends 0027, 0064) | Accepted (v1.2) |
 | [0073](0073-director-mcp-endpoint.md) | The director's MCP endpoint: script tokens only, scope per tool, approvals human only, agent text quoted as data | Accepted (v1.2) |
 | [0074](0074-identity-claims-in-the-journal.md) | Identity claims (`sub`, `azp`, `act`, scopes) in `AgentTokenIssued`; `sub` shortened in exports | Accepted (v1.2) |
-| [0075](0075-human-oversight-report.md) | The human oversight report: who supervised, what agents could do, what they did, what humans overrode, from the journal, masked, with its limits | Proposed (v1.3) |
-| [0076](0076-crash-recovery-reconciliation.md) | Crash recovery: authorized calls without outcome, orphan approvals and unclaimed worktrees recorded as To do rows at startup, once, no invented outcome | Proposed (v1.3) |
-| [0077](0077-commits-signed-by-the-agent.md) | Commits signed by the agent's identity: git SSH signing, one key per agent under the data folder, allowed signers, key retired on revoke | Proposed (v1.3) |
-| [0078](0078-standup-from-the-journal.md) | The 9 o'clock standup: per agent yesterday, today and blocked, from the journal only, no model call | Proposed (v1.3) |
-| [0079](0079-hash-chained-journal.md) | A hash chain over the journal in a side table, signed Ed25519 checkpoints, appends refused on a break until the director acknowledges (amends 0044) | Proposed |
-| [0080](0080-openfga-decides-keycloak-manages.md) | OpenFGA decides relationships, Keycloak manages identities, Floor42 enforces: the model as code with its tests, a JDK client, the pinned store and model, fail closed (supersedes the "Later" of 0065) | Proposed (v1.3.0) |
-| [0081](0081-assured-approvals.md) | Assured approvals: a second factor on a phone for risky acts, and four eyes | Proposed |
-| [0082](0082-trust-levels.md) | Trust levels: a cap after the permission table, shadow mode, probation that narrows by itself and widens only on the director's proven click | Proposed (v1.3) |
-| [0083](0083-bound-director-tokens.md) | Script tokens bound to a Keycloak session in IAM mode: a step-up, an offline session in the vault, refreshed at most once a minute; they steer, never approve a plan | Proposed (v1.3) |
+| [0075](0075-human-oversight-report.md) | The human oversight report: who supervised, what agents could do, what they did, what humans overrode, from the journal, masked, with its limits | Accepted (1.2.0) |
+| [0076](0076-crash-recovery-reconciliation.md) | Crash recovery: authorized calls without outcome, orphan approvals and unclaimed worktrees recorded as To do rows at startup, once, no invented outcome | Accepted (1.2.0) |
+| [0077](0077-commits-signed-by-the-agent.md) | Commits signed by the agent's identity: git SSH signing, one key per agent under the data folder, allowed signers, key retired on revoke | Accepted (1.2.0) |
+| [0078](0078-standup-from-the-journal.md) | The 9 o'clock standup: per agent yesterday, today and blocked, from the journal only, no model call | Accepted (1.2.0) |
+| [0079](0079-hash-chained-journal.md) | A hash chain over the journal in a side table, signed Ed25519 checkpoints, appends refused on a break until the director acknowledges (amends 0044) | Accepted (1.2.0) |
+| [0080](0080-openfga-decides-keycloak-manages.md) | OpenFGA decides relationships, Keycloak manages identities, Floor42 enforces: the model as code with its tests, a JDK client, the pinned store and model, fail closed (supersedes the "Later" of 0065) | Accepted (1.3.0) |
+| [0081](0081-assured-approvals.md) | Assured approvals: a second factor on a phone for risky acts, and four eyes | Accepted (1.3.0) |
+| [0082](0082-trust-levels.md) | Trust levels: a cap after the permission table, shadow mode, probation that narrows by itself and widens only on the director's proven click | Accepted (1.3.0) |
+| [0083](0083-bound-director-tokens.md) | Script tokens bound to a Keycloak session in IAM mode: a step-up, an offline session in the vault, refreshed at most once a minute; they steer, never approve a plan | Accepted (1.3.0) |

@@ -114,7 +114,12 @@ public class BrokerCatalogueResource {
         for (String n : names)
             if (catalogue.find(n).isEmpty()) throw RefusedException.invalid("UNKNOWN_RESOURCE", "No resource " + n);
         // Only a grant that widens needs the proof: taking one back keeps the click
-        List<String> held = catalogue.grantsOf().getOrDefault(id, List.of());
+        List<String> held;
+        try {
+            held = catalogue.grantsOf().getOrDefault(id, List.of());
+        } catch (FgaException e) {
+            throw unavailable(e);
+        }
         boolean widens = !held.containsAll(names);
         guard.run(AssurancePolicy.ActKind.GRANT, "agent:" + id, widens, () -> {
             try {

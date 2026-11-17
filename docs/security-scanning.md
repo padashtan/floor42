@@ -297,6 +297,11 @@ The script tests only the daemon it started: there is no URL override.
   `/hooks/*` and `/mcp` (the agent sessions' own door, which refuses a director's cookie with 401), and the routes that
   write at a path the client names: `/api/projects/folders`, `/api/projects/init`, `/api/terminals`, `open-folder`. A
   fuzzer should not be what proves they stay inside the temp home.
+- **5xx in the signed-in run**: the built-in `not_a_server_error` is replaced by `tools/security/schemathesis_signed_in.py`,
+  the same rule with one exception: a 503 whose body code is `FGA_UNAVAILABLE`, on an operation whose OpenAPI lists 503.
+  The test daemon has no OpenFGA (IAM mode is off), so the grant routes fail closed by design (ADR-0080). Any other 5xx,
+  or that 503 on an operation that does not document it, still fails. The real authorization routes are attacked in IAM
+  mode in the v1.4 security lab.
 - **Without a session**, with the custom check `tools/security/schemathesis_noauth.py`: every operation but `/api/status`
   must answer 401 or 403, never a 2xx and never a 5xx. Only these others pass, because the HTTP layer answers before any
   handler runs: a 405, and a 400 that is the daemon's `PATH_REFUSED`, the framework's bare HTML 400 page, an empty 400, or

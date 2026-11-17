@@ -1,6 +1,6 @@
 # ADR-0068: A test map keyed by path, kept honest by a gate and an escape survey
 
-Date: 2026-11-13 · Status: Proposed
+Date: 2026-11-13 · Status: Accepted (2026-11-17)
 
 ## Context
 

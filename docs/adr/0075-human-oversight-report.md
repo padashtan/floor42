@@ -1,6 +1,6 @@
 # ADR-0075: The human oversight report
 
-Date: 2026-11-16 · Status: Proposed
+Date: 2026-11-16 · Status: Accepted (1.2.0)
 
 ## Context
 

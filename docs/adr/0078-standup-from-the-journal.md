@@ -1,6 +1,6 @@
 # ADR-0078: The 9 o'clock standup, built from the journal
 
-Date: 2026-11-16 · Status: Proposed
+Date: 2026-11-16 · Status: Accepted (1.2.0)
 
 ## Context
 

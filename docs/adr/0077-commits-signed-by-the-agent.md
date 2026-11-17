@@ -1,6 +1,6 @@
 # ADR-0077: Commits signed by the agent's identity
 
-Date: 2026-11-26 · Status: Proposed (v1.3)
+Date: 2026-11-16 · Status: Accepted (1.2.0)
 
 ## Context
 
