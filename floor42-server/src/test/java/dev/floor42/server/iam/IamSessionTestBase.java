@@ -84,7 +84,7 @@ public abstract class IamSessionTestBase {
         var workdir = Files.createTempDirectory("office-session");
         if (office.query(c -> c.staff().find(CHRIS).isEmpty())) {
             office.execute(c -> c.staff()
-                    .hire(
+                    .hireSeeded(
                             director(),
                             CHRIS,
                             "Chris",
@@ -94,6 +94,11 @@ public abstract class IamSessionTestBase {
                             "medium",
                             List.of()));
         }
+        // An earlier test of the shared journal may have narrowed Chris (an incident, a risk alert): each starts
+        // STANDARD.
+        office.execute(c -> c.staff().find(CHRIS).orElseThrow().trust() == dev.floor42.domain.TrustLevel.STANDARD
+                ? java.util.List.<dev.floor42.domain.event.EventEnvelope>of()
+                : c.staff().raiseTrust(director(), CHRIS, dev.floor42.domain.TrustLevel.STANDARD, true));
         MissionId m = ((MissionCreated) office.execute(c -> c.missions()
                                 .create(
                                         director(),

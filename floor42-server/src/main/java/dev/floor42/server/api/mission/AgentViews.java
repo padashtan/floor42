@@ -28,10 +28,18 @@ public final class AgentViews {
             String workRole,
             boolean atWork,
             boolean stays,
-            boolean core) {
+            boolean core,
+            String trust,
+            String trustSince,
+            String trustCause,
+            int acceptedPatches,
+            int raiseAfter,
+            boolean raiseProposed) {
         // atWork: a session of the agent is open, it cannot be dismissed until that session ends.
         // stays: a chair of Floor42's committees, never dismissed; nobody can be hired in their place.
         // core: starred by the director as a core member; "dismiss everyone except the core members" keeps it.
+        // trust: SHADOW, PROBATION or STANDARD (ADR-0082); trustSince and trustCause are null while it never changed.
+        // acceptedPatches counts since the level last changed; raiseAfter is the count that proposes a raise.
         static AgentView of(Company c, Agent a) {
             WorkRole role = Staff.roleOf(a);
             return new AgentView(
@@ -46,7 +54,13 @@ public final class AgentViews {
                     role == null ? null : role.name(),
                     c.queries().atWork(a.id()),
                     CommitteeRoles.chair(a.id()),
-                    a.core());
+                    a.core(),
+                    a.trust().name(),
+                    a.trustSince() == null ? null : a.trustSince().toString(),
+                    a.trustCause() == null ? null : a.trustCause().name(),
+                    a.acceptedSinceTrustChange(),
+                    dev.floor42.domain.Probation.ACCEPTED_FOR_RAISE,
+                    a.trustRaiseProposed());
         }
     }
 

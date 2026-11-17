@@ -96,12 +96,17 @@ public class OfficeService {
         return unreadable;
     }
 
+    /** Set in IAM mode: a command then runs where a stronger proof exists (ADR-0081). Null in a plain unit test. */
+    @Inject
+    dev.floor42.server.iam.IamSettings iam;
+
     public CommandContext context(Actor actor, Origin origin) {
-        return new CommandContext(actor, origin, clock.instant(), null);
+        return context(actor, origin, null);
     }
 
     public CommandContext context(Actor actor, Origin origin, String causationId) {
-        return new CommandContext(actor, origin, clock.instant(), causationId);
+        CommandContext ctx = new CommandContext(actor, origin, clock.instant(), causationId);
+        return iam != null && iam.enabled() ? ctx.withAssurance() : ctx;
     }
 
     public synchronized <T> T query(Function<Company, T> query) {

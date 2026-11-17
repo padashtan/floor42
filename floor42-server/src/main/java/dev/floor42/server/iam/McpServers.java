@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import dev.floor42.server.iam.ResourceCatalogue.Resource;
+import dev.floor42.server.iam.fga.FgaException;
+import dev.floor42.server.iam.fga.GrantTuples;
+import dev.floor42.server.iam.fga.GrantTuples.Pin;
 import dev.floor42.server.security.OwnerOnly;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,10 +32,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
  * The remote MCP servers agents may use (ADR-0072): a catalogue resource plus the path of its endpoint, and the tools
- * the director pinned and ticked. One file, {@code <data-dir>/iam/mcp-servers.json}, owner only, read at each call, not
- * journaled (ADR-0064 point 12). An unreadable file reads as empty: nothing is callable (fail closed). A tool is
- * pinned by the SHA-256 of its name, description and input schema: when a refresh shows another definition for a
- * ticked tool, it is unticked and flagged {@code changed} until the director ticks it again.
+ * the director pinned. One file, {@code <data-dir>/iam/mcp-servers.json}, owner only, read at each call: the pinned
+ * definitions. Whether a tool is ticked is not in it any more: a tick is the two tuples
+ * {@code mcp_tool:S/T/H#server@resource:S} and {@code mcp_tool:S/T/H#enabled@agent:*} in OpenFGA, journaled as
+ * {@code AuthorizationChanged} (ADR-0080). An unreadable file reads as empty: nothing is callable (fail closed). A tool
+ * is pinned by the SHA-256 of its name, description and input schema, and the hash is in the tuples' object id: when a
+ * refresh shows another definition for a ticked tool, the old tuples are deleted, the new object has none, and the tool
+ * is flagged {@code changed} until the director ticks it again.
  */
 @ApplicationScoped
 public class McpServers {
@@ -67,16 +73,68 @@ public class McpServers {
     private final Path file;
     private final ObjectMapper json;
     private final ResourceCatalogue catalogue;
+    private final GrantTuples grants;
 
     @Inject
     McpServers(
-            @ConfigProperty(name = "floor42.data-dir") Path dataDir, ObjectMapper json, ResourceCatalogue catalogue) {
+            @ConfigProperty(name = "floor42.data-dir") Path dataDir,
+            ObjectMapper json,
+            ResourceCatalogue catalogue,
+            GrantTuples grants) {
         this.file = dataDir.resolve("iam").resolve("mcp-servers.json");
         this.json = json;
         this.catalogue = catalogue;
+        this.grants = grants;
     }
 
+    /** The servers with {@code ticked} read from OpenFGA; nothing is ticked on a server pinned at another endpoint. */
     public synchronized List<McpServer> all() {
+        return stored().stream().map(this::withTicks).toList();
+    }
+
+    private McpServer withTicks(McpServer s) {
+        boolean moved = stale(s);
+        List<McpTool> tools = s.tools().stream()
+                .map(t -> new McpTool(
+                        t.name(),
+                        t.description(),
+                        t.inputSchema(),
+                        t.sha256(),
+                        !moved && isTicked(s.resource(), t),
+                        t.changed()))
+                .toList();
+        return new McpServer(s.resource(), s.path(), s.baseUrl(), s.audience(), s.pinnedAt(), tools);
+    }
+
+    /** A display only: OpenFGA out of reach shows nothing ticked, and the broker's own check refuses the call anyway. */
+    private boolean isTicked(String server, McpTool t) {
+        try {
+            return grants.ticked(server, t.name(), t.sha256());
+        } catch (FgaException e) {
+            // Handled: shown unticked; the decision is the broker's check, which fails closed on its own
+            return false;
+        }
+    }
+
+    /** A tool the 1.2.0 file recorded as ticked, still pinned at the endpoint it was ticked at. */
+    public record LegacyTick(String server, String tool, String sha256) {}
+
+    /** The ticks of the old file, for the one-shot import; none for a server pinned at another endpoint. */
+    public synchronized List<LegacyTick> legacyTicks() {
+        List<LegacyTick> out = new ArrayList<>();
+        for (McpServer s : stored())
+            if (!stale(s))
+                for (McpTool t : s.tools()) if (t.ticked()) out.add(new LegacyTick(s.resource(), t.name(), t.sha256()));
+        return out;
+    }
+
+    /** After the import: the file keeps the definitions only. */
+    public synchronized void dropStoredTicks() {
+        write(strict());
+    }
+
+    /** The pinned definitions as the file holds them ({@code ticked} is never stored). */
+    public synchronized List<McpServer> stored() {
         try {
             return Files.exists(file)
                     ? json.readValue(file.toFile(), new TypeReference<List<McpServer>>() {})
@@ -91,12 +149,27 @@ public class McpServers {
         return all().stream().filter(s -> s.resource().equals(resource)).findFirst();
     }
 
-    /** The server as it may be used now: when its resource no longer has the endpoint it was pinned at, nothing is ticked. */
+    /** The server as declared (ticks are OpenFGA's: see {@link #pinnedTool}); the broker decides the call. */
     public synchronized Optional<McpServer> usable(String resource) {
-        Optional<McpServer> found = find(resource);
+        Optional<McpServer> found =
+                stored().stream().filter(s -> s.resource().equals(resource)).findFirst();
         if (found.isEmpty() || !stale(found.get())) return found;
-        McpServer s = found.get();
-        return Optional.of(s.tools().stream().noneMatch(McpTool::ticked) ? s : replace(unticked(s)));
+        // A server whose resource moved: what was approved at the old endpoint is deleted now, and the tools say so
+        try {
+            McpServer cleared = unticked(found.get());
+            return Optional.of(cleared.equals(found.get()) ? found.get() : replace(cleared));
+        } catch (FgaException e) {
+            // Handled: the tuples stay for now, and pinnedTool refuses a server pinned at another endpoint all the same
+            return found;
+        }
+    }
+
+    /**
+     * The tool as pinned, when its server still has the endpoint it was pinned at; empty otherwise, whatever OpenFGA
+     * holds for it. Whether it is ticked is {@link ResourceCatalogue#toolAllowed}'s answer, for this definition's hash.
+     */
+    public Optional<McpTool> pinnedTool(String resource, String tool) {
+        return usable(resource).filter(s -> !stale(s)).flatMap(s -> s.tool(tool == null ? "" : tool));
     }
 
     private boolean stale(McpServer s) {
@@ -107,11 +180,19 @@ public class McpServers {
                 .orElse(true);
     }
 
-    private static McpServer unticked(McpServer s) {
-        List<McpTool> tools = s.tools().stream()
-                .map(t -> new McpTool(
-                        t.name(), t.description(), t.inputSchema(), t.sha256(), false, t.ticked() || t.changed()))
-                .toList();
+    /**
+     * The server with nothing ticked: the tuples of its ticked tools are deleted first (OpenFGA out of reach refuses the
+     * write, so an old approval can never come back), and those tools are flagged {@code changed}.
+     */
+    private McpServer unticked(McpServer s) {
+        List<McpTool> tools = new ArrayList<>();
+        List<Pin> gone = new ArrayList<>();
+        for (McpTool t : s.tools()) {
+            boolean was = grants.ticked(s.resource(), t.name(), t.sha256());
+            if (was) gone.add(new Pin(t.name(), t.sha256()));
+            tools.add(new McpTool(t.name(), t.description(), t.inputSchema(), t.sha256(), false, was || t.changed()));
+        }
+        grants.untick(s.resource(), gone);
         return new McpServer(s.resource(), s.path(), s.baseUrl(), s.audience(), s.pinnedAt(), tools);
     }
 
@@ -133,10 +214,7 @@ public class McpServers {
      */
     public synchronized McpServer put(String resource, String path) {
         Resource r = catalogue.find(resource == null ? "" : resource).orElseThrow(() -> refused("UNKNOWN_RESOURCE"));
-        if (path == null
-                || !PATH.matcher(path).matches()
-                || path.contains("//")
-                || List.of(path.split("/")).stream().anyMatch(NO_STEP::contains)) throw refused("INVALID_MCP_SERVER");
+        checkPath(path);
         if (!r.methods().contains("POST") || r.pathPrefixes().stream().noneMatch(p -> under(path, p)))
             throw refused("MCP_RESOURCE_UNFIT");
         List<McpServer> next = new ArrayList<>(strict());
@@ -145,6 +223,8 @@ public class McpServers {
         next.removeIf(s -> s.resource().equals(r.name()));
         String base = r.baseUrl().toString();
         McpServer fresh = new McpServer(r.name(), path, base, r.audience(), null, List.of());
+        // Another path is another endpoint: what was approved at the old one goes with it
+        before.filter(s -> !s.path().equals(path)).ifPresent(this::unticked);
         McpServer kept = before.filter(s -> s.path().equals(path))
                 .map(s -> stale(s)
                         ? new McpServer(
@@ -158,11 +238,20 @@ public class McpServers {
                 .orElse(fresh);
         next.add(kept);
         write(next);
-        return kept;
+        return withTicks(kept);
     }
 
+    private static void checkPath(String path) {
+        if (path == null
+                || !PATH.matcher(path).matches()
+                || path.contains("//")
+                || List.of(path.split("/")).stream().anyMatch(NO_STEP::contains)) throw refused("INVALID_MCP_SERVER");
+    }
+
+    /** The server and its ticks go: its tuples are deleted first, so a server declared again starts with nothing ticked. */
     public synchronized void remove(String resource) {
         List<McpServer> next = new ArrayList<>(strict());
+        next.stream().filter(s -> s.resource().equals(resource)).findFirst().ifPresent(this::unticked);
         next.removeIf(s -> s.resource().equals(resource));
         write(next);
     }
@@ -174,20 +263,28 @@ public class McpServers {
         // Tools read at another endpoint than the one the director ticked at are all to be approved again.
         boolean moved = stale(server);
         List<McpTool> tools = new ArrayList<>();
+        List<Pin> gone = new ArrayList<>();
         for (Listed l : listed) {
             String hash = hash(l);
             McpTool old = server.tool(l.name()).orElse(null);
             boolean same = old != null && !moved && old.sha256().equals(hash);
+            boolean wasTicked = old != null && grants.ticked(resource, old.name(), old.sha256());
+            if (wasTicked && !same) gone.add(new Pin(old.name(), old.sha256()));
             tools.add(new McpTool(
                     l.name(),
                     l.description(),
                     l.inputSchema(),
                     hash,
-                    same && old.ticked(),
-                    old != null && (same ? old.changed() : old.ticked() || old.changed())));
+                    false,
+                    old != null && (same ? old.changed() : wasTicked || old.changed())));
         }
-        return replace(new McpServer(
-                server.resource(), server.path(), r.baseUrl().toString(), r.audience(), now.toString(), tools));
+        // A tool the server no longer lists keeps no approval: it could come back with the same definition
+        for (McpTool old : server.tools())
+            if (listed.stream().noneMatch(l -> l.name().equals(old.name()))
+                    && grants.ticked(resource, old.name(), old.sha256())) gone.add(new Pin(old.name(), old.sha256()));
+        grants.untick(resource, gone);
+        return withTicks(replace(new McpServer(
+                server.resource(), server.path(), r.baseUrl().toString(), r.audience(), now.toString(), tools)));
     }
 
     private McpServer strictFind(String resource) {
@@ -203,23 +300,33 @@ public class McpServers {
      * MCP_TOOL_CHANGED. A server pinned at another endpoint than its resource's has to be refreshed first.
      */
     public synchronized McpServer tick(String resource, Map<String, String> ticks) {
-        McpServer server = strictFind(resource);
-        if (stale(server)) throw refused("MCP_ENDPOINT_CHANGED");
-        for (var t : ticks.entrySet()) {
-            McpTool pinned = server.tool(t.getKey()).orElseThrow(() -> refused("UNKNOWN_MCP_TOOL"));
-            if (!pinned.sha256().equals(t.getValue())) throw refused("MCP_TOOL_CHANGED");
-        }
+        McpServer server = checkTicks(resource, ticks);
+        grants.setTicks(
+                resource,
+                server.tools().stream().map(t -> new Pin(t.name(), t.sha256())).toList(),
+                ticks.keySet());
         List<McpTool> tools = server.tools().stream()
                 .map(t -> new McpTool(
                         t.name(),
                         t.description(),
                         t.inputSchema(),
                         t.sha256(),
-                        ticks.containsKey(t.name()),
+                        false,
                         !ticks.containsKey(t.name()) && t.changed()))
                 .toList();
-        return replace(new McpServer(
-                server.resource(), server.path(), server.baseUrl(), server.audience(), server.pinnedAt(), tools));
+        return withTicks(replace(new McpServer(
+                server.resource(), server.path(), server.baseUrl(), server.audience(), server.pinnedAt(), tools)));
+    }
+
+    /** The refusals of {@link #tick}, without writing: a step-up is asked only for a tick that would be accepted. */
+    public synchronized McpServer checkTicks(String resource, Map<String, String> ticks) {
+        McpServer server = strictFind(resource);
+        if (stale(server)) throw refused("MCP_ENDPOINT_CHANGED");
+        for (var t : ticks.entrySet()) {
+            McpTool pinned = server.tool(t.getKey()).orElseThrow(() -> refused("UNKNOWN_MCP_TOOL"));
+            if (!pinned.sha256().equals(t.getValue())) throw refused("MCP_TOOL_CHANGED");
+        }
+        return server;
     }
 
     private McpServer replace(McpServer s) {
@@ -242,6 +349,14 @@ public class McpServers {
         }
     }
 
+    /** What the file keeps of a server: ticks are OpenFGA's, a stored {@code ticked} would be a second truth. */
+    private static McpServer withoutTicks(McpServer s) {
+        List<McpTool> tools = s.tools().stream()
+                .map(t -> new McpTool(t.name(), t.description(), t.inputSchema(), t.sha256(), false, t.changed()))
+                .toList();
+        return new McpServer(s.resource(), s.path(), s.baseUrl(), s.audience(), s.pinnedAt(), tools);
+    }
+
     private static boolean under(String path, String prefix) {
         return prefix.endsWith("/") ? path.startsWith(prefix) : path.equals(prefix) || path.startsWith(prefix + "/");
     }
@@ -256,7 +371,11 @@ public class McpServers {
             OwnerOnly.restrict(file.getParent());
             Path tmp = Files.createTempFile(file.getParent(), file.getFileName().toString(), ".tmp");
             OwnerOnly.restrict(tmp);
-            Files.writeString(tmp, json.writerWithDefaultPrettyPrinter().writeValueAsString(value));
+            Files.writeString(
+                    tmp,
+                    json.writerWithDefaultPrettyPrinter()
+                            .writeValueAsString(
+                                    value.stream().map(McpServers::withoutTicks).toList()));
             Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (IOException e) {
             throw new UncheckedIOException(e);

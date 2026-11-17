@@ -100,6 +100,7 @@ class KeycloakSignInHandlersTest {
         signIn.directorTokens = directorTokens;
         signIn.json = json;
         signIn.stepUp = new StepUpApprovals();
+        signIn.boundTokens = new BoundTokenIssuance();
         signIn.clock = clock;
         signIn.office = new OfficeFacts() {
             public Collection<AgentId> activeStaff() {

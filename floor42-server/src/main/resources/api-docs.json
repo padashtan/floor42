@@ -366,7 +366,7 @@
     "POST /api/questions/{id}/answer": {
       "tag": "Questions",
       "summary": "Answer",
-      "description": "Answers with one of the question's options, or free text when it has none. A permission request takes ALLOW or DENY.",
+      "description": "Answers with one of the question's options, or free text when it has none. A permission request takes ALLOW or DENY. With IAM mode on, an ALLOW to a call that reaches outside (a remote MCP tool, any NETWORK tool that is not a plain read) is not recorded by this call: only a browser signed in through Keycloak may ask, it records a pending act (5 minutes, single use) and answers 202 `{redirect}`; the screen follows it, Keycloak asks for the password and the second factor (`acr_values=floor42-strong`), and the answer is recorded with its `ApprovalSigned` only when Floor42 checked the ID token itself (the strong `acr`, a fresh `auth_time`, the same user). A token, the director's own included, gets 403 `HUMAN_ONLY` with the RFC 9470 `WWW-Authenticate` challenge; a sign-in by the console link gets 403 `STEP_UP_NEEDS_SIGN_IN`. A DENY, a plain read (WebFetch, WebSearch) and every answer with IAM mode off keep the click.",
       "example": {
         "answer": "ALLOW"
       }
@@ -455,6 +455,22 @@
       "description": "`core: true` stars the agent as a core member, `false` takes the star away; journaled as AgentMarkedCore or AgentUnmarkedCore (real, by the director). Asking for the state the agent is already in records nothing. \"Dismiss everyone except the core members\" never lets a core member go.",
       "example": {
         "core": true
+      }
+    },
+    "POST /api/agents/{id}/trust/lower": {
+      "tag": "Team",
+      "summary": "Narrow an agent's trust level",
+      "description": "Sets the level to SHADOW or PROBATION, below the current one; journaled as AgentTrustChanged (cause DIRECTOR). A plain click: narrowing never needs proof. In shadow mode the agent's writes, runs and network calls are denied and shown as proposals.",
+      "example": {
+        "level": "SHADOW"
+      }
+    },
+    "POST /api/agents/{id}/trust/raise": {
+      "tag": "Team",
+      "summary": "Widen an agent's trust level",
+      "description": "Sets the level above the current one. Needs the step-up proof; without it the answer is TRUST_RAISE_NEEDS_STEP_UP and nothing is recorded. Journaled as AgentTrustChanged (cause DIRECTOR).",
+      "example": {
+        "level": "STANDARD"
       }
     },
     "GET /api/agents/dismiss-all-but-core": {
@@ -652,7 +668,7 @@
     "PUT /api/settings/{key}": {
       "tag": "Settings",
       "summary": "Change a setting",
-      "description": "Changes one setting; `value` null puts the daemon's default back. Setting the value already in force records nothing.",
+      "description": "Changes one setting; `value` null puts the daemon's default back. Setting the value already in force records nothing. With IAM mode on, turning `FOUR_EYES` off is an act of two signatures: this call answers 202 `{redirect}` (403 `HUMAN_ONLY` for a token), the director signs, and a second person holding the reviewer role countersigns within 30 minutes; the setting changes then, with both signatures journaled.",
       "example": {
         "value": "3"
       }
@@ -1239,6 +1255,22 @@
       "responses": {"204": "Done, no body"}, "without": ["200"],
       "description": "Ends the session at once. A script token's revocation is journaled as `ApiTokenRevoked` (its SHA-256, reason `revoked`). 404 when no such session is open. Answers 204."
     },
+    "POST /api/auth/tokens/bound": {
+      "tag": "Sessions",
+      "summary": "Ask for a script token bound to the Keycloak session",
+      "responses": {
+        "202": "Accepted: where the browser goes to type the Keycloak password again"
+      },
+      "without": [
+        "200"
+      ],
+      "description": "IAM mode only. Records a pending request (5 minutes, single use) for a script token of `scope` and `days` as in `POST /api/auth/tokens`, and answers `redirect`: the browser follows it, types the Keycloak password again, and the page that follows shows the token once. The token rests on its own Keycloak offline session, kept in the vault and never shown: it works while that session lives (Floor42 asks Keycloak at most once a minute), and a session ended in Keycloak gives 401 `SCRIPT_TOKEN_UNBOUND`. Unlike an unbound token it may approve tickets, nudge, give a directive, answer questions and resume; never approve a plan (403 `HUMAN_ONLY`). `ApiTokenIssued` records `subject` and `binding`. Refused with 403 `BOUND_TOKEN_NEEDS_SIGN_IN` to anything but a browser signed in through Keycloak, and with 409 `IAM_OFF` when IAM mode is off.",
+      "example": {
+        "scope": "missions:write",
+        "days": 7,
+        "label": "night shift"
+      }
+    },
     "POST /api/auth/tokens": {
       "tag": "Sessions",
       "summary": "Issue a script token",
@@ -1292,7 +1324,7 @@
     "GET /api/iam/resources": {
       "tag": "Identity",
       "summary": "The broker's catalogue and grants",
-      "description": "The external resources agents may call through the token broker, and which agents may use which (`grants`, by agent id). Files in the data folder, not journaled. A call also needs the mission's delegation to name the resource."
+      "description": "The external resources agents may call through the token broker, and which agents may use which (`grants`, by agent id). The catalogue is a file in the data folder; a grant is a tuple in OpenFGA, journaled as `AuthorizationChanged` (503 `FGA_UNAVAILABLE` when a write cannot reach OpenFGA, and `grants` is then empty). A call also needs the mission's delegation to name the resource (also a tuple)."
     },
     "PUT /api/iam/resources": {
       "tag": "Identity",
@@ -1410,6 +1442,11 @@
       "tag": "Identity",
       "summary": "Revoke a mission's delegation",
       "description": "Floor42 stops giving the mission a token at once, then Keycloak revokes the mission's offline token (RFC 7009) and the vault entry is deleted. If Keycloak does not answer the entry stays encrypted and the revoke is retried. Other missions are unaffected. 404 `NO_DELEGATION`, 409 `IAM_OFF`."
+    },
+    "GET /api/iam/assurance/waiting": {
+      "tag": "Identity",
+      "summary": "Acts waiting for a second signature",
+      "description": "The acts whose first signature stands and that wait for a countersignature (four eyes, ADR-0081): the kind and reference of the act, the first 8 characters of the first signer's subject, when the first signature expires (30 minutes), and the path the second person opens in a private window. Empty with IAM mode off."
     },
     "GET /api/iam/tokens": {
       "tag": "Identity",

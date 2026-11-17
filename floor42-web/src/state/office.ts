@@ -10,6 +10,7 @@ import { boardChoice, boardMission, keepBoardChoice } from '../ui/recent'
 import type {
   CommitteePanel,
   AgentView,
+  TrustLevel,
   EventView,
   MeetingView,
   MissionSummary,
@@ -304,6 +305,10 @@ export async function dismissAgent(agent: string, name: string, reason: string):
 
 const DISMISS_REFUSALS = ['AGENT_BUSY', 'AGENT_NEEDED', 'ALREADY_DISMISSED']
 /** The director stars an agent as a core member, or takes the star away. */
+/** Narrows an agent's trust level by hand: restricting needs no proof. */
+export const lowerTrust = (agent: string, level: TrustLevel) => command(() => api.lowerTrust(agent, level))
+/** Widens it: the daemon asks for the step-up proof, and says so when it is missing. */
+export const raiseTrust = (agent: string, level: TrustLevel) => command(() => api.raiseTrust(agent, level))
 export const markCore = (agent: string, core: boolean) => command(() => api.markCore(agent, core))
 /** Dismisses the agents the director confirmed from the preview; the report per agent, or null when refused. */
 export const dismissAllButCore = (agents: string[], reason: string) =>

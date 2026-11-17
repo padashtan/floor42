@@ -87,3 +87,7 @@ revisit) and the evidence in the code are in [`2026-11-06-review.md`](2026-11-06
 | [0077](0077-commits-signed-by-the-agent.md) | Commits signed by the agent's identity: git SSH signing, one key per agent under the data folder, allowed signers, key retired on revoke | Proposed (v1.3) |
 | [0078](0078-standup-from-the-journal.md) | The 9 o'clock standup: per agent yesterday, today and blocked, from the journal only, no model call | Proposed (v1.3) |
 | [0079](0079-hash-chained-journal.md) | A hash chain over the journal in a side table, signed Ed25519 checkpoints, appends refused on a break until the director acknowledges (amends 0044) | Proposed |
+| [0080](0080-openfga-decides-keycloak-manages.md) | OpenFGA decides relationships, Keycloak manages identities, Floor42 enforces: the model as code with its tests, a JDK client, the pinned store and model, fail closed (supersedes the "Later" of 0065) | Proposed (v1.3.0) |
+| [0081](0081-assured-approvals.md) | Assured approvals: a second factor on a phone for risky acts, and four eyes | Proposed |
+| [0082](0082-trust-levels.md) | Trust levels: a cap after the permission table, shadow mode, probation that narrows by itself and widens only on the director's proven click | Proposed (v1.3) |
+| [0083](0083-bound-director-tokens.md) | Script tokens bound to a Keycloak session in IAM mode: a step-up, an offline session in the vault, refreshed at most once a minute; they steer, never approve a plan | Proposed (v1.3) |

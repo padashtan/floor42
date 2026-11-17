@@ -47,6 +47,7 @@ class ResourceBrokerUnitTest {
     FakeKeycloak kc;
     HttpServer server;
     ResourceCatalogue catalogue;
+    TestGrants grants;
     Delegations delegations;
     ResourceBroker broker;
     Consumer<ObjectNode> edit = b -> {};
@@ -96,7 +97,9 @@ class ResourceBrokerUnitTest {
                 Optional::empty,
                 null,
                 json);
-        catalogue = new ResourceCatalogue(dir, json, delegations);
+        grants = new TestGrants();
+        delegations.listen(grants.tuples);
+        catalogue = new ResourceCatalogue(dir, json, delegations, grants.tuples);
         catalogue.put(resource("demo-api", cap));
         catalogue.grant(new AgentId("ada"), List.of("demo-api"));
         delegations.grant(M, new Tokens("a", "refresh", null, Instant.now().plusSeconds(60)), List.of("demo-api"));

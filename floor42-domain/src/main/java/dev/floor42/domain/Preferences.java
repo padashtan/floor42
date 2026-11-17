@@ -2,12 +2,15 @@ package dev.floor42.domain;
 
 import static dev.floor42.domain.DomainException.require;
 import static dev.floor42.domain.Rules.requireDirector;
+import static dev.floor42.domain.Rules.requireDirectorOrFloor42;
 import static dev.floor42.domain.Rules.requireReal;
 import static dev.floor42.domain.Rules.requireSystem;
 import static dev.floor42.domain.Rules.requireText;
 
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.EventEnvelope;
 import dev.floor42.domain.event.PreferenceEvent;
+import dev.floor42.domain.event.PreferenceEvent.AuthorizationChanged;
 import dev.floor42.domain.event.PreferenceEvent.BreakGlassSignIn;
 import dev.floor42.domain.event.PreferenceEvent.DefaultPermissionSet;
 import dev.floor42.domain.event.PreferenceEvent.SandboxToolsProbed;
@@ -16,6 +19,7 @@ import dev.floor42.domain.event.PreferenceEvent.UnsafeModeChanged;
 import java.time.Instant;
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,6 +43,14 @@ final class Preferences {
      * answer asked for): read back from the journal, so whether that measure was taken survives a restart.
      */
     private final Set<String> measureCauses = new HashSet<>();
+    /** The broker authorization tuples the journal holds: what every {@code AuthorizationChanged} row left standing. */
+    private final Set<AuthorizationTuple> authorization = new LinkedHashSet<>();
+    /** True once an {@code AuthorizationChanged} row with {@code imported: true} was journaled: the import is done. */
+    private boolean authorizationImported;
+
+    private static final Set<String> AUTHORIZATION_REASONS =
+            Set.of("GRANT", "DELEGATION", "MCP_TICK", "IMPORT", "RECONCILE", "QUARANTINE");
+    private static final int MAX_TUPLES = 100;
 
     Preferences(CompanyView view) {
         this.view = view;
@@ -61,11 +73,27 @@ final class Preferences {
     }
 
     List<EventEnvelope> changeSetting(CommandContext ctx, Setting setting, String value) {
+        return changeSetting(ctx, setting, value, List.of());
+    }
+
+    /** Turning four eyes off, where a stronger proof exists, is carried by two signatures (ADR-0081): refused without. */
+    List<EventEnvelope> changeSetting(CommandContext ctx, Setting setting, String value, List<ApprovalSigned> signed) {
         requireDirector(ctx);
         require(setting != null, Refusal.INVALID_ARGUMENT, "Which setting?");
         String v = value == null ? null : setting.normalize(value);
         if (Objects.equals(v, settings.get(setting))) return List.of();
-        return view.record(ctx, null).emit(new SettingChanged(setting, v)).events();
+        boolean turningOff =
+                ctx.assured() && setting == Setting.FOUR_EYES && "on".equals(settings.get(setting)) && !"on".equals(v);
+        List<ApprovalSigned> proofs = turningOff
+                ? AssurancePolicy.verify(
+                        ctx,
+                        new AssurancePolicy.Act(AssurancePolicy.ActKind.SETTING, Setting.FOUR_EYES.name()),
+                        AssurancePolicy.Level.FOUR_EYES,
+                        signed)
+                : List.of();
+        Recorder r = view.record(ctx, null);
+        proofs.forEach(r::emit);
+        return r.emit(new SettingChanged(setting, v)).events();
     }
 
     boolean unsafeMode() {
@@ -89,6 +117,53 @@ final class Preferences {
         requireReal(ctx, "INVALID_ARGUMENT", "A sign-in is real or nothing");
         requireText(session, "session");
         return view.record(ctx, null).emit(new BreakGlassSignIn(session)).events();
+    }
+
+    boolean authorizationImported() {
+        return authorizationImported;
+    }
+
+    /**
+     * Records the signatures of an act that has no command of its own (a grant, a tick, the identity settings): checked
+     * against the level the table asks for with four eyes as set now, then journaled before the act is carried out.
+     */
+    List<EventEnvelope> recordSignatures(CommandContext ctx, AssurancePolicy.Act act, List<ApprovalSigned> signed) {
+        requireDirector(ctx);
+        AssurancePolicy.Level level =
+                AssurancePolicy.required(act.kind(), "on".equals(settings.get(Setting.FOUR_EYES)));
+        List<ApprovalSigned> proofs = AssurancePolicy.verify(ctx, act, level, signed);
+        if (proofs.isEmpty()) return List.of();
+        Recorder r = view.record(ctx, null);
+        proofs.forEach(r::emit);
+        return r.events();
+    }
+
+    Set<AuthorizationTuple> authorization() {
+        return Set.copyOf(authorization);
+    }
+
+    /** One row per change of the broker authorization, by the director or by Floor42 on the director's behalf. */
+    List<EventEnvelope> changeAuthorization(
+            CommandContext ctx,
+            List<AuthorizationTuple> writes,
+            List<AuthorizationTuple> deletes,
+            String modelId,
+            String reason,
+            boolean imported,
+            boolean reconciled) {
+        requireDirectorOrFloor42(ctx);
+        List<AuthorizationTuple> w = writes == null ? List.of() : List.copyOf(writes);
+        List<AuthorizationTuple> d = deletes == null ? List.of() : List.copyOf(deletes);
+        requireText(modelId, "modelId");
+        require(
+                reason != null && AUTHORIZATION_REASONS.contains(reason),
+                Refusal.INVALID_ARGUMENT,
+                "Which reason: " + AUTHORIZATION_REASONS);
+        require(!w.isEmpty() || !d.isEmpty(), Refusal.INVALID_ARGUMENT, "Nothing changed");
+        require(w.size() <= MAX_TUPLES && d.size() <= MAX_TUPLES, Refusal.INVALID_ARGUMENT, "At most 100 tuples");
+        return view.record(ctx, null)
+                .emit(new AuthorizationChanged(w, d, modelId, reason, imported, reconciled))
+                .events();
     }
 
     List<EventEnvelope> setDefaultPermission(
@@ -137,6 +212,11 @@ final class Preferences {
             case SettingChanged e -> on(e);
             case UnsafeModeChanged e -> unsafeMode = e.on();
             case BreakGlassSignIn ignored -> {}
+            case AuthorizationChanged e -> {
+                if (e.imported()) authorizationImported = true;
+                authorization.addAll(e.writes());
+                authorization.removeAll(e.deletes());
+            }
             case DefaultPermissionSet e -> on(e);
             case SandboxToolsProbed e -> on(e, at, envelope.causationId());
         }

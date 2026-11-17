@@ -10,6 +10,11 @@ export interface ScriptTokenRequest {
   label: string | null
 }
 
+/** 202 of POST /api/auth/tokens/bound in IAM mode: the path of the Keycloak password step-up (ADR-0083). */
+export interface BoundTokenStep {
+  redirect: string
+}
+
 /** A script token just issued: `token` is shown this once and never again. */
 export interface IssuedScriptToken {
   session: DirectorSessionView

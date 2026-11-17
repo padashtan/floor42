@@ -20,6 +20,7 @@ export const PANEL_OF: Record<string, string> = {
   prove: '.prove-panel',
   dossier: '.dossier-panel',
   oversight: '.oversight-panel',
+  proposals: '.proposals-panel',
   standup: '.standup-panel',
   archive: '.archive-panel',
   tutorial: '.tutorial-card',

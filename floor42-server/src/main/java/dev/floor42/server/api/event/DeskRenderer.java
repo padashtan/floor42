@@ -6,6 +6,7 @@ import dev.floor42.domain.Company;
 import dev.floor42.domain.QuestionId;
 import dev.floor42.domain.event.DeskEvent;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.DeskEvent.QuestionAnswered;
 import dev.floor42.domain.event.DeskEvent.QuestionAsked;
 import dev.floor42.domain.event.DeskEvent.QuestionWithdrawn;
@@ -25,7 +26,20 @@ final class DeskRenderer implements EventRenderer<DeskEvent> {
                 question(forgottenVariant(e.reason()), e.question())
                         .param("reason", e.reason())
                         .build();
+            case ApprovalSigned e -> signed(e);
         };
+    }
+
+    /** A signature of an assured act: who (the first 8 characters of the subject), what, how strong, when. */
+    private static EventLine signed(ApprovalSigned e) {
+        String subject = e.subject().substring(0, Math.min(8, e.subject().length()));
+        return line(e.seat().name().toLowerCase(java.util.Locale.ROOT))
+                .param("kind", e.act().kind())
+                .param("ref", e.act().ref())
+                .param("subject", subject)
+                .param("acr", e.acr())
+                .param("authTime", java.time.Instant.ofEpochSecond(e.authTime()))
+                .build();
     }
 
     /** Forgotten by the director, lifted when the director asked to be asked again, or asked for one call only. */

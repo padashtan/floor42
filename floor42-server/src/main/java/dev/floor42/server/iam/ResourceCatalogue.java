@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.floor42.domain.AgentId;
 import dev.floor42.domain.MissionId;
+import dev.floor42.server.iam.fga.FgaException;
+import dev.floor42.server.iam.fga.GrantTuples;
 import dev.floor42.server.security.OwnerOnly;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,7 +17,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -25,9 +26,11 @@ import java.util.regex.Pattern;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /**
- * The external resources the broker may call, and which agents may use them: two files under {@code <data-dir>/iam/}
- * ({@code resources.json}, {@code grants.json}), the director's to edit; not journaled (v1.0.0). A call also needs the
- * mission's delegation to name the resource. An unreadable file reads as empty: nothing is callable (fail closed).
+ * The external resources the broker may call: {@code <data-dir>/iam/resources.json}, the director's to edit. Who may
+ * use them is not here any more: a grant is the tuple {@code resource:R#granted@agent:A} in OpenFGA and the mission's
+ * delegation is {@code resource:R#delegated@mission:M} (ADR-0080), both journaled as {@code AuthorizationChanged}.
+ * {@link #allowed} asks OpenFGA, after the local revocation check; when OpenFGA cannot answer it throws
+ * {@link FgaException} and the call is refused (fail closed). An unreadable file reads as empty: nothing is callable.
  */
 @ApplicationScoped
 public class ResourceCatalogue {
@@ -54,17 +57,20 @@ public class ResourceCatalogue {
     }
 
     private final Path resources;
-    private final Path grants;
     private final ObjectMapper json;
     private final Delegations delegations;
+    private final GrantTuples tuples;
 
     @Inject
     ResourceCatalogue(
-            @ConfigProperty(name = "floor42.data-dir") Path dataDir, ObjectMapper json, Delegations delegations) {
+            @ConfigProperty(name = "floor42.data-dir") Path dataDir,
+            ObjectMapper json,
+            Delegations delegations,
+            GrantTuples tuples) {
         this.resources = dataDir.resolve("iam").resolve("resources.json");
-        this.grants = dataDir.resolve("iam").resolve("grants.json");
         this.json = json;
         this.delegations = delegations;
+        this.tuples = tuples;
     }
 
     public synchronized List<Resource> all() {
@@ -77,39 +83,64 @@ public class ResourceCatalogue {
 
     /** Adds or replaces a resource; {@code IllegalArgumentException} says what is wrong with it. */
     public synchronized void put(Resource r) {
-        Resource clean = checked(r);
+        Resource clean = validate(r);
         List<Resource> next = new ArrayList<>(all());
         next.removeIf(x -> x.name().equals(clean.name()));
         next.add(clean);
         write(resources, next);
     }
 
+    /** The resource as it will be kept, or {@code IllegalArgumentException}: nothing is written. */
+    public Resource validate(Resource r) {
+        return checked(r);
+    }
+
     public synchronized void remove(String name) {
         List<Resource> next = new ArrayList<>(all());
         next.removeIf(x -> x.name().equals(name));
         write(resources, next);
-        Map<String, List<String>> kept = new LinkedHashMap<>();
-        grantsOf()
-                .forEach((agent, names) -> kept.put(
-                        agent, names.stream().filter(n -> !n.equals(name)).toList()));
-        write(grants, kept);
+        tuples.forgetResource(name);
     }
 
+    /** The agent holds exactly {@code names}, among the catalogue's resources (one OpenFGA write, one journal row). */
     public synchronized void grant(AgentId a, List<String> names) {
-        Map<String, List<String>> all = new LinkedHashMap<>(grantsOf());
-        all.put(a.value(), List.copyOf(names));
-        write(grants, all);
+        tuples.grant(a, names, names());
     }
 
+    /** Who holds what, read from OpenFGA. */
     public synchronized Map<String, List<String>> grantsOf() {
-        return read(grants, new TypeReference<Map<String, List<String>>>() {}, Map.of());
+        return tuples.grantsOf(names());
     }
 
-    /** The agent's grant AND the mission's delegation both name the resource. */
+    private List<String> names() {
+        return all().stream().map(Resource::name).toList();
+    }
+
+    /**
+     * Whether the agent may call the resource for this mission, decided by OpenFGA: the grant AND the mission's
+     * delegation (a contextual tuple says the agent runs the mission). A delegation revoked here is refused first, with
+     * no call to OpenFGA, so a revocation needs no network to bite. Throws {@link FgaException} when OpenFGA cannot
+     * answer: the caller refuses.
+     */
     public boolean allowed(AgentId a, MissionId m, String name) {
-        return grantsOf().getOrDefault(a.value(), List.of()).contains(name)
-                && delegations.find(m).filter(d -> !d.revoked()).stream()
-                        .anyMatch(d -> d.resources().contains(name));
+        MissionDelegation d = delegations.find(m).filter(x -> !x.revoked()).orElse(null);
+        if (d == null) return false;
+        if (tuples.allowed(a, m, name)) return true;
+        // A delegation OpenFGA missed (it was away when the plan was approved) is written once, from the local record
+        return d.resources().contains(name)
+                && delegations.activeForWork(m)
+                && tuples.ensureDelegated(m, name)
+                && tuples.allowed(a, m, name);
+    }
+
+    /** What a refusal or an allowed call names as its basis: {@code fga:<model id>}, empty when no model is recorded. */
+    public Optional<String> basis() {
+        return tuples.modelId().map(id -> "fga:" + id);
+    }
+
+    /** Whether the tool, at this definition, is ticked on a server this caller may use (see {@link #allowed}). */
+    public boolean toolAllowed(AgentId a, MissionId m, String server, String tool, String sha256) {
+        return tuples.toolAllowed(a, m, server, tool, sha256);
     }
 
     private static Resource checked(Resource r) {

@@ -96,6 +96,7 @@ export const deliverablesEn = {
   'core.done': 'Close',
   'ev.AgentMarkedCore': 'Director made {agent} a core member',
   'ev.AgentUnmarkedCore': '{agent} is no longer a core member',
+  'ev.AgentTrustChanged': '{agent}: trust level {from} to {to} ({cause})',
   // recent-projects
   'recent.title': 'Recent projects (pinned first, then by last activity):',
   'recent.useTitle': 'Start a new mission on {path}',

@@ -147,6 +147,17 @@ class GoldenScenarioTest {
         s.run("unsafe mode without a reason", () -> c.preferences().setUnsafeMode(s.director(REAL), true, " "));
         s.run("unsafe mode on", () -> c.preferences().setUnsafeMode(s.director(REAL), true, "WSL is not installed"));
         s.run("unsafe mode off", () -> c.preferences().setUnsafeMode(s.director(REAL), false, null));
+        s.run(
+                "authorization changed",
+                () -> c.preferences()
+                        .changeAuthorization(
+                                s.director(REAL),
+                                java.util.List.of(new AuthorizationTuple("agent:A-1", "granted", "resource:crm")),
+                                java.util.List.of(),
+                                "model-1",
+                                "GRANT",
+                                false,
+                                false));
         s.run("break-glass sign-in", () -> c.preferences().recordBreakGlassSignIn(s.director(REAL), "S-1"));
     }
 
@@ -325,7 +336,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire planner",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 GALEN,
                                 "Galen",
@@ -336,7 +347,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire developer",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 CHRIS,
                                 "Chris",
@@ -347,7 +358,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire reviewer",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 DARIUS,
                                 "Darius",
@@ -358,7 +369,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire second developer",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 KEN,
                                 "Ken",
@@ -369,7 +380,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire analyst",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 ANA,
                                 "Ana",
@@ -380,7 +391,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire researcher",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 RITA,
                                 "Rita",
@@ -391,7 +402,7 @@ class GoldenScenarioTest {
         s.run(
                 "hire without a role",
                 () -> c.staff()
-                        .hire(
+                        .hireSeeded(
                                 s.director(REAL),
                                 IVO,
                                 "Ivo",
@@ -448,6 +459,25 @@ class GoldenScenarioTest {
                 () -> c.preferences().changeSetting(s.agent(CHRIS, REAL), Setting.AGENT_LANGUAGE, "en"));
         s.run("no setting", () -> c.preferences().changeSetting(s.director(REAL), null, "en"));
         s.run("default language", () -> c.preferences().changeSetting(s.director(REAL), Setting.AGENT_LANGUAGE, null));
+        s.run("four eyes on", () -> c.preferences().changeSetting(s.director(REAL), Setting.FOUR_EYES, "on"));
+        s.run(
+                "four eyes off without signatures",
+                () -> c.preferences().changeSetting(s.director(REAL).withAssurance(), Setting.FOUR_EYES, "off"));
+        s.run("four eyes off signed twice", () -> {
+            CommandContext ctx = s.director(REAL).withAssurance();
+            var act = new AssurancePolicy.Act(AssurancePolicy.ActKind.SETTING, "FOUR_EYES");
+            long at = ctx.now().minusSeconds(5).getEpochSecond();
+            return c.preferences()
+                    .changeSetting(
+                            ctx,
+                            Setting.FOUR_EYES,
+                            "off",
+                            List.of(
+                                    new dev.floor42.domain.event.DeskEvent.ApprovalSigned(
+                                            act, AssurancePolicy.Seat.FIRST, "sub-a", "floor42-strong", at, "jti-a"),
+                                    new dev.floor42.domain.event.DeskEvent.ApprovalSigned(
+                                            act, AssurancePolicy.Seat.SECOND, "sub-b", "floor42-strong", at, "jti-b")));
+        });
         s.run(
                 "default permission",
                 () -> c.preferences()

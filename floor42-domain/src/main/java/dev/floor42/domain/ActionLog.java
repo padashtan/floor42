@@ -134,13 +134,18 @@ final class ActionLog {
         if (eval.rule() == null && a.category() == ActionCategory.FLOOR42) {
             return office.authorize(a.id(), DecisionBasis.floor42Tools(), "policy:" + m.id());
         }
+        // The trust cap is applied after the table and only ever narrows it (ADR-0082): shadow first, then the rest.
+        TrustLevel level = view.existingAgent(a.agent()).trust();
+        if (TrustCap.proposes(level, a.category(), eval.decision())) {
+            return deny(office, a, DenialReason.POLICY, DecisionBasis.trustShadow());
+        }
         // The director's edits are never overwritten silently: whatever the table says, short of forbidding, ask.
         if (a.category() == ActionCategory.WRITE
                 && eval.decision() != Decision.DENY
                 && view.editedByDirector(m.id(), a.agent(), a.summary())) {
             return approvals.askForThisCall(office, m, a, ApprovalScope.editedByDirector(a.summary()));
         }
-        return switch (eval.decision()) {
+        return switch (TrustCap.cap(level, a.category(), eval.decision())) {
             case ALLOW -> office.authorize(a.id(), eval.basis(), "policy:" + m.id());
             case DENY -> deny(office, a, DenialReason.POLICY, eval.basis());
             case ASK -> approvals.askOnce(office, m, a);
@@ -173,7 +178,7 @@ final class ActionLog {
         Recorder r = report.recorder();
         return switch (report.action().stage) {
             case AUTHORIZED -> r.emit(new ActionExecuted(id, output, true)).events();
-            case REQUESTED -> unauthorized(r, report.mission(), report.action(), output);
+            case REQUESTED -> unauthorized(ctx, r, report.mission(), report.action(), output);
             case DENIED -> List.of();
             case EXECUTED, FAILED, CONFIRMED -> throw alreadyRecorded(report.action());
         };
@@ -206,7 +211,7 @@ final class ActionLog {
                 Refusal.OUTCOME_ALREADY_RECORDED, "Outcome of " + a.id() + " already recorded (" + a.stage + ")");
     }
 
-    private List<EventEnvelope> unauthorized(Recorder r, Mission m, Action a, String output) {
+    private List<EventEnvelope> unauthorized(CommandContext ctx, Recorder r, Mission m, Action a, String output) {
         r.emit(new ActionExecuted(a.id(), output, false))
                 .emit(new IncidentRaised(
                         nextIncidentId(),
@@ -214,9 +219,12 @@ final class ActionLog {
                         Criticality.CRITICAL,
                         RecordedReason.ranWithout(a.agent(), a.tool(), a.summary()),
                         a.id()));
+        String incidentEvent = r.events().getLast().eventId();
         if (m.status == MissionStatus.IN_PROGRESS) {
             r.emit(new MissionSuspended(a.mission(), RecordedReason.unauthorizedReason(a.id())));
         }
+        // The incident narrows the agent's level at once, in this same command (ADR-0082).
+        Roster.narrow(view, r, ctx, a.agent(), TrustCause.INCIDENT, incidentEvent);
         return r.events();
     }
 

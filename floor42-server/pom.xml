@@ -7,7 +7,7 @@
     <parent>
         <groupId>dev.floor42</groupId>
         <artifactId>floor42-parent</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
     </parent>
 
     <artifactId>floor42-server</artifactId>
@@ -84,6 +84,19 @@
     </dependencies>
 
     <build>
+        <!-- The authorization model Floor42 loads into OpenFGA is the one checked in under iam/openfga (one copy). -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../iam/openfga</directory>
+                <includes>
+                    <include>model.json</include>
+                </includes>
+                <targetPath>iam/openfga</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
@@ -126,7 +139,9 @@
                          kept for many classes, but Surefire hands them out one at a time, each as its own JUnit
                          request, and Quarkus stops its application when a request ends: one boot per @QuarkusTest
                          class (106 in verify, measured 2026-11-13; ADR-0068). -Dfloor42.test.forks=1 gives the
-                         sequential run back: one request, where Quarkus groups the classes by test profile. -->
+                         sequential run back: one request, where Quarkus groups the classes by test profile. The Linux CI jobs use 1: with
+                         2 forks, a Quarkus shutdown (TestClassIndexer.removeIndex) deletes the shared
+                         target/test-classes/test-classes.idx under the other fork's class discovery. -->
                     <forkCount>${floor42.test.forks}</forkCount>
                     <reuseForks>true</reuseForks>
                     <!-- A fork that hangs at exit is killed after this delay instead of blocking the build. -->

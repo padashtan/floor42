@@ -65,7 +65,26 @@ public abstract class DispatchFixture extends ApiTestBase {
         SchedulerQuiet.await(scheduler, excluded.negate());
     }
 
+    /**
+     * An earlier test of the shared journal may have narrowed an agent (a risk alert, an incident: ADR-0082), and a
+     * narrowed agent asks for every command: each mission starts with the whole staff STANDARD.
+     */
+    protected void staffStandard() {
+        office.execute(c -> c.staff().all().stream()
+                .filter(a -> !a.dismissed() && a.trust() != dev.floor42.domain.TrustLevel.STANDARD)
+                .flatMap(a -> c
+                        .staff()
+                        .raiseTrust(
+                                office.context(Actor.director(), Origin.REAL),
+                                a.id(),
+                                dev.floor42.domain.TrustLevel.STANDARD,
+                                true)
+                        .stream())
+                .toList());
+    }
+
     protected MissionId mission(Path repo, String objective, String extra) {
+        staffStandard();
         return new MissionId(api().body("{\"title\":\"Dispatch\",\"objective\":\"" + objective + "\",\"repository\":\""
                         + repo.toString().replace("\\", "\\\\") + "\"" + extra + "}")
                 .post("/api/missions")
@@ -99,17 +118,6 @@ public abstract class DispatchFixture extends ApiTestBase {
                 .statusCode(200)
                 .extract()
                 .path("id");
-    }
-
-    /** Dismisses the agent once its work has ended (its session process included). */
-    protected void dismissWhenFree(String agent) throws InterruptedException {
-        await(
-                agent + " is free to leave",
-                Duration.ofSeconds(30),
-                () -> api().body("{\"reason\":\"test\"}")
-                                .post("/api/agents/" + agent + "/dismiss")
-                                .statusCode()
-                        == 200);
     }
 
     /** Answers every open question of the mission: ALLOW for permissions, the given answer for the plan limit. */

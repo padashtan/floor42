@@ -54,4 +54,24 @@ public sealed interface DeskEvent extends DomainEvent {
      * only (recorded with the question, so a one-off answer is never reused).
      */
     record ApprovalForgotten(QuestionId question, String reason) implements DeskEvent {}
+
+    /**
+     * A signature that carried a risky act (ADR-0081): who signed it, at which level, when they authenticated. Recorded
+     * in the command of the act, before the act's own event. Never a token: only the ID token's id.
+     *
+     * @param act what was signed: the kind of act and its reference (a question id, a setting)
+     * @param seat FIRST, or SECOND for the countersigning person under four eyes
+     * @param subject the identity provider's subject of the signer, in full; exports show its first 8 characters
+     * @param acr the authentication context the provider reported, {@code floor42-strong} when it counted
+     * @param authTime when the signer authenticated, in epoch seconds (the token's {@code auth_time})
+     * @param idTokenId nullable: the {@code jti} of the ID token, when the provider gave one
+     */
+    record ApprovalSigned(
+            dev.floor42.domain.AssurancePolicy.Act act,
+            dev.floor42.domain.AssurancePolicy.Seat seat,
+            String subject,
+            String acr,
+            long authTime,
+            String idTokenId)
+            implements DeskEvent {}
 }

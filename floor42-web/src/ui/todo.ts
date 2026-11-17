@@ -27,6 +27,8 @@ export type TodoGo =
   | { panel: 'progress' }
   /** A risky session: the director confirms, then Floor42 revokes, suspends and stops. */
   | { panel: 'quarantine'; mission: string; agent: string }
+  /** An agent's profile, where its trust level is raised or lowered (ADR-0082). */
+  | { panel: 'profile'; agent: string }
 
 export interface TodoRow {
   key: string
@@ -140,7 +142,7 @@ export function uncommittedRow(accept: TodoRow, check: UncommittedCheck | 'faile
 /** Both lists as one, newest first. */
 export const merged = (a: readonly TodoRow[], b: readonly TodoRow[]): TodoRow[] => [...a, ...b].sort(byNewest)
 
-export type GoKey = `todo.go.${'approve' | 'answer' | 'decide' | 'look' | 'board' | 'workshop' | 'report' | 'progress' | 'quarantine'}`
+export type GoKey = `todo.go.${'approve' | 'answer' | 'decide' | 'look' | 'board' | 'workshop' | 'report' | 'progress' | 'quarantine' | 'profile'}`
 
 /** The catalogue key of the button that opens the place to act. */
 export function goLabel(row: Pick<TodoRow, 'category' | 'go'>): GoKey {
@@ -157,6 +159,8 @@ export function goLabel(row: Pick<TodoRow, 'category' | 'go'>): GoKey {
       return 'todo.go.report'
     case 'quarantine':
       return 'todo.go.quarantine'
+    case 'profile':
+      return 'todo.go.profile'
     default:
       return 'todo.go.progress'
   }

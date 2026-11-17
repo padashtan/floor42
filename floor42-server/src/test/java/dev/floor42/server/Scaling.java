@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.function.Consumer;
 
 /**
- * Linear-time check for a text reader: a warm-up, then the time for 10000 and for 40000 characters (best of 3 each).
+ * Linear-time check for a text reader: a warm-up, then the time for 10000 and for 40000 characters (best of 7 each, after a warm-up at both sizes).
  * The 40000 run must stay under 10 s (the quadratic bugs found took 18 s and more) and under 8 times the 10000 run, plus
  * a floor for timer noise. A tight absolute budget would trip on a loaded gate, a growth ratio does not.
  */
@@ -20,7 +20,9 @@ public final class Scaling {
     }
 
     public static void linear(String what, String prefix, String unit, Consumer<String> read) {
-        for (int i = 0; i < 3; i++) read.accept(of(prefix, unit, 2_000));
+        for (int i = 0; i < 5; i++) read.accept(of(prefix, unit, 2_000));
+        // warm at both sizes: a JIT still compiling during the small run made the big one look 12 times slower
+        for (int i = 0; i < 3; i++) read.accept(of(prefix, unit, 10_000));
         Duration small = best(of(prefix, unit, 10_000), read);
         Duration big = best(of(prefix, unit, 40_000), read);
         assertThat(big).as("%s: 40000 characters", what).isLessThan(Duration.ofSeconds(10));
@@ -31,7 +33,7 @@ public final class Scaling {
 
     private static Duration best(String input, Consumer<String> read) {
         long best = Long.MAX_VALUE;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 7; i++) {
             long t = System.nanoTime();
             read.accept(input);
             best = Math.min(best, System.nanoTime() - t);

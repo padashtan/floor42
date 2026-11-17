@@ -54,7 +54,8 @@ public final class CompanySnapshot {
         CompanySnapshot s = new CompanySnapshot(company);
         s.fields();
         s.queries();
-        return s.out.toString();
+        // an event id inside the state (an agent's trustCauseEvent) is random
+        return s.out.toString().replaceAll("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "<id>");
     }
 
     public static String sha256(String text) {

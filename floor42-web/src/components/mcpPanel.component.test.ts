@@ -71,6 +71,20 @@ describe('the MCP panel', () => {
     puts = []
   })
 
+  it('a tick answered 202 {redirect} follows the step-up and keeps the list as it is', async () => {
+    serve(true, [tool('search')], {
+      'PUT /api/iam/mcp-servers/docs/tools': () => new Response(JSON.stringify({ redirect: '/auth/keycloak/assure?act=A1' }), { status: 202 }),
+    })
+    const assign = vi.fn()
+    vi.stubGlobal('window', Object.assign(window, { location: { assign } }))
+    const w = mount(McpPanel)
+    await flushPromises()
+    await w.find('tr.tool input[type="checkbox"]').setValue(true)
+    await flushPromises()
+    expect(assign).toHaveBeenCalledWith('/auth/keycloak/assure?act=A1')
+    expect(w.find('.server-item').text()).toContain('0 of 1 tools allowed')
+  })
+
   it('a moved endpoint asks for a refresh to review it', async () => {
     serve(true, [tool('search')], {
       'PUT /api/iam/mcp-servers/docs/tools': () => new Response(JSON.stringify({ code: 'MCP_ENDPOINT_CHANGED', message: 'x' }), { status: 409 }),

@@ -71,6 +71,9 @@ public class AuthResource {
      */
     public record ScriptTokenRequest(String scope, Integer days, String label) {}
 
+    /** @param redirect where the browser goes to type the Keycloak password again (ADR-0083) */
+    public record BoundTokenStep(String redirect) {}
+
     /** @param token the value, shown this once and never again */
     public record IssuedScriptToken(DirectorSessionView session, String token) {}
 
@@ -85,6 +88,15 @@ public class AuthResource {
 
     @Inject
     dev.floor42.server.iam.DirectorTokens directorTokens;
+
+    @Inject
+    dev.floor42.server.iam.ScriptTokenBindings bindings;
+
+    @Inject
+    dev.floor42.server.iam.BoundTokenIssuance boundIssuance;
+
+    @Inject
+    io.quarkus.vertx.http.runtime.CurrentVertxRequest current;
 
     @Inject
     OfficeService office;
@@ -110,7 +122,10 @@ public class AuthResource {
     @Path("/sessions/{id}")
     public Response revoke(@PathParam("id") String id) {
         Session s = sessions.revoke(id).orElseThrow(() -> new NotFoundException("No open session " + id));
-        if (s.kind() == SessionRegistry.Kind.SCRIPT) journalRevoked(s, "revoked");
+        if (s.kind() == SessionRegistry.Kind.SCRIPT) {
+            journalRevoked(s, "revoked");
+            bindings.end(s.id());
+        }
         directorTokens.signOut(s.id());
         terminals.closeOpenedBy(s.id());
         sockets.sweep();
@@ -122,21 +137,10 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @org.jboss.resteasy.reactive.ResponseStatus(201)
     public IssuedScriptToken issue(ScriptTokenRequest request, @HeaderParam("User-Agent") String userAgent) {
-        if (request == null) throw new RefusedException(400, "INVALID_ARGUMENT", "scope and days are required");
-        Scope scope = Scope.parse(request.scope())
-                .orElseThrow(
-                        () -> new RefusedException(400, "INVALID_ARGUMENT", "scope is read, missions:write or all"));
-        int days = request.days() == null ? 0 : request.days();
-        if (days < 1 || days > SessionRegistry.MAX_SCRIPT_DAYS) {
-            throw new RefusedException(
-                    400, "INVALID_ARGUMENT", "A token lasts 1 to " + SessionRegistry.MAX_SCRIPT_DAYS + " days");
-        }
-        String label = request.label() == null || request.label().isBlank()
-                ? null
-                : request.label().strip();
-        if (label != null && label.length() > 80) {
-            throw new RefusedException(400, "INVALID_ARGUMENT", "A label is at most 80 characters");
-        }
+        var checked = checked(request);
+        Scope scope = Scope.parse(checked.scope()).orElseThrow();
+        int days = checked.days();
+        String label = checked.label();
         var issued = sessions.issueScript(scope, days, label, userAgent);
         Session s = issued.session();
         try {
@@ -154,6 +158,47 @@ public class AuthResource {
             throw e;
         }
         return new IssuedScriptToken(view(s, null), issued.secret());
+    }
+
+    /**
+     * IAM mode: a script token bound to the director's Keycloak session (ADR-0083). Only a browser session signed in
+     * through Keycloak may ask; the answer (202) tells the UI where to go to type the password again, and the page
+     * that follows shows the token once. The token is not issued here.
+     */
+    @POST
+    @Path("/tokens/bound")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response issueBound(ScriptTokenRequest request) {
+        if (!iam.enabled()) {
+            throw new RefusedException(409, "IAM_OFF", "A token bound to a Keycloak session needs IAM mode");
+        }
+        var session = LocalAccessGuard.sessionOf(current.getCurrent());
+        if (!boundIssuance.mayAsk(session)) {
+            throw new RefusedException(
+                    403, "BOUND_TOKEN_NEEDS_SIGN_IN", "A bound token needs the director signed in through Keycloak");
+        }
+        return Response.accepted(new BoundTokenStep(boundIssuance.record(checked(request), session.get())))
+                .build();
+    }
+
+    /** The request of the desk, checked once for both ways of issuing a token. */
+    private static dev.floor42.server.iam.BoundTokenIssuer.Request checked(ScriptTokenRequest request) {
+        if (request == null) throw new RefusedException(400, "INVALID_ARGUMENT", "scope and days are required");
+        Scope scope = Scope.parse(request.scope())
+                .orElseThrow(
+                        () -> new RefusedException(400, "INVALID_ARGUMENT", "scope is read, missions:write or all"));
+        int days = request.days() == null ? 0 : request.days();
+        if (days < 1 || days > SessionRegistry.MAX_SCRIPT_DAYS) {
+            throw new RefusedException(
+                    400, "INVALID_ARGUMENT", "A token lasts 1 to " + SessionRegistry.MAX_SCRIPT_DAYS + " days");
+        }
+        String label = request.label() == null || request.label().isBlank()
+                ? null
+                : request.label().strip();
+        if (label != null && label.length() > 80) {
+            throw new RefusedException(400, "INVALID_ARGUMENT", "A label is at most 80 characters");
+        }
+        return new dev.floor42.server.iam.BoundTokenIssuer.Request(scope.wire(), days, label);
     }
 
     /**
@@ -183,7 +228,10 @@ public class AuthResource {
         terminals.closeAll();
         for (Session s : ended) {
             directorTokens.signOut(s.id());
-            if (s.kind() == SessionRegistry.Kind.SCRIPT) journalRevoked(s, "everywhere");
+            if (s.kind() == SessionRegistry.Kind.SCRIPT) {
+                journalRevoked(s, "everywhere");
+                bindings.end(s.id());
+            }
         }
         sockets.sweep();
         return Response.noContent().cookie(cleared()).build();

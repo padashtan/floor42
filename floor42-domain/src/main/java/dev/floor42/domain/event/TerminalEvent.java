@@ -18,9 +18,18 @@ public sealed interface TerminalEvent extends DomainEvent {
      * @param scope {@code read}, {@code missions:write} or {@code all}
      * @param expiresAt ISO-8601, at most 30 days after issue
      * @param label nullable: what the director named it
+     * @param subject nullable: the Keycloak {@code sub} of the step-up sign-in a bound token rests on (ADR-0083)
+     * @param binding nullable: {@code KEYCLOAK_OFFLINE_SESSION} for a bound token, absent for an unbound one
      */
-    record ApiTokenIssued(String token, String sha256, String scope, String expiresAt, String label)
-            implements TerminalEvent {}
+    record ApiTokenIssued(
+            String token, String sha256, String scope, String expiresAt, String label, String subject, String binding)
+            implements TerminalEvent {
+
+        /** An unbound token, as every row written before 1.3.0. */
+        public ApiTokenIssued(String token, String sha256, String scope, String expiresAt, String label) {
+            this(token, sha256, scope, expiresAt, label, null, null);
+        }
+    }
 
     /**
      * A script token stopped working before its expiry.

@@ -74,6 +74,19 @@ export interface ConsentView {
   resources: string[]
 }
 
+/**
+ * GET /api/iam/assurance/waiting: an act whose first signature stands and waits for a second person (four eyes,
+ * ADR-0081). `path` is what the second person opens in a private window; `firstSubject` is 8 characters at most.
+ */
+export interface AssuranceWaiting {
+  id: string
+  kind: string
+  ref: string
+  firstSubject: string
+  until: string
+  path: string
+}
+
 /** 202 of POST /api/missions/{id}/approve in IAM mode: the path of the password step-up. */
 export interface StepUp {
   redirect: string

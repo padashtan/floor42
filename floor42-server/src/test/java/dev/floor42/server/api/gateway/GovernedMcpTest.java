@@ -388,6 +388,33 @@ class GovernedMcpTest extends BrokerTestBase {
         return null;
     }
 
+    /** ALLOW to a call that reaches outside needs a strong signature (ADR-0081): carried here as the callback would. */
+    private void allowWithStrongSignature(String question) {
+        var id = new dev.floor42.domain.QuestionId(question);
+        var act = new dev.floor42.domain.AssurancePolicy.Act(
+                dev.floor42.domain.AssurancePolicy.ActKind.QUESTION, question);
+        var signed = new dev.floor42.domain.event.DeskEvent.ApprovalSigned(
+                act,
+                dev.floor42.domain.AssurancePolicy.Seat.FIRST,
+                "director-sub",
+                dev.floor42.domain.AssurancePolicy.ACR_STRONG,
+                Instant.now().getEpochSecond(),
+                null);
+        office.execute(c -> {
+            var origin = c.missions()
+                    .find(c.desk().find(id).orElseThrow().mission())
+                    .orElseThrow()
+                    .origin();
+            return c.desk()
+                    .answer(
+                            office.context(dev.floor42.domain.Actor.director(), origin),
+                            id,
+                            "ALLOW",
+                            null,
+                            List.of(signed));
+        });
+    }
+
     private void answerQuestion(String question, String answer) {
         given().header("Authorization", "Bearer " + directorToken.value())
                 .contentType("application/json")
@@ -405,7 +432,7 @@ class GovernedMcpTest extends BrokerTestBase {
 
         var first = java.util.concurrent.CompletableFuture.supplyAsync(
                 () -> decision(token, "call_mcp", "mc-1", args(RESOURCE, "echo", "{}")));
-        answerQuestion(awaitQuestion(s), "ALLOW");
+        allowWithStrongSignature(awaitQuestion(s));
         assertThat(first.get(30, TimeUnit.SECONDS)).isEqualTo("allow");
 
         // same server and tool, other arguments: remembered, no new question

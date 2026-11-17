@@ -61,6 +61,23 @@ curl -s localhost:8180/realms/floor42/.well-known/openid-configuration | jq -r .
 
 The realm is imported on the first start of a clean database (`--import-realm`, existing realm kept afterwards).
 
+## OpenFGA (1.3.0)
+
+OpenFGA decides the relationships (agent to resource, mission delegation, MCP tool, who may countersign); Keycloak keeps
+managing identities and roles (ADR-0080). The model is code: `iam/openfga/model.fga`, its tests `model.fga.yaml`, and
+`model.json`, which Floor42 loads. Run the tests with the pinned CLI image:
+
+```bash
+docker run --rm -v "$PWD/iam/openfga:/m" -w /m openfga/cli@sha256:7a7f9fb0a27a788a0fa7907eb5fc751c3134ca0776245578308e011606b61091 model test --tests model.fga.yaml
+```
+
+`docker compose -f iam/compose.yaml up -d` starts `openfga-migrate` and `openfga` (HTTP on `127.0.0.1:8181`, preshared key
+`FLOOR42_FGA_KEY` from `iam/.env`). The `openfga` database is made by `iam/bootstrap.sh`: bring Postgres up, run the script,
+then `up -d` again. Floor42 reads `floor42.iam.fga.url` and the key from the vault entry `fga-key` (or
+`floor42.iam.fga.key`). IAM mode refuses to start without OpenFGA (`IAM_NEEDS_FGA`), with it unreachable
+(`FGA_UNAVAILABLE`) or with a store that does not know the recorded model (`FGA_MODEL_MISMATCH`). With your own server,
+`iam/byo-openfga-check.sh` checks the store, the key and one check.
+
 ## The realm contract
 
 - Realm `floor42`, issuer `http://localhost:8180/realms/floor42` (pinned by `KC_HOSTNAME`, whatever address the
@@ -392,3 +409,44 @@ refused the same way; not measured here.
 See also: [what stops working, when, and how it was measured when access is revoked](../docs/iam-revocation.md).
 
 The desk may also be opened at `http://floor42.localhost:7420` (and `:7421` in dev mode). A realm created before that address was supported must get `http://floor42.localhost:7420/auth/callback` and `http://floor42.localhost:7421/auth/callback` added to the redirect URIs of the `floor42-desk` client (web origins `+` already covers them).
+
+## Assured approvals: a second factor on a phone, and a second person (ADR-0081)
+
+Some acts need more than a click in the browser: an ALLOW to a call that reaches outside, and, with four eyes on, the
+riskiest acts of the company. Floor42 sends the director to Keycloak with `acr_values=floor42-strong`, `prompt=login`
+and `max_age=0`, and checks the ID token itself (signature, `iss`, `aud`, `nonce`, a fresh `auth_time`, and `acr` equal to
+`floor42-strong`: `acr_values` is only a request). The realm file holds what Keycloak needs:
+
+- realm attribute `acr.loa.map` = `{"floor42-basic":1,"floor42-strong":2}` (the `acr` client scope already writes the
+  name into the token), and the realm browser flow `floor42-browser`: cookie, or the forms; `floor42-loa1` asks the
+  password (level 1), `floor42-loa2` asks the second factor, every time (`loa-max-age` 0).
+- realm role `floor42-director`: the only role that opens the desk (`bootstrap.sh` creates the role if the realm lacks it, as an existing realm is not re-imported, and assigns it to `director`; run the script again on an older install). A reviewer is refused with `DESK_DIRECTOR_ONLY`.
+- realm role `floor42-reviewer`: who may countersign. Keycloak says who holds it; OpenFGA decides (`countersigner`).
+  Give it only to a person who is not the director.
+- the required action Configure OTP is **disabled**. Measured (Keycloak 26.8.1): with it on, a user who had no factor was
+  offered to enrol one in the strong step-up, with just their password, and got `floor42-strong`. A strong level is only
+  as strong as the enrolment, so the realm refuses to enrol there: a user without a factor gets an error, not a code.
+
+**Enrol a factor** (before the first assured act, for the director and for each reviewer; "a code from your phone" is a
+TOTP authenticator app such as the ones every phone has):
+
+```sh
+iam/enrol-window.sh on        # opens Configure OTP
+# each person signs in at http://localhost:8180/realms/floor42/account, Signing in, Set up authenticator application
+iam/enrol-window.sh off       # closes it again, as soon as everyone is enrolled
+```
+
+A reviewer is a Keycloak user with the role `floor42-reviewer` (Users, Role mapping, `floor42-reviewer`).
+A passkey on the phone (WebAuthn over the hybrid transport) is a documented option, not shipped: it was not measured on
+`localhost` (add the "WebAuthn Authenticator" step as an alternative next to "OTP Form" in `floor42-loa2`, set the
+relying party id `localhost`, then test it on Chrome and Edge with an Android phone and an iPhone before relying on it).
+
+**Four eyes** (setting `FOUR_EYES`, off by default). The director signs, the act waits 30 minutes, a second person
+countersigns. Floor42 listens on loopback, so the second person sits at the same machine. The Countersign row on the desk
+gives an address: open it **in a private window**. A second user's sign-in in the director's own browser ends the director's
+Keycloak online session (measured): the offline sessions of running missions survive, but the director would be signed
+out. The countersign callback creates no Floor42 session and never relies on the director's online session afterwards.
+
+**Not built: CIBA** (a push to the phone, Keycloak's backchannel grant). Keycloak's channel authenticates nobody; its
+strength is the channel and the phone app, which Floor42 would have to write, and the phone must reach that channel: a LAN
+bind (breaks loopback only), a tunnel or a push relay (a third party). Reopen it with a remote access story.

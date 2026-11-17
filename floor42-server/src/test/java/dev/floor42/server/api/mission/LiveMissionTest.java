@@ -17,6 +17,7 @@ import dev.floor42.domain.QuestionStatus;
 import dev.floor42.domain.ReviewVerdict;
 import dev.floor42.domain.Ticket;
 import dev.floor42.domain.TicketStatus;
+import dev.floor42.server.api.TrustSnapshot;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.security.SessionToken;
 import io.quarkus.test.junit.QuarkusTest;
@@ -25,6 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -83,6 +86,19 @@ public class LiveMissionTest {
         return office.query(c -> c.tickets().of(m).getFirst().status());
     }
 
+    TrustSnapshot trust;
+
+    @BeforeEach
+    void noteTheTrustLevels() {
+        trust = TrustSnapshot.take(office);
+    }
+
+    /** The producer's read outside its worktree raises a risk that narrows its level: the next classes meet it as it was. */
+    @AfterEach
+    void restoreTheTrustLevels() {
+        trust.restore(office);
+    }
+
     @Test
     void aNewMissionStartsFromTheCompanysDefaultPermissions() throws Exception {
         try {
@@ -137,8 +153,9 @@ public class LiveMissionTest {
 
         String id = given().header("Authorization", auth())
                 .contentType("application/json")
-                .body("{\"title\":\"Inventory\",\"objective\":\"Describe this repository\",\"repository\":\""
-                        + repo.toString().replace("\\", "\\\\") + "\"}")
+                .body(
+                        "{\"title\":\"Inventory\",\"objective\":\"Describe this repository [fake:outside]\",\"repository\":\""
+                                + repo.toString().replace("\\", "\\\\") + "\"}")
                 .post("/api/missions")
                 .then()
                 .statusCode(201)

@@ -22,6 +22,7 @@ const KEYS: Record<SettingKey, true> = {
   ACCEPTED_STREAM_LINES: true,
   STALL_MINUTES: true,
   MISSION_BUDGET_USD: true,
+  FOUR_EYES: true,
 }
 export const SETTING_KEYS = Object.keys(KEYS) as SettingKey[]
 
@@ -88,6 +89,7 @@ export const SECTIONS: readonly SettingsSection[] = [
     items: [
       setting('SHELL_SANDBOX'),
       setting('SANDBOX_NETWORK'),
+      setting('FOUR_EYES'),
       { kind: 'panel', panel: 'sandbox' },
       { kind: 'panel', panel: 'sessions' },
       { kind: 'unsafe' },

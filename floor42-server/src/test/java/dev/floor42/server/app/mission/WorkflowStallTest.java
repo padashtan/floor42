@@ -199,5 +199,7 @@ class WorkflowStallTest {
         assertThat(office.<Integer>query(c -> c.sessions().of(m).size()))
                 .as("no retrospective session started")
                 .isEqualTo(sessions);
+        // Chris sits at this retrospective until it ends: left open, it refuses every later call of him in the app.
+        office.execute(c -> c.retros().closeNow(director(), m));
     }
 }

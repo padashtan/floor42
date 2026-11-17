@@ -3,6 +3,7 @@ package dev.floor42.server.app.session;
 import dev.floor42.domain.ActionId;
 import dev.floor42.domain.ActionStage;
 import dev.floor42.domain.Actor;
+import dev.floor42.domain.DecisionBasis;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.config.DataFolders;
 import dev.floor42.server.runtime.AgentRuntime.Governor;
@@ -312,6 +313,7 @@ public final class MissionGovernor implements Governor {
         return office.query(c -> c.actions()
                 .find(actionId(toolUseId))
                 .map(a -> a.decisionBasis())
+                .map(b -> DecisionBasis.trustShadow().equals(b) ? DecisionBasis.SHADOW_AGENT_TEXT : b)
                 .orElse(null));
     }
 

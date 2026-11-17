@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.floor42.domain.AgentId;
+import dev.floor42.server.iam.fga.FgaStore;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,6 +69,11 @@ class IamStatusTest {
     }
 
     private IamStatus status(boolean on, BooleanSupplier sandbox, SocketOwners owners) {
+        return status(on, sandbox, owners, Optional::empty);
+    }
+
+    private IamStatus status(
+            boolean on, BooleanSupplier sandbox, SocketOwners owners, Supplier<Optional<FgaStore.Problem>> fga) {
         var settings = new IamSettings(
                 dataDir, Optional.of(on), Optional.of(kc.issuer().toString()), Optional.empty(), new ObjectMapper());
         var keycloak = new KeycloakClient(kc.issuer().toString(), vault, new ObjectMapper());
@@ -75,7 +82,31 @@ class IamStatusTest {
                 URI.create(kc.issuer() + "/protocol/openid-connect/certs"),
                 HttpClient.newHttpClient(),
                 Clock.systemUTC());
-        return new IamStatus(settings, vault, owners, jwks, clients, keycloak, sandbox);
+        return new IamStatus(settings, vault, owners, jwks, clients, keycloak, sandbox, fga);
+    }
+
+    @Test
+    void anOpenFgaThatIsNotUsableRefusesSessionsAndTheBackgroundCheckCannotClearIt() {
+        var s = status(
+                true,
+                () -> true,
+                owners(true),
+                () -> Optional.of(new FgaStore.Problem("FGA_UNAVAILABLE", "OpenFGA is unreachable")));
+        s.start();
+        assertThat(s.view().health()).isEqualTo(IamStatus.Health.REFUSED_TO_START);
+        assertThat(s.view().code()).isEqualTo("FGA_UNAVAILABLE");
+        assertThat(s.blocksSessions()).contains("OpenFGA is unreachable");
+        s.checkOk();
+        assertThat(s.view().health())
+                .as("Keycloak being well does not make OpenFGA well")
+                .isNotEqualTo(IamStatus.Health.UP);
+    }
+
+    @Test
+    void iamIsUpOnlyWhenOpenFgaIsToo() {
+        var s = status(true, () -> true, owners(true), Optional::empty);
+        s.start();
+        assertThat(s.view().health()).isEqualTo(IamStatus.Health.UP);
     }
 
     @Test

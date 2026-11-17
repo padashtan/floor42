@@ -14,6 +14,7 @@ import dev.floor42.server.iam.ResourceBroker;
 import dev.floor42.server.iam.ResourceBroker.BrokerResult;
 import dev.floor42.server.iam.ResourceCatalogue;
 import dev.floor42.server.iam.SessionClaims;
+import dev.floor42.server.iam.fga.FgaException;
 import dev.floor42.server.runtime.AgentRuntime.Governor;
 import dev.floor42.server.runtime.AskOutcome;
 import dev.floor42.server.runtime.ClaudeCodeConfig;
@@ -237,11 +238,16 @@ public class McpResource {
         if (refused != null) return refused;
         String only = params.path("arguments").path("server").asText("");
         ArrayNode tools = json.createArrayNode();
-        for (McpServer declared : mcpServers.all()) {
-            // usable(): a server whose resource moved to another address shows nothing ticked
-            McpServer s = mcpServers.usable(declared.resource()).orElse(declared);
-            if ((!only.isBlank() && !only.equals(s.resource()))
-                    || !catalogue.allowed(caller.agent(), caller.mission(), s.resource())) continue;
+        for (McpServer s : mcpServers.all()) {
+            // all(): ticks are OpenFGA's, and a server whose resource moved to another address shows nothing ticked
+            boolean granted;
+            try {
+                granted = catalogue.allowed(caller.agent(), caller.mission(), s.resource());
+            } catch (FgaException e) {
+                // Handled: the list is refused, said in the answer, never shown as empty.
+                return text(e.code() + ": OpenFGA could not decide: the list is refused", true);
+            }
+            if ((!only.isBlank() && !only.equals(s.resource())) || !granted) continue;
             s.tools().stream().filter(t -> t.ticked()).forEach(t -> {
                 ObjectNode o = tools.addObject().put("server", s.resource()).put("tool", t.name());
                 o.put("description", t.description()).set("inputSchema", t.inputSchema());
@@ -312,7 +318,8 @@ public class McpResource {
                 .map(h -> h.getKey() + ": " + h.getValue() + "\n")
                 .reduce("", String::concat);
         return "Resource " + resource + " " + method.toUpperCase(java.util.Locale.ROOT) + " " + path + " -> "
-                + r.status() + " (exchanged token " + r.jti() + " for " + r.audience() + ")\n"
+                + r.status() + " (exchanged token " + r.jti() + " for " + r.audience()
+                + (r.basis() == null ? "" : ", " + r.basis()) + ")\n"
                 + Untrusted.quote(resource, headers + r.body())
                 + (r.truncated() ? "\n[response cut at the size cap]" : "");
     }

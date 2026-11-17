@@ -44,19 +44,80 @@ final class IdTokenCheck {
         return out;
     }
 
+    /**
+     * The realm roles of the access token that came with the id_token in one code exchange: the id_token and the
+     * userinfo carry none (measured on Keycloak 26.8.1, ADR-0081). Checked like the id_token: RS256, the issuer's keys,
+     * {@code iss}, the time claims, {@code azp} this client, and the {@code sub} of that id_token. Empty on any doubt.
+     */
+    Optional<java.util.Set<String>> realmRoles(String accessToken, String subject) {
+        String[] rule = new String[1];
+        try {
+            Optional<Jwts.Parsed> t = signed(accessToken, rule);
+            if (t.isEmpty()) return log(rule);
+            JsonNode c = t.get().claims();
+            String why = !issuer.toString().equals(c.path("iss").asText())
+                    ? "iss"
+                    : !audience.equals(c.path("azp").asText())
+                            ? "azp"
+                            : !sameSecret(subject, c.path("sub").asText("")) ? "sub" : timeRule(c);
+            if (why != null) {
+                rule[0] = why;
+                return log(rule);
+            }
+            java.util.Set<String> roles = new java.util.HashSet<>();
+            c.path("realm_access").path("roles").forEach(r -> roles.add(r.asText()));
+            return Optional.of(roles);
+        } catch (RuntimeException e) {
+            // Handled: anything unexpected is "no roles known"; the countersignature is refused.
+            rule[0] = "malformed";
+            return log(rule);
+        }
+    }
+
+    /** Whether the verified access token (for this subject) carries the director realm role. */
+    boolean director(String accessToken, String subject) {
+        return accessToken != null
+                && realmRoles(accessToken, subject)
+                        .filter(r -> r.contains(Countersigners.DIRECTOR_ROLE))
+                        .isPresent();
+    }
+
+    /** Same, for a token whose subject is its own: a refreshed login, where no id_token comes along. */
+    boolean director(String accessToken) {
+        try {
+            return director(
+                    accessToken, Jwts.parse(accessToken).claims().path("sub").asText(""));
+        } catch (RuntimeException e) {
+            // Handled: an unreadable token is no director.
+            return false;
+        }
+    }
+
+    private static <T> Optional<T> log(String[] rule) {
+        LOG.warnf("Access token refused: rule=%s", rule[0]);
+        return Optional.empty();
+    }
+
+    /** RS256 only, a known key, a signature that verifies: the parsed token, or empty with the rule that failed. */
+    private Optional<Jwts.Parsed> signed(String token, String[] rule) {
+        Jwts.Parsed t = Jwts.parse(token);
+        JsonNode h = t.header();
+        if (!"RS256".equals(h.path("alg").asText()) || h.has("crit")) return refuse(rule, "alg");
+        if (!token.substring(token.lastIndexOf('.') + 1).equals(Jwts.base64url(t.signature())))
+            return refuse(rule, "signature");
+        String kid = h.path("kid").asText("");
+        if (kid.isBlank()) return refuse(rule, "kid");
+        Optional<PublicKey> key = jwks.key(kid);
+        if (key.isEmpty()) return refuse(rule, "kid");
+        if (!Jwts.verify(t, key.get())) return refuse(rule, "signature");
+        return Optional.of(t);
+    }
+
     private Optional<JsonNode> check(String idToken, String nonce, String[] rule) {
         try {
-            Jwts.Parsed t = Jwts.parse(idToken);
-            JsonNode h = t.header();
-            if (!"RS256".equals(h.path("alg").asText()) || h.has("crit")) return refuse(rule, "alg");
-            if (!idToken.substring(idToken.lastIndexOf('.') + 1).equals(Jwts.base64url(t.signature())))
-                return refuse(rule, "signature");
-            String kid = h.path("kid").asText("");
-            if (kid.isBlank()) return refuse(rule, "kid");
-            Optional<PublicKey> key = jwks.key(kid);
-            if (key.isEmpty()) return refuse(rule, "kid");
-            if (!Jwts.verify(t, key.get())) return refuse(rule, "signature");
-            JsonNode c = t.claims();
+            Optional<Jwts.Parsed> parsed = signed(idToken, rule);
+            if (parsed.isEmpty()) return Optional.empty();
+            JsonNode c = parsed.get().claims();
             if (!issuer.toString().equals(c.path("iss").asText())) return refuse(rule, "iss");
             if (!hasSubject(c.path("sub"))) return refuse(rule, "sub");
             if (!hasAudience(c.path("aud"))) return refuse(rule, "aud");
@@ -72,7 +133,7 @@ final class IdTokenCheck {
         }
     }
 
-    private static Optional<JsonNode> refuse(String[] rule, String name) {
+    private static <T> Optional<T> refuse(String[] rule, String name) {
         rule[0] = name;
         return Optional.empty();
     }

@@ -100,7 +100,7 @@ class ClaudeCodeRuntimeTest {
         Path workdir = Files.createTempDirectory("office-session");
         if (office.query(c -> c.staff().find(CHRIS).isEmpty())) {
             office.execute(c -> c.staff()
-                    .hire(
+                    .hireSeeded(
                             director(),
                             CHRIS,
                             "Chris",
@@ -110,6 +110,11 @@ class ClaudeCodeRuntimeTest {
                             "medium",
                             List.of()));
         }
+        // An earlier test of the shared journal may have narrowed Chris (an incident, a risk alert): each starts
+        // STANDARD.
+        office.execute(c -> c.staff().find(CHRIS).orElseThrow().trust() == dev.floor42.domain.TrustLevel.STANDARD
+                ? java.util.List.<dev.floor42.domain.event.EventEnvelope>of()
+                : c.staff().raiseTrust(director(), CHRIS, dev.floor42.domain.TrustLevel.STANDARD, true));
         MissionId m = ((MissionCreated) office.execute(c -> c.missions()
                                 .create(
                                         director(),
@@ -198,10 +203,10 @@ class ClaudeCodeRuntimeTest {
     @Test
     void aLiveSessionIsGovernedThroughTheHookAndRecorded() throws Exception {
         Setup s = realMissionInProgress();
-        MissionGovernor governor = new MissionGovernor(office, spec(s, "Inspect the repository"));
+        MissionGovernor governor = new MissionGovernor(office, spec(s, "Inspect the repository [fake:outside]"));
 
-        CompletableFuture<SessionReport> run =
-                CompletableFuture.supplyAsync(() -> runtime.run(spec(s, "Inspect the repository"), governor));
+        CompletableFuture<SessionReport> run = CompletableFuture.supplyAsync(
+                () -> runtime.run(spec(s, "Inspect the repository [fake:outside]"), governor));
 
         // Bash is set to "ask once": the hook waits for the director, exactly like the agent does.
         Instant deadline = Instant.now().plus(Duration.ofSeconds(20));

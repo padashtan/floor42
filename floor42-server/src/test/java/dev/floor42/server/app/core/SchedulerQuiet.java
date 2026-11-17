@@ -52,9 +52,17 @@ public final class SchedulerQuiet {
         await(scheduler, name -> true);
     }
 
-    /** Waits until no background task the filter counts runs. */
+    /**
+     * The demo and the rehearsal play a script on their own thread and wait for the director for up to 30 minutes: a
+     * test that starts one and leaves it blocked must not hold up the next test of a shared application (one test JVM).
+     */
+    private static boolean isScript(String task) {
+        return task.startsWith("demo-") || task.startsWith("practice-");
+    }
+
+    /** Waits until no background task the filter counts runs; the demo and rehearsal scripts are never counted. */
     public static void await(MissionScheduler scheduler, Predicate<String> counted) throws InterruptedException {
-        List<String> busy = scheduler.awaitQuiet(PATIENCE, counted);
+        List<String> busy = scheduler.awaitQuiet(PATIENCE, counted.and(task -> !isScript(task)));
         if (!busy.isEmpty()) throw new AssertionError("The dispatcher is still busy after " + PATIENCE + ": " + busy);
     }
 }

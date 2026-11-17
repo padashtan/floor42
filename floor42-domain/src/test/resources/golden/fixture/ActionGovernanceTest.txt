@@ -27,10 +27,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=READ, decisionBasis="outside the agent's worktree", denialReason=OUTSIDE_WORKSPACE, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=DENIED, summary="C:/Users/director/.ssh/id_ed25519", ticket="T-1", tool="Read", updatedAt=2026-10-20T09:00:11Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -85,7 +87,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=READ, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -108,6 +110,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -120,15 +123,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -189,10 +192,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="No such tool available: Bash", denialReason=BLOCKED_UPSTREAM, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result=null, runningSeconds=null, stage=DENIED, summary="git log", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -247,7 +252,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -270,6 +275,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -282,15 +288,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -351,10 +357,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=READ, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result=null, runningSeconds=null, stage=DENIED, summary="pom.xml", ticket="T-1", tool="Read", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -409,7 +417,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -432,6 +440,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -444,15 +453,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -519,10 +528,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis=null, denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result="gateway", runningSeconds=null, stage=EXECUTED, summary="docker restart gateway", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -577,7 +588,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 15
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ASK, ticket=null)]}, status=SUSPENDED, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = [Question{action="a1", answer=null, askedAt=2026-10-20T09:00:11Z, askedBy="chris", blocking=true, context="docker restart gateway\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=OPEN, subject="Allow chris to use Bash?", ticket="T-1"}]
 committeeSeats = []
@@ -600,6 +611,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -612,15 +624,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WAITING_FOR_DIRECTOR
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -687,10 +699,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="mission is SUSPENDED", denialReason=MISSION_NOT_ACTIVE, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:12Z, result=null, runningSeconds=null, stage=DENIED, summary="mvn test", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -745,7 +759,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 13
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=SUSPENDED, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -768,6 +782,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -780,15 +795,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = PAUSED
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -846,10 +861,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -904,7 +921,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 9
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -927,6 +944,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -939,15 +957,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1010,10 +1028,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="galen", authorizedByOffice=false, category=READ, decisionBasis="galen is neither working on nor reviewing T-1", denialReason=POLICY, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=DENIED, summary="pom.xml", ticket="T-1", tool="Read", updatedAt=2026-10-20T09:00:11Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1068,7 +1088,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=READ, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -1091,6 +1111,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1103,15 +1124,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1178,10 +1199,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result="BUILD SUCCESS", runningSeconds=null, stage=CONFIRMED, summary="mvn test", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:14Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1236,7 +1259,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 14
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -1259,6 +1282,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1271,15 +1295,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1342,10 +1366,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE 'git status' for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="git status", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:11Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1400,7 +1426,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix="git status", decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -1423,6 +1449,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1435,15 +1462,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1513,10 +1540,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result="BUILD SUCCESS", runningSeconds=null, stage=EXECUTED, summary="mvn test", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:13Z}, "a2"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE for any agent", denialReason=null, id="a2", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:12Z, result="2 tests failed", runningSeconds=null, stage=FAILED, summary="mvn verify", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:14Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1571,7 +1600,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 16
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -1594,6 +1623,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1606,15 +1636,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1679,10 +1709,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="PreToolUse hook error", denialReason=BLOCKED_UPSTREAM, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=DENIED, summary="git status", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1737,7 +1769,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 13
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ASK, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = [Question{action="a1", answer=null, askedAt=2026-10-20T09:00:11Z, askedBy="chris", blocking=true, context="git status\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=OPEN, subject="Allow chris to use Bash?", ticket="T-1"}]
 committeeSeats = []
@@ -1760,6 +1792,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1772,15 +1805,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WAITING_FOR_DIRECTOR
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -1845,10 +1878,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis=null, denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result="", runningSeconds=null, stage=EXECUTED, summary="rm x", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -1903,7 +1938,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 13
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=SUSPENDED, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -1926,6 +1961,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -1938,15 +1974,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = PAUSED
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2012,10 +2048,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="director allowed it (Q-1)", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="docker restart gateway", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2070,7 +2108,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 14
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ASK, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2093,6 +2131,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2105,15 +2144,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2181,10 +2220,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE 'git diff' for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="git diff --stat", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:11Z}, "a2"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="a2", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:12Z, result=null, runningSeconds=null, stage=DENIED, summary="git diff-index HEAD", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2239,7 +2280,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 14
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix="git diff", decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2262,6 +2303,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2274,15 +2316,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2345,10 +2387,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=READ, decisionBasis="rule: ALLOW READ for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="pom.xml", ticket="T-1", tool="Read", updatedAt=2026-10-20T09:00:11Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2403,7 +2447,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=READ, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2426,6 +2470,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2438,15 +2483,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2507,10 +2552,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=WRITE, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result=null, runningSeconds=null, stage=DENIED, summary="notes.txt", ticket="T-1", tool="Write", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2565,7 +2612,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2588,6 +2635,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2600,15 +2648,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2669,10 +2717,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=FLOOR42, decisionBasis="Floor42 tools are always available", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="Which gateway?", ticket="T-1", tool="mcp__floor42__ask_director", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2727,7 +2777,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2750,6 +2800,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2762,15 +2813,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -2833,10 +2884,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="mvn test", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:11Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -2891,7 +2944,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 12
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ALLOW, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -2914,6 +2967,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -2926,15 +2980,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -3000,10 +3054,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="director denied it (Q-1)", denialReason=DIRECTOR, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:11Z, result=null, runningSeconds=null, stage=DENIED, summary="rm -rf build", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:12Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -3058,7 +3114,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 14
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ASK, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -3081,6 +3137,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -3093,15 +3150,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -3178,10 +3235,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=true, category=EXECUTE, decisionBasis="rule: ALLOW EXECUTE for any agent", denialReason=null, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:14Z, result=null, runningSeconds=null, stage=AUTHORIZED, summary="mvn test", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:14Z}, "a2"=Action{agent="chris", authorizedByOffice=false, category=EXECUTE, decisionBasis="rule: DENY EXECUTE 'docker' for chris", denialReason=POLICY, id="a2", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:15Z, result=null, runningSeconds=null, stage=DENIED, summary="docker restart gateway", ticket="T-1", tool="Bash", updatedAt=2026-10-20T09:00:15Z}, "a3"=Action{agent="chris", authorizedByOffice=false, category=READ, decisionBasis="rule: DENY READ for any agent", denialReason=POLICY, id="a3", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:16Z, result=null, runningSeconds=null, stage=DENIED, summary="README.md", ticket="T-1", tool="Read", updatedAt=2026-10-20T09:00:16Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -3236,7 +3295,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 19
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[Actor(kind=DIRECTOR, id="director"), Actor(kind=DIRECTOR, id="director"), Actor(kind=DIRECTOR, id="director"), Actor(kind=DIRECTOR, id="director")], rules=[PermissionRule(agent=null, category=EXECUTE, tool=null, commandPrefix=null, decision=ALLOW, ticket=null), PermissionRule(agent="chris", category=EXECUTE, tool=null, commandPrefix="docker", decision=DENY, ticket=null), PermissionRule(agent=null, category=READ, tool=null, commandPrefix=null, decision=ALLOW, ticket=null), PermissionRule(agent=null, category=READ, tool=null, commandPrefix=null, decision=DENY, ticket=null)]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -3259,6 +3318,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -3271,15 +3331,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = EXECUTING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []
@@ -3340,10 +3400,12 @@ events not recorded by the test: 0
 ### live
 # fields
 actions = {"a1"=Action{agent="chris", authorizedByOffice=false, category=WRITE, decisionBasis="no rule allows it (default deny)", denialReason=POLICY, id="a1", mission="M-1", orphaned=false, requestedAt=2026-10-20T09:00:10Z, result=null, runningSeconds=null, stage=DENIED, summary="notes.txt", ticket="T-1", tool="Write", updatedAt=2026-10-20T09:00:10Z}}
-agents = {"galen"=Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, "chris"=Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, "darius"=Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}}
+agents = {"galen"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "chris"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, "darius"=Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}}
 askedBackBy = {}
 askedBackNotes = {}
 askedBackRounds = {}
+authorization = []
+authorizationImported = false
 checkRuns = []
 clock = 0
 committeeSeats = {}
@@ -3398,7 +3460,7 @@ witnesses = {}
 workspaces = []
 # queries
 version = 11
-agents = [Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}, Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agents = [Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}, Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 missions = [Mission{archived=false, budgetUsd=null, capDecided=false, checkCommand=null, checksAutomatic=false, createdAt=2026-10-20T09:00:04Z, id="M-1", objective="Protect web services with a gateway", origin=SIMULATED, outcome=null, planSubmitted=true, policy=PermissionPolicy{authors=[], rules=[]}, status=IN_PROGRESS, ticketValidation=false, title="Secure the APIs", workspace=null}]
 openQuestions = []
 committeeSeats = []
@@ -3421,6 +3483,7 @@ setting SANDBOX_NETWORK = Optional.empty
 setting ACCEPTED_STREAM_LINES = Optional.empty
 setting STALL_MINUTES = Optional.empty
 setting MISSION_BUDGET_USD = Optional.empty
+setting FOUR_EYES = Optional.empty
 defaultPermission Bash = Optional.empty
 defaultPermission Read = Optional.empty
 defaultPermission Write = Optional.empty
@@ -3433,15 +3496,15 @@ lessonsFor REVIEWER = []
 lessonsFor RESEARCHER = []
 lessonsFor PLANNER = []
 lessonsFor ANALYST = []
-agent galen = Optional[Agent{core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, workRole=null}]
+agent galen = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="galen", effort="medium", id="galen", model="claude-sonnet-5-5", provider="anthropic", role="role of galen", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf galen = AVAILABLE
 atWork galen = false
 handedBackOnDismissal galen = []
-agent chris = Optional[Agent{core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, workRole=null}]
+agent chris = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="chris", effort="medium", id="chris", model="claude-sonnet-5-5", provider="anthropic", role="role of chris", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf chris = WORKING
 atWork chris = false
 handedBackOnDismissal chris = ["T-1"]
-agent darius = Optional[Agent{core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, workRole=null}]
+agent darius = Optional[Agent{acceptedSinceTrustChange=0, core=false, dismissed=false, displayName="darius", effort="medium", id="darius", model="claude-sonnet-5-5", provider="anthropic", role="role of darius", skills=[], suspended=false, trust=STANDARD, trustCause=null, trustCauseEvent=null, trustSince=null, workRole=null}]
 statusOf darius = AVAILABLE
 atWork darius = false
 handedBackOnDismissal darius = []

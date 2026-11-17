@@ -87,6 +87,7 @@ public class OfficeSettings
             case ACCEPTED_STREAM_LINES -> "";
             case STALL_MINUTES -> Integer.toString(stallMinutes);
             case MISSION_BUDGET_USD -> missionBudgetUsd;
+            case FOUR_EYES -> "off";
         };
     }
 

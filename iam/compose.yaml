@@ -1,5 +1,6 @@
-# Keycloak 26 and its Postgres for Floor42's IAM mode. Dev only: run iam/bootstrap.sh first (it writes iam/.env).
-# Both services listen on loopback only.
+# Keycloak 26, OpenFGA and their Postgres for Floor42's IAM mode. Dev only: run iam/bootstrap.sh first (it writes iam/.env).
+# Every service listens on loopback only. The openfga database is made by bootstrap.sh (a postgres image creates only
+# POSTGRES_DB on a fresh volume), so run bootstrap.sh once the postgres service is up, then `up -d` again.
 name: floor42-iam
 
 services:
@@ -39,6 +40,35 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  # OpenFGA v1.22.1, pinned by digest (measured 2026-11-16). `migrate` is a one-shot: the server does not migrate by itself.
+  openfga-migrate:
+    image: openfga/openfga@sha256:b852071314f1fda1194d341a6ebac0a4f619b3cd87a6626d2ccc7048af4ec671
+    command: ["migrate"]
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: postgres://openfga:${OPENFGA_DB_PASSWORD:?run iam/bootstrap.sh first}@postgres:5432/openfga
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  openfga:
+    image: openfga/openfga@sha256:b852071314f1fda1194d341a6ebac0a4f619b3cd87a6626d2ccc7048af4ec671
+    command: ["run"]
+    environment:
+      OPENFGA_DATASTORE_ENGINE: postgres
+      OPENFGA_DATASTORE_URI: postgres://openfga:${OPENFGA_DB_PASSWORD:?run iam/bootstrap.sh first}@postgres:5432/openfga
+      OPENFGA_AUTHN_METHOD: preshared
+      OPENFGA_AUTHN_PRESHARED_KEYS: ${FLOOR42_FGA_KEY:?run iam/bootstrap.sh first}
+      OPENFGA_PLAYGROUND_ENABLED: "false"
+      OPENFGA_LOG_FORMAT: json
+    ports:
+      # HTTP only; the gRPC (8081) and metrics ports are not published.
+      - "127.0.0.1:8181:8080"
+    depends_on:
+      openfga-migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:

@@ -134,6 +134,7 @@ export interface SettingView {
   | 'ACCEPTED_STREAM_LINES'
   | 'STALL_MINUTES'
   | 'MISSION_BUDGET_USD'
+  | 'FOUR_EYES'
   value: string
   defaultValue: string
   changed: boolean

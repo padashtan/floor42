@@ -2,12 +2,15 @@
 import { nowMs } from '../ui/clock'
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { api } from '../api/client'
+import type { AssuranceWaiting } from '../api/identity'
+import { request } from '../api/request'
 import type { UncommittedCheck } from '../api/types'
 import { t } from '../i18n'
 import { office } from '../state/office'
 import { waits } from '../state/waits'
 import { acceptanceRows, CATEGORIES, goLabel, inCategory, merged, todoRows, uncommittedRow, type TodoRow } from '../ui/todo'
 import { openTodoGo } from '../ui/todoGo'
+import { trustRow } from '../ui/trust'
 import { waited } from '../ui/waits'
 
 /**
@@ -15,7 +18,7 @@ import { waited } from '../ui/waits'
  * rulings, each with its count and, per row, the one button that opens the place to act. Read from what the page
  * already holds (state/waits.ts, the open questions), so it follows the event stream like the Progress panel does.
  */
-const emit = defineEmits<{ question: [id: string]; workshop: []; report: [mission: string]; progress: [] }>()
+const emit = defineEmits<{ question: [id: string]; workshop: []; report: [mission: string]; progress: []; profile: [agent: string] }>()
 
 const KEY = 'floor42.todo.collapsed'
 const stored = (): boolean => {
@@ -49,10 +52,36 @@ function follow() {
   root.setProperty('--log-bottom', `${Math.round(log.getBoundingClientRect().bottom) + 8}px`)
 }
 
+/**
+ * Acts that wait for a second person (four eyes, ADR-0081). Empty with IAM mode off. A read that fails reads as none:
+ * the row only offers the address the second person needs, nothing else depends on it.
+ */
+const assureWaiting = ref<AssuranceWaiting[]>([])
+const copied = ref('')
+async function readWaiting() {
+  try {
+    assureWaiting.value = await request<AssuranceWaiting[]>('GET', '/api/iam/assurance/waiting')
+  } catch {
+    assureWaiting.value = []
+  }
+}
+/** The address is opened in a private window by the second person: copied, never opened here (the director's browser). */
+async function copyAddress(w: AssuranceWaiting) {
+  try {
+    await navigator.clipboard.writeText(`${window.location.origin}${w.path}`)
+    copied.value = w.id
+  } catch {
+    copied.value = ''
+  }
+}
+const until = (w: AssuranceWaiting) => new Date(w.until).toLocaleTimeString()
+
 onMounted(() => {
+  void readWaiting()
   tick = window.setInterval(() => {
     now.value = nowMs()
     seenEvent.value = office.log[0]?.id ?? ''
+    void readWaiting()
   }, 10000)
   follow()
   const log = document.querySelector('.hud > .log')
@@ -102,9 +131,12 @@ watch(
   { immediate: true },
 )
 const rows = computed(() =>
-  merged(base.value, acceptanceRows(base.value).flatMap((r) => uncommittedRow(r, checks[r.mission ?? '']) ?? [])),
+  merged(base.value, [
+    ...acceptanceRows(base.value).flatMap((r) => uncommittedRow(r, checks[r.mission ?? '']) ?? []),
+    ...office.agents.flatMap((a) => trustRow(a) ?? []),
+  ]),
 )
-const count = computed(() => rows.value.length)
+const count = computed(() => rows.value.length + assureWaiting.value.length)
 
 function since(r: TodoRow): string {
   return r.since ? waited(Math.max(0, now.value - Date.parse(r.since))) : ''
@@ -116,6 +148,7 @@ function go(r: TodoRow) {
   else if (g.panel === 'report') emit('report', g.mission)
   else if (g.panel === 'board' || g.panel === 'plan' || g.panel === 'quarantine') openTodoGo(g, () => {})
   else if (g.panel === 'workshop') emit('workshop')
+  else if (g.panel === 'profile') emit('profile', g.agent)
   else emit('progress')
 }
 </script>
@@ -131,6 +164,19 @@ function go(r: TodoRow) {
     </div>
     <template v-if="!collapsed">
       <div v-if="count === 0" class="empty">{{ t('todo.none') }}</div>
+      <section v-if="assureWaiting.length" class="cat" data-category="countersign">
+        <div class="sub">
+          {{ t('assure.title') }}
+          <span class="count">{{ assureWaiting.length }}</span>
+        </div>
+        <div v-for="w in assureWaiting" :key="w.id" class="row" data-testid="countersign-row">
+          <div class="what">
+            <span class="text">{{ t('assure.text', { kind: w.kind, ref: w.ref, who: w.firstSubject, until: until(w) }) }}</span>
+            <span class="facts">{{ copied === w.id ? t('assure.copied') : t('assure.how') }}</span>
+          </div>
+          <button class="action" @click="copyAddress(w)">{{ t('assure.copy') }}</button>
+        </div>
+      </section>
       <section v-for="c in CATEGORIES" :key="c" class="cat" :data-category="c">
         <div class="sub">
           {{ t(`todo.cat.${c}`) }}

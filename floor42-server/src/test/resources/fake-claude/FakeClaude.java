@@ -246,6 +246,11 @@ public class FakeClaude {
         if (prompt != null && !prompt.contains("independent review") && prompt.contains("[fake:env-blocked]")) {
             script = script.resolveSibling("session-env-blocked.txt");
         }
+        // "[fake:outside]": the default session plus one read aimed outside the worktree (denied; it raises a session
+        // risk, which narrows the agent's trust level, so the default session leaves it out).
+        if (prompt != null && !prompt.contains("independent review") && prompt.contains("[fake:outside]")) {
+            script = script.resolveSibling("session-outside.txt");
+        }
         // "[fake:probe]": a developer that reads three files outside its workspace, back to back (session risk).
         if (prompt != null && !prompt.contains("independent review") && prompt.contains("[fake:probe]")) {
             script = script.resolveSibling("session-probe.txt");

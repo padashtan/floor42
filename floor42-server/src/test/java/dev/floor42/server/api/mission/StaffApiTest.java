@@ -75,7 +75,7 @@ class StaffApiTest extends ApiTestBase {
     }
 
     @Test
-    void aNameAlreadyAtWorkIsRefusedWhateverItsCase() {
+    void aNameAlreadyAtWorkIsRefusedWhateverItsCase() throws InterruptedException {
         String first = api().body("{\"name\":\"Margaux\",\"workRole\":\"DEVELOPER\",\"model\":\"claude-haiku-5-5\"}")
                 .post("/api/agents")
                 .then()
@@ -94,12 +94,15 @@ class StaffApiTest extends ApiTestBase {
                 .post("/api/agents/" + first + "/dismiss")
                 .then()
                 .statusCode(200);
-        api().body("{\"name\":\"Margaux\",\"workRole\":\"DEVELOPER\",\"model\":\"claude-haiku-5-5\"}")
+        String second = api().body("{\"name\":\"Margaux\",\"workRole\":\"DEVELOPER\",\"model\":\"claude-haiku-5-5\"}")
                 .post("/api/agents")
                 .then()
                 .statusCode(200)
                 .body("name", equalTo("Margaux"))
-                .body("id", not(equalTo(first)));
+                .body("id", not(equalTo(first)))
+                .extract()
+                .path("id");
+        dismissWhenFree(second);
     }
 
     @Test

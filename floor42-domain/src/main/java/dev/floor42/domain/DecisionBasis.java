@@ -23,6 +23,14 @@ public final class DecisionBasis {
     static final String FLOOR42_TOOLS = "Floor42 tools are always available";
     static final String DEFAULT_DENY = "no rule allows it (default deny)";
     static final String RULE = "rule: ";
+    static final String TRUST_SHADOW = "shadow mode: proposed to the director";
+
+    /**
+     * What the agent reads when shadow mode refuses its call (the hook's deny reason). Fixed: no rule name, no level
+     * history (ADR-0066 point 7: rule texts never reach the agent).
+     */
+    public static final String SHADOW_AGENT_TEXT = "Shadow mode: this call was not run. The director sees it as a "
+            + "proposal. Do not retry it; continue with what you can do, or wait for a directive.";
 
     /** What a rule's basis starts with: a rule's own text after it reads as one ({@link #read}). */
     public static final String RULE_PREFIX = RULE;
@@ -49,6 +57,7 @@ public final class DecisionBasis {
     public static final String CODE_MISSION_NOT_ACTIVE = "missionNotActive";
     public static final String CODE_MISSION_CANCELLED = "missionCancelled";
     public static final String CODE_NOT_ON_TICKET = "notOnTicket";
+    public static final String CODE_TRUST_SHADOW = "trustShadow";
 
     private static final Pattern QUESTION = Pattern.compile("Q-\\d+");
     private static final Pattern ALREADY_SCOPE = Pattern.compile("(Q-\\d+) \\((.+)\\)");
@@ -84,6 +93,11 @@ public final class DecisionBasis {
         return DEFAULT_DENY;
     }
 
+    /** A shadow agent's write, run or network call: denied and shown to the director as a proposal (ADR-0082). */
+    public static String trustShadow() {
+        return TRUST_SHADOW;
+    }
+
     static String ofRule(PermissionRule rule) {
         return RULE + rule;
     }
@@ -106,6 +120,7 @@ public final class DecisionBasis {
         if (text.equals(FLOOR42_TOOLS)) return Optional.of(Phrase.of(CODE_FLOOR42_TOOLS));
         if (text.equals(DEFAULT_DENY)) return Optional.of(Phrase.of(CODE_DEFAULT_DENY));
         if (text.equals(MISSION_CANCELLED)) return Optional.of(Phrase.of(CODE_MISSION_CANCELLED));
+        if (text.equals(TRUST_SHADOW)) return Optional.of(Phrase.of(CODE_TRUST_SHADOW));
         if (text.startsWith(ANSWERED) && QUESTION.matcher(rest(text, ANSWERED)).matches()) {
             return Optional.of(Phrase.of(CODE_ANSWERED, "question", rest(text, ANSWERED)));
         }

@@ -84,7 +84,7 @@ public class StaffProvisioner {
                 c -> c.staff().all().stream().anyMatch(a -> !a.dismissed() && Staff.roleOf(a) == WorkRole.ANALYST));
         if (analyst || office.query(c -> c.staff().find(ANALYST).isPresent())) return;
         office.execute(c -> c.staff()
-                .hire(
+                .hireSeeded(
                         office.context(Actor.director(), Origin.REAL),
                         ANALYST,
                         "Linnea",
@@ -97,7 +97,7 @@ public class StaffProvisioner {
     public void hireIfMissing(AgentId id, String name, String role, String model, String effort) {
         if (office.query(c -> c.staff().find(id).isPresent())) return;
         office.execute(c -> c.staff()
-                .hire(
+                .hireSeeded(
                         office.context(Actor.director(), Origin.REAL),
                         id,
                         name,

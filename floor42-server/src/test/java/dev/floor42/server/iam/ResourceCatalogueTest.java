@@ -29,6 +29,7 @@ class ResourceCatalogueTest {
 
     ResourceCatalogue catalogue;
     Delegations delegations;
+    TestGrants grants;
 
     @BeforeEach
     void start() {
@@ -36,7 +37,9 @@ class ResourceCatalogueTest {
         var vault = new SecretVault(dir);
         delegations = new Delegations(
                 dir.resolve("iam").resolve("delegations.json"), vault, null, () -> true, Optional::empty, null, json);
-        catalogue = new ResourceCatalogue(dir, json, delegations);
+        grants = new TestGrants();
+        delegations.listen(grants.tuples);
+        catalogue = new ResourceCatalogue(dir, json, delegations, grants.tuples);
     }
 
     private static Resource res(String name, String base, boolean local) {
@@ -216,11 +219,12 @@ class ResourceCatalogueTest {
         catalogue.remove("demo-api");
         assertThat(catalogue.find("demo-api")).isEmpty();
         assertThat(catalogue.find("wiki")).isPresent();
-        assertThat(catalogue.grantsOf()).containsEntry("ada", List.of("wiki")).containsEntry("bob", List.of());
+        assertThat(catalogue.grantsOf()).containsEntry("ada", List.of("wiki")).doesNotContainKey("bob");
     }
 
     @Test
     void grantingReplacesTheAgentsListAndLeavesOthers() {
+        for (String n : List.of("a", "b", "c", "z")) catalogue.put(res(n, "https://" + n + ".example", false));
         catalogue.grant(ADA, List.of("a", "b"));
         catalogue.grant(new AgentId("bob"), List.of("c"));
         catalogue.grant(ADA, List.of("z"));
@@ -232,7 +236,6 @@ class ResourceCatalogueTest {
         catalogue.put(valid());
         catalogue.grant(ADA, List.of("demo-api"));
         Files.writeString(dir.resolve("iam").resolve("resources.json"), "{broken");
-        Files.writeString(dir.resolve("iam").resolve("grants.json"), "[1,");
         assertThat(catalogue.all()).isEmpty();
         assertThat(catalogue.find("demo-api")).isEmpty();
         assertThat(catalogue.grantsOf()).isEmpty();

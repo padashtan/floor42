@@ -9,6 +9,7 @@ import { dateLocale, lang, t } from '../i18n'
 import { setPanel } from '../state/openPanels'
 import { missionsOf, refusalText } from '../ui/identities'
 import { clientState } from '../ui/identityLights'
+import IdentityGrants from './IdentityGrants.vue'
 import TokenCard from './TokenCard.vue'
 
 const props = defineProps<{ agent: AgentIdentityView; tokens: TokenView[]; refusals: RefusalView[]; busy?: boolean }>()
@@ -57,6 +58,8 @@ watch(() => props.agent.agent, loadExchanges)
         <button class="small" :disabled="busy" @click="emit('act', 'rotate')">{{ t('idn.rotate') }}</button>
       </span>
     </div>
+
+    <IdentityGrants :agent="agent.agent" />
 
     <div class="sub">{{ t('idn.d.current') }}</div>
     <TokenCard v-if="current" :token="current" />

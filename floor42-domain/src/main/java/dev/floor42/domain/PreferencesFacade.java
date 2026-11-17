@@ -1,5 +1,6 @@
 package dev.floor42.domain;
 
+import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
 import dev.floor42.domain.event.EventEnvelope;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +49,15 @@ public final class PreferencesFacade {
         return preferences.changeSetting(ctx, setting, value);
     }
 
+    /**
+     * The same, carried by signatures: turning four eyes off, in an assured context, needs two (a first by the director,
+     * a second by a reviewer, ADR-0081) and is refused without them.
+     */
+    public List<EventEnvelope> changeSetting(
+            CommandContext ctx, Setting setting, String value, List<ApprovalSigned> signed) {
+        return preferences.changeSetting(ctx, setting, value, signed);
+    }
+
     /** Whether the director allows a REAL mission's shell to run without the sandbox (ADR-0063). */
     public boolean unsafeMode() {
         return preferences.unsafeMode();
@@ -56,6 +66,37 @@ public final class PreferencesFacade {
     /** The director switches unsafe mode on (a reason is required) or off; the state already in force records nothing. */
     public List<EventEnvelope> setUnsafeMode(CommandContext ctx, boolean on, String reason) {
         return preferences.setUnsafeMode(ctx, on, reason);
+    }
+
+    /** The broker authorization tuples the journal holds now (the rows of {@code AuthorizationChanged}, replayed). */
+    public java.util.Set<AuthorizationTuple> authorization() {
+        return preferences.authorization();
+    }
+
+    /**
+     * One row for a change of the broker authorization (grants, delegations, MCP ticks): the tuples written and
+     * deleted in OpenFGA, ids only.
+     */
+    public List<EventEnvelope> changeAuthorization(
+            CommandContext ctx,
+            List<AuthorizationTuple> writes,
+            List<AuthorizationTuple> deletes,
+            String modelId,
+            String reason,
+            boolean imported,
+            boolean reconciled) {
+        return preferences.changeAuthorization(ctx, writes, deletes, modelId, reason, imported, reconciled);
+    }
+
+    /** Whether the journal holds the one-shot import of the 1.2.0 grants and ticks ({@code imported: true}). */
+    public boolean authorizationImported() {
+        return preferences.authorizationImported();
+    }
+
+    /** The signatures of an act without a command of its own (a grant, a tick, the identity settings), journaled. */
+    public List<EventEnvelope> recordSignatures(
+            CommandContext ctx, AssurancePolicy.Act act, List<ApprovalSigned> signed) {
+        return preferences.recordSignatures(ctx, act, signed);
     }
 
     /** The director signed in with the console link while IAM mode is on (ADR-0064): journaled, by session id only. */

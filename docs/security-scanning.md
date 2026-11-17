@@ -368,3 +368,4 @@ session, which the fake Claude Code does not give. The module tests cover it wit
   journeys and Trivy.
 - **The release's `security` job also runs Semgrep and the `fs` scan.** They are fast and their artifacts travel with
   the release run; only Trivy can fail it.
+- CodeQL `java/path-injection` alerts 142 to 144 (`AgentSigning.retire`) were dismissed as false positives: the path segment is an `AgentId` validated by `Identifier.check` (`[A-Za-z0-9._:-]{1,128}`, not only dots).

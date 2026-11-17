@@ -2,6 +2,9 @@ import { CATALOGS, expect, shot, test, useLanguage } from './fixtures'
 
 const t = CATALOGS.en
 
+// The quarantine narrows chris to shadow mode for good: a daemon of its own keeps the other journeys' agents standard.
+test.use({ isolatedDaemon: true })
+
 /**
  * Journey: session risk (ADR-0066). The fake Claude Code reads three files outside its workspace ([fake:probe]); the
  * hook refuses each one, the risk reaches the strict level, and the To do panel shows the row with its reason. The

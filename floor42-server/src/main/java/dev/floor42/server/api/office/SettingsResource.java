@@ -1,11 +1,17 @@
 package dev.floor42.server.api.office;
 
 import dev.floor42.domain.Actor;
+import dev.floor42.domain.AssurancePolicy;
 import dev.floor42.domain.Origin;
 import dev.floor42.domain.Setting;
+import dev.floor42.server.api.AssuranceResponses;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.app.core.OfficeSettings;
 import dev.floor42.server.app.mission.LiveMissions;
+import dev.floor42.server.iam.AssuredActs;
+import dev.floor42.server.iam.IamSettings;
+import dev.floor42.server.security.LocalAccessGuard;
+import io.quarkus.vertx.http.runtime.CurrentVertxRequest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -50,6 +56,15 @@ public class SettingsResource {
     @Inject
     dev.floor42.server.runtime.Sandbox sandbox;
 
+    @Inject
+    IamSettings iam;
+
+    @Inject
+    AssuredActs acts;
+
+    @Inject
+    CurrentVertxRequest current;
+
     @GET
     public List<SettingView> list() {
         return Arrays.stream(Setting.values())
@@ -71,15 +86,38 @@ public class SettingsResource {
         } catch (IllegalArgumentException e) {
             throw dev.floor42.server.app.core.RefusedException.invalid("INVALID_ARGUMENT", "No setting " + key, e);
         }
-        office.execute(c -> c.preferences()
-                .changeSetting(
-                        office.context(Actor.director(), Origin.REAL),
-                        setting,
-                        request == null ? null : request.value()));
+        String value = request == null ? null : request.value();
+        if (turnsFourEyesOff(setting, value)) throw stepUp(value);
+        office.execute(
+                c -> c.preferences().changeSetting(office.context(Actor.director(), Origin.REAL), setting, value));
         // More sessions at once may let waiting work start now.
         if (setting == Setting.PARALLEL_SESSIONS) live.staffChanged();
         // Turning the sandbox on measures it again: the director may just have installed or repaired WSL.
         if (setting == Setting.SHELL_SANDBOX && settings.sandboxEnabled()) sandbox.recheck();
         return list();
+    }
+
+    /** In IAM mode, turning four eyes off is an act of two signatures (ADR-0081); every other change keeps the click. */
+    private boolean turnsFourEyesOff(Setting setting, String value) {
+        return iam.enabled()
+                && setting == Setting.FOUR_EYES
+                && "on".equals(settings.valueOf(Setting.FOUR_EYES))
+                && !"on".equalsIgnoreCase(value == null ? "" : value.strip());
+    }
+
+    /** A token cannot do it (403 HUMAN_ONLY); a browser follows the step-up, which ends with the second person. */
+    private RuntimeException stepUp(String value) {
+        if (LocalAccessGuard.viaOf(current.getCurrent()) != LocalAccessGuard.Via.COOKIE)
+            return AssuranceResponses.humanOnly();
+        var session = LocalAccessGuard.sessionOf(current.getCurrent());
+        if (!acts.mayAssure(session)) return AssuranceResponses.needsSignIn();
+        String path = acts.record(
+                new AssurancePolicy.Act(AssurancePolicy.ActKind.SETTING, Setting.FOUR_EYES.name()),
+                true,
+                session.get(),
+                signed -> office.execute(c -> c.preferences()
+                        .changeSetting(
+                                office.context(Actor.director(), Origin.REAL), Setting.FOUR_EYES, value, signed)));
+        return AssuranceResponses.followStepUp(path);
     }
 }

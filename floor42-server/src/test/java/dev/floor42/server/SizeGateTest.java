@@ -45,7 +45,6 @@ class SizeGateTest {
             Map.entry("AgentProfileView.reviews", 36),
             Map.entry("EventCodec.decode", 36),
             Map.entry("Retrospectives.step", 35),
-            Map.entry("AuthResource.issue", 34),
             Map.entry("Checks.run", 34),
             Map.entry("ResumeResource.resumeSession", 34),
             Map.entry("SandboxResource.view", 34),

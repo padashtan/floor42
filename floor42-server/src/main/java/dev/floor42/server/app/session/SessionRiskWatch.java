@@ -3,6 +3,7 @@ package dev.floor42.server.app.session;
 import dev.floor42.domain.ActionId;
 import dev.floor42.domain.Actor;
 import dev.floor42.domain.AgentId;
+import dev.floor42.domain.DecisionBasis;
 import dev.floor42.domain.DenialReason;
 import dev.floor42.domain.Origin;
 import dev.floor42.domain.RiskRaise;
@@ -126,10 +127,7 @@ public class SessionRiskWatch {
                 if (w != null) byAgent.remove(w.agent(), s.session());
             }
             case ActionRequested r -> requested(r, at, raised);
-            case ActionDenied d -> {
-                Flight f = flights.remove(d.action());
-                if (f != null) signal(f.session(), denial(d.reason(), f.tool()), at, d.action(), raised);
-            }
+            case ActionDenied d -> denied(d, at, raised);
             case ActionFailed x -> {
                 Flight f = flights.remove(x.action());
                 if (f != null && broker(f.tool())) brokerFailure(f, x, at, raised);
@@ -141,6 +139,14 @@ public class SessionRiskWatch {
                 }
             }
             default -> {}
+        }
+    }
+
+    private void denied(ActionDenied d, Instant at, List<Pending> raised) {
+        Flight f = flights.remove(d.action());
+        // A shadow proposal is not the agent's probing (ADR-0082): it raises nothing.
+        if (f != null && !DecisionBasis.trustShadow().equals(d.detail())) {
+            signal(f.session(), denial(d.reason(), f.tool()), at, d.action(), raised);
         }
     }
 

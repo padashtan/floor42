@@ -21,6 +21,7 @@ AgentUnmarkedCore
 ApiTokenIssued
 ApiTokenRevoked
 ApprovalForgotten
+ApprovalSigned
 BranchesMerged
 BudgetSet
 ChecksConfigured
@@ -127,3 +128,5 @@ UnsafeModeChanged
 BreakGlassSignIn
 SessionRiskRaised
 MissionQuarantined
+AuthorizationChanged
+AgentTrustChanged

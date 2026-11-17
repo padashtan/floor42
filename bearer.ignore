@@ -664,5 +664,29 @@
     "comment": "Compares hashes of journal rows kept in the local database, not a secret presented by a remote caller",
     "false_positive": true,
     "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "602856dd9a82a32ab8347a395c667256_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. AssuredActs.record reads the sub of the director's access token Floor42 got itself from Keycloak in the back-channel code exchange; the director role and sub are checked by IdTokenCheck.director at sign-in, refresh and the first seat",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "e67557dc8e252a2bd1bfcacb8113e0cd_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. BoundTokenIssuance.record reads the sub of the director's access token Floor42 got itself from Keycloak in the back-channel code exchange; the issued token is bound after IdTokenCheck verifies the step-up tokens",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "f25c7626c6646f35edb578d338e0d90a_1": {
+    "author": "q8c",
+    "comment": "This is the verifying path: IdTokenCheck.signed checks RS256, no crit, a known kid and the signature right after the decode, before any claim is read",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "55f777d76201c61298ad284b6748a7e9_0": {
+    "author": "q8c",
+    "comment": "Jwts.parse only decodes. KeycloakSignIn.isDirector reads the sub of the ID token already verified by IdTokenCheck (signature, iss, aud, azp, nonce, times) a few lines above, then IdTokenCheck.director verifies the access token and its realm role",
+    "false_positive": true,
+    "ignored_at": "2026-11-16T00:00:00Z"
   }
 }

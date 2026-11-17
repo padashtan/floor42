@@ -16,6 +16,9 @@ export const tutorialEn = {
   'sessions.days': 'Days (1 to 30)',
   'sessions.label': 'Name (optional)',
   'sessions.issueButton': 'Issue the token',
+  'sessions.issueBound': 'Issue a token bound to my Keycloak sign-in',
+  'sessions.issueBoundHint':
+    'IAM mode: you type your Keycloak password again, and the token then works only while that Keycloak session lives. Unlike the others it may approve tickets, nudge, direct and answer agents; it never approves a plan. Ending the session in Keycloak, or revoking the token here, stops it.',
   'sessions.shownOnce': 'Copy it now: it is shown this once and never again.',
   'sessions.copy': 'Copy',
   'sessions.copied': 'Copied',

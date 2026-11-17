@@ -61,6 +61,9 @@ public class KeycloakSignIn {
     @Inject
     StepUpApprovals stepUp;
 
+    @Inject
+    BoundTokenIssuance boundTokens;
+
     Clock clock = Clock.systemUTC();
 
     private final Map<String, Pending> pending = new LinkedHashMap<>();
@@ -160,7 +163,7 @@ public class KeycloakSignIn {
             iamOff(rc);
             return;
         }
-        if (stepUp.callback(rc)) return;
+        if (stepUp.callback(rc) || boundTokens.callback(rc)) return;
         Pending p = take(rc.request().getParam("state"));
         if (p == null) {
             refuse(rc, "SIGN_IN_STATE_UNKNOWN", "This sign-in is unknown, expired or already used: start again");
@@ -173,7 +176,10 @@ public class KeycloakSignIn {
         String code = rc.request().getParam("code");
         Tokens tokens = code == null || rc.request().getParam("error") != null ? null : redeem(code, p);
         if (tokens == null) refuse(rc, "SIGN_IN_FAILED", "Keycloak did not sign you in");
-        else open(rc, tokens);
+        else if (!isDirector(tokens)) {
+            endKeycloakSession(tokens);
+            refuse(rc, "DESK_DIRECTOR_ONLY", "Only the director may open the desk");
+        } else open(rc, tokens);
     }
 
     private void open(RoutingContext rc, Tokens tokens) {
@@ -196,6 +202,24 @@ public class KeycloakSignIn {
         } catch (IdpRefusedException | IdpUnavailableException e) {
             // Handled: reported as SIGN_IN_FAILED, with nothing of what Keycloak said.
             return null;
+        }
+    }
+
+    /** The desk is the director's: the verified access token of this exchange must carry the director realm role. */
+    private boolean isDirector(Tokens t) {
+        String sub = Jwts.parse(t.idToken()).claims().path("sub").asText("");
+        return new IdTokenCheck(settings.issuer(), CLIENT, jwks, clock).director(t.accessToken(), sub);
+    }
+
+    /** A refused sign-in leaves no Keycloak session behind (best effort). */
+    private void endKeycloakSession(Tokens t) {
+        if (t.refreshToken() == null) return;
+        try {
+            keycloak.logout(t.refreshToken());
+        } catch (RuntimeException e) {
+            // Handled: logged; the refusal stands and the session expires by itself in Keycloak.
+            LOG.warn("A refused sign-in's Keycloak session could not be ended: "
+                    + e.getClass().getSimpleName());
         }
     }
 

@@ -1,0 +1,111 @@
+# Model tests for iam/openfga/model.fga: `fga model test --tests model.fga.yaml` (Linux CI job, openfga/cli pinned by digest).
+# In production mission#runner and role#member are contextual tuples sent on each Check; here they are plain tuples
+# of the test that stands for the one request.
+name: Floor42 authorization model
+model_file: ./model.fga
+
+tests:
+  - name: granted-and-delegated-to-the-sessions-mission
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:jira"}
+      - {user: "mission:m1", relation: delegated, object: "resource:jira"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+    check:
+      - user: "agent:ada"
+        object: "resource:jira"
+        assertions: {can_call: true}
+
+  - name: granted-delegated-to-another-mission-only
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:jira"}
+      - {user: "mission:m1", relation: delegated, object: "resource:jira"}
+      - {user: "agent:ada", relation: runner, object: "mission:m2"}
+    check:
+      - user: "agent:ada"
+        object: "resource:jira"
+        assertions: {can_call: false}
+
+  - name: delegated-not-granted
+    tuples:
+      - {user: "mission:m1", relation: delegated, object: "resource:jira"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+    check:
+      - user: "agent:ada"
+        object: "resource:jira"
+        assertions: {can_call: false}
+
+  # Documents why Floor42 never stores runner: an agent staffed on m1 and m2 would pass from m2 on what only m1 delegated.
+  - name: why-runner-is-never-stored
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:jira"}
+      - {user: "mission:m1", relation: delegated, object: "resource:jira"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+      - {user: "agent:ada", relation: runner, object: "mission:m2"}
+    check:
+      - user: "agent:ada"
+        object: "resource:jira"
+        assertions: {can_call: true}
+
+  - name: mcp-tool-enabled-and-server-callable
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:docs"}
+      - {user: "mission:m1", relation: delegated, object: "resource:docs"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+      - {user: "resource:docs", relation: server, object: "mcp_tool:docs/search/aaaa"}
+      - {user: "agent:*", relation: enabled, object: "mcp_tool:docs/search/aaaa"}
+    check:
+      - user: "agent:ada"
+        object: "mcp_tool:docs/search/aaaa"
+        assertions: {can_call: true}
+
+  - name: mcp-tool-enabled-server-not-delegated
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:docs"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+      - {user: "resource:docs", relation: server, object: "mcp_tool:docs/search/aaaa"}
+      - {user: "agent:*", relation: enabled, object: "mcp_tool:docs/search/aaaa"}
+    check:
+      - user: "agent:ada"
+        object: "mcp_tool:docs/search/aaaa"
+        assertions: {can_call: false}
+
+  - name: mcp-tool-with-another-hash
+    tuples:
+      - {user: "agent:ada", relation: granted, object: "resource:docs"}
+      - {user: "mission:m1", relation: delegated, object: "resource:docs"}
+      - {user: "agent:ada", relation: runner, object: "mission:m1"}
+      - {user: "resource:docs", relation: server, object: "mcp_tool:docs/search/aaaa"}
+      - {user: "agent:*", relation: enabled, object: "mcp_tool:docs/search/aaaa"}
+    check:
+      - user: "agent:ada"
+        object: "mcp_tool:docs/search/bbbb"
+        assertions: {can_call: false}
+
+  - name: reviewer-role-member-is-a-countersigner
+    tuples:
+      - {user: "role:floor42-reviewer#member", relation: reviewer, object: "office:floor42"}
+      - {user: "user:rev", relation: member, object: "role:floor42-reviewer"}
+      - {user: "user:dir", relation: director, object: "office:floor42"}
+    check:
+      - user: "user:rev"
+        object: "office:floor42"
+        assertions: {countersigner: true}
+
+  - name: the-director-with-the-reviewer-role-is-not
+    tuples:
+      - {user: "role:floor42-reviewer#member", relation: reviewer, object: "office:floor42"}
+      - {user: "user:dir", relation: member, object: "role:floor42-reviewer"}
+      - {user: "user:dir", relation: director, object: "office:floor42"}
+    check:
+      - user: "user:dir"
+        object: "office:floor42"
+        assertions: {countersigner: false}
+
+  - name: a-user-with-no-role-is-not
+    tuples:
+      - {user: "role:floor42-reviewer#member", relation: reviewer, object: "office:floor42"}
+      - {user: "user:dir", relation: director, object: "office:floor42"}
+    check:
+      - user: "user:nobody"
+        object: "office:floor42"
+        assertions: {countersigner: false}

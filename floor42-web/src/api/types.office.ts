@@ -177,7 +177,21 @@ export interface AgentView {
   stays: boolean
   /** Starred by the director as a core member: "dismiss everyone except the core members" keeps it. */
   core: boolean
+  /** The cap on the agent's rights (ADR-0082): SHADOW, PROBATION or STANDARD. */
+  trust: TrustLevel
+  /** When the level last changed; null while it never did. */
+  trustSince: string | null
+  /** INCIDENT, RISK, QUARANTINE, DIRECTOR or HIRE; null while the level never changed. */
+  trustCause: string | null
+  /** Patches the director accepted since the level last changed. */
+  acceptedPatches: number
+  /** The count that proposes a raise. */
+  raiseAfter: number
+  /** The agent earned a proposal to raise its level one step. */
+  raiseProposed: boolean
 }
+
+export type TrustLevel = 'SHADOW' | 'PROBATION' | 'STANDARD'
 
 /** One agent in the preview of "dismiss everyone except the core members". */
 export interface CoreDismissalEntry {

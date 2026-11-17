@@ -90,6 +90,12 @@ public final class FakeKeycloak implements AutoCloseable {
     private volatile int revokeStatus = 200;
     private volatile int logoutStatus = 200;
     private volatile String subjectOverride;
+    /** The acr the next id_tokens carry: the strong level unless a test says the factor was missing. */
+    private volatile String idTokenAcr = "floor42-strong";
+    /** The realm roles the next access tokens carry (null: no realm_access claim). */
+    private volatile List<String> accessRoles = List.of("floor42-director");
+    /** Client roles the next access tokens carry under resource_access (client id, then roles); null: none. */
+    private volatile Map.Entry<String, List<String>> clientRoles;
     /** The browser's single sign-on session: flows inside it share one offline session (measured on Keycloak 26.8.1). */
     private final String ssoFamily = UUID.randomUUID().toString();
 
@@ -147,6 +153,21 @@ public final class FakeKeycloak implements AutoCloseable {
         subjectOverride = subject;
     }
 
+    /** The acr of the next id_tokens (a user without a second factor gets a lower one, or none: see omitIdTokenClaim). */
+    public void idTokenAcr(String value) {
+        idTokenAcr = value;
+    }
+
+    /** The client roles of the next access tokens, as Keycloak puts them in resource_access (none: no roles). */
+    public void clientRoles(String client, String... roles) {
+        clientRoles = roles.length == 0 ? null : Map.entry(client, List.of(roles));
+    }
+
+    /** The realm roles of the next access tokens, as Keycloak puts them in realm_access.roles. */
+    public void accessRoles(String... roles) {
+        accessRoles = List.of(roles);
+    }
+
     /** The next ID tokens carry no claim of this name. */
     public void omitIdTokenClaim(String name) {
         omittedClaim = name;
@@ -166,6 +187,8 @@ public final class FakeKeycloak implements AutoCloseable {
                 .put("azp", clientId)
                 .put("nonce", nonce)
                 .put("auth_time", authTime.getEpochSecond())
+                .put("acr", idTokenAcr)
+                .put("jti", UUID.randomUUID().toString())
                 .put("iat", now().getEpochSecond())
                 .put("exp", now().plus(Duration.ofHours(1)).getEpochSecond());
         if (omittedClaim != null) body.remove(omittedClaim);
@@ -328,6 +351,16 @@ public final class FakeKeycloak implements AutoCloseable {
         }
         if (act != null) body.set("act", act);
         if (ctx != null) body.set("floor42", ctx);
+        if (accessRoles != null) {
+            ArrayNode roles = body.putObject("realm_access").putArray("roles");
+            accessRoles.forEach(roles::add);
+        }
+        if (clientRoles != null) {
+            ArrayNode roles = body.putObject("resource_access")
+                    .putObject(clientRoles.getKey())
+                    .putArray("roles");
+            clientRoles.getValue().forEach(roles::add);
+        }
         return Jwts.sign(header, body, keys.get(currentKid).getPrivate());
     }
 

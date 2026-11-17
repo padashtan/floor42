@@ -1,5 +1,6 @@
 package dev.floor42.server.security;
 
+import dev.floor42.server.iam.ScriptTokenBindings.Liveness;
 import io.vertx.core.http.Cookie;
 import io.vertx.core.http.CookieSameSite;
 import io.vertx.core.http.HttpHeaders;
@@ -74,6 +75,8 @@ public class LocalAccessGuard {
     /** Where the guard leaves the caller's session for the routes that act on it ({@link #sessionOf}). */
     private static final String SESSION_KEY = "floor42.session";
 
+    private static final String BOUND_KEY = "floor42.bound";
+
     @Inject
     SessionToken token;
 
@@ -88,6 +91,9 @@ public class LocalAccessGuard {
 
     @Inject
     dev.floor42.server.iam.IamSettings iam;
+
+    @Inject
+    dev.floor42.server.iam.ScriptTokenBindings bindings;
 
     /** Quarkus's mapper: the error body is written by Jackson, like every other one. */
     @Inject
@@ -148,13 +154,30 @@ public class LocalAccessGuard {
             return;
         }
         Caller caller = caller(rc);
-        d = caller == null ? unknown(rc) : refusal(rc, caller, origin, path, socket);
+        Liveness bound = caller == null || !scriptInIam(caller)
+                ? Liveness.UNBOUND
+                : bindings.peek(caller.session().id());
+        if (bound == Liveness.STALE)
+            ScriptTokensInIam.ask(
+                    rc, bindings, caller.session().id(), l -> proceed(rc, caller, origin, path, socket, l));
+        else proceed(rc, caller, origin, path, socket, bound);
+    }
+
+    private boolean scriptInIam(Caller caller) {
+        return caller.session() != null && caller.session().kind() == SessionRegistry.Kind.SCRIPT && iam.enabled();
+    }
+
+    private void proceed(RoutingContext rc, Caller caller, String origin, String path, boolean socket, Liveness bound) {
+        Denial d = caller == null ? unknown(rc) : refusal(rc, caller, origin, path, socket, bound);
         if (d != null) {
             deny(rc, d.status(), d.code(), d.message());
             return;
         }
-        rc.put(SCOPE_KEY, caller.scope());
+        boolean live = bound == Liveness.LIVE;
+        SessionRegistry.Scope scope = ScriptTokensInIam.seenByDesk(caller.scope(), live);
+        rc.put(SCOPE_KEY, scope);
         rc.put(VIA_KEY, caller.via());
+        rc.put(BOUND_KEY, live);
         if (caller.session() != null) rc.put(SESSION_KEY, caller.session());
         rc.next();
     }
@@ -196,7 +219,8 @@ public class LocalAccessGuard {
     }
 
     /** The director's own request: a browser's change names its Origin and the header; a token keeps to its scope. */
-    private Denial refusal(RoutingContext rc, Caller caller, String origin, String path, boolean socket) {
+    private Denial refusal(
+            RoutingContext rc, Caller caller, String origin, String path, boolean socket, Liveness bound) {
         boolean changes = !READS.contains(rc.request().method());
         if (caller.via() == Via.COOKIE) {
             if ((changes || socket) && origin == null) {
@@ -206,11 +230,9 @@ public class LocalAccessGuard {
                 return new Denial(403, "FORBIDDEN", "Missing " + REQUEST_HEADER + ": 1 (sent by Floor42's own page)");
             }
         }
-        if (caller.session() != null
-                && caller.session().kind() == SessionRegistry.Kind.SCRIPT
-                && iam.enabled()
-                && !ScriptTokensInIam.mayCall(rc.request().method(), path)) {
-            return new Denial(403, ScriptTokensInIam.REFUSED, ScriptTokensInIam.MESSAGE);
+        if (scriptInIam(caller)) {
+            var d = ScriptTokensInIam.refusal(rc.request().method(), path, bound);
+            if (d != null) return new Denial(d.status(), d.code(), d.message());
         }
         // The director's MCP endpoint takes a POST of any scope: it checks the credential and the scope per tool
         // itself.
@@ -220,6 +242,11 @@ public class LocalAccessGuard {
                     403, "SCOPE", "This token's scope (" + caller.scope().wire() + ") does not allow this request");
         }
         return null;
+    }
+
+    /** Whether the guard let this request in as a bound script token whose Keycloak session answered ({@link #boundOf}). */
+    public static boolean boundOf(RoutingContext rc) {
+        return rc != null && Boolean.TRUE.equals(rc.get(BOUND_KEY));
     }
 
     /** How the director's credential came on this request: the browser's cookie, or a token. Unknown reads as a token. */

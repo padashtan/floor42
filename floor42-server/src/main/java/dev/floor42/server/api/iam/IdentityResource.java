@@ -3,6 +3,7 @@ package dev.floor42.server.api.iam;
 import static dev.floor42.server.api.DirectorRequests.parse;
 
 import dev.floor42.domain.AgentId;
+import dev.floor42.domain.AssurancePolicy;
 import dev.floor42.domain.MissionId;
 import dev.floor42.server.app.core.RefusedException;
 import dev.floor42.server.app.workspace.signing.AgentSigning;
@@ -100,6 +101,9 @@ public class IdentityResource {
     /** The revoked agent's signing key is retired with its access (ADR-0077). */
     @Inject
     AgentSigning signing;
+
+    @Inject
+    IamActGuard guard;
 
     private final SecretVault vault;
     private final Delegations delegations;
@@ -231,12 +235,17 @@ public class IdentityResource {
         if (!validIssuer(issuer))
             throw RefusedException.invalid(
                     "INVALID_ISSUER", "issuer must be an http(s) address, e.g. " + IamSettings.DEFAULT_ISSUER);
-        if (r.daemonSecret() != null && !r.daemonSecret().isBlank())
-            vault.put(DAEMON_ENTRY, r.daemonSecret().strip().getBytes(StandardCharsets.UTF_8));
-        if (r.apiSecret() != null && !r.apiSecret().isBlank())
-            vault.put(API_ENTRY, r.apiSecret().strip().getBytes(StandardCharsets.UTF_8));
-        settings.save(new Settings(r.enabled(), issuer, r.maxTokenHours()));
-        return new IamSettingsAnswer(settings.restartNeeded());
+        Settings saved = settings.saved();
+        // In IAM mode, turning it off or pointing it at another issuer is an assured act (ADR-0081)
+        boolean changesWho = r.enabled() != saved.enabled() || !issuer.equals(saved.issuer());
+        return guard.run(AssurancePolicy.ActKind.IAM_SETTINGS, "iam", changesWho, () -> {
+            if (r.daemonSecret() != null && !r.daemonSecret().isBlank())
+                vault.put(DAEMON_ENTRY, r.daemonSecret().strip().getBytes(StandardCharsets.UTF_8));
+            if (r.apiSecret() != null && !r.apiSecret().isBlank())
+                vault.put(API_ENTRY, r.apiSecret().strip().getBytes(StandardCharsets.UTF_8));
+            settings.save(new Settings(r.enabled(), issuer, r.maxTokenHours()));
+            return new IamSettingsAnswer(settings.restartNeeded());
+        });
     }
 
     /**

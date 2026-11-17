@@ -149,7 +149,7 @@ final class SessionLog {
         require(!reasons.isEmpty(), Refusal.INVALID_TRANSITION, "a risk raise names its reasons");
         RiskLevel current = s.risk == null ? RiskLevel.NONE : s.risk.level();
         require(level.compareTo(current) > 0, Refusal.INVALID_TRANSITION, "risk only goes up: " + current);
-        return view.record(ctx, s.mission())
+        Recorder r = view.record(ctx, s.mission())
                 .emit(new SessionRiskRaised(
                         sessionId,
                         s.agent(),
@@ -158,8 +158,18 @@ final class SessionLog {
                         level.name(),
                         reasons.stream().map(RiskReason::name).toList(),
                         windowStart.toString(),
-                        actions.stream().map(ActionId::value).toList()))
-                .events();
+                        actions.stream().map(ActionId::value).toList()));
+        // From ALERT up the agent's trust level narrows by one, in this same command (ADR-0082).
+        if (level.compareTo(RiskLevel.ALERT) >= 0) {
+            Roster.narrow(
+                    view,
+                    r,
+                    ctx,
+                    s.agent(),
+                    TrustCause.RISK,
+                    r.events().getLast().eventId());
+        }
+        return r.events();
     }
 
     /** The director's quarantine of a session at risk, recorded once with what each step did (even if none did). */
@@ -169,7 +179,7 @@ final class SessionLog {
         AgentSession s = existing(sessionId);
         view.missionFor(ctx, s.mission());
         require(s.risk != null, Refusal.INVALID_TRANSITION, "no risk raised on " + sessionId);
-        return view.record(ctx, s.mission())
+        Recorder r = view.record(ctx, s.mission())
                 .emit(new MissionQuarantined(
                         sessionId,
                         s.agent(),
@@ -179,8 +189,15 @@ final class SessionLog {
                         s.risk.reasons().stream().map(RiskReason::name).toList(),
                         revoked,
                         suspended,
-                        stopped))
-                .events();
+                        stopped));
+        Roster.narrow(
+                view,
+                r,
+                ctx,
+                s.agent(),
+                TrustCause.QUARANTINE,
+                r.events().getLast().eventId());
+        return r.events();
     }
 
     /**

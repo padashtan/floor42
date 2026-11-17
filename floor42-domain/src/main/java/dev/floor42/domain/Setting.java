@@ -51,7 +51,13 @@ public enum Setting {
      * The budget offered for a new mission when its plan is approved, in USD as Claude Code estimates it, or "none" to
      * offer no amount. The director still decides each mission's cap; this is only what the approval proposes.
      */
-    MISSION_BUDGET_USD(List.of());
+    MISSION_BUDGET_USD(List.of()),
+    /**
+     * Whether the riskiest acts need a second person (ADR-0081): "on" makes grants, ALLOW rules on shell or network,
+     * pull requests and trust raises wait for a countersignature of someone holding the reviewer role. Off by default
+     * (it needs a second identity). Turning it off is itself an act of two signatures.
+     */
+    FOUR_EYES(List.of("off", "on"));
 
     /** The bounds of a mission's default cap, in USD. */
     public static final double MISSION_BUDGET_MIN = 0.05;

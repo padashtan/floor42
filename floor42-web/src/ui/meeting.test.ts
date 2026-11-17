@@ -26,6 +26,12 @@ const agent = (id: string): AgentView => ({
   atWork: false,
   stays: false,
   core: false,
+  trust: 'STANDARD',
+  trustSince: null,
+  trustCause: null,
+  acceptedPatches: 0,
+  raiseAfter: 5,
+  raiseProposed: false,
 })
 
 const meeting = (id: string, missionId: string, open: boolean, attendees: MeetingView['attendees'] = []): MeetingView => ({

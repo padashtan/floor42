@@ -17,6 +17,7 @@ import { remoteEn } from './remote.en'
 import { missionFormEn } from './missionForm.en'
 import { mcpEn } from './mcp.en'
 import { standupEn } from './standup.en'
+import { trustEn } from './trust.en'
 
 export const en = {
   ...shellEn,
@@ -36,4 +37,5 @@ export const en = {
   ...missionFormEn,
   ...mcpEn,
   ...standupEn,
+  ...trustEn,
 } as const

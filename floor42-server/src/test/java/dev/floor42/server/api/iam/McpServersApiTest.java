@@ -47,6 +47,17 @@ class McpServersApiTest extends BrokerTestBase {
         api().delete(ROUTE + "/" + RESOURCE);
     }
 
+    @Inject
+    dev.floor42.server.iam.McpServers mcpServers;
+
+    /** The tick the screen makes after a step-up: through the service, as the signed act does. */
+    private void tickDirectly(String... names) {
+        java.util.Map<String, String> ticks = new java.util.LinkedHashMap<>();
+        for (String n : names)
+            ticks.put(n, api().get(ROUTE).path("servers[0].tools.find { it.name == '" + n + "' }.sha256"));
+        mcpServers.tick(RESOURCE, ticks);
+    }
+
     /** A tick body for tools of the server, each with the hash the screen shows. */
     private String ticks(String... names) {
         StringBuilder out = new StringBuilder("{\"ticks\":[");
@@ -129,11 +140,21 @@ class McpServersApiTest extends BrokerTestBase {
                 .body("tools[0].sha256", org.hamcrest.Matchers.hasLength(64));
         assertThat(rpc).containsExactly("initialize", "notifications/initialized", "tools/list");
 
+        // A tick widens what agents may call: a token, the director's own included, cannot sign it (ADR-0081)
         api().body(ticks("echo"))
                 .put(ROUTE + "/demo-api/tools")
                 .then()
+                .statusCode(403)
+                .body("code", equalTo("HUMAN_ONLY"));
+        api().get(ROUTE).then().body("servers[0].tools[0].ticked", equalTo(false));
+        tickDirectly("echo");
+        // Taking a tick back widens nothing: it keeps the click
+        api().body("{\"ticks\":[]}")
+                .put(ROUTE + "/demo-api/tools")
+                .then()
                 .statusCode(200)
-                .body("tools[0].ticked", equalTo(true));
+                .body("tools[0].ticked", equalTo(false));
+        tickDirectly("echo");
         api().get(ROUTE)
                 .then()
                 .statusCode(200)
@@ -160,7 +181,7 @@ class McpServersApiTest extends BrokerTestBase {
                 .then()
                 .statusCode(400)
                 .body("code", equalTo("MCP_TOOL_CHANGED"));
-        api().body(ticks("echo")).put(ROUTE + "/demo-api/tools").then().statusCode(200);
+        tickDirectly("echo");
         api().delete(ROUTE + "/demo-api").then().statusCode(200).body("servers", hasSize(0));
         api().delete(ROUTE + "/demo-api").then().statusCode(404).body("code", equalTo("UNKNOWN_MCP_SERVER"));
     }
@@ -205,7 +226,7 @@ class McpServersApiTest extends BrokerTestBase {
                 .body("ok", equalTo(false))
                 .body("refusal", equalTo("MCP_TOOL_NOT_ALLOWED"));
 
-        api().body(ticks("echo")).put(ROUTE + "/demo-api/tools").then().statusCode(200);
+        tickDirectly("echo");
         api().body("{" + who + ",\"tool\":\"echo\",\"arguments\":{\"q\":\"hi\"}}")
                 .post(ROUTE + "/demo-api/try")
                 .then()

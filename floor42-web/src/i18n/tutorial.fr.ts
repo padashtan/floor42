@@ -18,6 +18,9 @@ export const tutorialFr: Record<keyof typeof tutorialEn, string> = {
   'sessions.days': 'Jours (1 à 30)',
   'sessions.label': 'Nom (facultatif)',
   'sessions.issueButton': 'Émettre le jeton',
+  'sessions.issueBound': 'Émettre un jeton lié à ma connexion Keycloak',
+  'sessions.issueBoundHint':
+    'Mode IAM : vous retapez votre mot de passe Keycloak, et le jeton ne marche ensuite que tant que cette session Keycloak vit. Contrairement aux autres, il peut approuver des tickets, relancer, diriger et répondre aux agents ; il n’approuve jamais un plan. Terminer la session dans Keycloak, ou révoquer le jeton ici, l’arrête.',
   'sessions.shownOnce': 'Copiez-le maintenant : il n’est montré que cette fois.',
   'sessions.copy': 'Copier',
   'sessions.copied': 'Copié',

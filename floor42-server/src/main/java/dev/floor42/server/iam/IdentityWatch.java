@@ -45,6 +45,10 @@ public class IdentityWatch {
     private volatile LongSupplier nanos = System::nanoTime;
     private final Set<String> behind = ConcurrentHashMap.newKeySet();
 
+    /** Set by CDI; null in the unit tests that build the watch by hand. */
+    @Inject
+    jakarta.enterprise.inject.Instance<dev.floor42.server.iam.fga.GrantTuples> grantTuples;
+
     /** For tests: the clock the deadline reads. */
     void clock(LongSupplier value) {
         nanos = value;
@@ -101,6 +105,7 @@ public class IdentityWatch {
     /** One pass, as the timer runs it; tests call it directly. */
     public void checkNow() {
         if (!settings.enabled()) return;
+        if (grantTuples != null && grantTuples.isResolvable()) grantTuples.get().retryJournal();
         sessions.stopRevoked();
         Pass pass = introspectAll();
         if (pass != Pass.OK) {

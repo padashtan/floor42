@@ -40,4 +40,18 @@ public sealed interface RosterEvent extends DomainEvent {
 
     /** The director takes the star away: the agent is no longer a core member. */
     record AgentUnmarkedCore(AgentId agent) implements RosterEvent {}
+
+    /**
+     * An agent's trust level changed (ADR-0082). Written by Floor42 when an incident narrows it or a hire starts it, and
+     * by the director when they raise or lower it by hand.
+     *
+     * @param causeEvent nullable; the id of the journal event that caused it (an incident, a risk raise, a quarantine)
+     */
+    record AgentTrustChanged(
+            AgentId agent,
+            dev.floor42.domain.TrustLevel from,
+            dev.floor42.domain.TrustLevel to,
+            dev.floor42.domain.TrustCause cause,
+            String causeEvent)
+            implements RosterEvent {}
 }

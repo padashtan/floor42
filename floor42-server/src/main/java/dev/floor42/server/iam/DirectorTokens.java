@@ -4,6 +4,7 @@ import dev.floor42.server.iam.KeycloakClient.Tokens;
 import dev.floor42.server.security.SessionRegistry;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
@@ -27,6 +28,14 @@ public class DirectorTokens {
 
     @Inject
     KeycloakClient keycloak;
+
+    @Inject
+    IamSettings settings;
+
+    @Inject
+    Jwks jwks;
+
+    Clock clock = Clock.systemUTC();
 
     private final Map<String, Tokens> held = new ConcurrentHashMap<>();
 
@@ -102,6 +111,11 @@ public class DirectorTokens {
                     n.refreshToken() != null ? n.refreshToken() : old.refreshToken(),
                     n.idToken() != null ? n.idToken() : old.idToken(),
                     n.expiresAt());
+            if (!new IdTokenCheck(settings.issuer(), DESK, jwks, clock).director(kept.accessToken())) {
+                // The director role is re-checked at every refresh: a login that lost it ends here.
+                endDesk(id, kept);
+                return Optional.empty();
+            }
             held.put(id, kept);
             return Optional.of(kept);
         } catch (IdpRefusedException e) {
@@ -111,6 +125,18 @@ public class DirectorTokens {
         } catch (IdpUnavailableException e) {
             // Handled: Keycloak is unreachable; the tokens stay for the next try, unusable now (fail closed).
             return Optional.empty();
+        }
+    }
+
+    private void endDesk(String id, Tokens t) {
+        held.remove(id);
+        sessions.revoke(id);
+        try {
+            keycloak.logout(t.refreshToken());
+        } catch (RuntimeException e) {
+            // Handled: logged; the local session is already revoked and Keycloak's expires by itself.
+            LOG.warn("Keycloak did not end the session of a login without the director role: "
+                    + e.getClass().getSimpleName());
         }
     }
 }

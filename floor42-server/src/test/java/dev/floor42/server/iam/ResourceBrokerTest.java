@@ -41,6 +41,8 @@ class ResourceBrokerTest extends BrokerTestBase {
     @Test
     void callsTheResourceWithAShortTokenForExactlyItsAudience() throws Exception {
         Setup s = brokerSetup(List.of(RESOURCE), List.of(RESOURCE));
+        // The fake Keycloak log is shared by every class of the fork: only what this call adds counts.
+        int before = IamOnProfile.fake.requests().size();
         BrokerResult r = broker.call(claims(s), RESOURCE, "get", "/api/users?first=0", null);
 
         assertThat(r.status()).isEqualTo(200);
@@ -48,6 +50,7 @@ class ResourceBrokerTest extends BrokerTestBase {
         assertThat(r.audience()).isEqualTo(AUDIENCE);
         assertThat(hits).containsExactly("GET /api/users?first=0");
         var exchange = IamOnProfile.fake.requests().stream()
+                .skip(before)
                 .filter(f -> AUDIENCE.equals(f.get("audience")))
                 .toList();
         assertThat(exchange).hasSize(1);
@@ -183,7 +186,7 @@ class ResourceBrokerTest extends BrokerTestBase {
     void removingAResourceRemovesItsGrantsAndTheCatalogueTakesOriginsOnly() throws Exception {
         brokerSetup(List.of(RESOURCE), List.of(RESOURCE));
         catalogue.remove(RESOURCE);
-        assertThat(catalogue.grantsOf().get(CHRIS.value())).doesNotContain(RESOURCE);
+        assertThat(catalogue.grantsOf().getOrDefault(CHRIS.value(), List.of())).doesNotContain(RESOURCE);
         var base = catalogue.find(RESOURCE);
         assertThat(base).isEmpty();
         var withPath = new ResourceCatalogue.Resource(
@@ -212,7 +215,8 @@ class ResourceBrokerTest extends BrokerTestBase {
     void aCompletedMissionGetsNoResourceToken() throws Exception {
         Setup s = brokerSetup(List.of(RESOURCE), List.of(RESOURCE));
         delegations.closeToWork(s.mission());
-        refusedWith("IDENTITY_REFUSED", () -> broker.call(claims(s), RESOURCE, "GET", "/api/x", null));
+        // Closing ends the delegation's tuples and nothing heals them for a closed mission: refused at the grant check
+        refusedWith("RESOURCE_NOT_GRANTED", () -> broker.call(claims(s), RESOURCE, "GET", "/api/x", null));
         assertThat(hits).isEmpty();
     }
 }

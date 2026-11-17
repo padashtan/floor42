@@ -4,6 +4,7 @@ import static dev.floor42.server.api.DirectorRequests.parse;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.floor42.domain.AgentId;
+import dev.floor42.domain.AssurancePolicy;
 import dev.floor42.domain.MissionId;
 import dev.floor42.server.api.NoNullItems;
 import dev.floor42.server.app.core.RefusedException;
@@ -15,6 +16,8 @@ import dev.floor42.server.iam.McpServers;
 import dev.floor42.server.iam.McpServers.McpServer;
 import dev.floor42.server.iam.ResourceBroker.Refusal;
 import dev.floor42.server.iam.SessionClaims;
+import dev.floor42.server.iam.fga.FgaException;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -35,8 +38,8 @@ import java.util.UUID;
 /**
  * The remote MCP servers agents may use and the tools the director ticked (ADR-0072), director only like the rest of
  * {@code /api/iam}. Refresh and Try use the chosen agent's own token for the chosen mission, on the director's behalf:
- * the remote server sees what it would see from that agent. Recorded by the API console and the Keycloak exchanges list,
- * not by the journal.
+ * the remote server sees what it would see from that agent. Recorded by the API console and the Keycloak exchanges list;
+ * a tick is journaled as {@code AuthorizationChanged} (ADR-0080).
  */
 @Path("/api/iam/mcp-servers")
 @Produces(MediaType.APPLICATION_JSON)
@@ -66,6 +69,9 @@ public class McpServersResource {
     /** {@code refusal} is the code of the refusal, null when the server answered; {@code body} is the server's own text. */
     public record TryAnswer(boolean ok, String firstLine, String body, boolean truncated, String refusal) {}
 
+    @Inject
+    IamActGuard guard;
+
     private final McpServers servers;
     private final McpClient client;
     private final AgentClients agents;
@@ -91,6 +97,8 @@ public class McpServersResource {
             return servers.put(request.resource(), request.path());
         } catch (IllegalArgumentException e) {
             throw refused(e);
+        } catch (FgaException e) {
+            throw unavailable(e);
         }
     }
 
@@ -103,6 +111,8 @@ public class McpServersResource {
             servers.remove(resource);
         } catch (IllegalArgumentException e) {
             throw refused(e);
+        } catch (FgaException e) {
+            throw unavailable(e);
         }
         return list();
     }
@@ -120,6 +130,8 @@ public class McpServersResource {
         } catch (Refusal e) {
             // Handled: the refusal's code is the answer's code, so the screen can say why
             throw RefusedException.conflict(e.code(), e.getMessage(), e);
+        } catch (FgaException e) {
+            throw unavailable(e);
         }
     }
 
@@ -133,10 +145,27 @@ public class McpServersResource {
             Map<String, String> ticks = new LinkedHashMap<>();
             if (request != null && request.ticks() != null)
                 request.ticks().forEach(t -> ticks.put(t.name(), t.sha256()));
-            return servers.tick(resource, ticks);
+            servers.checkTicks(resource, ticks);
+            // Only a tick that widens needs the proof: unticking a tool keeps the click
+            boolean widens = ticks.entrySet().stream()
+                    .anyMatch(t -> servers.all().stream()
+                            .filter(s -> s.resource().equals(resource))
+                            .flatMap(s -> s.tools().stream())
+                            .noneMatch(k -> k.ticked()
+                                    && k.name().equals(t.getKey())
+                                    && k.sha256().equals(t.getValue())));
+            return guard.run(
+                    AssurancePolicy.ActKind.GRANT, "mcp:" + resource, widens, () -> servers.tick(resource, ticks));
         } catch (IllegalArgumentException e) {
             throw refused(e);
+        } catch (FgaException e) {
+            throw unavailable(e);
         }
+    }
+
+    /** A tick is a tuple in OpenFGA: with OpenFGA out of reach nothing is written. */
+    private static RefusedException unavailable(FgaException e) {
+        return RefusedException.unavailable(e.code(), "OpenFGA could not write the ticks: " + e.getMessage(), e);
     }
 
     /** The refusal's code is the message of the exception; a damaged file is a conflict, the rest a bad request. */

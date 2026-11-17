@@ -3,9 +3,10 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { api } from '../api/client'
 import type { AgentProfileView } from '../api/types'
 import { cssColor, inkOn, uniformOf } from '../scene/identity'
-import { t, tr, dateLocale } from '../i18n'
+import { t, tr, dateLocale, type Key } from '../i18n'
 import { phrased } from '../i18n/events'
-import { markCore, office } from '../state/office'
+import { lowerTrust, markCore, office, raiseTrust } from '../state/office'
+import { levelsBelow, levelsAbove } from '../ui/trust'
 import { contexts } from '../state/context'
 import { contextTip, gauge, tokens } from '../ui/contextGauge'
 import { duration } from '../ui/time'
@@ -73,6 +74,11 @@ const staff = computed(() => office.agents.find((a) => a.id === props.agent) ?? 
 const leaving = computed(() =>
   staff.value ? dismissal(staff.value, currentTicket(props.agent, office.mission?.tickets ?? [])) : null,
 )
+
+// Its trust level (ADR-0082): a fact with its cause. Narrowing is a plain click; widening asks the daemon for the proof.
+const trust = computed(() => staff.value)
+const lowerTo = computed(() => (trust.value ? levelsBelow(trust.value.trust) : []))
+const raiseTo = computed(() => (trust.value ? levelsAbove(trust.value.trust) : []))
 
 function words(m: Record<string, number>) {
   const e = Object.entries(m)
@@ -152,6 +158,31 @@ function words(m: Record<string, number>) {
           </template>
           <div v-else class="hint">{{ t('ctx.none') }}</div>
           <div class="hint">{{ t('ctx.noCategories') }}</div>
+        </div>
+
+        <div v-if="trust" class="trust-block">
+          <div class="sub">{{ t('trust.title') }}</div>
+          <div>
+            <b>{{ t(`trust.level.${trust.trust}`) }}</b>
+            <span class="hint"> · {{ t(`trust.hint.${trust.trust}`) }}</span>
+          </div>
+          <div class="hint">
+            <template v-if="trust.trustSince && trust.trustCause">
+              {{ t('trust.since', { level: t(`trust.level.${trust.trust}`), time: new Date(trust.trustSince).toLocaleString(dateLocale()), cause: t(`trust.cause.${trust.trustCause}` as Key) }) }}
+            </template>
+            <template v-else>{{ t('trust.never') }}</template>
+          </div>
+          <div v-if="trust.trust !== 'STANDARD'" class="hint" :class="{ warn: trust.raiseProposed }">
+            {{ trust.raiseProposed ? t('trust.proposed', { count: trust.acceptedPatches }) : t('trust.progress', { count: trust.acceptedPatches, need: trust.raiseAfter }) }}
+          </div>
+          <div v-if="lowerTo.length || raiseTo.length" class="trust-actions">
+            <button v-for="l in raiseTo" :key="`r${l}`" class="action" :title="t('trust.raiseHint')" @click="raiseTrust(agent, l)">
+              {{ t('trust.raise', { level: t(`trust.level.${l}`) }) }}
+            </button>
+            <button v-for="l in lowerTo" :key="`l${l}`" class="action" @click="lowerTrust(agent, l)">
+              {{ t('trust.lower', { level: t(`trust.level.${l}`) }) }}
+            </button>
+          </div>
         </div>
 
         <AgentIdentity :agent="agent" />
@@ -248,3 +279,13 @@ function words(m: Record<string, number>) {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Raising and lowering are opposite decisions: a wide gap keeps a slip from choosing the other. */
+.trust-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 8px 0 12px;
+}
+</style>

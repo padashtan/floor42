@@ -90,7 +90,9 @@ const tick = (name: string, on: boolean) => {
   const s = selected.value!
   return run(refreshRefusal, async () => {
     try {
-      replace(await mcpApi.tick(s.resource, ticksAfter(s, name, on)))
+      const answer = await mcpApi.tick(s.resource, ticksAfter(s, name, on))
+      // 202 {redirect} (IAM mode): the page leaves for the step-up; the ticks change when Keycloak confirmed it
+      if (!('redirect' in answer)) replace(answer)
     } catch (e) {
       // A stale hash or a moved endpoint: what is on screen is out of date, so read the list again.
       if (refusalOf(e).code in TICK_HINTS) take((await mcpApi.list()).servers)

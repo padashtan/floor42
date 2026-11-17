@@ -44,13 +44,13 @@ jobs:
           unshare -Urm true
 
       - name: Slow tests
-        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp -pl floor42-server -am test -Pslow -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=1" "-Dfloor42.test.heap=2g"
 
       # SandboxNativeEscapeTest is not tagged slow (the push build runs it); the nightly runs it too, on this runner.
       - name: Native sandbox escape tests
         run: >-
           ./mvnw -B -ntp -pl floor42-server -am test -Dtest=SandboxNativeEscapeTest
-          -Dsurefire.failIfNoSpecifiedTests=false -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+          -Dsurefire.failIfNoSpecifiedTests=false -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=1" "-Dfloor42.test.heap=2g"
 
   # Static analysis and coverage reports (docs/quality.md). No SonarQube server in CI: the reports are artifacts.
   quality:
@@ -81,7 +81,7 @@ jobs:
         working-directory: floor42-web
 
       - name: Quality profile
-        run: ./mvnw -B -ntp -Pquality verify -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=2" "-Dfloor42.test.heap=2g"
+        run: ./mvnw -B -ntp -Pquality verify -Dspotless.check.skip=true -Dquarkus.quinoa=false "-Dfloor42.test.forks=1" "-Dfloor42.test.heap=2g"
 
       - name: Mutation tests on the security code
         run: ./mvnw -B -ntp -Pquality -Dspotless.check.skip=true -Dquarkus.quinoa=false test-compile org.pitest:pitest-maven:mutationCoverage

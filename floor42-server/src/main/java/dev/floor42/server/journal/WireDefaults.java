@@ -70,11 +70,21 @@ final class WireDefaults {
         java.util.List<String> scopes();
     }
 
+    /** A script token's subject and binding are written only for a bound token (ADR-0083): absent reads as none. */
+    interface TokenBinding {
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String subject();
+
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String binding();
+    }
+
     static JsonMapper.Builder apply(JsonMapper.Builder builder) {
         builder.addMixIn(PermissionRule.class, RuleTicket.class);
         builder.addMixIn(SessionEvent.AgentSessionStarted.class, SessionCap.class);
         builder.addMixIn(SessionEvent.AgentSessionEnded.class, SessionBound.class);
         builder.addMixIn(SessionEvent.AgentTokenIssued.class, TokenClaims.class);
+        builder.addMixIn(dev.floor42.domain.event.TerminalEvent.ApiTokenIssued.class, TokenBinding.class);
         DomainEvents.types().values().stream()
                 .filter(CommitteeEvent.class::isAssignableFrom)
                 .forEach(type -> builder.addMixIn(type, CommitteeNumber.class));
