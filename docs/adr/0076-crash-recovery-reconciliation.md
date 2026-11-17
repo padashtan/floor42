@@ -1,6 +1,6 @@
 # ADR-0076: Crash recovery and journal reconciliation at startup
 
-Date: 2026-11-16 · Status: Proposed (v1.3) · Extends ADR-0038 and D9 (`MissionRecovery`)
+Date: 2026-11-16 · Status: Accepted (1.2.0) · Extends ADR-0038 and D9 (`MissionRecovery`)
 
 ## Context
 

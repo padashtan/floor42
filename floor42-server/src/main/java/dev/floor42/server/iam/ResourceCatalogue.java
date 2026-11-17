@@ -95,11 +95,12 @@ public class ResourceCatalogue {
         return checked(r);
     }
 
+    /** The grants go first: with OpenFGA out ({@link FgaException}) nothing is removed, so no grant outlives its resource. */
     public synchronized void remove(String name) {
+        tuples.forgetResource(name);
         List<Resource> next = new ArrayList<>(all());
         next.removeIf(x -> x.name().equals(name));
         write(resources, next);
-        tuples.forgetResource(name);
     }
 
     /** The agent holds exactly {@code names}, among the catalogue's resources (one OpenFGA write, one journal row). */

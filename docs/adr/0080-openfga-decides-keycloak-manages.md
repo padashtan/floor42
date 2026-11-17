@@ -1,6 +1,6 @@
 # ADR-0080: OpenFGA decides, Keycloak manages, Floor42 enforces
 
-Date: 2026-11-16 · Status: Proposed · Supersedes the "Later" section of ADR-0065 · Amends ADR-0064 (point 12), ADR-0072 (points 2 and 8)
+Date: 2026-11-16 · Status: Accepted (1.3.0) · Supersedes the "Later" section of ADR-0065 · Amends ADR-0064 (point 12), ADR-0072 (points 2 and 8)
 
 ## Context
 

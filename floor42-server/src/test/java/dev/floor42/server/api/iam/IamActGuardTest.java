@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.floor42.server.iam.BrokerTestBase;
 import dev.floor42.server.iam.IamSessionProfile;
 import dev.floor42.server.iam.ResourceCatalogue.Resource;
+import dev.floor42.server.iam.fga.MockFga;
 import dev.floor42.server.security.LocalAccessGuard;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -30,6 +31,14 @@ class IamActGuardTest extends BrokerTestBase {
 
     @Inject
     dev.floor42.server.security.SessionToken directorToken;
+
+    @Inject
+    MockFga fga;
+
+    @org.junit.jupiter.api.AfterEach
+    void fgaBack() {
+        fga.unavailable(false);
+    }
 
     private RequestSpecification bearer() {
         return given().header("Authorization", "Bearer " + directorToken.value())
@@ -66,6 +75,13 @@ class IamActGuardTest extends BrokerTestBase {
                 .statusCode(403)
                 .body("code", equalTo("STEP_UP_NEEDS_SIGN_IN"));
         assertThat(catalogue.grantsOf()).doesNotContainKey("chris");
+    }
+
+    @Test
+    void aGrantReadsOpenFgaBeforeAnythingAndAnswers503WhenItIsOut() throws Exception {
+        brokerSetup(List.of(RESOURCE), List.of(RESOURCE));
+        fga.unavailable(true);
+        bearer().put("/api/iam/agents/chris/grants").then().statusCode(503).body("code", equalTo("FGA_UNAVAILABLE"));
     }
 
     @Test

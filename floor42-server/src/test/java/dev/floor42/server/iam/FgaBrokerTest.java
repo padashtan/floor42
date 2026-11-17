@@ -1,6 +1,7 @@
 package dev.floor42.server.iam;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import dev.floor42.server.iam.ResourceBroker.BrokerResult;
 import dev.floor42.server.iam.ResourceBroker.Refusal;
 import dev.floor42.server.iam.ResourceCatalogue.Resource;
 import dev.floor42.server.iam.fga.EvaluatingFga.Check;
+import dev.floor42.server.iam.fga.FgaException;
 import dev.floor42.server.iam.fga.FgaTuple;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -154,6 +156,26 @@ class FgaBrokerTest {
         Refusal r = refused();
         assertThat(r.code()).isEqualTo("FGA_UNAVAILABLE");
         assertThat(r.getMessage()).doesNotContain("RESOURCE_NOT_GRANTED");
+    }
+
+    @Test
+    void removingAResourceWithOpenFgaOutRemovesNothing() {
+        catalogue.grant(ADA_ID, List.of("demo-api"));
+        grants.fga.unavailable(true);
+        assertThatThrownBy(() -> catalogue.remove("demo-api")).isInstanceOf(FgaException.class);
+        grants.fga.unavailable(false);
+        assertThat(catalogue.find("demo-api")).isPresent();
+        assertThat(catalogue.grantsOf().get("ada")).containsExactly("demo-api");
+    }
+
+    @Test
+    void removingAResourceForgetsItsGrantsSoARecreatedOneStartsEmpty() {
+        Resource demo = catalogue.find("demo-api").orElseThrow();
+        catalogue.grant(ADA_ID, List.of("demo-api"));
+        catalogue.remove("demo-api");
+        assertThat(catalogue.find("demo-api")).isEmpty();
+        catalogue.put(demo);
+        assertThat(catalogue.grantsOf().getOrDefault("ada", List.of())).isEmpty();
     }
 
     @Test

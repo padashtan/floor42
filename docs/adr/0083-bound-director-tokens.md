@@ -1,6 +1,6 @@
 # ADR-0083: The director's bearer in IAM mode: script tokens bound to a Keycloak session
 
-Date: 2026-11-16 · Status: Proposed (v1.3) · Amends ADR-0044, ADR-0064 (1.2.0 note) and ADR-0073
+Date: 2026-11-16 · Status: Accepted (1.3.0) · Amends ADR-0044, ADR-0064 (1.2.0 note) and ADR-0073
 
 ## Context
 

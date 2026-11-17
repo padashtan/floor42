@@ -253,7 +253,7 @@ export const workshopEn = {
   'option.Go on without it': 'Go on without it',
   'option.Drop the ticket': 'Drop the ticket',
   'board.exportJira': 'Export for Jira (CSV)',
-  'board.exportJiraTitle': 'Downloads the tickets as a file Jira can import. Nothing is sent to Jira.',
+  'board.exportJiraTitle': 'Downloads the tickets as a file Jira can import. Nothing is sent to Jira. The columns follow the Jira documentation; the import was not checked on a live Jira.',
   'board.exportJiraNone': 'No ticket to export yet',
   'board.reinforce': 'Reinforce?',
   'board.reinforcing': 'Galen is weighing it…',

@@ -258,7 +258,7 @@ export const workshopFr: Record<keyof typeof workshopEn, string> = {
   'option.Go on without it': 'Continuer sans',
   'option.Drop the ticket': 'Abandonner le ticket',
   'board.exportJira': 'Exporter pour Jira (CSV)',
-  'board.exportJiraTitle': "Télécharge les tickets dans un fichier que Jira sait importer. Rien n'est envoyé à Jira.",
+  'board.exportJiraTitle': "Télécharge les tickets dans un fichier que Jira sait importer. Rien n'est envoyé à Jira. Les colonnes suivent la documentation de Jira ; l'import n'a pas été vérifié sur un vrai Jira.",
   'board.exportJiraNone': "Aucun ticket à exporter pour l'instant",
   'board.reinforce': 'Renfort ?',
   'board.reinforcing': 'Galen évalue…',

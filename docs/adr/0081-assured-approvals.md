@@ -1,6 +1,6 @@
 # ADR-0081: Assured approvals, a second factor on a phone and four eyes
 
-Date: 2026-11-16 · Status: Proposed · Amends ADR-0064 (point 2, step-up), ADR-0073 (the director's MCP endpoint)
+Date: 2026-11-16 · Status: Accepted (1.3.0) · Amends ADR-0064 (point 2, step-up), ADR-0073 (the director's MCP endpoint)
 
 ## Context
 

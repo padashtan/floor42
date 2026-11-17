@@ -349,6 +349,8 @@ class DirectorMcpApiTest extends ApiTestBase {
         given().header("Authorization", "Bearer " + issued("read"))
                 .get("/api/mcp")
                 .then()
-                .statusCode(405);
+                .statusCode(405)
+                .contentType("application/json")
+                .body("code", org.hamcrest.Matchers.equalTo("METHOD_NOT_ALLOWED"));
     }
 }

@@ -24,3 +24,8 @@ reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not 
 id = "GHSA-ccrj-gw8r-854m" # io.opentelemetry:opentelemetry-api 1.62.0
 ignoreUntil = 2026-12-31
 reason = "transitive of provided-scope Keycloak 26.8.x server dependencies; not packaged in the Floor42 extension jar; Keycloak 26.8.2 still pins it; recheck at the next Keycloak release"
+
+[[IgnoredVulns]]
+id = "GHSA-fc5q-39xc-vjpf" # picomatch 4.0.7, CVE-2026-112366
+ignoreUntil = 2026-12-31
+reason = "build-time only (vite, vitest, vue-tsc in floor42-web); not in the jar nor in the served UI; 4.0.7 is the latest release and no fixed version exists; upgrade as soon as one is published"

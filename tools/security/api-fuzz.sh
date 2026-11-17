@@ -18,6 +18,7 @@ find "$OUT" -mindepth 1 -delete
 chmod 777 "$OUT"
 cp floor42-web/src/api/openapi.json "$OUT/openapi.json"
 cp tools/security/schemathesis_noauth.py "$OUT/schemathesis_noauth.py"
+cp tools/security/schemathesis_signed_in.py "$OUT/schemathesis_signed_in.py"
 [ ! -f tools/security/api-fuzz-baseline.json ] || cp tools/security/api-fuzz-baseline.json "$OUT/baseline.json"
 PID=
 BASE=
@@ -88,6 +89,10 @@ BL=
 #   confined to $BASE by its home and data folders, but a fuzzer must not be the one to test that on a real disk.
 SKIP='^(/api/auth/(sign-out|sessions/)|/hooks/|/mcp$|/api/projects/(folders|init)|/api/terminals|.*/open-folder$)'
 
+# not_a_server_error is replaced by server_error_unless_fga_unavailable (tools/security/schemathesis_signed_in.py): the same
+# rule, plus a 503 FGA_UNAVAILABLE on an operation that documents 503 (no OpenFGA beside this daemon, the grant routes
+# fail closed by design). Not in the baseline.
+#
 # Three checks left out, accepted deviations (docs/security-scanning.md): positive_data_acceptance (the routes validate more
 # than the schema says and answer a documented 400), negative_data_rejection (the daemon reads leniently: a wrong scalar
 # type is coerced, a body is optional where the route has defaults) and allow_header_conformance (the framework answers
@@ -95,11 +100,11 @@ SKIP='^(/api/auth/(sign-out|sessions/)|/hooks/|/mcp$|/api/projects/(folders|init
 # routes from one run to the next, so a per-route list or baseline of them would flap. unsupported_method stays on: a 2xx
 # on a method the route does not declare, or a 405 without Allow, fails the run. The baseline holds only what the HTTP
 # server answers before any route runs.
-ACCEPTED=positive_data_acceptance,negative_data_rejection,allow_header_conformance
+ACCEPTED=positive_data_acceptance,negative_data_rejection,allow_header_conformance,not_a_server_error
 
 # --network host: the daemon refuses any Host that is not a loopback name, so the image must reach it as 127.0.0.1.
 set +e
-docker run --rm --user "$(id -u):$(id -g)" --network host -v "$OUT:/w:rw" -e FLOOR42_COOKIE "$IMAGE" --config-file /w/schemathesis.toml run /w/openapi.json \
+docker run --rm --user "$(id -u):$(id -g)" --network host -v "$OUT:/w:rw" -e FLOOR42_COOKIE -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONPATH=/w -e SCHEMATHESIS_HOOKS=schemathesis_signed_in "$IMAGE" --config-file /w/schemathesis.toml run /w/openapi.json \
   --url "$URL" --checks all --phases examples,coverage,fuzzing,stateful -n "$N" --seed "$SEED" --no-color \
   --generation-with-security-parameters false \
   --exclude-path-regex "$SKIP" --exclude-checks "$ACCEPTED" --request-timeout 20 \

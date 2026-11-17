@@ -7,13 +7,25 @@ before v1.0.0: that work is not published as versions, and the decision records 
 
 ## [Unreleased]
 
-## [1.3.0] - 2026-11-16
+## [1.3.1] - 2026-11-17
+
+### Security
+- Removing a catalogue resource while OpenFGA was out removed it but kept its grants, and a resource created again under the same name took them back. The grants are now forgotten first: with OpenFGA out the removal answers 503 `FGA_UNAVAILABLE` and removes nothing.
+
+### Fixed
+- `PUT /api/iam/agents/{id}/grants` answered 500 when OpenFGA was out; it answers the documented 503 `FGA_UNAVAILABLE`.
+- `GET /api/mcp` and `GET /mcp` answer 405 with the JSON error body and the `Allow` header instead of an empty body.
+
+### Changed
+- The Jira export says its import was not checked on a live Jira.
+
+## [1.3.0] - 2026-11-17
 
 ### Added
 - Script tokens bound to a Keycloak session (ADR-0083, IAM mode): issued after a password step-up and backed by their own offline session in the vault, they may approve tickets, nudge, direct, resume and answer agents, never approve a plan; unbound tokens keep the 1.2.0 default deny. A session ended in Keycloak refuses the token (401 `SCRIPT_TOKEN_UNBOUND`), checked at most once a minute. `ApiTokenIssued` gains optional `subject` and `binding`.
 - OpenFGA foundation (ADR-0080): the authorization model as code with its tests (`iam/openfga`, `fga model test` in a Linux CI job), a JDK client that fails closed and asks `HIGHER_CONSISTENCY` on every check, the store and the pinned model id kept in `iam/fga.json`, OpenFGA in `iam/compose.yaml`; IAM mode refuses to start without it (`IAM_NEEDS_FGA`, `FGA_UNAVAILABLE`, `FGA_MODEL_MISMATCH`).
 - Assured approvals ([ADR-0081](docs/adr/0081-assured-approvals.md)): in IAM mode an ALLOW to a call that reaches outside needs a fresh sign-in at the strong level (a code from your phone), checked by Floor42 itself and enforced in the domain; a token gets 403 `HUMAN_ONLY` with the RFC 9470 challenge. Four eyes (setting `FOUR_EYES`, off by default) adds a countersignature by a second person holding the reviewer role; turning it off needs two signatures. New event `ApprovalSigned`. Changing the IAM switch or the issuer is an assured act too; the director bearer token and a break-glass sign-in are refused on it.
-- OpenFGA decides at the brokers (ADR-0080): `call_resource` and `call_mcp` ask `can_call` (the agent's grant AND the mission's delegation, the session's agent and mission as a contextual `runner`), after the local revocation check, and fail closed (`FGA_UNAVAILABLE`); grants, delegations and MCP ticks are tuples (a tick's object id holds the tool's hash), each change one `AuthorizationChanged` row (new event type, ids only); the first 1.3.0 start imports `grants.json` and the ticks, journals it and renames the file to `grants.json.imported-1.3.0` (a downgrade to 1.2.0 then refuses every resource call; to restore, rename it back); a start reconciler journals what no row recorded (`reconciled: true`); a grants section per agent in the Identities panel; an allowed call's first line names `fga:<model id>`.
+- OpenFGA decides at the brokers (ADR-0080): `call_resource` and `call_mcp` ask `can_call` (the agent's grant and the mission's delegation, the session's agent and mission as a contextual `runner`), after the local revocation check, and fail closed (`FGA_UNAVAILABLE`); grants, delegations and MCP ticks are tuples (a tick's object id holds the tool's hash), each change one `AuthorizationChanged` row (new event type, ids only); the first 1.3.0 start imports `grants.json` and the ticks, journals it and renames the file to `grants.json.imported-1.3.0` (a downgrade to 1.2.0 then refuses every resource call; to restore, rename it back); a start reconciler journals what no row recorded (`reconciled: true`); a grants section per agent in the Identities panel; an allowed call's first line names `fga:<model id>`.
 - Trust levels (ADR-0082): each agent is SHADOW, PROBATION or STANDARD, a cap applied after the permission table that only ever narrows it. A shadow agent's write, run and network calls are denied and shown as proposals (Proposals panel, Work menu); an incident, an alert or a quarantine lowers the level at once; five accepted patches with no incident propose a raise as a To do row that only the director's proven click applies. New event `AgentTrustChanged`; staff already hired stay STANDARD, agents hired afterwards start on probation. A 1.2.0 binary sets the row aside and applies the director's table without the cap.
 
 ### Security
@@ -25,12 +37,10 @@ before v1.0.0: that work is not published as versions, and the decision records 
 ## [1.2.0] - 2026-11-16
 
 ### Added
-- Browser tests: `use.actionTimeout` is 20 s, overridable by `FLOOR42_E2E_ACTION_TIMEOUT`; three count-then-act clicks got a bounded wait.
 - Identity claims in the journal (ADR-0074): `AgentTokenIssued` records `sub`, `azp`, `act` and the scopes of the verified token (all optional, never the token); the proof dossier shows them as recorded (`sub` cut to 8 characters in every export), the identity audit export carries them, older sessions keep the "not recorded" limit. A v1.2 journal row with claims is set aside by an older binary (`NEWER_VERSION`).
 - Export for Jira (CSV): a button in the board panel downloads the tickets as a Jira import file (`GET /api/missions/{id}/tickets.csv`, RFC 4180). Masked like any export, a cell that would start a formula gets a leading apostrophe, no assignee column. A snapshot: nothing is sent to Jira. No new event.
 - The director's MCP endpoint (ADR-0073): `POST /api/mcp` gives a model six tools (missions, questions, costs; create a mission, answer an agent's open question) with a script token, scope per tool. It never approves anything, whatever the scope; agent-written text comes back in the untrusted envelope. See `docs/headless.md`.
 - Governed MCP servers (ADR-0072): a remote MCP server is a catalogue resource with an endpoint path (`/api/iam/mcp-servers`); the director pins its tools by hash, ticks the ones agents may call, and an agent runs them with its own short-lived token through the new Floor42 tools `list_mcp_tools` and `call_mcp` (permission table line "External MCP tools", built-in ASK). IAM mode only; who ticked which tool is not in the journal.
-- `Untrusted.quote(source, text)`: the nonce envelope for untrusted text, taken out of `McpResource` (answers unchanged).
 - MCP servers panel (System menu, IAM mode, ADR-0072): declare a catalogue resource as an MCP server, read its tools as an agent ("Refresh tools as"), tick the tools agents may call, and try one with a form built from its schema. Refresh and Try use the chosen agent's own token on the director's behalf, and the screen says so; server text is shown as text, marked untrusted. Web only, no new event.
 - The journal is hash-chained in a side table, with signed Ed25519 checkpoints, `GET /api/journal/integrity`, and appends refused (`JOURNAL_CHAIN_BROKEN`) on a broken chain until the director acknowledges ([ADR-0079](docs/adr/0079-hash-chained-journal.md)).
 - Commits the director accepts in the workshop are signed with the agent's own SSH key (kept under the data folder, retired when the agent is revoked or dismissed); the proof dossier shows "signed by <agent>, verified" or why not ([ADR-0077](docs/adr/0077-commits-signed-by-the-agent.md)).
@@ -41,7 +51,6 @@ before v1.0.0: that work is not published as versions, and the decision records 
 - `AgentTokenIssued` carries four optional identity fields (ADR-0074); older rows read with nulls.
 
 ### Fixed
-- Browser tests no longer wait the whole test timeout on an element that left the page.
 - Crash recovery: at startup, calls authorized without outcome, approvals whose hook died and worktrees with unexplained changes are recorded once as To do rows, never with an invented outcome ([ADR-0076](docs/adr/0076-crash-recovery-reconciliation.md)).
 
 ### Security
@@ -50,7 +59,7 @@ before v1.0.0: that work is not published as versions, and the decision records 
 - Jira CSV export: a cell that starts a formula is neutralised.
 - IAM mode: a script token (any scope) is denied by default: it may only read, create a mission and call the MCP read tools and `create_mission`; approving, answering, resuming, the terminal and the IAM settings answer 403 `IAM_SCRIPT_TOKEN_REFUSED` (ADR-0064 note).
 
-## [1.1.0] - 2026-11-19
+## [1.1.0] - 2026-11-16
 
 ### Added
 
@@ -61,10 +70,6 @@ before v1.0.0: that work is not published as versions, and the decision records 
 - Workshop: "Accept the ticked, discard the rest" accepts the ticked files and discards the others after one confirmation that names both counts.
 - Ends shown with their day when not today ("tomorrow 09:10", "12 Nov 14:32"): the top bar's session end and the delegation chip, which is also amber 30 minutes before its end.
 - IAM mode: a screen warning 30 minutes before a delegation ends and 10 minutes before an agent token ends (no journal event, nothing renewed).
-
-### Fixed
-
-- Tests: SocketSessionsTest no longer fails when a refused socket closes before its close handler is set (the client checks the socket first; a deterministic test forces that order, TerminalApiTest likewise); the seam fields of `SocketSessions` are volatile.
 
 ### Security
 

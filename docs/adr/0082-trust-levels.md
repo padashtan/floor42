@@ -1,6 +1,6 @@
 # ADR-0082: Trust levels: shadow mode and probation
 
-Date: 2026-11-16 · Status: Proposed (v1.3). One new event type, `AgentTrustChanged`, approved by the director on
+Date: 2026-11-16 · Status: Accepted (1.3.0). One new event type, `AgentTrustChanged`, approved by the director on
 2026-11-16 (question 6 of the 1.3.0 questions).
 
 ## Context

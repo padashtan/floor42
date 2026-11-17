@@ -1,6 +1,6 @@
 # ADR-0079: A hash chain over the journal, with signed checkpoints
 
-Date: 2026-11-16 · Status: Proposed · Amends ADR-0044 (amendment 3, "writes are not refused")
+Date: 2026-11-16 · Status: Accepted (1.2.0) · Amends ADR-0044 (amendment 3, "writes are not refused")
 
 ## Context
 

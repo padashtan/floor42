@@ -81,7 +81,8 @@ public class McpResource {
     /** No server-initiated messages: Floor42 answers each request in its response. */
     @GET
     public Response stream() {
-        return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+        // Thrown, not built: the mapper gives it the JSON problem shape and the Allow header
+        throw new jakarta.ws.rs.WebApplicationException(Response.Status.METHOD_NOT_ALLOWED);
     }
 
     @POST
