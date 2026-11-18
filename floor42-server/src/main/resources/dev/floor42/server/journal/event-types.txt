@@ -130,3 +130,5 @@ SessionRiskRaised
 MissionQuarantined
 AuthorizationChanged
 AgentTrustChanged
+DeliveryEvidenceRecorded
+PullRequestMerged

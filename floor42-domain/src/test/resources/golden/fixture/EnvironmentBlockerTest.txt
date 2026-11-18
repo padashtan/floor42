@@ -43,6 +43,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -64,6 +65,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="darius: The review session failed: exit code 3", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["ACCEPT_AS_IS", "SEND_BACK", "REVIEW_AGAIN"], options=["Accept as is", "Send back to work", "Request another review"], phrase=Phrase(code="reviewUnverifiable", params={"findings"="The review session failed: exit code 3", "reviewer"="darius", "ticket"="T-1"}), recommendation=null, status=OPEN, subject="Review of T-1 could not be verified", ticket="T-1"}}
 retros = {}
@@ -195,6 +197,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -216,6 +219,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -336,6 +340,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -357,6 +362,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=OPEN, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -505,6 +511,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -526,6 +533,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -672,6 +680,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -693,6 +702,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -839,6 +849,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -860,6 +871,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (UNVERIFIABLE): cannot render\nENVIRONMENT ONLY: yes", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="cannot render\nENVIRONMENT ONLY: yes", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="UNVERIFIABLE"}), recommendation=null, status=OPEN, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -1008,6 +1020,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1029,6 +1042,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks Docker, needed to docker build -t app .. The shell sandbox cannot reach the Docker daemon: its socket is hidden there and the docker group is dropped, so installing Docker will not help and no setting grants it. Do the Docker step yourself, accept the ticket as is, or send it back to work without that step. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlockedDocker", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="Docker", "reviewer"="darius", "step"="docker build -t app .", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=OPEN, subject="T-1 is blocked by the environment: it lacks Docker", ticket="T-1"}}
 retros = {}
@@ -1160,6 +1174,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -1181,6 +1196,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1303,6 +1319,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1324,6 +1341,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="I do the step myself", askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=ANSWERED, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -1474,6 +1492,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1495,6 +1514,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="Accept as is", askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=ANSWERED, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -1645,6 +1665,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1666,6 +1687,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="I allow an exception", askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=ANSWERED, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -1816,6 +1838,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1837,6 +1860,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="I install what is missing", askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=ANSWERED, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -1987,6 +2011,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2008,6 +2033,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="Send back to work", askedAt=2026-10-20T09:00:11Z, askedBy=null, blocking=true, context="The developer reports that the environment lacks a desktop browser, needed to render report.pdf with tools/render.cmd. Another session there would hit the same wall. Do the step yourself, allow an exception (grant it first in Permissions or Settings), install what is missing, or accept the ticket as is. Reviewer darius (REJECTED): PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", criticality=HIGH, id="Q-1", kind=REVIEW_ESCALATION, mission="M-1", optionCodes=["DO_IT_MYSELF", "ALLOW_EXCEPTION", "INSTALL_MISSING", "ACCEPT_AS_IS", "SEND_BACK"], options=["I do the step myself", "I allow an exception", "I install what is missing", "Accept as is", "Send back to work"], phrase=Phrase(code="environmentBlocked", params={"findings"="PDFs missing: the browser cannot start in the sandbox. xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nENVIRONMENT ONLY: yes\nVERDICT: REJECTED", "missing"="a desktop browser", "reviewer"="darius", "step"="render report.pdf with tools/render.cmd", "ticket"="T-1", "verdict"="REJECTED"}), recommendation=null, status=ANSWERED, subject="T-1 is blocked by the environment: it lacks a desktop browser", ticket="T-1"}}
 retros = {}
@@ -2139,6 +2165,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -2160,6 +2187,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -2284,6 +2312,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2305,6 +2334,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="I do the step myself", askedAt=2026-10-20T09:00:10Z, askedBy=null, blocking=true, context="", criticality=HIGH, id="Q-1", kind=OPEN, mission="M-1", optionCodes=["DO_IT_MYSELF", "WITHOUT_DOCKER"], options=["I do the step myself", "Go on without Docker"], phrase=Phrase(code="dockerUnreachable", params={"tickets"="T-99", "tools"="docker"}), recommendation=null, status=ANSWERED, subject="The project needs Docker", ticket=null}}
 retros = {}
@@ -2436,6 +2466,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -2457,6 +2488,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

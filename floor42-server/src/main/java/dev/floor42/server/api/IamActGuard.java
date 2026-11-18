@@ -1,9 +1,8 @@
-package dev.floor42.server.api.iam;
+package dev.floor42.server.api;
 
 import dev.floor42.domain.Actor;
 import dev.floor42.domain.AssurancePolicy;
 import dev.floor42.domain.Origin;
-import dev.floor42.server.api.AssuranceResponses;
 import dev.floor42.server.app.core.OfficeService;
 import dev.floor42.server.iam.AssuredActs;
 import dev.floor42.server.iam.IamSettings;

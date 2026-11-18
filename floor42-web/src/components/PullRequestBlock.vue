@@ -22,6 +22,7 @@ const error = ref('')
 const busy = ref(false)
 const refreshing = ref<number | null>(null)
 const copied = ref(false)
+const merging = ref<number | null>(null)
 
 const mine = computed(() => list.value.filter((p) => p.workspace === props.workspace))
 const canConfirm = computed(
@@ -89,6 +90,45 @@ async function refresh(pr: PullRequestView) {
     error.value = message(e)
   } finally {
     refreshing.value = null
+  }
+}
+
+/** Where the branch is now: the checks on screen are stale once it is at another commit. Records nothing. */
+async function checkHead(pr: PullRequestView) {
+  refreshing.value = pr.number
+  error.value = ''
+  try {
+    const seen = await api.pullRequestHead(props.mission, pr.number)
+    list.value = list.value.map((p) => (p.number === pr.number ? seen : p))
+  } catch (e) {
+    error.value = message(e)
+  } finally {
+    refreshing.value = null
+  }
+}
+
+/** Only a green, current commit may be merged; the reason shows on the disabled button. */
+function mergeWhy(pr: PullRequestView): string | undefined {
+  return why(
+    [!pr.commit, t('pr.whyNoEvidence')],
+    [pr.stale === true, t('pr.whyStale')],
+    [pr.conclusion !== 'GREEN', t('pr.whyNotGreen')],
+  )
+}
+
+async function merge(pr: PullRequestView) {
+  if (!pr.commit) return
+  merging.value = pr.number
+  error.value = ''
+  try {
+    const answer = await api.mergePullRequest(props.mission, pr.number, { commit: pr.commit })
+    // 202 {redirect} (IAM mode): the page leaves for the step-up; the merge happens once Keycloak confirmed it.
+    if ('redirect' in answer) return
+    await load()
+  } catch (e) {
+    error.value = message(e)
+  } finally {
+    merging.value = null
   }
 }
 
@@ -169,6 +209,31 @@ watch(
         <button class="link" :disabled="refreshing !== null" :title="t('pr.refreshTitle')" @click="refresh(pr)">
           {{ refreshing === pr.number ? t('pr.refreshing') : t('pr.refresh') }}
         </button>
+      </div>
+      <div v-if="pr.commit" class="row">
+        <code>{{ t('pr.commit', { commit: pr.commit.slice(0, 8) }) }}</code>
+        <span v-if="pr.stale === false" class="hint">{{ t('pr.headSame', { commit: pr.commit.slice(0, 8) }) }}</span>
+        <button class="link" :disabled="refreshing !== null" :title="t('pr.checkHeadTitle')" @click="checkHead(pr)">
+          {{ t('pr.checkHead') }}
+        </button>
+      </div>
+      <div v-if="pr.stale && pr.commit" class="hint warn pr-stale">
+        {{ t('pr.stale', { head: (pr.headNow ?? '').slice(0, 8), commit: pr.commit.slice(0, 8) }) }}
+      </div>
+      <div v-if="pr.mergedCommit" class="pr-merged">
+        <b>{{ t('pr.merged', { commit: pr.mergedCommit.slice(0, 8) }) }}</b>
+        <span class="hint"> · {{ when(pr.mergedAt) }}</span>
+      </div>
+      <div v-else class="row">
+        <button
+          class="action"
+          :disabled="!!mergeWhy(pr) || merging !== null"
+          :title="mergeWhy(pr) ?? t('pr.mergeTitle')"
+          @click="merge(pr)"
+        >
+          {{ merging === pr.number ? t('pr.merging') : t('pr.merge') }}
+        </button>
+        <span class="hint">{{ t('pr.mergeHint') }}</span>
       </div>
       <ul v-if="pr.checks.length" class="pr-check-list">
         <li v-for="c in pr.checks" :key="c.name" :class="c.bucket">

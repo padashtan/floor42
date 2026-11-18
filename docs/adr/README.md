@@ -91,3 +91,4 @@ revisit) and the evidence in the code are in [`2026-11-06-review.md`](2026-11-06
 | [0081](0081-assured-approvals.md) | Assured approvals: a second factor on a phone for risky acts, and four eyes | Accepted (1.3.0) |
 | [0082](0082-trust-levels.md) | Trust levels: a cap after the permission table, shadow mode, probation that narrows by itself and widens only on the director's proven click | Accepted (1.3.0) |
 | [0083](0083-bound-director-tokens.md) | Script tokens bound to a Keycloak session in IAM mode: a step-up, an offline session in the vault, refreshed at most once a minute; they steer, never approve a plan | Accepted (1.3.0) |
+| [0084](0084-governed-delivery.md) | Governed delivery: the checks of the exact commit (check runs by sha), stale when the head moves, a merge only on green evidence and the proven click (STRONG act) | Accepted (1.4.0) |

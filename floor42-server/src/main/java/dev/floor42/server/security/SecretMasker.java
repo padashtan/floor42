@@ -19,7 +19,7 @@ public final class SecretMasker {
 
     /** Keys whose value is never kept, whatever it looks like. */
     static final Pattern SECRET_KEY = Pattern.compile(
-            "(?i).*(token|secret|password|passwd|api[-_]?key|access[-_]?key|private[-_]?key|credential|auth|cookie)"
+            "(?i).*(token|secret|password|passwd|passphrase|api[-_]?key|access[-_]?key|private[-_]?key|credential|auth|cookie)"
                     + ".*");
 
     /**
@@ -29,7 +29,7 @@ public final class SecretMasker {
      * the end of the line, an unquoted value to the next blank. No {@code \b} (the JDK's reads back over a run of
      * combining marks), no bound that a long value can pass, and a head never rescans what a failed head already read.
      */
-    private static final Pattern HEAD = Pattern.compile("(?<pem>-----BEGIN [A-Z ]*PRIVATE KEY-----)"
+    private static final String BASE = "(?<pem>-----BEGIN [A-Z ]*PRIVATE KEY-----)"
             + "|(?<jwt>eyJ)"
             + "|(?<prefix>(?:sk-ant-|sk_live_|sk_test_|rk_live_|sk-|ghp_|gho_|ghs_|github_pat_|glpat-|npm_|xox[abprs]-"
             + "|AKIA|ASIA|AIza)[A-Za-z0-9_\\-]{6,})"
@@ -38,7 +38,27 @@ public final class SecretMasker {
             // A key (its quote may close first), a separator, then the value.
             // Its name may be URL-encoded, any character of it, a quote as %22, "=" and ":" as %3D and %3A (D29).
             + "|(?<key>(?i:"
-            + encoded("password", "pass", "passwd", "pwd", "secret", "token", "api_key", "api-key", "apikey")
+            + encoded(
+                    "password",
+                    "pass",
+                    "passwd",
+                    "pwd",
+                    "passphrase",
+                    "secret",
+                    "secret_key",
+                    "secret-key",
+                    "secretkey",
+                    "privatekey",
+                    "accesskey",
+                    "clientsecret",
+                    "private_key",
+                    "private-key",
+                    "access_key",
+                    "access-key",
+                    "token",
+                    "api_key",
+                    "api-key",
+                    "apikey")
             + ")(?:[\"']|%22)?(?:\\s*[=:]\\s*|\\s+|%3[dDaA](?:%22)?))"
             // These words are common in plain text: a = or : must follow, and for authorization a scheme word or a long
             // token.
@@ -68,9 +88,13 @@ public final class SecretMasker {
                     "signature",
                     "x-amz-signature",
                     "x-goog-signature")
-            + "(?:=|%3[dD]))))"
-            + "|(?<hex>(?<![A-Za-z0-9_])[0-9a-fA-F]{24,}(?![A-Za-z0-9_]))"
-            + "|(?<run>[A-Za-z0-9+/_=-]{32,})");
+            + "(?:=|%3[dD]))))";
+
+    private static final Pattern HEAD = Pattern.compile(
+            BASE + "|(?<hex>(?<![A-Za-z0-9_])[0-9a-fA-F]{24,}(?![A-Za-z0-9_]))" + "|(?<run>[A-Za-z0-9+/_=-]{32,})");
+
+    /** The heads inside a file path: all but the two that read a bare run (a path is not a secret by itself). */
+    private static final Pattern INNER = Pattern.compile(BASE);
 
     /**
      * The names as alternatives, each character also URL-encoded ({@code %74oken} is {@code token}). Read in a
@@ -117,14 +141,17 @@ public final class SecretMasker {
 
     private static int scan(String s, StringBuilder out) {
         Matcher m = HEAD.matcher(s);
+        Matcher inner = INNER.matcher(s).useTransparentBounds(true).useAnchoringBounds(false);
         int n = 0;
         int last = 0;
         int pos = 0;
-        // Heads before these stand inside a run a failed head already read to its end: they fail the same way.
-        int[] noUntil = new int[2];
-        while (pos <= s.length() && m.find(pos)) {
-            int start = m.start();
-            int end = headEnd(m, s, noUntil);
+        // Heads before these stand inside a run a failed head already read to its end: they fail the same way. The
+        // third is the end of the file path being read, the fourth the end of a path token judged not to be one.
+        int[] noUntil = new int[4];
+        Matcher cur;
+        while (pos <= s.length() && (cur = nextHead(m, inner, s, pos, noUntil)) != null) {
+            int start = cur.start();
+            int end = headEnd(cur, s, noUntil);
             if (end > start) {
                 n++;
                 if (out != null) out.append(s, last, start).append(MASK);
@@ -136,6 +163,26 @@ public final class SecretMasker {
         }
         if (out != null) out.append(s, last, s.length());
         return n;
+    }
+
+    /**
+     * The next head from {@code pos}. A file path is not a secret by itself: inside one only the heads of known forms are
+     * read, within the path, so it is not rescanned as runs.
+     */
+    private static Matcher nextHead(Matcher m, Matcher inner, String s, int pos, int[] st) {
+        int p = pos;
+        while (true) {
+            if (p < st[2]) {
+                if (inner.region(p, st[2]).find()) return inner;
+                p = st[2];
+            } else if (!m.find(p)) {
+                return null;
+            } else if (m.group("run") != null && SecretPaths.pathRun(s, m.start(), m.end(), st)) {
+                p = m.start();
+            } else {
+                return m;
+            }
+        }
     }
 
     /** The end of the credential whose head the matcher found, or -1 when it is none (the memos are in noUntil). */
@@ -156,17 +203,127 @@ public final class SecretMasker {
                 if (end < 0) noUntil[0] = atStop(s, m.end());
             }
         } else if (m.group("key") != null || m.group("auth") != null) {
-            end = valueEnd(s, m.end(), true, false);
+            end = keyEnd(s, start, m.end(), m.group("key") != null);
         } else if (m.group("authz") != null || m.group("cookie") != null) {
-            end = valueEnd(s, m.end(), false, true);
+            end = headerValueEnd(s, start, m.end());
         } else if (m.group("query") != null) {
-            int i = m.end();
-            while (i < s.length() && s.charAt(i) != '&' && s.charAt(i) != '#' && !blank(s.charAt(i))) i++;
+            int i = queryValueEnd(s, m.end());
             if (i > m.end()) end = i;
         } else {
             end = m.end();
         }
         return end;
+    }
+
+    private static boolean delimited(String s, int from, int to) {
+        for (int i = from; i < to; i++) {
+            char c = s.charAt(i);
+            if (c == '=' || c == ':' || c == '%' && i + 1 < to && s.charAt(i + 1) == '3') return true;
+        }
+        return false;
+    }
+
+    /** Whether a value read after a bare key word looks like a secret: opens with a quote, has a digit, 8 characters or both cases. */
+    private static boolean secretLike(String s, int from, int to) {
+        if (to - from >= 8 || quote(s.charAt(from))) return true;
+        boolean upper = false;
+        boolean lower = false;
+        for (int i = from; i < to; i++) {
+            char c = s.charAt(i);
+            if (c >= '0' && c <= '9') return true;
+            upper |= c >= 'A' && c <= 'Z';
+            lower |= c >= 'a' && c <= 'z';
+        }
+        return upper && lower;
+    }
+
+    /** Whether a query string's {@code &} (or {@code &amp;}, {@code %26}, {@code ?}, {@code %3F}) stands right before {@code at}. */
+    private static boolean queryMark(String s, int at) {
+        if (at <= 0) return false;
+        char p = s.charAt(at - 1);
+        return p == '?'
+                || p == '&'
+                || at >= 5 && s.regionMatches(true, at - 5, "&amp;", 0, 5)
+                || at >= 3
+                        && (s.regionMatches(true, at - 3, "%26", 0, 3) || s.regionMatches(true, at - 3, "%3f", 0, 3));
+    }
+
+    /** A key's value; in a query string ({@code ?token=...}) it may hold blanks. */
+    private static int keyEnd(String s, int start, int from, boolean key) {
+        int end = valueEnd(s, from, true, false);
+        // "pass in", "token expired": after a bare key word (no = or :) the value must look like a secret.
+        if (end > 0
+                && key
+                && !delimited(s, start, from)
+                && !SecretWords.explicit(s, start, from, end)
+                && !secretLike(s, from, end)) return -1;
+        if (end > 0 && queryMark(s, start) && !quote(s.charAt(from))) end = queryValueEnd(s, end);
+        return end;
+    }
+
+    /** A header's value: the rest of the line, or up to the closing quote of a header quoted on a command line. */
+    private static int headerValueEnd(String s, int start, int from) {
+        int end = valueEnd(s, from, false, true);
+        // A quoted value ({"Cookie": "sid=..."}) already ends after its closing quote.
+        boolean quotedValue = from < s.length() && quote(s.charAt(from));
+        if (end > 0 && !quotedValue && start > 0 && quote(s.charAt(start - 1)))
+            return headerEnd(s, from, s.charAt(start - 1), end);
+        // A value opening with the other quote (-H 'Cookie: "v1"; sid=...'): to the outer quote or the line end, the
+        // longer.
+        if (end > 0
+                && quotedValue
+                && start > 0
+                && quote(s.charAt(start - 1))
+                && s.charAt(start - 1) != s.charAt(from)
+                && noQuote(s, start, from)) {
+            int lineEnd = from;
+            while (lineEnd < s.length() && s.charAt(lineEnd) != '\n' && s.charAt(lineEnd) != '\r') lineEnd++;
+            return Math.max(end, headerEnd(s, from, s.charAt(start - 1), lineEnd));
+        }
+        return end;
+    }
+
+    /**
+     * The end of a query value: at {@code &}, {@code #} or a blank, then on over the blank-separated words that follow
+     * while each is made only of URL characters ({@link #urlSafe}). When in doubt, mask: a blank inside the value
+     * ({@code token=abc1 2xyz}) is not told from the end of the URL by its shape, so prose after a token-bearing URL goes
+     * too. It stops at a line end, at a quote, {@code &}, {@code #}, {@code <} or {@code >}, and before a word with any
+     * other character.
+     */
+    private static int queryValueEnd(String s, int from) {
+        int i = from;
+        while (true) {
+            while (i < s.length() && s.charAt(i) != '&' && s.charAt(i) != '#' && !blank(s.charAt(i))) i++;
+            int j = i;
+            while (j < s.length() && (s.charAt(j) == ' ' || s.charAt(j) == '\t')) j++;
+            int k = j;
+            while (k < s.length() && urlSafe(s.charAt(k))) k++;
+            boolean wordEnds = k == s.length() || "&#<>\"'".indexOf(s.charAt(k)) >= 0 || blank(s.charAt(k));
+            if (j == i || k == j || !wordEnds) return i;
+            i = k;
+        }
+    }
+
+    private static boolean noQuote(String s, int from, int to) {
+        for (int i = from; i < to; i++) if (quote(s.charAt(i))) return false;
+        return true;
+    }
+
+    /** A header quoted on a command line ({@code -H 'Cookie: a=b'}) ends at its closing quote, not at the line's end. */
+    private static int headerEnd(String s, int from, char q, int lineEnd) {
+        for (int i = from; i < lineEnd; i++) {
+            if (s.charAt(i) == (char) 92) i++;
+            else if (s.charAt(i) == q) return i;
+        }
+        return lineEnd;
+    }
+
+    private static boolean quote(char c) {
+        return c == '"' || c == '\'';
+    }
+
+    private static boolean urlSafe(char c) {
+        return word(c) || c == '-' || c == '.' || c == '~' || c == '%' || c == '+' || c == '/' || c == '=';
     }
 
     /** The end of a private key block: past its END line, or the end of the text when it has none. */
@@ -179,11 +336,16 @@ public final class SecretMasker {
         return end;
     }
 
-    /** Where the read of a URL's password stops: at its {@code @}, or at the first blank (or the end). */
+    /** Where the read of a URL's password stops: at its last {@code @}, or at the first blank (or the end). */
     private static int atStop(String s, int from) {
         int i = from;
-        while (i < s.length() && s.charAt(i) != '@' && !blank(s.charAt(i))) i++;
-        return i;
+        int at = -1;
+        // The last @ before the host's path: a password may hold an @.
+        while (i < s.length() && !blank(s.charAt(i)) && !(at >= 0 && s.charAt(i) == '/')) {
+            if (s.charAt(i) == '@') at = i;
+            i++;
+        }
+        return at >= 0 ? at : i;
     }
 
     /** The end of {@code user:password@} (the password starts at {@code from}), or -1 when there is no {@code @}. */

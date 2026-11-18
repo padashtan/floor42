@@ -958,6 +958,58 @@
       "mission" : "M-7"
     }
   },
+  "DeliveryEvidenceRecorded.failed" : {
+    "line" : "Checks of pull request #7 at commit 84b0d7cb: 1 of 2 failed",
+    "params" : [ "checks", "commit", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS, lint|fail|FAILURE",
+      "commit" : "84b0d7cb",
+      "count" : "2",
+      "failed" : "1",
+      "mission" : "M-1",
+      "number" : "7",
+      "pending" : "0"
+    }
+  },
+  "DeliveryEvidenceRecorded.green" : {
+    "line" : "Checks of pull request #7 at commit 84b0d7cb: all 2 green",
+    "params" : [ "checks", "commit", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS, lint|pass|SUCCESS",
+      "commit" : "84b0d7cb",
+      "count" : "2",
+      "failed" : "0",
+      "mission" : "M-1",
+      "number" : "7",
+      "pending" : "0"
+    }
+  },
+  "DeliveryEvidenceRecorded.none" : {
+    "line" : "GitHub reports no check on pull request #9 at commit 84b0d7cb",
+    "params" : [ "checks", "commit", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "",
+      "commit" : "84b0d7cb",
+      "count" : "0",
+      "failed" : "0",
+      "mission" : "M-9",
+      "number" : "9",
+      "pending" : "0"
+    }
+  },
+  "DeliveryEvidenceRecorded.pending" : {
+    "line" : "Checks of pull request #9 at commit 84b0d7cb: 1 of 2 still running",
+    "params" : [ "checks", "commit", "count", "failed", "mission", "number", "pending" ],
+    "sample" : {
+      "checks" : "build|pass|SUCCESS, e2e|pending|QUEUED",
+      "commit" : "84b0d7cb",
+      "count" : "2",
+      "failed" : "0",
+      "mission" : "M-9",
+      "number" : "9",
+      "pending" : "1"
+    }
+  },
   "DirectiveGiven" : {
     "line" : "Director's directive on T-5: Add the expiry test",
     "params" : [ "directive", "mission", "ticket" ],
@@ -1626,6 +1678,26 @@
       "mission" : "M-9",
       "number" : "9",
       "pending" : "1"
+    }
+  },
+  "PullRequestMerged.approved" : {
+    "line" : "Director merged pull request #7 at commit 84b0d7cb on a signed approval (MERGE:pr:M-1#7)",
+    "params" : [ "approval", "commit", "mission", "number" ],
+    "sample" : {
+      "approval" : "MERGE:pr:M-1#7",
+      "commit" : "84b0d7cb",
+      "mission" : "M-1",
+      "number" : "7"
+    }
+  },
+  "PullRequestMerged.click" : {
+    "line" : "Director merged pull request #9 at commit 84b0d7cb on a click (IAM mode is off)",
+    "params" : [ "approval", "commit", "mission", "number" ],
+    "sample" : {
+      "approval" : "CLICK",
+      "commit" : "84b0d7cb",
+      "mission" : "M-9",
+      "number" : "9"
     }
   },
   "PullRequestOpened.found" : {

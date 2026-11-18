@@ -303,7 +303,9 @@ export class Wanderer {
   }
 
   /** The nearest standing place clear of every road ahead, with a lane to it that touches nobody now. */
-  private safePlace(here: Point, worst: (p: Point) => number, stand: ((p: Point) => boolean) | undefined): Point | null {
+  private safePlace(here: Point, worst: (p: Point) => number, canStand: ((p: Point) => boolean) | undefined): Point | null {
+    // Without its own test (the robot) it stands where the grid is free: a way aside never crosses furniture.
+    const stand = canStand ?? ((p: Point): boolean => !this.o.nav.isBlocked(p))
     const n = this.o.avoid(this.others)
     const touching = (p: Point): boolean => {
       for (let i = 0; i < n; i++) if (Math.hypot(p.x - this.others[i].x, p.z - this.others[i].z) < this.gap(this.others[i]) - 0.08) return true
@@ -313,11 +315,11 @@ export class Wanderer {
       for (let k = 0; k < 20; k++) {
         const a = (k / 20) * Math.PI * 2
         const p = { x: here.x + Math.sin(a) * r, z: here.z + Math.cos(a) * r }
-        if ((stand && !stand(p)) || worst(p) > -0.05) continue
+        if (!stand(p) || worst(p) > -0.05) continue
         let clear = true
         for (let d = 0.12; d < r && clear; d += 0.12) {
           const q = { x: here.x + Math.sin(a) * d, z: here.z + Math.cos(a) * d }
-          clear = (!stand || stand(q)) && !touching(q)
+          clear = stand(q) && !touching(q)
         }
         if (clear) return p
       }

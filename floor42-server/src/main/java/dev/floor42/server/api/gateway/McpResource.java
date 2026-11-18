@@ -205,19 +205,11 @@ public class McpResource {
         schema.putArray("required").add("resource").add("method").add("path");
     }
 
-    /** Tool calls whose hook authorisation a broker call already used: one authorisation, one call. */
-    private final java.util.Set<String> spent =
-            java.util.Collections.newSetFromMap(new java.util.LinkedHashMap<String, Boolean>() {
-                @Override
-                protected boolean removeEldestEntry(java.util.Map.Entry<String, Boolean> eldest) {
-                    return size() > 10_000;
-                }
-            });
+    private final SpentToolUses spent =
+            new SpentToolUses(java.time.Duration.ofHours(1), 10_000, System::currentTimeMillis);
 
-    boolean spend(String toolUseId) {
-        synchronized (spent) {
-            return spent.add(toolUseId);
-        }
+    boolean spend(String key, java.util.function.BooleanSupplier live) {
+        return spent.spend(key, live);
     }
 
     /** The hook authorized this call and nothing used that authorisation yet, and IAM gives a caller; else the error. */
@@ -226,7 +218,9 @@ public class McpResource {
         // The authorization is the hook's for this tool: an id it gave to another tool buys nothing here.
         if (toolUseId.isBlank()
                 || !governor.authorized(toolUseId, ToolCatalog.FLOOR42_TOOL_PREFIX + name)
-                || !spend((caller == null ? "" : caller.launch()) + toolUseId))
+                || !spend(
+                        (caller == null ? "" : caller.launch()) + toolUseId,
+                        () -> governor.authorized(toolUseId, ToolCatalog.FLOOR42_TOOL_PREFIX + name)))
             return text("NOT_AUTHORIZED: the PreToolUse hook has not authorized this call.", true);
         if (caller == null)
             return text("IDENTITY_UNAVAILABLE: resource calls need IAM mode and an authenticated session.", true);

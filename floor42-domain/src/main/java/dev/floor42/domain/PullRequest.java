@@ -43,6 +43,42 @@ public record PullRequest(
         }
     }
 
+    /** The conclusion of a set of checks (ADR-0084): only GREEN lets a merge through. */
+    public static final String GREEN = "GREEN";
+
+    public static final String FAILED = "FAILED";
+    public static final String PENDING = "PENDING";
+    public static final String NONE = "NONE";
+
+    /** The checks of one exact commit, as read from GitHub on the director's click. */
+    public record Evidence(String commit, List<Check> checks, String conclusion, Instant at) {
+        public Evidence {
+            checks = List.copyOf(checks);
+        }
+    }
+
+    /** The merge on GitHub: the commit that was merged and the signed act that allowed it. */
+    public record Merge(String commit, String approval, Instant at) {}
+
+    /**
+     * GREEN when every check passed or was skipped, FAILED when one failed or was cancelled (a cancelled run is not a
+     * pass), else PENDING; NONE when no check passed (none at all, or only skipped ones: nothing proves the commit).
+     */
+    public static String conclusionOf(List<String> lines) {
+        if (lines == null || lines.isEmpty()) return NONE;
+        boolean pending = false;
+        int passed = 0;
+        for (String l : lines) {
+            String bucket = Check.parse(l).map(Check::bucket).orElse("fail");
+            if (bucket.equals("pass")) passed++;
+            else if (bucket.equals("pending")) pending = true;
+            else if (!bucket.equals("skipping")) return FAILED;
+        }
+        // Skipped checks prove nothing: with no pass at all there is no evidence.
+        if (pending) return PENDING;
+        return passed == 0 ? NONE : GREEN;
+    }
+
     public PullRequest {
         checks = List.copyOf(checks);
     }

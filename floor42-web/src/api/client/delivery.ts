@@ -4,12 +4,13 @@ import type {
   MissionReport,
   ReplayExportPreview,
   ReplayExportRequest,
+  MergeRequest,
   PullRequestOutcome,
   PullRequestPreview,
   PullRequestRequest,
   PullRequestView,
 } from '../types'
-import { ApiError, REQUEST_HEADER, request } from '../request'
+import { ApiError, REQUEST_HEADER, followStepUp, request } from '../request'
 
 export const deliveryApi = {
   archive: (mission: string) => request<ArchiveView>('GET', `/api/missions/${encodeURIComponent(mission)}/archive`),
@@ -32,7 +33,15 @@ export const deliveryApi = {
   /** Pushes the branch (never forced) and opens the pull request the director confirmed. */
   openPullRequest: (mission: string, confirmed: PullRequestRequest) =>
     request<PullRequestOutcome>('POST', pullRequestsPath(mission), confirmed),
-  /** Reads once the checks GitHub reports on the pull request. */
+  /** Asks GitHub where the branch is now: `stale` says whether the recorded checks belong to an older commit. */
+  pullRequestHead: (mission: string, number: number) =>
+    request<PullRequestView>('GET', `${pullRequestsPath(mission)}/${number}/head`),
+  /** Merges at the commit looked at (ADR-0084). In IAM mode answers 202 {redirect}: the page leaves for the step-up. */
+  mergePullRequest: (mission: string, number: number, body: MergeRequest) =>
+    request<PullRequestView | { redirect: string }>('POST', `${pullRequestsPath(mission)}/${number}/merge`, body).then(
+      followStepUp,
+    ),
+  /** Reads once the checks GitHub keeps for the branch's current commit. */
   refreshPullRequestChecks: (mission: string, number: number) =>
     request<PullRequestView>('POST', `${pullRequestsPath(mission)}/${number}/checks`),
   /** What the mission delivered (ADR-0038); ignored files only when asked. Read only, never journaled. */

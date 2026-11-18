@@ -29,6 +29,10 @@ public final class TestJournals {
     public static SqliteJournal open(Path file, int busyTimeoutMillis) {
         SQLiteDataSource ds = new SQLiteDataSource();
         ds.setUrl("jdbc:sqlite:" + file + "?transaction_mode=IMMEDIATE&busy_timeout=" + busyTimeoutMillis);
+        // The data source's own config says DEFERRED and wins over the URL's option (measured, v1.4 N4): the daemon's
+        // pool goes through the driver and honours the URL, so say it here too.
+        ds.setTransactionMode("IMMEDIATE");
+        ds.setBusyTimeout(busyTimeoutMillis); // same: the data source's own 3000 wins over the URL's busy_timeout
         Flyway.configure()
                 .dataSource(ds)
                 .locations("classpath:db/migration")
@@ -36,6 +40,22 @@ public final class TestJournals {
                 .migrate();
         SqliteJournal journal = new SqliteJournal();
         journal.dataSource = ds;
+        return journal;
+    }
+
+    /** As {@link #open(Path)}, in WAL mode as the daemon runs the journal since 1.4.0. */
+    public static SqliteJournal openWal(Path file) {
+        return openWal(file, 3000);
+    }
+
+    /** As {@link #openWal(Path)}, waiting this long for the write lock (SQLite's wait is unfair: a writer can starve). */
+    public static SqliteJournal openWal(Path file, int busyTimeoutMillis) {
+        SqliteJournal journal = open(file, busyTimeoutMillis);
+        try (Connection c = journal.dataSource.getConnection()) {
+            JournalConnections.useWal(c);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
         return journal;
     }
 

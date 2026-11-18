@@ -5,6 +5,7 @@ import static dev.floor42.domain.Rules.agentOf;
 import static dev.floor42.domain.Rules.requireDirector;
 import static dev.floor42.domain.Rules.requireText;
 
+import dev.floor42.domain.event.ActionEvent.ActionDenied;
 import dev.floor42.domain.event.DeskEvent;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
 import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
@@ -237,9 +238,14 @@ final class Desk {
                 RecordedReason.askedBackText(reason).isEmpty(),
                 Refusal.ASK_BACK_NOT_ALLOWED,
                 "Only askBack writes an ask-back reason");
-        return view.record(ctx, q.mission())
-                .emit(new QuestionWithdrawn(id, reason))
-                .events();
+        Recorder r = view.record(ctx, q.mission()).emit(new QuestionWithdrawn(id, reason));
+        // Nobody answered ALLOW: the action the question asked about is refused, not left waiting for ever.
+        if (q.kind() == QuestionKind.ACTION_APPROVAL && q.action() != null)
+            view.action(q.action())
+                    .filter(a -> a.stage == ActionStage.REQUESTED)
+                    .ifPresent(a ->
+                            r.emit(new ActionDenied(a.id(), DenialReason.DIRECTOR, DecisionBasis.directorDenied(id))));
+        return r.events();
     }
 
     int rounds(QuestionId id) {

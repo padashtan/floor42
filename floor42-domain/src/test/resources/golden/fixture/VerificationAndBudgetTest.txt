@@ -49,6 +49,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -70,6 +71,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -237,6 +239,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 2
 incidents = []
 interventions = []
@@ -258,6 +261,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -442,6 +446,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -463,6 +468,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -626,6 +632,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -647,6 +654,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -803,6 +811,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -824,6 +833,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -966,6 +976,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -987,6 +998,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1137,6 +1149,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1158,6 +1171,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1312,6 +1326,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1333,6 +1348,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1499,6 +1515,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 2
 incidents = []
 interventions = []
@@ -1520,6 +1537,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1703,6 +1721,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1724,6 +1743,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -1884,6 +1904,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1905,6 +1926,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -2073,6 +2095,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2094,6 +2117,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="Stop here", askedAt=2026-10-20T09:00:15Z, askedBy=null, blocking=true, context="Estimated spending 0.1200 USD of a 0.1000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", criticality=HIGH, id="Q-1", kind=BUDGET_REACHED, mission="M-1", optionCodes=["RAISE_BUDGET", "STOP_HERE"], options=["Raise the budget by 50%", "Stop here"], phrase=Phrase(code="budget", params={"budget"="0.1000", "mission"="M-1", "spent"="0.1200"}), recommendation=null, status=ANSWERED, subject="Budget of M-1 reached", ticket=null}}
 retros = {}
@@ -2291,6 +2315,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2312,6 +2337,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -2502,6 +2528,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2523,6 +2550,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -2691,6 +2719,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2712,6 +2741,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:17Z, askedBy=null, blocking=true, context="Spending counted 0.5000 USD of a 0.5000 USD budget: estimated 0.0400 USD by the runtime + up to 0.4600 USD for 1 session(s) with no reported cost (the cap each ran under). No new agent session starts until you raise it.", criticality=HIGH, id="Q-1", kind=BUDGET_REACHED, mission="M-1", optionCodes=["RAISE_BUDGET", "STOP_HERE"], options=["Raise the budget by 50%", "Stop here"], phrase=Phrase(code="budgetBounded", params={"bound"="0.4600", "bounded"="1", "budget"="0.5000", "estimated"="0.0400", "mission"="M-1", "spent"="0.5000"}), recommendation=null, status=OPEN, subject="Budget of M-1 reached", ticket=null}}
 retros = {}
@@ -2874,6 +2904,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2895,6 +2926,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -3062,6 +3094,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -3083,6 +3116,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer="Raise the budget by 50%", askedAt=2026-10-20T09:00:15Z, askedBy=null, blocking=true, context="Estimated spending 0.1200 USD of a 0.1000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", criticality=HIGH, id="Q-1", kind=BUDGET_REACHED, mission="M-1", optionCodes=["RAISE_BUDGET", "STOP_HERE"], options=["Raise the budget by 50%", "Stop here"], phrase=Phrase(code="budget", params={"budget"="0.1000", "mission"="M-1", "spent"="0.1200"}), recommendation=null, status=ANSWERED, subject="Budget of M-1 reached", ticket=null}}
 retros = {}
@@ -3244,6 +3278,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -3265,6 +3300,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

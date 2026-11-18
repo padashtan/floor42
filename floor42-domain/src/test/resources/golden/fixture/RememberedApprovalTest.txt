@@ -51,6 +51,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -72,6 +73,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Bash?", ticket="T-1"}, "Q-2"=Question{action="a2", answer=null, askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=OPEN, subject="Allow chris to use Bash?", ticket="T-1"}}
 retros = {}
@@ -230,6 +232,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -251,6 +254,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -407,6 +411,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -428,6 +433,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -590,6 +596,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -611,6 +618,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:13Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to this call only (setting: ask every time).", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action="a2", answer=null, askedAt=2026-10-20T09:00:16Z, askedBy="chris", blocking=true, context="report.md\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=OPEN, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -769,6 +777,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -790,6 +799,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action="a2", answer=null, askedAt=2026-10-20T09:00:14Z, askedBy="galen", blocking=true, context="plan.md\nYour answer applies to every Write request from galen for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="galen", "tool"="Write"}), recommendation=null, status=OPEN, subject="Allow galen to use Write?", ticket=null}}
 retros = {}
@@ -950,6 +960,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -971,6 +982,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -1127,6 +1139,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1148,6 +1161,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action="a2", answer=null, askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="pom.xml\nYour answer applies to every Edit request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Edit"}), recommendation=null, status=OPEN, subject="Allow chris to use Edit?", ticket="T-1"}}
 retros = {}
@@ -1309,6 +1323,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1330,6 +1345,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="docker restart gateway\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Bash?", ticket="T-1"}, "Q-2"=Question{action="a3", answer=null, askedAt=2026-10-20T09:00:15Z, askedBy="chris", blocking=true, context="docker rm -f gateway\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=OPEN, subject="Allow chris to use Bash?", ticket="T-1"}}
 retros = {}
@@ -1496,6 +1512,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1517,6 +1534,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action=null, answer="Retry the write", askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-2", kind=OPEN, mission="M-1", optionCodes=[null, null], options=["Retry the write", "Give up"], phrase=null, recommendation=null, status=ANSWERED, subject="My write of notes.txt was denied. What now?", ticket="T-1"}, "Q-3"=Question{action="a2", answer="ALLOW", askedAt=2026-10-20T09:00:16Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-3", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -1685,6 +1703,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1706,6 +1725,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="rm -rf build\nYour answer applies to this exact command from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Bash"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Bash?", ticket="T-1"}, "Q-2"=Question{action="a2", answer="DENY", askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-3"=Question{action=null, answer="Retry", askedAt=2026-10-20T09:00:16Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-3", kind=OPEN, mission="M-1", optionCodes=[null, null], options=["Retry", "Give up"], phrase=null, recommendation=null, status=ANSWERED, subject="Two calls were denied. What now?", ticket="T-1"}}
 retros = {}
@@ -1886,6 +1906,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1907,6 +1928,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action=null, answer="Retry the write", askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-2", kind=OPEN, mission="M-1", optionCodes=[], options=[], phrase=null, recommendation=null, status=ANSWERED, subject="My write was denied. What now?", ticket="T-1"}, "Q-3"=Question{action=null, answer="no retry", askedAt=2026-10-20T09:00:16Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-3", kind=OPEN, mission="M-1", optionCodes=[], options=[], phrase=null, recommendation=null, status=ANSWERED, subject="My write was denied. What now?", ticket="T-1"}, "Q-4"=Question{action=null, answer="ne réessaie pas", askedAt=2026-10-20T09:00:18Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-4", kind=OPEN, mission="M-1", optionCodes=[], options=[], phrase=null, recommendation=null, status=ANSWERED, subject="My write was denied. What now?", ticket="T-1"}, "Q-5"=Question{action=null, answer="ne plus réessayer", askedAt=2026-10-20T09:00:20Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-5", kind=OPEN, mission="M-1", optionCodes=[], options=[], phrase=null, recommendation=null, status=ANSWERED, subject="My write was denied. What now?", ticket="T-1"}, "Q-6"=Question{action=null, answer="Retry, but not X", askedAt=2026-10-20T09:00:22Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-6", kind=OPEN, mission="M-1", optionCodes=[], options=[], phrase=null, recommendation=null, status=ANSWERED, subject="My write was denied. What now?", ticket="T-1"}}
 retros = {}
@@ -2072,6 +2094,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2093,6 +2116,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="galen", blocking=true, context="plan.md\nYour answer applies to every Write request from galen for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="galen", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow galen to use Write?", ticket=null}, "Q-2"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:14Z, askedBy="chris", blocking=true, context="", criticality=MEDIUM, id="Q-2", kind=OPEN, mission="M-1", optionCodes=[null, null], options=["Retry", "Give up"], phrase=null, recommendation=null, status=OPEN, subject="What now?", ticket="T-1"}}
 retros = {}
@@ -2248,6 +2272,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2269,6 +2294,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -2422,6 +2448,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2443,6 +2470,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -2599,6 +2627,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2620,6 +2649,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -2776,6 +2806,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2797,6 +2828,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="DENY", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -2955,6 +2987,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -2976,6 +3009,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer="ALLOW", askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=ANSWERED, subject="Allow chris to use Write?", ticket="T-1"}, "Q-2"=Question{action="a2", answer=null, askedAt=2026-10-20T09:00:15Z, askedBy="chris", blocking=true, context="report.md\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-2", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=OPEN, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}
@@ -3128,6 +3162,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -3149,6 +3184,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action="a1", answer=null, askedAt=2026-10-20T09:00:12Z, askedBy="chris", blocking=true, context="notes.txt\nYour answer applies to every Write request from chris for the rest of this mission.", criticality=MEDIUM, id="Q-1", kind=ACTION_APPROVAL, mission="M-1", optionCodes=[null, null], options=["ALLOW", "DENY"], phrase=Phrase(code="approval", params={"agent"="chris", "tool"="Write"}), recommendation=null, status=OPEN, subject="Allow chris to use Write?", ticket="T-1"}}
 retros = {}

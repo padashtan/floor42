@@ -5,6 +5,7 @@ import static dev.floor42.server.api.DirectorRequests.parse;
 import dev.floor42.domain.AgentId;
 import dev.floor42.domain.AssurancePolicy;
 import dev.floor42.domain.MissionId;
+import dev.floor42.server.api.IamActGuard;
 import dev.floor42.server.app.core.RefusedException;
 import dev.floor42.server.app.workspace.signing.AgentSigning;
 import dev.floor42.server.iam.AgentClients;

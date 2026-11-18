@@ -161,4 +161,22 @@ class IdentityAuditTest {
                 .links();
         assertThat(links).extracting(IdentityAudit.Link::kind).containsExactly(Kind.AGENT_TOKEN, Kind.REFUSAL);
     }
+
+    @Test
+    void aBrokerCallStillReachesTheChainAfterTheJournalMaskedItsResult() {
+        String jti = "09d81046-33d1-4312-9e6f-3925d03a06b7";
+        String masked = dev.floor42.server.app.session.BrokerLine.mask(
+                "Resource github GET /user -> 200 (exchanged token " + jti + " for target-api)\nbody",
+                dev.floor42.server.runtime.ToolCatalog.FLOOR42_TOOL_PREFIX + IdentityAudit.BROKER_TOOL);
+        var events = List.of(
+                journal.get(0),
+                env(2, asked("a3", IdentityAudit.BROKER_TOOL, "github")),
+                env(3, new ActionExecuted(new ActionId("a3"), masked, true)));
+        var broker =
+                IdentityAudit.chain("L1", events, Optional.empty(), OptionalLong.empty(), List.of()).links().stream()
+                        .filter(l -> l.kind() == Kind.BROKER_TOKEN)
+                        .findFirst()
+                        .orElseThrow();
+        assertThat(broker.detail()).isEqualTo("jti " + jti + ", status 200");
+    }
 }

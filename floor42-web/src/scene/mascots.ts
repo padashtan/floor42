@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 import type { Bubble } from './petBubbles'
 import type { Figure } from './figures'
-import { DESKS, FLOOR, LANDING, PLANTS, around } from './floorPlan'
+import { VIEW_DIR } from './camera'
+import { DESKS, FLOOR, LANDING, PLANTS, STATIONS, around } from './floorPlan'
 import { box, glow, markTarget, mat } from './kit'
 import type { NavGrid, Point, Rect } from './nav'
 import { P } from './palette'
@@ -134,9 +135,13 @@ export class Mascots {
   private idle: Figure[] = []
   private hub: Point = { x: 6, z: 12.4 }
   private readonly seed: number
+  private readonly scene: THREE.Object3D
+  private readonly seen = new Map<string, boolean>()
+  private readonly sight = new THREE.Raycaster()
 
   constructor(parent: THREE.Object3D, world: MascotWorld, seed = 0) {
     this.world = world
+    this.scene = parent
     this.seed = seed
     this.petNav = new PetNav(world.nav, SIZE.width, SIZE.depth)
     const robot = buildRobot()
@@ -405,8 +410,38 @@ export class Mascots {
     const hub = nav === this.petNav ? this.hub : LANDING
     // The second pet starts beside the first, in plain view.
     const beside = (p: Point) => nav !== this.petNav || (Math.hypot(p.x - hub.x, p.z - hub.z) > 1.2 && Math.hypot(p.x - hub.x, p.z - hub.z) < 3.2)
-    const ok = (p: Point) => this.clear(p) && placed(p) && beside(p) && (nav !== this.petNav || (this.petNav.inHome(p) && this.petNav.clearOf(p, r + 0.1)))
+    const ok = (p: Point) => this.clear(p) && this.pickable(p) && placed(p) && beside(p) && (nav !== this.petNav || (this.petNav.inHome(p) && this.petNav.clearOf(p, r + 0.1)))
     return freeSpot(nav, SIZE, rng, hub, ok) ?? hub
+  }
+
+  /**
+   * Whether the pointer can reach a little one standing at `p`: no machine, table or other target stands between it and
+   * the camera (the first target under the pointer takes the hover and the click, so a pet resting behind one could not
+   * be picked). The view direction never changes, so the answer is kept per cell.
+   */
+  pickable(p: Point): boolean {
+    const key = `${Math.round(p.x * 4)},${Math.round(p.z * 4)}`
+    p = { x: Math.round(p.x * 4) / 4, z: Math.round(p.z * 4) / 4 }
+    let ok = this.seen.get(key)
+    if (ok === undefined) {
+      // Asked while the scene is built, before any frame: the matrices are not yet in place.
+      this.scene.updateMatrixWorld(true)
+      this.sight.set(new THREE.Vector3(p.x, 0.25, p.z), VIEW_DIR)
+      // Sprites (labels) need a camera to be tested; they are no target.
+      this.sight.camera ??= new THREE.OrthographicCamera()
+      ok = true
+      for (const hit of this.sight.intersectObjects(this.scene.children, true)) {
+        let hidden = false
+        for (let o: THREE.Object3D | null = hit.object; o; o = o.parent) hidden = hidden || !o.visible
+        let target: { kind: string } | undefined
+        for (let o: THREE.Object3D | null = hit.object; o && !target; o = o.parent) target = o.userData.target
+        if (hidden || !target || target.kind === 'robot' || target.kind === 'pet' || target.kind === 'agent') continue
+        ok = false
+        break
+      }
+      this.seen.set(key, ok)
+    }
+    return ok
   }
 
   /** Not on the elevator's landing, where agents step out. */
@@ -416,6 +451,10 @@ export class Mascots {
 
   /** No agent stands within a pet's reach of this point. */
   private awayFromAgents(p: Point, r: number): boolean {
+    // Nor where an agent will stand or sit: it steps into its slot fast, with the pet at its feet.
+    for (const slots of Object.values(STATIONS)) {
+      for (const s of slots) if (Math.hypot(s.x - p.x, s.z - p.z) < r + AGENT_R + 0.5) return false
+    }
     for (const f of this.world.figures.values()) {
       if (f.root.visible && Math.hypot(f.root.position.x - p.x, f.root.position.z - p.z) < r + AGENT_R + 0.5) return false
     }

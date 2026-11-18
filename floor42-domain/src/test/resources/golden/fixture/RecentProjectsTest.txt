@@ -47,6 +47,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -68,6 +69,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -206,6 +208,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -227,6 +230,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -380,6 +384,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -401,6 +406,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -552,6 +558,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 2
 incidents = []
 interventions = []
@@ -573,6 +580,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {"C:/repo"=ProjectMark{forgottenAt=2026-10-20T09:00:10Z, path="C:/repo", pinned=false}}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

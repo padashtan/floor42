@@ -165,6 +165,19 @@ class ProofDossiersTest {
     }
 
     @Test
+    void aBrokerCallStillReachesTheDossierAfterTheJournalMaskedItsResult() {
+        String jti = "09d81046-33d1-4312-9e6f-3925d03a06b7";
+        String masked = dev.floor42.server.app.session.BrokerLine.mask(
+                "Resource github GET /user -> 200 (exchanged token " + jti + " for target-api)\nbody",
+                dev.floor42.server.runtime.ToolCatalog.FLOOR42_TOOL_PREFIX + IdentityAudit.BROKER_TOOL);
+        List<EventEnvelope> events =
+                List.of(IAM.get(0), IAM.get(3), env(5, new ActionExecuted(new ActionId("a2"), masked, true)));
+        ProofDossier.BrokerFact b = compose(events).brokerCalls().items().getFirst();
+        assertThat(b.exchangedJti()).isEqualTo(jti);
+        assertThat(b.audience()).isEqualTo("target-api");
+    }
+
+    @Test
     void anIdentityRefusalIsARefusalMarkedIdentity() {
         List<ProofDossier.RefusalFact> r = compose(IAM).refusals().items();
         assertThat(r).extracting(ProofDossier.RefusalFact::identity).containsExactly(false, true);

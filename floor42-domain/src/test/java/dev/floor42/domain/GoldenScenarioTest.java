@@ -1670,6 +1670,30 @@ class GoldenScenarioTest {
         s.run(
                 "malformed check line",
                 () -> c.deliveries().recordPullRequestChecks(s.director(REAL), M1, 7, List.of("build")));
+        String sha = "84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8";
+        s.run(
+                "merge without evidence",
+                () -> c.deliveries().recordPullRequestMerged(s.director(REAL), M1, 7, sha, "CLICK"));
+        s.run(
+                "delivery evidence, a check failed",
+                () -> c.deliveries()
+                        .recordDeliveryEvidence(
+                                s.director(REAL), M1, 7, sha, List.of("build|pass|SUCCESS", "lint|fail|FAILURE")));
+        s.run(
+                "merge on red evidence",
+                () -> c.deliveries().recordPullRequestMerged(s.director(REAL), M1, 7, sha, "CLICK"));
+        s.run(
+                "delivery evidence, all green",
+                () -> c.deliveries()
+                        .recordDeliveryEvidence(
+                                s.director(REAL), M1, 7, sha, List.of("build|pass|SUCCESS", "lint|pass|SUCCESS")));
+        s.run(
+                "merge by an agent",
+                () -> c.deliveries().recordPullRequestMerged(s.agent(CHRIS, REAL), M1, 7, sha, "CLICK"));
+        s.run(
+                "merge on green evidence",
+                () -> c.deliveries().recordPullRequestMerged(s.director(REAL), M1, 7, sha, "MERGE:pr:M-1#7"));
+        s.run("merge again", () -> c.deliveries().recordPullRequestMerged(s.director(REAL), M1, 7, sha, "CLICK"));
         s.run(
                 "assets",
                 () -> c.deliveries()

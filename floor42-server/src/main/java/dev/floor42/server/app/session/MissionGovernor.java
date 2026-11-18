@@ -18,6 +18,7 @@ import dev.floor42.server.runtime.RuntimeEvent.ToolCompleted;
 import dev.floor42.server.runtime.RuntimeEvent.ToolRequested;
 import dev.floor42.server.runtime.ShellGuard;
 import dev.floor42.server.runtime.ToolCatalog;
+import dev.floor42.server.security.SecretMasker;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -84,7 +85,7 @@ public final class MissionGovernor implements Governor {
                         spec.agent(),
                         ToolCatalog.category(call.tool()),
                         call.tool(),
-                        ToolCatalog.summary(call.tool(), call.input(), spec.workdir()),
+                        masked(ToolCatalog.summary(call.tool(), call.input(), spec.workdir())),
                         ToolCatalog.command(call.tool(), call.input()),
                         violation(call)));
         return verdict(id);
@@ -220,7 +221,7 @@ public final class MissionGovernor implements Governor {
                             spec.agent(),
                             ToolCatalog.category(call.tool()),
                             call.tool(),
-                            ToolCatalog.summary(call.tool(), call.input(), spec.workdir()),
+                            masked(ToolCatalog.summary(call.tool(), call.input(), spec.workdir())),
                             false,
                             detail));
         } catch (RuntimeException e) {
@@ -348,12 +349,19 @@ public final class MissionGovernor implements Governor {
                 c -> c.missions().find(spec.mission()).orElseThrow().status().isTerminal());
     }
 
+    /** The one place the tool's own words enter an event: what looks like a secret never reaches the journal. */
+    private static String masked(String text) {
+        return SecretMasker.maskText(text);
+    }
+
     @Override
     public void completed(ToolCompleted result) {
         ActionId id = actionId(result.toolUseId());
-        String output = result.output().length() > MAX_OUTPUT
-                ? result.output().substring(0, MAX_OUTPUT) + "…"
-                : result.output();
+        // Masked before the cut, so a secret straddling the cut is not left as a half
+        String tool = office.query(
+                c -> c.actions().find(id).map(dev.floor42.domain.Action::tool).orElse(null));
+        String full = BrokerLine.mask(result.output(), tool);
+        String output = full.length() > MAX_OUTPUT ? full.substring(0, MAX_OUTPUT) + "…" : full;
         if (office.query(c -> c.actions().find(id).isPresent())) {
             office.execute(c -> c.actions()
                     .recordOutcome(
@@ -382,7 +390,7 @@ public final class MissionGovernor implements Governor {
                         spec.agent(),
                         ToolCatalog.category(tool),
                         tool,
-                        call == null ? null : ToolCatalog.summary(tool, call.input(), spec.workdir()),
+                        call == null ? null : masked(ToolCatalog.summary(tool, call.input(), spec.workdir())),
                         !result.error(),
                         output));
     }

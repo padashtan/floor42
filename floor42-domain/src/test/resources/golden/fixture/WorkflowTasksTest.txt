@@ -47,6 +47,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -68,6 +69,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Tasked", steps=[Plan(maxTickets=3),
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -226,6 +228,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -247,6 +250,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Tasked", steps=[Plan(maxTickets=3),
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -434,6 +438,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = [Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:20Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-1", subject="also the docs", detail=null, files=[])]
@@ -455,6 +460,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Tasked", steps=[Plan(maxTickets=3),
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -620,6 +626,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -641,6 +648,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Tasked", steps=[Plan(maxTickets=3),
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -794,6 +802,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -815,6 +824,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Research", steps=[Approval(), Task(
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -963,6 +973,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -984,6 +995,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Tasked", steps=[Plan(maxTickets=3),
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

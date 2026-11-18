@@ -272,6 +272,25 @@ class SandboxEscapeTest {
         }
     }
 
+    /** D30: the per-worktree config is hidden like the repository config; only the allow-listed keys reach git. */
+    @Test
+    void theWorktreeConfigIsHiddenAndOnlyAllowListedKeysAreListed() throws Exception {
+        Path wt = linkedWorktree();
+        Path repo = data.resolve("repo");
+        GitProcess.git(repo, List.of("config", "extensions.worktreeConfig", "true"));
+        GitProcess.git(wt, List.of("config", "--worktree", "core.sshCommand", "ssh -i " + SandboxGitConfigTest.TOKEN));
+        GitProcess.git(wt, List.of("config", "--worktree", "credential.helper", "store " + SandboxGitConfigTest.TOKEN));
+        Sandbox sandbox = sandbox(120, 2048, 4_294_967_296L);
+        String script = "cat \"$GIT_DIR/config.worktree\" 2>&1; git config --worktree --list 2>&1; echo wt-end";
+
+        for (List<String> argv : List.of(sandbox.argv(wt, script), sandbox.argv(wt, script, 120, true))) {
+            Result r = run(argv, 180);
+            assertThat(r.out()).as("the script ran to its end").contains("wt-end");
+            assertThat(r.out()).as("no secret of the worktree config").doesNotContain(SandboxGitConfigTest.TOKEN);
+            assertThat(r.out()).doesNotContain("credential.", "sshcommand");
+        }
+    }
+
     @Test
     void onlyTheAllowedEnvironmentReachesTheCommandEvenWhenWslForwardsMore() throws Exception {
         Path work = Files.createDirectories(data.resolve("work"));

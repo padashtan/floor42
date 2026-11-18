@@ -113,6 +113,8 @@ public class Sandbox {
               mount --bind "$3" /media/git
               rr /media/git
               hide /media/git/config
+              # D30: config.worktree (extensions.worktreeConfig) is hidden like config; its allow-listed keys (WorktreeGitDirs.KEYS) come as GIT_CONFIG_*.
+              hide /media/git/config.worktree
               if [ "$4" != - ]; then
                 mount --bind "$3/worktrees/$4" "/media/git/worktrees/$4"
                 # ro and proof: the whole folder is read-only first and nothing is created in the source repository.
@@ -124,6 +126,7 @@ public class Sandbox {
                   mount --bind "$3/worktrees/$4" /media/.wtlow; rr /media/.wtlow
                   mount -t overlay overlay -o "lowerdir=/media/.wtlow,upperdir=/media/.ovg/u,workdir=/media/.ovg/w" "/media/git/worktrees/$4" 2>/dev/null || rr "/media/git/worktrees/$4"
                 fi
+                hide "/media/git/worktrees/$4/config.worktree"
               fi
             fi
             if [ -e /media/work/.git ]; then ro /media/work/.git; hide /media/work/.git/config; fi; for p in .claude .mcp.json; do if [ -e "/media/work/$p" ]; then ro "/media/work/$p"; fi; done

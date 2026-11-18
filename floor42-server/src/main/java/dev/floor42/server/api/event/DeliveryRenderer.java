@@ -9,12 +9,14 @@ import dev.floor42.domain.UncommittedWorktree;
 import dev.floor42.domain.event.DeliveryEvent;
 import dev.floor42.domain.event.DeliveryEvent.DeliverablesCopied;
 import dev.floor42.domain.event.DeliveryEvent.DeliverablesDestinationSet;
+import dev.floor42.domain.event.DeliveryEvent.DeliveryEvidenceRecorded;
 import dev.floor42.domain.event.DeliveryEvent.MissionAssetsSelected;
 import dev.floor42.domain.event.DeliveryEvent.PluginCommandRan;
 import dev.floor42.domain.event.DeliveryEvent.ProofRan;
 import dev.floor42.domain.event.DeliveryEvent.ProofStepWitnessed;
 import dev.floor42.domain.event.DeliveryEvent.ProofVerdictGiven;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestCheckState;
+import dev.floor42.domain.event.DeliveryEvent.PullRequestMerged;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestOpened;
 import dev.floor42.domain.event.DeliveryEvent.UncommittedWorkAccepted;
 import dev.floor42.domain.event.DeliveryEvent.UnprovenDeliveryAccepted;
@@ -29,13 +31,10 @@ final class DeliveryRenderer implements EventRenderer<DeliveryEvent> {
         return switch (event) {
             case PullRequestOpened e -> opened(e);
             case PullRequestCheckState e -> checked(e);
+            case DeliveryEvidenceRecorded e -> evidence(e);
+            case PullRequestMerged e -> merged(e);
             case PluginCommandRan e -> plugin(e);
-            case MissionAssetsSelected e ->
-                line(e.items().isEmpty() ? "none" : "some")
-                        .param("mission", e.mission())
-                        .param("items", e.items())
-                        .param("count", e.items().size())
-                        .build();
+            case MissionAssetsSelected e -> assets(e);
             case DeliverablesDestinationSet e ->
                 line("set")
                         .param("mission", e.mission())
@@ -48,6 +47,23 @@ final class DeliveryRenderer implements EventRenderer<DeliveryEvent> {
             case ProofVerdictGiven e -> ProofLines.verdict(e);
             case UnprovenDeliveryAccepted e -> ProofLines.unproven(e);
         };
+    }
+
+    private static EventLine merged(PullRequestMerged e) {
+        return line(e.approval().equals("CLICK") ? "click" : "approved")
+                .param("mission", e.mission())
+                .param("number", e.number())
+                .param("commit", shortCommit(e.commit()))
+                .param("approval", e.approval())
+                .build();
+    }
+
+    private static EventLine assets(MissionAssetsSelected e) {
+        return line(e.items().isEmpty() ? "none" : "some")
+                .param("mission", e.mission())
+                .param("items", e.items())
+                .param("count", e.items().size())
+                .build();
     }
 
     /** How many files were written, kept beside another, already there, or left out (ADR-0051). */
@@ -110,6 +126,24 @@ final class DeliveryRenderer implements EventRenderer<DeliveryEvent> {
                 .param("failed", failed)
                 .param("pending", pending)
                 .build();
+    }
+
+    /** The checks of one commit, counted by bucket as above; the conclusion was computed by the domain. */
+    private static EventLine evidence(DeliveryEvidenceRecorded e) {
+        long failed = bucket(e.checks(), "fail") + bucket(e.checks(), "cancel");
+        return line(e.conclusion().toLowerCase(Locale.ROOT))
+                .param("mission", e.mission())
+                .param("number", e.number())
+                .param("commit", shortCommit(e.commit()))
+                .param("checks", e.checks())
+                .param("count", e.checks().size())
+                .param("failed", failed)
+                .param("pending", bucket(e.checks(), "pending"))
+                .build();
+    }
+
+    private static String shortCommit(String commit) {
+        return commit == null ? "" : commit.substring(0, Math.min(8, commit.length()));
     }
 
     /** Where, what was asked, and what Floor42 read again afterwards: the sentence follows what is on disk. */

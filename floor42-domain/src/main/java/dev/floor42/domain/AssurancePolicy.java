@@ -42,7 +42,9 @@ public final class AssurancePolicy {
         TRUST,
         SCRIPT_TOKEN,
         SETTING,
-        IAM_SETTINGS
+        IAM_SETTINGS,
+        /** Merging a pull request on GitHub, on the proven click (ADR-0084). */
+        MERGE
     }
 
     public enum Seat {
@@ -68,7 +70,7 @@ public final class AssurancePolicy {
     /** The table: the level an act of this kind needs, with four eyes on or off. */
     public static Level required(ActKind kind, boolean fourEyesOn) {
         return switch (kind) {
-            case PLAN, QUESTION, SCRIPT_TOKEN -> Level.STRONG;
+            case PLAN, QUESTION, SCRIPT_TOKEN, MERGE -> Level.STRONG;
             case RULE, GRANT, PULL_REQUEST, TRUST, IAM_SETTINGS -> fourEyesOn ? Level.FOUR_EYES : Level.STRONG;
             case SETTING -> Level.FOUR_EYES;
         };

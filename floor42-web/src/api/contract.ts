@@ -1,6 +1,8 @@
 // Compile-time contract between the server and the UI (debt D1). Each view written by hand in types.ts must have
 // exactly the fields of the server's view, as recorded in openapi.json (kept current by the server's
-// OpenApiContractTest). When they differ, the type check fails and names the fields in question.
+// OpenApiContractTest). When they differ, the type check fails and names the fields in question. The field TYPES
+// (string, number, boolean, array, object) are compared by contractTypes.test.ts: TypeScript widens the JSON import,
+// so the type system cannot tell a boolean from a string there.
 import type * as I from './identity'
 import type * as M from './mcp'
 import type * as O from './objections'
@@ -118,6 +120,7 @@ export type Contract = [
   Agree<Mismatch<T.PullRequestView, 'PullRequestView'>>,
   Agree<Mismatch<T.PullRequestPreview, 'PullRequestPreview'>>,
   Agree<Mismatch<T.PullRequestRequest, 'PullRequestRequest'>>,
+  Agree<Mismatch<T.MergeRequest, 'MergeRequest'>>,
   Agree<Mismatch<T.PullRequestOutcome, 'PullRequestOutcome'>>,
   Agree<Mismatch<T.DeliveredReview, 'DeliveredReview'>>,
   Agree<Mismatch<T.UncommittedCheck, 'UncommittedCheck'>>,
