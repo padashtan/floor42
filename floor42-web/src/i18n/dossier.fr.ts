@@ -52,6 +52,8 @@ export const dossierFr: Record<keyof typeof dossierEn, string> = {
   'dossier.kind.PROOF_VERDICT_GIVEN': 'Verdict de preuve rendu',
   'dossier.kind.DELIVERABLES_COPIED': 'Livrables copiés',
   'dossier.kind.PULL_REQUEST_OPENED': 'Pull request ouverte',
+  'dossier.kind.DELIVERY_EVIDENCE': 'Vérifications du commit d’une pull request',
+  'dossier.kind.PULL_REQUEST_MERGED': 'Pull request fusionnée',
   'dossier.kind.PATCH_ACCEPTED': 'Correctif accepté',
   'dossier.kind.PROJECT_MERGED': 'Branche du projet fusionnée dans un espace de travail',
   'dossier.kind.BRANCHES_MERGED': 'Branches fusionnées',

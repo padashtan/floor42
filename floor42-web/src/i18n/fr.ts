@@ -6,6 +6,7 @@ import { missionsFr } from './missions.fr'
 import { workshopFr } from './workshop.fr'
 import { eventLinesFr } from './event-lines.fr'
 import { statusPanelsFr } from './status-panels.fr'
+import { pullRequestsFr } from './pull-requests.fr'
 import { deliverablesFr } from './deliverables.fr'
 import { terminalCostFr } from './terminal-cost.fr'
 import { tutorialFr } from './tutorial.fr'
@@ -26,6 +27,7 @@ export const fr: Record<keyof typeof en, string> = {
   ...workshopFr,
   ...eventLinesFr,
   ...statusPanelsFr,
+  ...pullRequestsFr,
   ...deliverablesFr,
   ...terminalCostFr,
   ...tutorialFr,

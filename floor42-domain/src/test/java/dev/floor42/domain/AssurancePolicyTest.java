@@ -49,6 +49,7 @@ class AssurancePolicyTest {
             {ActKind.PULL_REQUEST, Level.STRONG, Level.FOUR_EYES},
             {ActKind.TRUST, Level.STRONG, Level.FOUR_EYES},
             {ActKind.SCRIPT_TOKEN, Level.STRONG, Level.STRONG},
+            {ActKind.MERGE, Level.STRONG, Level.STRONG},
             {ActKind.SETTING, Level.FOUR_EYES, Level.FOUR_EYES},
             {ActKind.IAM_SETTINGS, Level.STRONG, Level.FOUR_EYES},
         };

@@ -5,6 +5,7 @@ import { missionsEn } from './missions.en'
 import { workshopEn } from './workshop.en'
 import { eventLinesEn } from './event-lines.en'
 import { statusPanelsEn } from './status-panels.en'
+import { pullRequestsEn } from './pull-requests.en'
 import { deliverablesEn } from './deliverables.en'
 import { terminalCostEn } from './terminal-cost.en'
 import { tutorialEn } from './tutorial.en'
@@ -25,6 +26,7 @@ export const en = {
   ...workshopEn,
   ...eventLinesEn,
   ...statusPanelsEn,
+  ...pullRequestsEn,
   ...deliverablesEn,
   ...terminalCostEn,
   ...tutorialEn,

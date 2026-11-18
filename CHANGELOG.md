@@ -7,6 +7,24 @@ before v1.0.0: that work is not published as versions, and the decision records 
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-18
+
+### Added
+- Governed delivery ([ADR-0084](docs/adr/0084-governed-delivery.md)): Floor42 reads the checks of the pull request's exact head commit (check runs per suite and legacy commit statuses), shows them with the commit, marks them stale when the branch moves, and merges only on the director's own click (`gh pr merge --match-head-commit`) when every check of the current head is green and the remote still names the pull request's repository (409 `REMOTE_CHANGED` otherwise); a token gets 403 `HUMAN_ONLY`, IAM on or off, and in IAM mode the merge is an assured act at the strong level (its end-to-end test with the phone is planned for 1.5). New events `DeliveryEvidenceRecorded` and `PullRequestMerged`; a 1.3.x binary sets them aside (`NEWER_VERSION`). Known limit: a check that GitHub has not created yet when the first evidence is read is unseen (ADR-0084).
+- Adversarial lab ([docs/security-lab.md](docs/security-lab.md)): 26 deterministic tests through the hook and the brokers, run in `verify`: 23 assert a refusal (its code, the journal row where there is one, and no call reaching the broker's resource), 3 document residual gaps: injected instructions in a file or in test output are not detected (the forbidden follow-up is refused) and a command that hides its program passes the text check (the sandbox is the boundary).
+
+### Security
+- A secret in a tool's input or in its result was written to the journal as is; both are now masked before the journal.
+- Inside the shell sandbox `config.worktree` is hidden like `config` (DEBT D30).
+- A withdrawn approval question denies its pending action instead of leaving it requested.
+- An MCP gateway `toolUseId` cannot be replayed while its action is open; spent ids of finished actions are forgotten after one hour or by the bound.
+
+### Changed
+- The journal runs in SQLite WAL mode with `synchronous=FULL`: a backup no longer stretches appends (in the same run, the append p95 under a looping backup is at most half the rollback-mode p95; measured about a fifth on the development machine). A clean stop folds the WAL back and returns to rollback mode, so 1.3.x opens the folder; after a crash keep `floor42.db-wal` and `floor42.db-shm` next to the journal. Stop 1.4.0 cleanly before a downgrade.
+
+### Fixed
+- A journal append whose commit was durable could be reported as failed when SQLite was busy right after the commit, and a retry would have stored it twice.
+
 ## [1.3.1] - 2026-11-17
 
 ### Security

@@ -33,6 +33,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -54,6 +55,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -198,6 +200,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -219,6 +222,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {1=WorkflowProposal(number=1, mission="M-1", by="galen", at=2026-10-20T09:00:07Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=DISMISSED)}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -350,6 +354,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -371,6 +376,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -474,6 +480,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -495,6 +502,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -607,6 +615,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -628,6 +637,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Light", steps=[Plan(maxTickets=2), 
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -758,6 +768,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 0
 incidents = []
 interventions = []
@@ -779,6 +790,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -898,6 +910,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -919,6 +932,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {1=WorkflowProposal(number=1, mission="M-1", by="galen", at=2026-10-20T09:00:09Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=2), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=ADOPTED), 2=WorkflowProposal(number=2, mission="M-1", by="galen", at=2026-10-20T09:00:10Z, reading=Read(workflow=Workflow(name="Talk", steps=[Approval(), Committee(), Accept()], mode=LOOP)), status=DISMISSED)}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

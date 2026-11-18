@@ -100,11 +100,19 @@ public class SqliteJournal implements Journal {
         // A copy before migration and replay: what a failed start leaves to restore.
         backups.atStartup();
         flyway.migrate();
-        refuseExtensionLoading();
+        JournalConnections.enableWal(dataSource);
+        JournalConnections.refuseExtensionLoading(dataSource);
         JournalIntegrity i = new JournalIntegrity(dataSource, dataDir, checkpointEvery);
         i.start();
         integrity = i;
         checkContinuity();
+    }
+
+    /** How long {@link #leaveWal()} waits for other connections to close (tests shorten it). */
+    long leaveWalMillis = 3000;
+
+    void leaveWal() {
+        JournalConnections.leaveWal(dataSource, leaveWalMillis);
     }
 
     /** The chain's last verification (ADR-0079); empty before the journal was opened. */
@@ -213,22 +221,6 @@ public class SqliteJournal implements Journal {
     }
 
     /**
-     * SQLite's {@code load_extension()} runs native code from a file: an open journal connection must refuse it. Asked
-     * of the connection itself, so it holds whatever configured the pool.
-     */
-    void refuseExtensionLoading() {
-        try (Connection c = dataSource.getConnection();
-                PreparedStatement ps = c.prepareStatement("SELECT load_extension('floor42-no-such-extension')")) {
-            ps.executeQuery().close();
-        } catch (SQLException e) {
-            if (String.valueOf(e.getMessage()).contains("not authorized")) return;
-            throw new JournalException(
-                    "The journal's connection loads SQLite extensions (" + e.getMessage() + "): refused", e);
-        }
-        throw new JournalException("The journal's connection loads SQLite extensions: refused", null);
-    }
-
-    /**
      * The restore the director prepared (in memory, never from a file) is applied here, during the daemon's own orderly
      * stop, after every other stop observer: the journal then takes no more appends, so nothing written during the
      * stop lands in the restored journal. A crash or {@code kill -9} forgets the restore.
@@ -265,6 +257,7 @@ public class SqliteJournal implements Journal {
         } finally {
             if (k != null) k.close();
         }
+        leaveWal(); // after the anchor's own connection is closed
     }
 
     /** Applies the prepared restore; whatever stops it, the outcome is written so the next start reports it. */
@@ -350,9 +343,11 @@ public class SqliteJournal implements Journal {
                 }
                 ps.executeBatch();
                 JournalChain.chainPending(c, false);
-                c.commit();
+                // Not commit(): sqlite-jdbc then runs "begin immediate" again, and when that is busy the call throws
+                // although the rows are durable (a committed append reported as failed, a retry would duplicate it).
+                c.setAutoCommit(true);
             } catch (SQLException | RuntimeException ex) {
-                c.rollback();
+                JournalConnections.rollBack(c, ex);
                 throw ex;
             }
         } catch (SQLException ex) {

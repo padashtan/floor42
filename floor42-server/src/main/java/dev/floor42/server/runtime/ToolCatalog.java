@@ -67,7 +67,8 @@ public final class ToolCatalog {
         ActionCategory c = category(tool);
         if (c == ActionCategory.READ || c == ActionCategory.WRITE)
             s = Objects.requireNonNullElse(inside(s, workdir), s);
-        return StreamJsonParser.abbreviate(s, 300);
+        // Masked before the cut: a secret straddling it would leave a half the patterns no longer recognise.
+        return StreamJsonParser.abbreviate(SecretMasker.maskText(s), 300);
     }
 
     /** "server tool arguments", the arguments with every secret masked: the journal row never holds what the agent typed. */

@@ -57,6 +57,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -78,6 +79,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="Decide", steps=[Approval(), Committ
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:16Z, askedBy=null, blocking=true, context="Recommendation: Adopt a gateway", criticality=MEDIUM, id="Q-1", kind=COMMITTEE_ARBITRATION, mission="M-1", optionCodes=[null, null], options=["Adopt", "Reject"], phrase=Phrase(code="committee", params={"topic"="Gateway?"}), recommendation=null, status=OPEN, subject="Committee decision: Gateway?", ticket="T-1"}}
 retros = {}
@@ -242,6 +244,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -263,6 +266,7 @@ pins = {"M-1"=Pinned(workflow=Workflow(name="built-in", steps=[Plan(maxTickets=8
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {"Q-1"=Question{action=null, answer=null, askedAt=2026-10-20T09:00:16Z, askedBy=null, blocking=true, context="Recommendation: Adopt a gateway", criticality=MEDIUM, id="Q-1", kind=COMMITTEE_ARBITRATION, mission="M-1", optionCodes=[null, null, null], options=["Adopt", "Adopt and implement (writes ask you first)", "Reject"], phrase=Phrase(code="committee", params={"topic"="Gateway?"}), recommendation=null, status=OPEN, subject="Committee decision: Gateway?", ticket="T-1"}}
 retros = {}

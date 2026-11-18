@@ -15,6 +15,9 @@ import java.util.function.Consumer;
 public class CapturingRuntime extends ClaudeCodeRuntime {
 
     public final List<SessionSpec> specs = new CopyOnWriteArrayList<>();
+    /** Which thread asked for which mission's session: shows a fork of an earlier test reaching this mock. */
+    public final List<String> calls = new CopyOnWriteArrayList<>();
+
     private final Consumer<SessionSpec> during;
 
     public CapturingRuntime(ObjectMapper json, Consumer<SessionSpec> during) {
@@ -25,6 +28,7 @@ public class CapturingRuntime extends ClaudeCodeRuntime {
     @Override
     public SessionReport run(SessionSpec spec, Governor governor) {
         specs.add(spec);
+        calls.add(Thread.currentThread().getName() + " -> " + spec.mission());
         during.accept(spec);
         return new SessionReport(
                 Origin.REAL,

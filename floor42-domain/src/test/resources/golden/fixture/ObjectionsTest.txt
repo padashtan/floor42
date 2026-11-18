@@ -49,6 +49,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -70,6 +71,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -224,6 +226,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = [Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:12Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-1", subject="Cover the expiry", detail=null, files=[])]
@@ -245,6 +248,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -410,6 +414,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = [Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:19Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-2", subject="fix", detail=null, files=[])]
@@ -431,6 +436,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -591,6 +597,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -612,6 +619,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -778,6 +786,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = [Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:12Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-1", subject="one", detail=null, files=[]), Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:12Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-1", subject="three", detail=null, files=[]), Intervention(kind=DIRECTIVE, mission="M-1", at=2026-10-20T09:00:17Z, author=Actor(kind=DIRECTOR, id="director"), workspace="chris", ticket="T-1", subject="again", detail=null, files=[])]
@@ -799,6 +808,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -950,6 +960,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -971,6 +982,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}

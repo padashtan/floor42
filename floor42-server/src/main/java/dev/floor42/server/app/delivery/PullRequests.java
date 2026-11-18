@@ -11,7 +11,6 @@ import dev.floor42.server.runtime.GitProcess;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,12 +46,18 @@ public class PullRequests {
             boolean found,
             String openedAt,
             List<PullRequestCheck> checks,
-            String checksAt) {
+            String checksAt,
+            String commit,
+            String conclusion,
+            Boolean stale,
+            String headNow,
+            String mergedCommit,
+            String mergedAt) {
         public PullRequestView {
             checks = checks == null ? null : Collections.unmodifiableList(new ArrayList<>(checks));
         }
 
-        static PullRequestView of(PullRequest p) {
+        static PullRequestView of(PullRequest p, PullRequest.Evidence e, PullRequest.Merge m, String headNow) {
             return new PullRequestView(
                     p.number(),
                     p.url(),
@@ -65,11 +70,33 @@ public class PullRequests {
                     p.checks().stream()
                             .map(c -> new PullRequestCheck(c.name(), c.bucket(), c.state()))
                             .toList(),
-                    p.checksAt() == null ? null : p.checksAt().toString());
+                    p.checksAt() == null ? null : p.checksAt().toString(),
+                    e == null ? null : e.commit(),
+                    e == null ? null : e.conclusion(),
+                    e == null || headNow == null ? null : !e.commit().equals(headNow),
+                    headNow,
+                    m == null ? null : m.commit(),
+                    m == null ? null : m.at().toString());
         }
 
         static PullRequestView found(GhClient.Found f, String branch) {
-            return new PullRequestView(f.number(), f.url(), null, branch, f.base(), null, true, null, List.of(), null);
+            return new PullRequestView(
+                    f.number(),
+                    f.url(),
+                    null,
+                    branch,
+                    f.base(),
+                    null,
+                    true,
+                    null,
+                    List.of(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
         }
     }
 
@@ -120,14 +147,17 @@ public class PullRequests {
     private final PullRequestDraft drafts;
     private final PullRequestGit git;
     private final GhClient gh;
+    private final PullRequestChecks checks;
     private final Set<MissionId> running = ConcurrentHashMap.newKeySet();
 
     @Inject
-    public PullRequests(OfficeService office, PullRequestDraft drafts, PullRequestGit git, GhClient gh) {
+    public PullRequests(
+            OfficeService office, PullRequestDraft drafts, PullRequestGit git, GhClient gh, PullRequestChecks checks) {
         this.office = office;
         this.drafts = drafts;
         this.git = git;
         this.gh = gh;
+        this.checks = checks;
     }
 
     /** Tests swap gh for a fake one and shorten the limit; null puts the configured ones back. */
@@ -138,7 +168,7 @@ public class PullRequests {
     /** The pull requests recorded for the mission. Reads the journal only: no call to GitHub. */
     public List<PullRequestView> list(MissionId id) {
         return office.query(c -> c.deliveries().pullRequests(id).stream()
-                .map(PullRequestView::of)
+                .map(p -> view(c, p, null))
                 .toList());
     }
 
@@ -180,30 +210,109 @@ public class PullRequests {
         }
     }
 
-    /** Reads the checks GitHub reports on a pull request, once, on the director's click, and records them. */
-    public PullRequestView refreshChecks(Actor actor, MissionId id, int number) {
-        Origin origin = drafts.check(actor, id);
-        PullRequest pr = office.query(c -> c.deliveries().pullRequest(id, number))
-                .orElseThrow(() -> new DomainException("UNKNOWN_PULL_REQUEST", "No pull request #" + number));
-        Path project = drafts.project(id);
-        String repository = PullRequestGit.repositoryOf(git.remoteUrl(project, pr.remote()))
-                .orElseThrow(() -> new DomainException(
-                        "NOT_GITHUB", "The remote " + pr.remote() + " no longer names a GitHub repository"));
-        GhStatus status = gh.status(project, repository);
-        if (!status.authenticated()) {
-            throw new DomainException(status.available() ? "GH_NOT_AUTHENTICATED" : "GH_MISSING", status.detail());
+    /** The pull request as the journal knows it, with the head GitHub reported if one was read just now. */
+    private static PullRequestView view(dev.floor42.domain.Company c, PullRequest p, String headNow) {
+        return PullRequestView.of(
+                p,
+                c.deliveries().evidence(p.mission(), p.number()).orElse(null),
+                c.deliveries().merge(p.mission(), p.number()).orElse(null),
+                headNow);
+    }
+
+    private PullRequestView viewOf(MissionId id, int number, String headNow) {
+        return office.query(c -> view(c, c.deliveries().pullRequest(id, number).orElseThrow(), headNow));
+    }
+
+    /** Reads the checks of the PR's head commit, once, on the director's click, and records them with the commit. */
+    public PullRequestView refreshChecks(MissionId id, int number) {
+        // The same guard as the merge: no read of the checks lands in the journal while a merge is under way.
+        if (!running.add(id)) throw new DomainException("PULL_REQUEST_RUNNING", "A pull request of " + id + " is busy");
+        try {
+            Origin[] origin = new Origin[1];
+            PullRequestChecks.Target t = checks.target(id, number, origin);
+            PullRequestChecks.Read read = checks.readChecks(t, id, number);
+            office.execute(c -> c.deliveries()
+                    .recordDeliveryEvidence(
+                            office.context(Actor.director(), origin[0]), id, number, read.commit(), read.checks()));
+            return viewOf(id, number, read.commit());
+        } finally {
+            running.remove(id);
         }
-        GhClient.Checks checks = gh.checks(project, repository, number);
-        if (checks.failure() != null) {
-            GhCli.Result r = checks.failure();
+    }
+
+    /** Asks GitHub where the branch is now, changes nothing: the evidence is stale once the head is another commit. */
+    public PullRequestView head(MissionId id, int number) {
+        Origin[] origin = new Origin[1];
+        PullRequestChecks.Target t = checks.target(id, number, origin);
+        return viewOf(id, number, checks.headOf(t, number));
+    }
+
+    public record MergeRequest(String commit) {}
+
+    /**
+     * What a merge needs before the director is asked for their phone: the commit they looked at is the head now, and
+     * its checks are all green. 409 {@code EVIDENCE_STALE}, {@code CHECKS_NOT_GREEN}, {@code PULL_REQUEST_MERGED}.
+     * Reads GitHub, records nothing.
+     */
+    public void checkMerge(MissionId id, int number, String commit) {
+        checks.verified(id, number, commit);
+    }
+
+    /**
+     * Merges on GitHub, as the director's gh, only for the commit whose checks were just read green and that the
+     * director looked at; {@code approval} names the signed act or the click that allowed it. gh is told the commit
+     * ({@code --match-head-commit}); afterwards Floor42 asks GitHub whether the pull request is merged before it says so.
+     */
+    public PullRequestView merge(MissionId id, int number, String commit, String approval) {
+        if (!running.add(id)) throw new DomainException("PULL_REQUEST_RUNNING", "A pull request of " + id + " is busy");
+        try {
+            PullRequestChecks.Verified v = checks.verified(id, number, commit);
+            office.execute(c -> c.deliveries()
+                    .recordDeliveryEvidence(
+                            office.context(Actor.director(), v.origin()),
+                            id,
+                            number,
+                            v.read().commit(),
+                            v.read().checks()));
+            GhCli.Result merged = gh.merge(v.target().project(), v.target().repository(), number, commit);
+            checkMerged(v.target(), number, merged);
+            recordMerged(v, id, number, commit, approval);
+            return viewOf(id, number, commit);
+        } finally {
+            running.remove(id);
+        }
+    }
+
+    /** GitHub, not gh, says whether the pull request is merged: both must agree before Floor42 records it. */
+    private void checkMerged(PullRequestChecks.Target target, int number, GhCli.Result merged) {
+        GhClient.Head after = checks.confirmed(target, number);
+        if (after == null) {
             throw new DomainException(
-                    r.timedOut() ? "GH_TIMEOUT" : "GH_FAILED",
-                    "gh pr checks " + number + (r.timedOut() ? " timed out" : " failed: " + r.said()));
+                    "MERGE_UNKNOWN",
+                    "Floor42 could not read the state of pull request #" + number
+                            + " after asking gh to merge it: look at it on GitHub before trying again");
         }
+        boolean merged2 = "MERGED".equals(after.state());
+        if (!merged2) {
+            if (merged.ok()) {
+                throw new DomainException(
+                        "GH_FAILED",
+                        "gh answered for pull request #" + number
+                                + " but GitHub does not report it merged: look at it on GitHub");
+            }
+            throw PullRequestChecks.failed("gh pr merge " + number, merged);
+        }
+        if (!merged.ok()) {
+            throw new DomainException(
+                    "GH_FAILED",
+                    "gh reported a failure for pull request #" + number + " (" + merged.said()
+                            + ") yet GitHub shows it merged: look at it on GitHub");
+        }
+    }
+
+    private void recordMerged(PullRequestChecks.Verified v, MissionId id, int number, String commit, String approval) {
         office.execute(c -> c.deliveries()
-                .recordPullRequestChecks(office.context(Actor.director(), origin), id, number, checks.lines()));
-        return office.query(
-                c -> PullRequestView.of(c.deliveries().pullRequest(id, number).orElseThrow()));
+                .recordPullRequestMerged(office.context(Actor.director(), v.origin()), id, number, commit, approval));
     }
 
     // --- pushing and opening -----------------------------------------------------------------------------------------
@@ -302,11 +411,10 @@ public class PullRequests {
                             v.remote(),
                             found));
         }
-        return office.query(
-                c -> PullRequestView.of(c.deliveries().pullRequest(id, number).orElseThrow()));
+        return viewOf(id, number, null);
     }
 
-    private static String shortHash(String hash) {
+    static String shortHash(String hash) {
         return hash == null ? "?" : hash.substring(0, Math.min(8, hash.length()));
     }
 }

@@ -10,8 +10,7 @@ import java.util.Properties;
  * scenario file, and keeps the pull requests it "opened" in a state folder. It never touches the network.
  *
  * <p>Usage: {@code java FakeGh.java --fake-state <dir> <gh arguments>}. The folder holds {@code scenario}
- * (properties: {@code auth=yes|no}, {@code default=main}, {@code create=ok|timeout|fail}), optionally
- * {@code checks.json}; the fake writes {@code prs.tsv}, {@code body.md} and appends every call to {@code calls.log}.
+ * (properties: {@code auth=yes|no}, {@code default=main}, {@code create=ok|timeout|fail}); the fake writes {@code prs.tsv}, {@code body.md} and appends every call to {@code calls.log}.
  */
 public class FakeGh {
 
@@ -36,6 +35,7 @@ public class FakeGh {
             }
         }
         String command = args.size() >= 2 ? args.get(0) + " " + args.get(1) : String.join(" ", args);
+        if (args.get(0).equals("api")) command = "api";
         switch (command) {
             case "auth status" -> {
                 if (scenario.getProperty("auth", "yes").equals("yes")) {
@@ -91,16 +91,57 @@ public class FakeGh {
                 System.out.println("Creating pull request for " + option(args, "--head") + " into "
                         + option(args, "--base") + "\n\n" + url);
             }
-            case "pr checks" -> {
-                Path checks = state.resolve("checks.json");
-                if (!Files.exists(checks)) {
-                    System.err.println("no checks reported on the '" + args.get(2) + "' branch");
+            case "pr view" -> {
+                Path head = state.resolve("head.txt");
+                if (!Files.exists(head)) {
+                    System.err.println("no pull request found");
                     System.exit(1);
                 }
-                String json = Files.readString(checks, StandardCharsets.UTF_8);
-                System.out.println(json);
-                if (json.contains("\"fail\"")) System.exit(1);
-                if (json.contains("\"pending\"")) System.exit(8);
+                // After the merge, the first N reads fail: GitHub answers late.
+                Path fails = state.resolve("view-fails");
+                if (Files.exists(state.resolve("merged")) && Files.exists(fails)) {
+                    int left = Integer.parseInt(Files.readString(fails).strip());
+                    if (left != 0) {
+                        if (left > 0) Files.writeString(fails, Integer.toString(left - 1));
+                        System.err.println("HTTP 502: Bad Gateway");
+                        System.exit(1);
+                    }
+                }
+                String shown = Files.exists(state.resolve("merged")) ? "MERGED" : "OPEN";
+                if (Files.exists(state.resolve("state.txt"))) shown = Files.readString(state.resolve("state.txt")).strip();
+                System.out.println("{\"headRefOid\":\"" + Files.readString(head).strip() + "\",\"state\":\"" + shown
+                        + "\"}");
+            }
+            case "api" -> {
+                // gh api repos/<o>/<r>/commits/<sha>/check-runs or /status: what GitHub keeps for THAT commit only.
+                String path = args.get(args.size() - 1);
+                String sha = path.replaceAll(".*/commits/([0-9a-f]+)/(check-runs|status).*", "$1");
+                boolean status = path.contains("/status");
+                Path found = state.resolve((status ? "status-" : "check-runs-") + sha + ".json");
+                System.out.println(Files.exists(found)
+                        ? Files.readString(found, StandardCharsets.UTF_8)
+                        : status
+                                ? "{\"state\":\"pending\",\"total_count\":0,\"statuses\":[]}"
+                                : "{\"total_count\":0,\"check_runs\":[]}");
+                // The branch moves while Floor42 reads: the next question about its head sees the new commit.
+                Path after = state.resolve("head-after-checks.txt");
+                if (Files.exists(after)) {
+                    Files.move(after, state.resolve("head.txt"), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+            case "pr merge" -> {
+                String mode = scenario.getProperty("merge", "ok");
+                if (mode.equals("slow")) Thread.sleep(3_000);
+                if (mode.equals("fail")) {
+                    System.err.println("Pull request is not mergeable: the base branch policy prohibits the merge");
+                    System.exit(1);
+                }
+                // ok-but-open: auto-merge queued, gh is happy and GitHub has not merged yet.
+                if (!mode.equals("ok-but-open")) Files.writeString(state.resolve("merged"), String.join(" ", args));
+                if (mode.equals("fail-but-merged")) {
+                    System.err.println("HTTP 504: timeout");
+                    System.exit(1);
+                }
             }
             default -> {
                 System.err.println("unknown command: " + String.join(" ", args));

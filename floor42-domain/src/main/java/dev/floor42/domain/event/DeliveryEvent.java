@@ -44,6 +44,26 @@ public sealed interface DeliveryEvent extends DomainEvent {
     }
 
     /**
+     * The checks of the exact head commit of a pull request, read from GitHub on the director's click (ADR-0084).
+     * {@code checks} are lines {@code name|bucket|state}, one per check name (the latest run of each); {@code conclusion}
+     * is GREEN, FAILED, PENDING or NONE. A push to the branch changes the head: this evidence then no longer matches it.
+     */
+    record DeliveryEvidenceRecorded(
+            MissionId mission, int number, String commit, List<String> checks, String conclusion)
+            implements DeliveryEvent {
+        public DeliveryEvidenceRecorded {
+            checks = checks == null ? null : Collections.unmodifiableList(new ArrayList<>(checks));
+        }
+    }
+
+    /**
+     * Floor42 merged the pull request on GitHub, on the director's proven click (ADR-0084), at the commit whose checks
+     * were green. {@code approval} names the signed act that allowed it ({@code MERGE:<ref>}), or {@code CLICK} when
+     * IAM mode is off and the click is all Floor42 asks.
+     */
+    record PullRequestMerged(MissionId mission, int number, String commit, String approval) implements DeliveryEvent {}
+
+    /**
      * On the director's click and confirmation, Floor42 ran Claude Code's own plugin commands ({@code claude plugin
      * ...}) to install or uninstall a plugin. Only ever real, only ever the director's. What it says happened is what
      * Floor42 read again afterwards ({@code present}), never the commands' exit code alone.

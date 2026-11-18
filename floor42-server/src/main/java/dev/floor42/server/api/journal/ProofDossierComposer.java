@@ -8,10 +8,8 @@ import dev.floor42.domain.event.ActionEvent.ActionAuthorized;
 import dev.floor42.domain.event.ActionEvent.ActionDenied;
 import dev.floor42.domain.event.ActionEvent.ActionExecuted;
 import dev.floor42.domain.event.ActionEvent.ActionRequested;
-import dev.floor42.domain.event.DeliveryEvent.DeliverablesCopied;
 import dev.floor42.domain.event.DeliveryEvent.ProofRan;
 import dev.floor42.domain.event.DeliveryEvent.ProofVerdictGiven;
-import dev.floor42.domain.event.DeliveryEvent.PullRequestOpened;
 import dev.floor42.domain.event.DeliveryEvent.UncommittedWorkAccepted;
 import dev.floor42.domain.event.DeliveryEvent.UnprovenDeliveryAccepted;
 import dev.floor42.domain.event.DeskEvent.QuestionAnswered;
@@ -25,9 +23,6 @@ import dev.floor42.domain.event.SessionEvent.AgentSessionEnded;
 import dev.floor42.domain.event.SessionEvent.AgentSessionStarted;
 import dev.floor42.domain.event.SessionEvent.AgentTokenIssued;
 import dev.floor42.domain.event.VerificationEvent.ChecksRan;
-import dev.floor42.domain.event.WorkbenchEvent.BranchesMerged;
-import dev.floor42.domain.event.WorkbenchEvent.PatchAccepted;
-import dev.floor42.domain.event.WorkbenchEvent.ProjectMerged;
 import dev.floor42.server.api.journal.ProofDossier.Amount;
 import dev.floor42.server.api.journal.ProofDossier.ApprovalFact;
 import dev.floor42.server.api.journal.ProofDossier.BasisCount;
@@ -51,6 +46,7 @@ import dev.floor42.server.app.delivery.MissionReports.MissionReport;
 import dev.floor42.server.iam.AgentTokenVerifier;
 import dev.floor42.server.iam.IdentityAudit;
 import dev.floor42.server.iam.MissionDelegation;
+import dev.floor42.server.security.Jti;
 import dev.floor42.server.security.ReplaySanitizer;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -78,7 +74,7 @@ final class ProofDossierComposer {
     private final List<EventEnvelope> events;
     private final MissionReport report;
     private final ReplaySanitizer clean;
-    private final Map<String, SignatureFact> signatures;
+    private final DeliveryFacts deliveries;
     private final Map<String, Integer> seqOf = new HashMap<>();
     private final Map<ActionId, EventEnvelope> asked = new HashMap<>();
     private final Map<String, AgentSessionStarted> started = new HashMap<>();
@@ -104,7 +100,7 @@ final class ProofDossierComposer {
         this.events = events;
         this.report = report;
         this.clean = clean;
-        this.signatures = signatures;
+        this.deliveries = new DeliveryFacts(deliverables, signatures, this::text, e -> ref(null, e));
         for (int i = 0; i < events.size(); i++) seqOf.put(events.get(i).eventId(), i + 1);
     }
 
@@ -116,6 +112,11 @@ final class ProofDossierComposer {
 
     private String text(EventEnvelope e, String field, String s) {
         return s == null ? null : clean.text(seqOf.get(e.eventId()), field, s);
+    }
+
+    /** A token id of the shape the identity provider issues stays readable: it is an identifier, not a secret. */
+    private String jti(EventEnvelope e, String s) {
+        return Jti.isIssued(s) ? s : text(e, "jti", s);
     }
 
     private String output(EventEnvelope e, String field, String s) {
@@ -186,7 +187,7 @@ final class ProofDossierComposer {
             case ProofRan p -> proofRan(e, p);
             default -> {
                 approval(e);
-                delivery(e);
+                deliveries.delivery(e);
             }
         }
     }
@@ -201,7 +202,7 @@ final class ProofDossierComposer {
                 t.ticket() == null ? null : t.ticket().value(),
                 text(e, "issuer", t.issuer()),
                 t.expiresAt(),
-                text(e, "jti", t.tokenId()),
+                jti(e, t.tokenId()),
                 text(e, "subject", ReplaySanitizer.shortSubject(t.subject())),
                 text(e, "authorizedParty", t.authorizedParty()),
                 text(e, "actor", t.actor()),
@@ -223,7 +224,7 @@ final class ProofDossierComposer {
                     b.group(2),
                     text(e, "path", b.group(3)),
                     b.group(4),
-                    text(e, "jti", b.group(5)),
+                    jti(e, b.group(5)),
                     text(e, "audience", b.group(6)),
                     ref(null, req, e)));
     }
@@ -298,65 +299,6 @@ final class ProofDossierComposer {
                     ProofDossiers.shortCommit(p.target().head()),
                     "PROOF",
                     ref("FLOOR42".equals(s.runner()) ? MissionReports.MEASURED : MissionReports.REPORTED, e)));
-    }
-
-    /** What reached the outside: copies, pull requests, patches; merges follow. */
-    private void delivery(EventEnvelope e) {
-        switch (e.event()) {
-            case DeliverablesCopied c ->
-                delivered(
-                        e,
-                        "DELIVERABLES_COPIED",
-                        text(e, "folder", c.folder()) + (c.leftOut() > 0 ? ", left out " + c.leftOut() : ""),
-                        null,
-                        c.files().size());
-            case PullRequestOpened p ->
-                delivered(
-                        e,
-                        "PULL_REQUEST_OPENED",
-                        text(e, "branch", "#" + p.number() + " " + p.branch() + " -> " + p.base()),
-                        null,
-                        null);
-            case PatchAccepted p ->
-                delivered(
-                        e,
-                        "PATCH_ACCEPTED",
-                        text(e, "message", p.message()),
-                        ProofDossiers.shortCommit(p.commit()),
-                        p.files() == null ? 0 : p.files().size(),
-                        signatures.get(p.commit()));
-            default -> merge(e);
-        }
-    }
-
-    private void merge(EventEnvelope e) {
-        switch (e.event()) {
-            case ProjectMerged p ->
-                delivered(
-                        e,
-                        "PROJECT_MERGED",
-                        p.clean() ? "clean" : text(e, "detail", "conflict: " + p.detail()),
-                        ProofDossiers.shortCommit(p.commit()),
-                        null);
-            case BranchesMerged b ->
-                delivered(
-                        e,
-                        "BRANCHES_MERGED",
-                        text(e, "branches", String.join(", ", b.branches()) + (b.clean() ? "" : ": not clean")),
-                        null,
-                        null);
-            default -> {}
-        }
-    }
-
-    private void delivered(EventEnvelope e, String kind, String text, String commit, Integer files) {
-        delivered(e, kind, text, commit, files, null);
-    }
-
-    private void delivered(
-            EventEnvelope e, String kind, String text, String commit, Integer files, SignatureFact signature) {
-        deliverables.add(
-                new DeliveryFact(e.occurredAt().toString(), kind, text, commit, files, signature, ref(null, e)));
     }
 
     /** Counted last: every text of the dossier has passed through the sanitizer by then. */

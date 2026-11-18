@@ -443,10 +443,11 @@
   refused FORBIDDEN: Only the director or the asking agent withdraws Q-6
 >>> 202 withdraw
   #150 2026-10-20T11:21:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionWithdrawn(question="Q-6", reason="not now")
+  #151 2026-10-20T11:21:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null ActionDenied(action="b8", reason=DIRECTOR, detail="director denied it (Q-6)")
 >>> 203 withdraw twice
   refused QUESTION_CLOSED: Q-6 is WITHDRAWN
 >>> 204 refused upstream
-  #151 2026-10-20T11:23:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionDenied(action="b8", reason=BLOCKED_UPSTREAM, detail="refused by Claude Code")
+  (nothing recorded)
 >>> 205 denied call's result
   (nothing recorded)
 >>> 206 unseen call refused
@@ -696,722 +697,736 @@
   refused UNKNOWN_PULL_REQUEST: No pull request #99 on M-1
 >>> 323 malformed check line
   refused INVALID_ARGUMENT: A check line is name|bucket|state
->>> 324 assets
-  #231 2026-10-20T13:16:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionAssetsSelected(mission="M-1", items=["floor42:pr-review@claude-plugins-official/agent/code-reviewer", "claude:docs@market/skill/write"])
->>> 325 assets with a bad item
+>>> 324 merge without evidence
+  refused EVIDENCE_STALE: No checks are recorded for commit 84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8: read them again
+>>> 325 delivery evidence, a check failed
+  #231 2026-10-20T13:17:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null DeliveryEvidenceRecorded(mission="M-1", number=7, commit="84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8", checks=["build|pass|SUCCESS", "lint|fail|FAILURE"], conclusion="FAILED")
+>>> 326 merge on red evidence
+  refused CHECKS_NOT_GREEN: The checks of 84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8 are FAILED, not green
+>>> 327 delivery evidence, all green
+  #232 2026-10-20T13:19:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null DeliveryEvidenceRecorded(mission="M-1", number=7, commit="84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8", checks=["build|pass|SUCCESS", "lint|pass|SUCCESS"], conclusion="GREEN")
+>>> 328 merge by an agent
+  refused FORBIDDEN: Only the director opens a pull request or reads its checks: never an agent, never Floor42 on its own
+>>> 329 merge on green evidence
+  #233 2026-10-20T13:21:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null PullRequestMerged(mission="M-1", number=7, commit="84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8", approval="MERGE:pr:M-1#7")
+>>> 330 merge again
+  refused PULL_REQUEST_MERGED: Pull request #7 is already merged
+>>> 331 assets
+  #234 2026-10-20T13:23:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionAssetsSelected(mission="M-1", items=["floor42:pr-review@claude-plugins-official/agent/code-reviewer", "claude:docs@market/skill/write"])
+>>> 332 assets with a bad item
   refused INVALID_ARGUMENT: An item is <floor42|claude>:<plugin>@<marketplace>/<skill|agent>/<name>, not anything
->>> 326 assets by an agent
+>>> 333 assets by an agent
   refused FORBIDDEN: Only the director chooses what a mission's sessions receive: never an agent, never Floor42 on its own
->>> 327 staffing review
-  #232 2026-10-20T13:19:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-7", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
-  #233 2026-10-20T13:19:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-7", agent="galen")
-  #234 2026-10-20T13:19:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-7")
-  #235 2026-10-20T13:19:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-7", planner="galen")
->>> 328 staffing review twice
+>>> 334 staffing review
+  #235 2026-10-20T13:26:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-7", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
+  #236 2026-10-20T13:26:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-7", agent="galen")
+  #237 2026-10-20T13:26:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-7")
+  #238 2026-10-20T13:26:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-7", planner="galen")
+>>> 335 staffing review twice
   refused STAFFING_UNDER_WAY: The planner is already reviewing the team of M-1
->>> 329 advice by someone else
+>>> 336 advice by someone else
   refused FORBIDDEN: Only the planner advises, or Floor42 says why it could not
->>> 330 advice with too wide parallelism
+>>> 337 advice with too wide parallelism
   refused INVALID_ARGUMENT: parallel is 1 to 4
->>> 331 advice
-  #236 2026-10-20T13:23:00Z REAL AGENT:galen mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-7", advice="Two more developers", worthIt=true, hires=[Hire(name="Lou", title="Backend developer"), Hire(name="Max", title="UI developer")], parallel=3)
-  #237 2026-10-20T13:23:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-12", mission="M-1", kind=STAFFING, askedBy="galen", subject="Reinforce the team: hire Lou (Backend developer), Max (UI developer)?", context="The planner advises it. Parallel sessions would go to 3. Estimated by Floor42: 2 days sooner", options=["Hire them", "Not now"], recommendation="Hire them", criticality=MEDIUM, blocking=false, ticket=null, action=null, phrase=Phrase(code="staffing", params={"who"="Lou (Backend developer), Max (UI developer)"}), optionCodes=["HIRE", "NOT_NOW"])
->>> 332 advice twice
+>>> 338 advice
+  #239 2026-10-20T13:30:00Z REAL AGENT:galen mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-7", advice="Two more developers", worthIt=true, hires=[Hire(name="Lou", title="Backend developer"), Hire(name="Max", title="UI developer")], parallel=3)
+  #240 2026-10-20T13:30:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-12", mission="M-1", kind=STAFFING, askedBy="galen", subject="Reinforce the team: hire Lou (Backend developer), Max (UI developer)?", context="The planner advises it. Parallel sessions would go to 3. Estimated by Floor42: 2 days sooner", options=["Hire them", "Not now"], recommendation="Hire them", criticality=MEDIUM, blocking=false, ticket=null, action=null, phrase=Phrase(code="staffing", params={"who"="Lou (Backend developer), Max (UI developer)"}), optionCodes=["HIRE", "NOT_NOW"])
+>>> 339 advice twice
   refused STAFFING_ADVISED: The staffing review of M-1 is already advised
-??? 333 staffing ticket = true
->>> 334 hire them
-  #238 2026-10-20T13:25:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-12", answer="Hire them")
->>> 335 second staffing review
-  #239 2026-10-20T13:26:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-8", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
-  #240 2026-10-20T13:26:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-8", agent="galen")
-  #241 2026-10-20T13:26:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-8")
-  #242 2026-10-20T13:26:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-8", planner="galen")
->>> 336 Floor42 says why there is no advice
-  #243 2026-10-20T13:27:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-8", advice="No measure yet", worthIt=false, hires=[], parallel=null)
->>> 337 third staffing review
-  #244 2026-10-20T13:28:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-9", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
-  #245 2026-10-20T13:28:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-9", agent="galen")
-  #246 2026-10-20T13:28:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-9")
-  #247 2026-10-20T13:28:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-9", planner="galen")
->>> 338 advice against
-  #248 2026-10-20T13:29:00Z REAL AGENT:galen mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-9", advice="Not worth it", worthIt=false, hires=[Hire(name="Lou", title="Backend developer")], parallel=null)
-  #249 2026-10-20T13:29:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-13", mission="M-1", kind=STAFFING, askedBy="galen", subject="Reinforce the team: hire Lou (Backend developer)?", context="The planner advises against it. ", options=["Not now", "Hire anyway"], recommendation="Not now", criticality=MEDIUM, blocking=false, ticket=null, action=null, phrase=Phrase(code="staffing", params={"who"="Lou (Backend developer)"}), optionCodes=["NOT_NOW", "HIRE_ANYWAY"])
->>> 339 not now
-  #250 2026-10-20T13:30:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-13", answer="Not now")
-??? 340 plan limit risk = Optional[Risk(window="five_hour", utilization=0.42, expectedIncrease=null, resetsAt=2027-01-15T08:00:00Z)]
->>> 341 plan limit
-  #251 2026-10-20T13:31:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-14", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The 5-hour usage limit may cut the next session", context="5-hour window at 92% (measured by Claude Code); a session adds about 4% (estimated from earlier sessions, of claude-opus-5-5 when known; use outside Floor42 counts too). It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="5-hour"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
->>> 342 plan limit twice
+??? 340 staffing ticket = true
+>>> 341 hire them
+  #241 2026-10-20T13:32:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-12", answer="Hire them")
+>>> 342 second staffing review
+  #242 2026-10-20T13:33:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-8", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
+  #243 2026-10-20T13:33:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-8", agent="galen")
+  #244 2026-10-20T13:33:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-8")
+  #245 2026-10-20T13:33:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-8", planner="galen")
+>>> 343 Floor42 says why there is no advice
+  #246 2026-10-20T13:34:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-8", advice="No measure yet", worthIt=false, hires=[], parallel=null)
+>>> 344 third staffing review
+  #247 2026-10-20T13:35:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-9", mission="M-1", title="Staffing: should the team be reinforced?", description="Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Says whether to hire, whom, and at what cost, from the facts Floor42 measured"], kind=WORK)
+  #248 2026-10-20T13:35:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null TicketAssigned(ticket="T-9", agent="galen")
+  #249 2026-10-20T13:35:00Z REAL AGENT:galen mission=M-1 auth=null cause=null TicketStarted(ticket="T-9")
+  #250 2026-10-20T13:35:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null StaffingReviewRequested(mission="M-1", ticket="T-9", planner="galen")
+>>> 345 advice against
+  #251 2026-10-20T13:36:00Z REAL AGENT:galen mission=M-1 auth=null cause=null StaffingAdvised(mission="M-1", ticket="T-9", advice="Not worth it", worthIt=false, hires=[Hire(name="Lou", title="Backend developer")], parallel=null)
+  #252 2026-10-20T13:36:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-13", mission="M-1", kind=STAFFING, askedBy="galen", subject="Reinforce the team: hire Lou (Backend developer)?", context="The planner advises against it. ", options=["Not now", "Hire anyway"], recommendation="Not now", criticality=MEDIUM, blocking=false, ticket=null, action=null, phrase=Phrase(code="staffing", params={"who"="Lou (Backend developer)"}), optionCodes=["NOT_NOW", "HIRE_ANYWAY"])
+>>> 346 not now
+  #253 2026-10-20T13:37:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-13", answer="Not now")
+??? 347 plan limit risk = Optional[Risk(window="five_hour", utilization=0.42, expectedIncrease=null, resetsAt=2027-01-15T08:00:00Z)]
+>>> 348 plan limit
+  #254 2026-10-20T13:38:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-14", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The 5-hour usage limit may cut the next session", context="5-hour window at 92% (measured by Claude Code); a session adds about 4% (estimated from earlier sessions, of claude-opus-5-5 when known; use outside Floor42 counts too). It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="5-hour"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
+>>> 349 plan limit twice
   (nothing recorded)
->>> 343 plan limit by the director
+>>> 350 plan limit by the director
   refused FORBIDDEN: Only Floor42 reports the plan limit
->>> 344 run anyway
-  #252 2026-10-20T13:34:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-14", answer="Run anyway")
->>> 345 plan limit, small sessions
-  #253 2026-10-20T13:35:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-15", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The weekly usage limit may cut the next session", context="weekly window at 97% (measured by Claude Code); a session adds less than 1% (estimated from earlier sessions; readings are in whole percents; use outside Floor42 counts too). It resets at 2026-10-25T00:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="weekly"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
->>> 346 wait for the reset
-  #254 2026-10-20T13:36:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-15", answer="Wait for the reset")
->>> 347 plan limit, unknown increase
-  #255 2026-10-20T13:37:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-16", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The 5-hour usage limit may cut the next session", context="5-hour window at 99% (measured by Claude Code); how much one session adds is not known yet. It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="5-hour"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
->>> 348 stop here
-  #256 2026-10-20T13:38:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-16", answer="Stop here")
->>> 349 budget not reached
+>>> 351 run anyway
+  #255 2026-10-20T13:41:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-14", answer="Run anyway")
+>>> 352 plan limit, small sessions
+  #256 2026-10-20T13:42:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-15", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The weekly usage limit may cut the next session", context="weekly window at 97% (measured by Claude Code); a session adds less than 1% (estimated from earlier sessions; readings are in whole percents; use outside Floor42 counts too). It resets at 2026-10-25T00:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="weekly"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
+>>> 353 wait for the reset
+  #257 2026-10-20T13:43:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-15", answer="Wait for the reset")
+>>> 354 plan limit, unknown increase
+  #258 2026-10-20T13:44:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-16", mission="M-1", kind=PLAN_LIMIT, askedBy=null, subject="The 5-hour usage limit may cut the next session", context="5-hour window at 99% (measured by Claude Code); how much one session adds is not known yet. It resets at 2026-10-20T13:00:00Z. A session cut by the limit loses its work in progress.", options=["Wait for the reset", "Run anyway", "Stop here"], recommendation="Wait for the reset", criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="planLimit", params={"window"="5-hour"}), optionCodes=["WAIT_FOR_RESET", "RUN_ANYWAY", "STOP_HERE"])
+>>> 355 stop here
+  #259 2026-10-20T13:45:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-16", answer="Stop here")
+>>> 356 budget not reached
   refused BUDGET_AVAILABLE: M-1 has budget left
->>> 350 smaller budget
-  #257 2026-10-20T13:40:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=1.5)
-??? 351 budget left = Optional[0.0]
->>> 352 budget reached
-  #258 2026-10-20T13:41:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-17", mission="M-1", kind=BUDGET_REACHED, askedBy=null, subject="Budget of M-1 reached", context="Estimated spending 2.4500 USD of a 1.5000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", options=["Raise the budget by 50%", "Stop here"], recommendation=null, criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="budget", params={"budget"="1.5000", "mission"="M-1", "spent"="2.4500"}), optionCodes=["RAISE_BUDGET", "STOP_HERE"])
->>> 353 budget reached twice
+>>> 357 smaller budget
+  #260 2026-10-20T13:47:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=1.5)
+??? 358 budget left = Optional[0.0]
+>>> 359 budget reached
+  #261 2026-10-20T13:48:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-17", mission="M-1", kind=BUDGET_REACHED, askedBy=null, subject="Budget of M-1 reached", context="Estimated spending 2.4500 USD of a 1.5000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", options=["Raise the budget by 50%", "Stop here"], recommendation=null, criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="budget", params={"budget"="1.5000", "mission"="M-1", "spent"="2.4500"}), optionCodes=["RAISE_BUDGET", "STOP_HERE"])
+>>> 360 budget reached twice
   (nothing recorded)
-??? 354 check an answer by its code = "Raise the budget by 50%"
-??? 355 check a wrong answer = refused INVALID_ANSWER: Answer one of [Raise the budget by 50%, Stop here]
->>> 356 raise the budget
-  #259 2026-10-20T13:45:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-17", answer="Raise the budget by 50%")
-  #260 2026-10-20T13:45:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=3.675)
->>> 357 budget lowered again
-  #261 2026-10-20T13:46:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=2.0)
->>> 358 budget reached again
-  #262 2026-10-20T13:47:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-18", mission="M-1", kind=BUDGET_REACHED, askedBy=null, subject="Budget of M-1 reached", context="Estimated spending 2.4500 USD of a 2.0000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", options=["Raise the budget by 50%", "Stop here"], recommendation=null, criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="budget", params={"budget"="2.0000", "mission"="M-1", "spent"="2.4500"}), optionCodes=["RAISE_BUDGET", "STOP_HERE"])
->>> 359 stop at the budget
-  #263 2026-10-20T13:48:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-18", answer="Stop here")
->>> 360 no budget
-  #264 2026-10-20T13:49:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
->>> 361 note into a ticket
-  #265 2026-10-20T13:50:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-10", mission="M-1", title="Make the board faster", description="Make the board faster\nIt lags on big missions\n\nFrom the director's note N-1.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Done as the note asks: Make the board faster\nIt lags on big missions"], kind=WORK)
-  #266 2026-10-20T13:50:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null NoteTurnedIntoTicket(note="N-1", ticket="T-10")
->>> 362 note into a ticket twice
+??? 361 check an answer by its code = "Raise the budget by 50%"
+??? 362 check a wrong answer = refused INVALID_ANSWER: Answer one of [Raise the budget by 50%, Stop here]
+>>> 363 raise the budget
+  #262 2026-10-20T13:52:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-17", answer="Raise the budget by 50%")
+  #263 2026-10-20T13:52:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=3.675)
+>>> 364 budget lowered again
+  #264 2026-10-20T13:53:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=2.0)
+>>> 365 budget reached again
+  #265 2026-10-20T13:54:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null QuestionAsked(question="Q-18", mission="M-1", kind=BUDGET_REACHED, askedBy=null, subject="Budget of M-1 reached", context="Estimated spending 2.4500 USD of a 2.0000 USD budget (estimates by the runtime). No new agent session starts until you raise it.", options=["Raise the budget by 50%", "Stop here"], recommendation=null, criticality=HIGH, blocking=true, ticket=null, action=null, phrase=Phrase(code="budget", params={"budget"="2.0000", "mission"="M-1", "spent"="2.4500"}), optionCodes=["RAISE_BUDGET", "STOP_HERE"])
+>>> 366 stop at the budget
+  #266 2026-10-20T13:55:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null QuestionAnswered(question="Q-18", answer="Stop here")
+>>> 367 no budget
+  #267 2026-10-20T13:56:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null BudgetSet(mission="M-1", usd=null)
+>>> 368 note into a ticket
+  #268 2026-10-20T13:57:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-10", mission="M-1", title="Make the board faster", description="Make the board faster\nIt lags on big missions\n\nFrom the director's note N-1.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Done as the note asks: Make the board faster\nIt lags on big missions"], kind=WORK)
+  #269 2026-10-20T13:57:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null NoteTurnedIntoTicket(note="N-1", ticket="T-10")
+>>> 369 note into a ticket twice
   refused NOTE_ALREADY_TICKET: N-1 is already T-10
->>> 363 long note into a ticket
-  #267 2026-10-20T13:52:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-11", mission="M-1", title="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…", description="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nFrom the director's note N-3.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Done as the note asks: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"], kind=WORK)
-  #268 2026-10-20T13:52:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null NoteTurnedIntoTicket(note="N-3", ticket="T-11")
->>> 364 Floor42 closes a note whose ticket is open
+>>> 370 long note into a ticket
+  #270 2026-10-20T13:59:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCreated(ticket="T-11", mission="M-1", title="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx…", description="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nFrom the director's note N-3.", priority=NORMAL, dependsOn=[], acceptanceCriteria=["Done as the note asks: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"], kind=WORK)
+  #271 2026-10-20T13:59:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null NoteTurnedIntoTicket(note="N-3", ticket="T-11")
+>>> 371 Floor42 closes a note whose ticket is open
   refused NOTE_NOT_IMPLEMENTED: N-1 has no done ticket: only the director closes it
->>> 365 assign the note's ticket
-  #269 2026-10-20T13:54:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-10", agent="chris")
->>> 366 start it
-  #270 2026-10-20T13:55:00Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-10")
->>> 367 submit it
-  #271 2026-10-20T13:56:00Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketSubmittedForReview(ticket="T-10", deliverable="Faster board")
->>> 368 validate it
-  #272 2026-10-20T13:57:00Z REAL AGENT:darius mission=M-1 auth=null cause=null TicketReviewed(ticket="T-10", reviewer="darius", verdict=VALIDATED, findings="Fast")
-  #273 2026-10-20T13:57:00Z REAL AGENT:darius mission=M-1 auth=null cause=null TicketCompleted(ticket="T-10")
->>> 369 Floor42 closes the note
-  #274 2026-10-20T13:58:00Z REAL SYSTEM:floor42 mission=- auth=null cause=null NoteChecked(note="N-1", done=true)
->>> 370 complete with work open
+>>> 372 assign the note's ticket
+  #272 2026-10-20T14:01:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketAssigned(ticket="T-10", agent="chris")
+>>> 373 start it
+  #273 2026-10-20T14:02:00Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketStarted(ticket="T-10")
+>>> 374 submit it
+  #274 2026-10-20T14:03:00Z REAL AGENT:chris mission=M-1 auth=null cause=null TicketSubmittedForReview(ticket="T-10", deliverable="Faster board")
+>>> 375 validate it
+  #275 2026-10-20T14:04:00Z REAL AGENT:darius mission=M-1 auth=null cause=null TicketReviewed(ticket="T-10", reviewer="darius", verdict=VALIDATED, findings="Fast")
+  #276 2026-10-20T14:04:00Z REAL AGENT:darius mission=M-1 auth=null cause=null TicketCompleted(ticket="T-10")
+>>> 376 Floor42 closes the note
+  #277 2026-10-20T14:05:00Z REAL SYSTEM:floor42 mission=- auth=null cause=null NoteChecked(note="N-1", done=true)
+>>> 377 complete with work open
   refused MISSION_NOT_FINISHED: Some tickets of M-1 are still open
->>> 371 complete by an agent
+>>> 378 complete by an agent
   refused FORBIDDEN: Only the director or Floor42 can close a mission
->>> 372 cancel T-2
-  #275 2026-10-20T14:01:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-2", reason="Out of scope")
->>> 373 cancel T-3
-  #276 2026-10-20T14:02:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-3", reason="Out of scope")
->>> 374 cancel T-5
-  #277 2026-10-20T14:03:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-5", reason="Out of scope")
->>> 375 cancel T-11
-  #278 2026-10-20T14:04:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-11", reason="Out of scope")
->>> 376 complete with a blocking question
+>>> 379 cancel T-2
+  #278 2026-10-20T14:08:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-2", reason="Out of scope")
+>>> 380 cancel T-3
+  #279 2026-10-20T14:09:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-3", reason="Out of scope")
+>>> 381 cancel T-5
+  #280 2026-10-20T14:10:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-5", reason="Out of scope")
+>>> 382 cancel T-11
+  #281 2026-10-20T14:11:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null TicketCancelled(ticket="T-11", reason="Out of scope")
+>>> 383 complete with a blocking question
   refused ACTIONS_RUNNING: Some actions of M-1 are still pending or running
->>> 377 complete with actions under way
+>>> 384 complete with actions under way
   refused ACTIONS_RUNNING: Some actions of M-1 are still pending or running
->>> 378 outcome of a5
-  #279 2026-10-20T14:07:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="a5", error="stopped")
->>> 379 outcome of a6
-  #280 2026-10-20T14:08:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="a6", error="stopped")
->>> 380 outcome of b1
-  #281 2026-10-20T14:09:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b1", error="stopped")
->>> 381 outcome of b2
-  #282 2026-10-20T14:10:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b2", error="stopped")
->>> 382 outcome of b4
-  #283 2026-10-20T14:11:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b4", error="stopped")
->>> 383 outcome of b5
-  #284 2026-10-20T14:12:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b5", error="stopped")
->>> 384 outcome of b6
-  #285 2026-10-20T14:13:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b6", error="stopped")
->>> 385 complete without summary
+>>> 385 outcome of a5
+  #282 2026-10-20T14:14:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="a5", error="stopped")
+>>> 386 outcome of a6
+  #283 2026-10-20T14:15:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="a6", error="stopped")
+>>> 387 outcome of b1
+  #284 2026-10-20T14:16:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b1", error="stopped")
+>>> 388 outcome of b2
+  #285 2026-10-20T14:17:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b2", error="stopped")
+>>> 389 outcome of b4
+  #286 2026-10-20T14:18:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b4", error="stopped")
+>>> 390 outcome of b5
+  #287 2026-10-20T14:19:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b5", error="stopped")
+>>> 391 outcome of b6
+  #288 2026-10-20T14:20:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null ActionFailed(action="b6", error="stopped")
+>>> 392 complete without summary
   refused MISSING_SUMMARY: summary is required
->>> 386 complete
-  #286 2026-10-20T14:15:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCompleted(mission="M-1", summary="Login shipped")
->>> 387 ticket on a closed mission
+>>> 393 complete
+  #289 2026-10-20T14:22:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionCompleted(mission="M-1", summary="Login shipped")
+>>> 394 ticket on a closed mission
   refused PLAN_LOCKED: Tickets can be added while planning or in progress, not when COMPLETED
->>> 388 question on a closed mission
+>>> 395 question on a closed mission
   refused MISSION_CLOSED: M-1 is closed
->>> 389 budget on a closed mission
+>>> 396 budget on a closed mission
   refused MISSION_CLOSED: M-1 is closed
->>> 390 cancel a closed mission
+>>> 397 cancel a closed mission
   refused INVALID_TRANSITION: M-1: COMPLETED -> CANCELLED is not allowed
->>> 391 retro by the director
+>>> 398 retro by the director
   refused FORBIDDEN: Floor42 convenes the retrospective
->>> 392 retro with someone who did not work
+>>> 399 retro with someone who did not work
   refused NOT_A_PARTICIPANT: ana did not work on M-1
->>> 393 retro with a dismissed agent
+>>> 400 retro with a dismissed agent
   refused AGENT_DISMISSED: ken has left the company
->>> 394 retro with the chair outside
+>>> 401 retro with the chair outside
   refused INVALID_ARGUMENT: The chair takes part
->>> 395 retro
-  #287 2026-10-20T14:24:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null RetroOpened(mission="M-1", ticket="T-12", chair="galen", participants=["galen", "chris", "darius"], facts="12 sessions, 2 rejections")
->>> 396 retro twice
+>>> 402 retro
+  #290 2026-10-20T14:31:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null RetroOpened(mission="M-1", ticket="T-12", chair="galen", participants=["galen", "chris", "darius"], facts="12 sessions, 2 rejections")
+>>> 403 retro twice
   refused DUPLICATE_RETRO: M-1 already had its retrospective
-??? 397 in retro = IN_RETRO
->>> 398 retro session
-  #288 2026-10-20T14:26:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-retro", mission="M-1", ticket="T-12", agent="chris", model="claude-haiku-5-5", runtimeVersion="2.1.0", capUsd=null)
->>> 399 retro session ends
-  #289 2026-10-20T14:27:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-retro", failed=false, outcome="completed", turns=1, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.01, costUsdBound=null)
->>> 400 contribution by Floor42
+??? 404 in retro = IN_RETRO
+>>> 405 retro session
+  #291 2026-10-20T14:33:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionStarted(session="s-retro", mission="M-1", ticket="T-12", agent="chris", model="claude-haiku-5-5", runtimeVersion="2.1.0", capUsd=null)
+>>> 406 retro session ends
+  #292 2026-10-20T14:34:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null AgentSessionEnded(session="s-retro", failed=false, outcome="completed", turns=1, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.01, costUsdBound=null)
+>>> 407 contribution by Floor42
   refused FORBIDDEN: Participants speak for themselves
->>> 401 contribution
-  #290 2026-10-20T14:29:00Z REAL AGENT:chris mission=M-1 auth=null cause=null RetroContributed(mission="M-1", agent="chris", wentWell=["Tests first"], wentBadly=[], text="Good flow")
->>> 402 contribution twice
+>>> 408 contribution
+  #293 2026-10-20T14:36:00Z REAL AGENT:chris mission=M-1 auth=null cause=null RetroContributed(mission="M-1", agent="chris", wentWell=["Tests first"], wentBadly=[], text="Good flow")
+>>> 409 contribution twice
   refused NOT_EXPECTED: chris is not expected to speak in the retrospective
->>> 403 conclude too early
+>>> 410 conclude too early
   refused RETRO_NOT_READY: Some participants of M-1 have not spoken yet
->>> 404 skip
-  #291 2026-10-20T14:32:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null RetroSkipped(mission="M-1", agent="darius", reason="usage window")
->>> 405 skip by the director
+>>> 411 skip
+  #294 2026-10-20T14:39:00Z REAL SYSTEM:floor42 mission=M-1 auth=null cause=null RetroSkipped(mission="M-1", agent="darius", reason="usage window")
+>>> 412 skip by the director
   refused FORBIDDEN: Only Floor42 records a silence
->>> 406 chair speaks
-  #292 2026-10-20T14:34:00Z REAL AGENT:galen mission=M-1 auth=null cause=null RetroContributed(mission="M-1", agent="galen", wentWell=["Plan held"], wentBadly=["Budget surprises"], text="Mostly fine")
->>> 407 conclude by someone else
+>>> 413 chair speaks
+  #295 2026-10-20T14:41:00Z REAL AGENT:galen mission=M-1 auth=null cause=null RetroContributed(mission="M-1", agent="galen", wentWell=["Plan held"], wentBadly=["Budget surprises"], text="Mostly fine")
+>>> 414 conclude by someone else
   refused FORBIDDEN: The chair concludes the retrospective
->>> 408 conclude with a blank lesson
+>>> 415 conclude with a blank lesson
   refused MISSING_LESSON: lesson is required
->>> 409 conclude
-  #293 2026-10-20T14:37:00Z REAL AGENT:galen mission=M-1 auth=null cause=null RetroConcluded(mission="M-1", conclusions=["Keep tests first"], text="We shipped", reason=null)
-  #294 2026-10-20T14:37:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-1", mission="M-1", audience=DEVELOPER, text="Write the test first", proposedBy="galen")
-  #295 2026-10-20T14:37:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-2", mission="M-1", audience=null, text="Say what was not verified", proposedBy="galen")
-  #296 2026-10-20T14:37:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-3", mission="M-1", audience=REVIEWER, text="Run the browser", proposedBy="galen")
->>> 410 conclude twice
+>>> 416 conclude
+  #296 2026-10-20T14:44:00Z REAL AGENT:galen mission=M-1 auth=null cause=null RetroConcluded(mission="M-1", conclusions=["Keep tests first"], text="We shipped", reason=null)
+  #297 2026-10-20T14:44:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-1", mission="M-1", audience=DEVELOPER, text="Write the test first", proposedBy="galen")
+  #298 2026-10-20T14:44:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-2", mission="M-1", audience=null, text="Say what was not verified", proposedBy="galen")
+  #299 2026-10-20T14:44:00Z REAL AGENT:galen mission=M-1 auth=null cause=null LessonProposed(lesson="L-3", mission="M-1", audience=REVIEWER, text="Run the browser", proposedBy="galen")
+>>> 417 conclude twice
   refused RETRO_CONCLUDED: The retrospective of M-1 has ended
->>> 411 accept by an agent
+>>> 418 accept by an agent
   refused DIRECTOR_ONLY: Only the director can do this
->>> 412 accept a too long lesson
+>>> 419 accept a too long lesson
   refused INVALID_ARGUMENT: A lesson is at most 500 characters
->>> 413 accept
-  #297 2026-10-20T14:41:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonAccepted(lesson="L-1", text="Write the test first")
->>> 414 accept edited
-  #298 2026-10-20T14:42:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonAccepted(lesson="L-2", text="Say what you did not verify")
->>> 415 accept twice
+>>> 420 accept
+  #300 2026-10-20T14:48:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonAccepted(lesson="L-1", text="Write the test first")
+>>> 421 accept edited
+  #301 2026-10-20T14:49:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonAccepted(lesson="L-2", text="Say what you did not verify")
+>>> 422 accept twice
   refused INVALID_TRANSITION: L-1 is ACCEPTED
->>> 416 reject
-  #299 2026-10-20T14:44:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonRejected(lesson="L-3", reason="rejected by the director")
->>> 417 retire
-  #300 2026-10-20T14:45:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonRetired(lesson="L-1", reason="Obvious now")
->>> 418 retire a rejected one
+>>> 423 reject
+  #302 2026-10-20T14:51:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonRejected(lesson="L-3", reason="rejected by the director")
+>>> 424 retire
+  #303 2026-10-20T14:52:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null LessonRetired(lesson="L-1", reason="Obvious now")
+>>> 425 retire a rejected one
   refused INVALID_TRANSITION: L-3 is REJECTED
->>> 419 unknown lesson
+>>> 426 unknown lesson
   refused UNKNOWN_LESSON: No lesson L-9
->>> 420 decision mission
-  #301 2026-10-20T14:48:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCreated(mission="M-2", title="Gateway?", objective="Put a gateway in front of the APIs?", workspace="C:/repo/api")
-  #302 2026-10-20T14:48:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null WorkflowPinned(mission="M-2", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
->>> 421 decision ticket
-  #303 2026-10-20T14:49:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCreated(ticket="T-13", mission="M-2", title="Decide: gateway", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 422 assign the chair
-  #304 2026-10-20T14:50:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketAssigned(ticket="T-13", agent="galen")
->>> 423 committee with one member
+>>> 427 decision mission
+  #304 2026-10-20T14:55:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCreated(mission="M-2", title="Gateway?", objective="Put a gateway in front of the APIs?", workspace="C:/repo/api")
+  #305 2026-10-20T14:55:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null WorkflowPinned(mission="M-2", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+>>> 428 decision ticket
+  #306 2026-10-20T14:56:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCreated(ticket="T-13", mission="M-2", title="Decide: gateway", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 429 assign the chair
+  #307 2026-10-20T14:57:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketAssigned(ticket="T-13", agent="galen")
+>>> 430 committee with one member
   refused INVALID_ARGUMENT: A committee needs at least two members
->>> 424 committee with a chair who is not the assignee
+>>> 431 committee with a chair who is not the assignee
   refused INVALID_ARGUMENT: The chair is the decision ticket's assignee
->>> 425 committee with a dismissed member
+>>> 432 committee with a dismissed member
   refused AGENT_DISMISSED: ken has left the company
->>> 426 committee
-  #305 2026-10-20T14:54:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeConvened(mission="M-2", ticket="T-13", topic="Gateway?", members=["galen", "darius", "chris"], roles=["Architect", "Security", "Developer"], panel="architecture", moderated=false, maxDebateRounds=1, directorSeat=null, committeeNo=1)
->>> 427 committee twice
+>>> 433 committee
+  #308 2026-10-20T15:01:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeConvened(mission="M-2", ticket="T-13", topic="Gateway?", members=["galen", "darius", "chris"], roles=["Architect", "Security", "Developer"], panel="architecture", moderated=false, maxDebateRounds=1, directorSeat=null, committeeNo=1)
+>>> 434 committee twice
   refused DUPLICATE_COMMITTEE: M-2 already has a committee
->>> 428 submit
-  #306 2026-10-20T14:56:00Z REAL AGENT:galen mission=M-2 auth=null cause=null MissionPlanSubmitted(mission="M-2")
->>> 429 no cap
-  #307 2026-10-20T14:57:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null BudgetSet(mission="M-2", usd=null)
->>> 430 approve
-  #308 2026-10-20T14:58:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionPlanApproved(mission="M-2")
->>> 431 start deciding
-  #309 2026-10-20T14:59:00Z REAL AGENT:galen mission=M-2 auth=null cause=null TicketStarted(ticket="T-13")
->>> 432 member's session
-  #310 2026-10-20T15:00:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionStarted(session="s-c1", mission="M-2", ticket="T-13", agent="darius", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
->>> 433 member's session ends
-  #311 2026-10-20T15:01:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionEnded(session="s-c1", failed=false, outcome="completed", turns=2, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.02, costUsdBound=null)
->>> 434 chair's session
-  #312 2026-10-20T15:02:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionStarted(session="s-c2", mission="M-2", ticket="T-13", agent="galen", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
->>> 435 chair's session ends
-  #313 2026-10-20T15:03:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionEnded(session="s-c2", failed=false, outcome="completed", turns=2, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.02, costUsdBound=null)
-??? 436 in committee = IN_COMMITTEE
->>> 437 contribution of the wrong kind
+>>> 435 submit
+  #309 2026-10-20T15:03:00Z REAL AGENT:galen mission=M-2 auth=null cause=null MissionPlanSubmitted(mission="M-2")
+>>> 436 no cap
+  #310 2026-10-20T15:04:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null BudgetSet(mission="M-2", usd=null)
+>>> 437 approve
+  #311 2026-10-20T15:05:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionPlanApproved(mission="M-2")
+>>> 438 start deciding
+  #312 2026-10-20T15:06:00Z REAL AGENT:galen mission=M-2 auth=null cause=null TicketStarted(ticket="T-13")
+>>> 439 member's session
+  #313 2026-10-20T15:07:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionStarted(session="s-c1", mission="M-2", ticket="T-13", agent="darius", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
+>>> 440 member's session ends
+  #314 2026-10-20T15:08:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionEnded(session="s-c1", failed=false, outcome="completed", turns=2, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.02, costUsdBound=null)
+>>> 441 chair's session
+  #315 2026-10-20T15:09:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionStarted(session="s-c2", mission="M-2", ticket="T-13", agent="galen", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
+>>> 442 chair's session ends
+  #316 2026-10-20T15:10:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null AgentSessionEnded(session="s-c2", failed=false, outcome="completed", turns=2, inputTokensProvided=10, outputTokensProvided=10, costUsdEstimated=0.02, costUsdBound=null)
+??? 443 in committee = IN_COMMITTEE
+>>> 444 contribution of the wrong kind
   refused INVALID_ARGUMENT: Expected a ANALYSIS now
->>> 438 contribution for someone else
+>>> 445 contribution for someone else
   refused FORBIDDEN: A contribution is made by its member
->>> 439 analysis with questions
-  #314 2026-10-20T15:06:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=1, kind=ANALYSIS, text="Gateway", proposal="Gateway", position="NEW", criticalObjection=null, byDirector=null, questions=["Which SLA?", "Which budget?"], committeeNo=1)
->>> 440 analysis with an objection
-  #315 2026-10-20T15:07:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=1, kind=ANALYSIS, text="mTLS", proposal="Gateway with mTLS", position="NEW", criticalObjection="Tokens are not checked per API", byDirector=null, questions=[], committeeNo=1)
->>> 441 analysis twice
+>>> 446 analysis with questions
+  #317 2026-10-20T15:13:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=1, kind=ANALYSIS, text="Gateway", proposal="Gateway", position="NEW", criticalObjection=null, byDirector=null, questions=["Which SLA?", "Which budget?"], committeeNo=1)
+>>> 447 analysis with an objection
+  #318 2026-10-20T15:14:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=1, kind=ANALYSIS, text="mTLS", proposal="Gateway with mTLS", position="NEW", criticalObjection="Tokens are not checked per API", byDirector=null, questions=[], committeeNo=1)
+>>> 448 analysis twice
   refused NOT_EXPECTED: darius owes no contribution now
->>> 442 last analysis
-  #316 2026-10-20T15:09:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=1, kind=ANALYSIS, text="Fine", proposal="Gateway", position="NEW", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #317 2026-10-20T15:09:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=DEBATE, round=2, committeeNo=1)
->>> 443 director without a seat
+>>> 449 last analysis
+  #319 2026-10-20T15:16:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=1, kind=ANALYSIS, text="Fine", proposal="Gateway", position="NEW", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #320 2026-10-20T15:16:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=DEBATE, round=2, committeeNo=1)
+>>> 450 director without a seat
   refused NO_DIRECTOR_SEAT: This committee has no seat for the director
->>> 444 rebuttal
-  #318 2026-10-20T15:11:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=2, kind=REBUTTAL, text="Still a gateway", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
->>> 445 rebuttal with the objection
-  #319 2026-10-20T15:12:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=2, kind=REBUTTAL, text="Still", proposal="Gateway with mTLS", position="MAINTAINED", criticalObjection="Tokens still not checked", byDirector=null, questions=[], committeeNo=1)
->>> 446 last rebuttal
-  #320 2026-10-20T15:13:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=2, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #321 2026-10-20T15:13:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=2, committeeNo=1)
->>> 447 synthesis
-  #322 2026-10-20T15:14:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=2, kind=SYNTHESIS, text="# Record", proposal="Adopt a gateway", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #323 2026-10-20T15:14:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarificationOpened(mission="M-2", analyst="ana", round=2, committeeNo=1)
->>> 448 clarification by someone else
+>>> 451 rebuttal
+  #321 2026-10-20T15:18:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=2, kind=REBUTTAL, text="Still a gateway", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+>>> 452 rebuttal with the objection
+  #322 2026-10-20T15:19:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=2, kind=REBUTTAL, text="Still", proposal="Gateway with mTLS", position="MAINTAINED", criticalObjection="Tokens still not checked", byDirector=null, questions=[], committeeNo=1)
+>>> 453 last rebuttal
+  #323 2026-10-20T15:20:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=2, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #324 2026-10-20T15:20:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=2, committeeNo=1)
+>>> 454 synthesis
+  #325 2026-10-20T15:21:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=2, kind=SYNTHESIS, text="# Record", proposal="Adopt a gateway", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #326 2026-10-20T15:21:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarificationOpened(mission="M-2", analyst="ana", round=2, committeeNo=1)
+>>> 455 clarification by someone else
   refused FORBIDDEN: The committee's business analyst writes the clarification
->>> 449 clarification
-  #324 2026-10-20T15:16:00Z REAL AGENT:ana mission=M-2 auth=null cause=null CommitteeClarificationWritten(mission="M-2", analyst="ana", text="Two questions for you", questions=3, committeeNo=1)
-  #325 2026-10-20T15:16:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-19", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which SLA?", context="Uptime", options=["99.9", "99.99"], recommendation="99.99", criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[null, null])
-  #326 2026-10-20T15:16:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-20", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which budget?", context=null, options=[], recommendation="Small", criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[])
-  #327 2026-10-20T15:16:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-21", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which region?", context=null, options=[], recommendation=null, criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[])
-  #328 2026-10-20T15:16:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=AWAITING_ANSWERS, round=2, committeeNo=1)
->>> 450 answer the SLA
-  #329 2026-10-20T15:17:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-19", answer="99.9")
->>> 451 withdraw the budget question
-  #330 2026-10-20T15:18:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-20", reason="settled")
->>> 452 answer the region
-  #331 2026-10-20T15:19:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-21", answer="EU only")
-  #332 2026-10-20T15:19:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarified(mission="M-2", answers=["The director answered \"Which SLA?\": 99.9", "The director answered \"Which region?\": EU only"], committeeNo=1)
->>> 453 second rebuttal
-  #333 2026-10-20T15:20:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=3, kind=REBUTTAL, text="With 99.9", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=["Which vendor?"], committeeNo=1)
->>> 454 second rebuttal with the objection
-  #334 2026-10-20T15:21:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=3, kind=REBUTTAL, text="Still", proposal="Gateway with mTLS", position="MAINTAINED", criticalObjection="Tokens still not checked", byDirector=null, questions=[], committeeNo=1)
->>> 455 last second rebuttal
-  #335 2026-10-20T15:22:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=3, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #336 2026-10-20T15:22:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=3, committeeNo=1)
->>> 456 second synthesis
-  #337 2026-10-20T15:23:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=3, kind=SYNTHESIS, text="# Record 2", proposal=null, position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #338 2026-10-20T15:23:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarificationOpened(mission="M-2", analyst="ana", round=3, committeeNo=1)
->>> 457 clarification without questions
-  #339 2026-10-20T15:24:00Z REAL AGENT:ana mission=M-2 auth=null cause=null CommitteeClarificationWritten(mission="M-2", analyst="ana", text="I settled the vendor myself", questions=0, committeeNo=1)
-  #340 2026-10-20T15:24:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarified(mission="M-2", answers=[], committeeNo=1)
-  #341 2026-10-20T15:24:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null QuestionAsked(question="Q-22", mission="M-2", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Gateway?", context="Recommendation: (not stated: read the record)\nCritical objections still standing (a majority cannot remove them):\n- darius (Security): Tokens still not checked", options=["Adopt despite the critical objection", "Adopt and implement (writes ask you first) despite the critical objection", "Reject"], recommendation=null, criticality=HIGH, blocking=true, ticket="T-13", action=null, phrase=Phrase(code="committee", params={"topic"="Gateway?"}), optionCodes=[null, null, null])
->>> 458 send back while waiting? no: send back
-  #342 2026-10-20T15:25:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-22", reason="sent back with a constraint")
-  #343 2026-10-20T15:25:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeSentBack(mission="M-2", constraint="Must run on-premises", committeeNo=1)
->>> 459 send back twice
+>>> 456 clarification
+  #327 2026-10-20T15:23:00Z REAL AGENT:ana mission=M-2 auth=null cause=null CommitteeClarificationWritten(mission="M-2", analyst="ana", text="Two questions for you", questions=3, committeeNo=1)
+  #328 2026-10-20T15:23:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-19", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which SLA?", context="Uptime", options=["99.9", "99.99"], recommendation="99.99", criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[null, null])
+  #329 2026-10-20T15:23:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-20", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which budget?", context=null, options=[], recommendation="Small", criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[])
+  #330 2026-10-20T15:23:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionAsked(question="Q-21", mission="M-2", kind=CLARIFICATION, askedBy="ana", subject="Which region?", context=null, options=[], recommendation=null, criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=null, optionCodes=[])
+  #331 2026-10-20T15:23:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=AWAITING_ANSWERS, round=2, committeeNo=1)
+>>> 457 answer the SLA
+  #332 2026-10-20T15:24:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-19", answer="99.9")
+>>> 458 withdraw the budget question
+  #333 2026-10-20T15:25:00Z REAL AGENT:ana mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-20", reason="settled")
+>>> 459 answer the region
+  #334 2026-10-20T15:26:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-21", answer="EU only")
+  #335 2026-10-20T15:26:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarified(mission="M-2", answers=["The director answered \"Which SLA?\": 99.9", "The director answered \"Which region?\": EU only"], committeeNo=1)
+>>> 460 second rebuttal
+  #336 2026-10-20T15:27:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=3, kind=REBUTTAL, text="With 99.9", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=["Which vendor?"], committeeNo=1)
+>>> 461 second rebuttal with the objection
+  #337 2026-10-20T15:28:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=3, kind=REBUTTAL, text="Still", proposal="Gateway with mTLS", position="MAINTAINED", criticalObjection="Tokens still not checked", byDirector=null, questions=[], committeeNo=1)
+>>> 462 last second rebuttal
+  #338 2026-10-20T15:29:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=3, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #339 2026-10-20T15:29:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=3, committeeNo=1)
+>>> 463 second synthesis
+  #340 2026-10-20T15:30:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=3, kind=SYNTHESIS, text="# Record 2", proposal=null, position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #341 2026-10-20T15:30:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarificationOpened(mission="M-2", analyst="ana", round=3, committeeNo=1)
+>>> 464 clarification without questions
+  #342 2026-10-20T15:31:00Z REAL AGENT:ana mission=M-2 auth=null cause=null CommitteeClarificationWritten(mission="M-2", analyst="ana", text="I settled the vendor myself", questions=0, committeeNo=1)
+  #343 2026-10-20T15:31:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeClarified(mission="M-2", answers=[], committeeNo=1)
+  #344 2026-10-20T15:31:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null QuestionAsked(question="Q-22", mission="M-2", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Gateway?", context="Recommendation: (not stated: read the record)\nCritical objections still standing (a majority cannot remove them):\n- darius (Security): Tokens still not checked", options=["Adopt despite the critical objection", "Adopt and implement (writes ask you first) despite the critical objection", "Reject"], recommendation=null, criticality=HIGH, blocking=true, ticket="T-13", action=null, phrase=Phrase(code="committee", params={"topic"="Gateway?"}), optionCodes=[null, null, null])
+>>> 465 send back while waiting? no: send back
+  #345 2026-10-20T15:32:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-22", reason="sent back with a constraint")
+  #346 2026-10-20T15:32:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeSentBack(mission="M-2", constraint="Must run on-premises", committeeNo=1)
+>>> 466 send back twice
   refused INVALID_TRANSITION: The committee is not waiting for you
->>> 460 third rebuttal
-  #344 2026-10-20T15:27:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=4, kind=REBUTTAL, text="On-prem gateway", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
->>> 461 third rebuttal, objection withdrawn
-  #345 2026-10-20T15:28:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=4, kind=REBUTTAL, text="Fine with mTLS", proposal="Gateway with mTLS", position="ADOPTED galen", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
->>> 462 last third rebuttal
-  #346 2026-10-20T15:29:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=4, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #347 2026-10-20T15:29:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=4, committeeNo=1)
->>> 463 third synthesis
-  #348 2026-10-20T15:30:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=4, kind=SYNTHESIS, text="# Record 3", proposal="On-prem gateway", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #349 2026-10-20T15:30:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=AWAITING_DIRECTOR, round=4, committeeNo=1)
-  #350 2026-10-20T15:30:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null QuestionAsked(question="Q-23", mission="M-2", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Gateway?", context="Recommendation: On-prem gateway", options=["Adopt", "Adopt and implement (writes ask you first)", "Reject"], recommendation=null, criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=Phrase(code="committee", params={"topic"="Gateway?"}), optionCodes=[null, null, null])
-??? 464 arbitration options = Optional[["Adopt", "Adopt and implement (writes ask you first)", "Reject"]]
->>> 465 adopt and implement
-  #351 2026-10-20T15:31:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-23", answer="Adopt and implement (writes ask you first)")
-  #352 2026-10-20T15:31:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeArbitrated(mission="M-2", adopted=true, implement=true, overCriticalObjection=false, committeeNo=1)
-  #353 2026-10-20T15:31:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCompleted(ticket="T-13")
->>> 466 directive on the ruled decision
+>>> 467 third rebuttal
+  #347 2026-10-20T15:34:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=4, kind=REBUTTAL, text="On-prem gateway", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+>>> 468 third rebuttal, objection withdrawn
+  #348 2026-10-20T15:35:00Z REAL AGENT:darius mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="darius", round=4, kind=REBUTTAL, text="Fine with mTLS", proposal="Gateway with mTLS", position="ADOPTED galen", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+>>> 469 last third rebuttal
+  #349 2026-10-20T15:36:00Z REAL AGENT:chris mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="chris", round=4, kind=REBUTTAL, text="Ok", proposal="Gateway", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #350 2026-10-20T15:36:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=SYNTHESIS, round=4, committeeNo=1)
+>>> 470 third synthesis
+  #351 2026-10-20T15:37:00Z REAL AGENT:galen mission=M-2 auth=null cause=null CommitteeContributed(mission="M-2", member="galen", round=4, kind=SYNTHESIS, text="# Record 3", proposal="On-prem gateway", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #352 2026-10-20T15:37:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null CommitteeAdvanced(mission="M-2", stage=AWAITING_DIRECTOR, round=4, committeeNo=1)
+  #353 2026-10-20T15:37:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null QuestionAsked(question="Q-23", mission="M-2", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Gateway?", context="Recommendation: On-prem gateway", options=["Adopt", "Adopt and implement (writes ask you first)", "Reject"], recommendation=null, criticality=MEDIUM, blocking=true, ticket="T-13", action=null, phrase=Phrase(code="committee", params={"topic"="Gateway?"}), optionCodes=[null, null, null])
+??? 471 arbitration options = Optional[["Adopt", "Adopt and implement (writes ask you first)", "Reject"]]
+>>> 472 adopt and implement
+  #354 2026-10-20T15:38:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionAnswered(question="Q-23", answer="Adopt and implement (writes ask you first)")
+  #355 2026-10-20T15:38:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null CommitteeArbitrated(mission="M-2", adopted=true, implement=true, overCriticalObjection=false, committeeNo=1)
+  #356 2026-10-20T15:38:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCompleted(ticket="T-13")
+>>> 473 directive on the ruled decision
   refused DECIDED_TICKET: T-13 is the committee's decision, already ruled: no one works on it any more. Adopt it with implementation, or give the directive to a ticket of the mission
->>> 467 implementation ticket
-  #354 2026-10-20T15:33:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCreated(ticket="T-14", mission="M-2", title="Implement the gateway", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 468 assign the implementation
-  #355 2026-10-20T15:34:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketAssigned(ticket="T-14", agent="chris")
-??? 469 directive goes to = "T-14"
->>> 470 directive through the decision
-  #356 2026-10-20T15:36:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null DirectiveGiven(mission="M-2", ticket="T-14", directive="Use Kong")
->>> 471 a question before cancelling
-  #357 2026-10-20T15:37:00Z REAL AGENT:chris mission=M-2 auth=null cause=null QuestionAsked(question="Q-24", mission="M-2", kind=OPEN, askedBy="chris", subject="Kong or Envoy?", context=null, options=[], recommendation=null, criticality=HIGH, blocking=true, ticket="T-14", action=null, phrase=null, optionCodes=[])
->>> 472 start the implementation
-  #358 2026-10-20T15:38:00Z REAL AGENT:chris mission=M-2 auth=null cause=null TicketStarted(ticket="T-14")
->>> 473 read asks
-  #359 2026-10-20T15:39:00Z REAL AGENT:chris mission=M-2 auth=null cause=null ActionRequested(action="c1", mission="M-2", ticket="T-14", agent="chris", category=READ, tool="Read", summary="kong.yml")
-  #360 2026-10-20T15:39:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null ActionDenied(action="c1", reason=POLICY, detail="no rule allows it (default deny)")
->>> 474 cancel without reason
+>>> 474 implementation ticket
+  #357 2026-10-20T15:40:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCreated(ticket="T-14", mission="M-2", title="Implement the gateway", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 475 assign the implementation
+  #358 2026-10-20T15:41:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketAssigned(ticket="T-14", agent="chris")
+??? 476 directive goes to = "T-14"
+>>> 477 directive through the decision
+  #359 2026-10-20T15:43:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null DirectiveGiven(mission="M-2", ticket="T-14", directive="Use Kong")
+>>> 478 a question before cancelling
+  #360 2026-10-20T15:44:00Z REAL AGENT:chris mission=M-2 auth=null cause=null QuestionAsked(question="Q-24", mission="M-2", kind=OPEN, askedBy="chris", subject="Kong or Envoy?", context=null, options=[], recommendation=null, criticality=HIGH, blocking=true, ticket="T-14", action=null, phrase=null, optionCodes=[])
+>>> 479 start the implementation
+  #361 2026-10-20T15:45:00Z REAL AGENT:chris mission=M-2 auth=null cause=null TicketStarted(ticket="T-14")
+>>> 480 read asks
+  #362 2026-10-20T15:46:00Z REAL AGENT:chris mission=M-2 auth=null cause=null ActionRequested(action="c1", mission="M-2", ticket="T-14", agent="chris", category=READ, tool="Read", summary="kong.yml")
+  #363 2026-10-20T15:46:00Z REAL SYSTEM:floor42 mission=M-2 auth=null cause=null ActionDenied(action="c1", reason=POLICY, detail="no rule allows it (default deny)")
+>>> 481 cancel without reason
   refused MISSING_REASON: reason is required
->>> 475 cancel
-  #361 2026-10-20T15:41:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCancelled(ticket="T-14", reason="mission cancelled")
-  #362 2026-10-20T15:41:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-24", reason="mission cancelled")
-  #363 2026-10-20T15:41:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCancelled(mission="M-2", reason="Bought a product instead")
->>> 476 retro of a cancelled mission
+>>> 482 cancel
+  #364 2026-10-20T15:48:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null TicketCancelled(ticket="T-14", reason="mission cancelled")
+  #365 2026-10-20T15:48:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null QuestionWithdrawn(question="Q-24", reason="mission cancelled")
+  #366 2026-10-20T15:48:00Z REAL DIRECTOR:director mission=M-2 auth=null cause=null MissionCancelled(mission="M-2", reason="Bought a product instead")
+>>> 483 retro of a cancelled mission
   refused MISSION_NOT_ACTIVE: M-2 was cancelled: no retrospective
->>> 477 close the retro now by Floor42
+>>> 484 close the retro now by Floor42
   refused DIRECTOR_ONLY: Only the director can do this
->>> 478 close the retro now
+>>> 485 close the retro now
   refused NO_RETRO: M-2 has no retrospective
->>> 479 Floor42 concludes a closed retro
+>>> 486 Floor42 concludes a closed retro
   refused NO_RETRO: M-2 has no retrospective
->>> 480 idea mission
-  #364 2026-10-20T15:46:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null MissionCreated(mission="M-3", title="Idea", objective="A marketplace for tools?", workspace="C:/repo/idea")
-  #365 2026-10-20T15:46:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null WorkflowPinned(mission="M-3", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
->>> 481 idea ticket
-  #366 2026-10-20T15:47:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketCreated(ticket="T-15", mission="M-3", title="Decide: idea", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 482 assign the moderator
-  #367 2026-10-20T15:48:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketAssigned(ticket="T-15", agent="galen")
->>> 483 moderated committee too small
+>>> 487 idea mission
+  #367 2026-10-20T15:53:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null MissionCreated(mission="M-3", title="Idea", objective="A marketplace for tools?", workspace="C:/repo/idea")
+  #368 2026-10-20T15:53:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null WorkflowPinned(mission="M-3", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+>>> 488 idea ticket
+  #369 2026-10-20T15:54:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketCreated(ticket="T-15", mission="M-3", title="Decide: idea", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 489 assign the moderator
+  #370 2026-10-20T15:55:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketAssigned(ticket="T-15", agent="galen")
+>>> 490 moderated committee too small
   refused INVALID_ARGUMENT: A moderated committee needs at least two members besides the moderator
->>> 484 director's seat on the chair
+>>> 491 director's seat on the chair
   refused INVALID_ARGUMENT: The director's seat is a member's, not the chair's
->>> 485 committee without format
+>>> 492 committee without format
   refused INVALID_ARGUMENT: How does the committee run?
->>> 486 idea committee
-  #368 2026-10-20T15:52:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeConvened(mission="M-3", ticket="T-15", topic="Marketplace?", members=["galen", "darius", "chris"], roles=["Moderator", "Lawyer", "Your double"], panel="idea", moderated=true, maxDebateRounds=2, directorSeat="chris", committeeNo=1)
->>> 487 submit
-  #369 2026-10-20T15:53:00Z REAL AGENT:galen mission=M-3 auth=null cause=null MissionPlanSubmitted(mission="M-3")
->>> 488 director speaks before the plan is approved
+>>> 493 idea committee
+  #371 2026-10-20T15:59:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeConvened(mission="M-3", ticket="T-15", topic="Marketplace?", members=["galen", "darius", "chris"], roles=["Moderator", "Lawyer", "Your double"], panel="idea", moderated=true, maxDebateRounds=2, directorSeat="chris", committeeNo=1)
+>>> 494 submit
+  #372 2026-10-20T16:00:00Z REAL AGENT:galen mission=M-3 auth=null cause=null MissionPlanSubmitted(mission="M-3")
+>>> 495 director speaks before the plan is approved
   refused MISSION_NOT_ACTIVE: M-3 is AWAITING_APPROVAL
->>> 489 budget
-  #370 2026-10-20T15:55:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null BudgetSet(mission="M-3", usd=10.0)
->>> 490 approve
-  #371 2026-10-20T15:56:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null MissionPlanApproved(mission="M-3")
->>> 491 start
-  #372 2026-10-20T15:57:00Z REAL AGENT:galen mission=M-3 auth=null cause=null TicketStarted(ticket="T-15")
->>> 492 the director speaks
-  #373 2026-10-20T15:58:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=1, kind=ANALYSIS, text="My analysis", proposal="Rent, not sell", position="NEW", criticalObjection=null, byDirector=true, questions=[], committeeNo=1)
->>> 493 the director speaks by an agent
+>>> 496 budget
+  #373 2026-10-20T16:02:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null BudgetSet(mission="M-3", usd=10.0)
+>>> 497 approve
+  #374 2026-10-20T16:03:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null MissionPlanApproved(mission="M-3")
+>>> 498 start
+  #375 2026-10-20T16:04:00Z REAL AGENT:galen mission=M-3 auth=null cause=null TicketStarted(ticket="T-15")
+>>> 499 the director speaks
+  #376 2026-10-20T16:05:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=1, kind=ANALYSIS, text="My analysis", proposal="Rent, not sell", position="NEW", criticalObjection=null, byDirector=true, questions=[], committeeNo=1)
+>>> 500 the director speaks by an agent
   refused DIRECTOR_ONLY: Only the director can do this
->>> 494 the lawyer
-  #374 2026-10-20T16:00:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=1, kind=ANALYSIS, text="Liability", proposal="Sell with insurance", position="NEW", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
-  #375 2026-10-20T16:00:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=DEBATE, round=2, committeeNo=1)
->>> 495 debate, the double
-  #376 2026-10-20T16:01:00Z REAL AGENT:chris mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=2, kind=REBUTTAL, text="Rent", proposal="Rent", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
->>> 496 the director again
-  #377 2026-10-20T16:02:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=2, kind=REBUTTAL, text="Changed my mind", proposal=null, position="ADOPTED darius", criticalObjection=null, byDirector=true, questions=[], committeeNo=1)
->>> 497 the lawyer debates
-  #378 2026-10-20T16:03:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=2, kind=REBUTTAL, text="Insurance", proposal="Sell with insurance", position="MAINTAINED", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
-  #379 2026-10-20T16:03:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=DEBATE, round=3, committeeNo=1)
->>> 498 second debate round, lawyer
-  #380 2026-10-20T16:04:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=3, kind=REBUTTAL, text="Same", proposal="Sell with insurance", position="MAINTAINED", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
->>> 499 second debate round, double
-  #381 2026-10-20T16:05:00Z REAL AGENT:chris mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=3, kind=REBUTTAL, text="Same", proposal="Rent", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #382 2026-10-20T16:05:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=SYNTHESIS, round=3, committeeNo=1)
->>> 500 director in the synthesis
+>>> 501 the lawyer
+  #377 2026-10-20T16:07:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=1, kind=ANALYSIS, text="Liability", proposal="Sell with insurance", position="NEW", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
+  #378 2026-10-20T16:07:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=DEBATE, round=2, committeeNo=1)
+>>> 502 debate, the double
+  #379 2026-10-20T16:08:00Z REAL AGENT:chris mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=2, kind=REBUTTAL, text="Rent", proposal="Rent", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+>>> 503 the director again
+  #380 2026-10-20T16:09:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=2, kind=REBUTTAL, text="Changed my mind", proposal=null, position="ADOPTED darius", criticalObjection=null, byDirector=true, questions=[], committeeNo=1)
+>>> 504 the lawyer debates
+  #381 2026-10-20T16:10:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=2, kind=REBUTTAL, text="Insurance", proposal="Sell with insurance", position="MAINTAINED", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
+  #382 2026-10-20T16:10:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=DEBATE, round=3, committeeNo=1)
+>>> 505 second debate round, lawyer
+  #383 2026-10-20T16:11:00Z REAL AGENT:darius mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="darius", round=3, kind=REBUTTAL, text="Same", proposal="Sell with insurance", position="MAINTAINED", criticalObjection="Liability for defects", byDirector=null, questions=[], committeeNo=1)
+>>> 506 second debate round, double
+  #384 2026-10-20T16:12:00Z REAL AGENT:chris mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="chris", round=3, kind=REBUTTAL, text="Same", proposal="Rent", position="MAINTAINED", criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #385 2026-10-20T16:12:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=SYNTHESIS, round=3, committeeNo=1)
+>>> 507 director in the synthesis
   refused INVALID_TRANSITION: The committee is not analysing or debating now
->>> 501 moderator's record
-  #383 2026-10-20T16:07:00Z REAL AGENT:galen mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="galen", round=3, kind=SYNTHESIS, text="# Record", proposal="Sell with insurance", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
-  #384 2026-10-20T16:07:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=AWAITING_DIRECTOR, round=3, committeeNo=1)
-  #385 2026-10-20T16:07:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null QuestionAsked(question="Q-25", mission="M-3", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Marketplace?", context="Recommendation: Sell with insurance\nThe members did not all agree after 2 debate round(s): read the disagreements in the record.\nCritical objections still standing (a majority cannot remove them):\n- darius (Lawyer): Liability for defects", options=["Adopt despite the critical objection", "Adopt and implement (writes ask you first) despite the critical objection", "Reject"], recommendation=null, criticality=HIGH, blocking=true, ticket="T-15", action=null, phrase=Phrase(code="committee", params={"topic"="Marketplace?"}), optionCodes=[null, null, null])
->>> 502 reject
-  #386 2026-10-20T16:08:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null QuestionAnswered(question="Q-25", answer="Reject")
-  #387 2026-10-20T16:08:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeArbitrated(mission="M-3", adopted=false, implement=false, overCriticalObjection=false, committeeNo=1)
-  #388 2026-10-20T16:08:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketCancelled(ticket="T-15", reason="director rejected the committee's decision")
->>> 503 contribution after the ruling
+>>> 508 moderator's record
+  #386 2026-10-20T16:14:00Z REAL AGENT:galen mission=M-3 auth=null cause=null CommitteeContributed(mission="M-3", member="galen", round=3, kind=SYNTHESIS, text="# Record", proposal="Sell with insurance", position=null, criticalObjection=null, byDirector=null, questions=[], committeeNo=1)
+  #387 2026-10-20T16:14:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null CommitteeAdvanced(mission="M-3", stage=AWAITING_DIRECTOR, round=3, committeeNo=1)
+  #388 2026-10-20T16:14:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null QuestionAsked(question="Q-25", mission="M-3", kind=COMMITTEE_ARBITRATION, askedBy=null, subject="Committee decision: Marketplace?", context="Recommendation: Sell with insurance\nThe members did not all agree after 2 debate round(s): read the disagreements in the record.\nCritical objections still standing (a majority cannot remove them):\n- darius (Lawyer): Liability for defects", options=["Adopt despite the critical objection", "Adopt and implement (writes ask you first) despite the critical objection", "Reject"], recommendation=null, criticality=HIGH, blocking=true, ticket="T-15", action=null, phrase=Phrase(code="committee", params={"topic"="Marketplace?"}), optionCodes=[null, null, null])
+>>> 509 reject
+  #389 2026-10-20T16:15:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null QuestionAnswered(question="Q-25", answer="Reject")
+  #390 2026-10-20T16:15:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null CommitteeArbitrated(mission="M-3", adopted=false, implement=false, overCriticalObjection=false, committeeNo=1)
+  #391 2026-10-20T16:15:00Z REAL DIRECTOR:director mission=M-3 auth=null cause=null TicketCancelled(ticket="T-15", reason="director rejected the committee's decision")
+>>> 510 contribution after the ruling
   refused NOT_EXPECTED: darius owes no contribution now
->>> 504 send back a ruled committee
+>>> 511 send back a ruled committee
   refused INVALID_TRANSITION: The committee is not waiting for you
->>> 505 directive with no implementation
+>>> 512 directive with no implementation
   refused INVALID_TRANSITION: T-15 is cancelled
->>> 506 complete
-  #389 2026-10-20T16:12:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null MissionCompleted(mission="M-3", summary="Rejected the idea")
->>> 507 simulated mission with a repository
+>>> 513 complete
+  #392 2026-10-20T16:19:00Z REAL SYSTEM:floor42 mission=M-3 auth=null cause=null MissionCompleted(mission="M-3", summary="Rejected the idea")
+>>> 514 simulated mission with a repository
   refused SIMULATED_WORKSPACE: A simulated mission works on no repository
->>> 508 simulated mission
-  #390 2026-10-20T16:14:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionCreated(mission="M-4", title="Sim", objective="Try", workspace=null)
->>> 509 real command on a simulated mission
+>>> 515 simulated mission
+  #393 2026-10-20T16:21:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionCreated(mission="M-4", title="Sim", objective="Try", workspace=null)
+>>> 516 real command on a simulated mission
   refused ORIGIN_MISMATCH: M-4 is a SIMULATED mission; it cannot receive REAL events
->>> 510 simulated ticket
-  #391 2026-10-20T16:16:00Z SIMULATED AGENT:galen mission=M-4 auth=null cause=null TicketCreated(ticket="T-16", mission="M-4", title="Try", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 511 planning ticket by kind
-  #392 2026-10-20T16:17:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCreated(ticket="T-17", mission="M-4", title="Replan", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=PLANNING)
->>> 512 ticket without kind
-  #393 2026-10-20T16:18:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCreated(ticket="T-18", mission="M-4", title="Plan: legacy-looking title", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 513 simulated assets
+>>> 517 simulated ticket
+  #394 2026-10-20T16:23:00Z SIMULATED AGENT:galen mission=M-4 auth=null cause=null TicketCreated(ticket="T-16", mission="M-4", title="Try", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 518 planning ticket by kind
+  #395 2026-10-20T16:24:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCreated(ticket="T-17", mission="M-4", title="Replan", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=PLANNING)
+>>> 519 ticket without kind
+  #396 2026-10-20T16:25:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCreated(ticket="T-18", mission="M-4", title="Plan: legacy-looking title", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 520 simulated assets
   refused SIMULATED_MISSION: A simulated mission runs no real session
->>> 514 simulated pull request
+>>> 521 simulated pull request
   refused SIMULATED_MISSION: A simulated mission pushes nothing anywhere
->>> 515 simulated workspace
+>>> 522 simulated workspace
   refused NO_REPOSITORY: M-4 has no repository
->>> 516 simulated checks
+>>> 523 simulated checks
   refused NO_REPOSITORY: M-4 has no repository to check
->>> 517 simulated empty plan
-  #394 2026-10-20T16:23:00Z SIMULATED AGENT:galen mission=M-4 auth=null cause=null MissionPlanSubmitted(mission="M-4")
->>> 518 simulated assign
-  #395 2026-10-20T16:24:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketAssigned(ticket="T-16", agent="chris")
->>> 519 simulated submit
+>>> 524 simulated empty plan
+  #397 2026-10-20T16:30:00Z SIMULATED AGENT:galen mission=M-4 auth=null cause=null MissionPlanSubmitted(mission="M-4")
+>>> 525 simulated assign
+  #398 2026-10-20T16:31:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketAssigned(ticket="T-16", agent="chris")
+>>> 526 simulated submit
   refused INVALID_TRANSITION: M-4: AWAITING_APPROVAL -> AWAITING_APPROVAL is not allowed
->>> 520 simulated approve
-  #396 2026-10-20T16:26:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionPlanApproved(mission="M-4")
->>> 521 simulated start
-  #397 2026-10-20T16:27:00Z SIMULATED AGENT:chris mission=M-4 auth=null cause=null TicketStarted(ticket="T-16")
->>> 522 simulated session
-  #398 2026-10-20T16:28:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null AgentSessionStarted(session="sim-1", mission="M-4", ticket="T-16", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
->>> 523 simulated continuation
+>>> 527 simulated approve
+  #399 2026-10-20T16:33:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionPlanApproved(mission="M-4")
+>>> 528 simulated start
+  #400 2026-10-20T16:34:00Z SIMULATED AGENT:chris mission=M-4 auth=null cause=null TicketStarted(ticket="T-16")
+>>> 529 simulated session
+  #401 2026-10-20T16:35:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null AgentSessionStarted(session="sim-1", mission="M-4", ticket="T-16", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+>>> 530 simulated continuation
   refused SIMULATED_MISSION: A simulated session cannot be continued
->>> 524 simulated session ends
-  #399 2026-10-20T16:30:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null AgentSessionEnded(session="sim-1", failed=false, outcome="completed", turns=1, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
->>> 525 simulated action
-  #400 2026-10-20T16:31:00Z SIMULATED AGENT:chris mission=M-4 auth=null cause=null ActionRequested(action="sim-a1", mission="M-4", ticket="T-16", agent="chris", category=EXECUTE, tool="Bash", summary="ls")
-  #401 2026-10-20T16:31:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null ActionDenied(action="sim-a1", reason=POLICY, detail="no rule allows it (default deny)")
->>> 526 simulated suspend
-  #402 2026-10-20T16:32:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionSuspended(mission="M-4", reason="pause")
-??? 527 paused = PAUSED
->>> 528 simulated cancel
-  #403 2026-10-20T16:33:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-16", reason="mission cancelled")
-  #404 2026-10-20T16:33:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-17", reason="mission cancelled")
-  #405 2026-10-20T16:33:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-18", reason="mission cancelled")
-  #406 2026-10-20T16:33:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionCancelled(mission="M-4", reason="enough")
->>> 529 simulated cancel twice
+>>> 531 simulated session ends
+  #402 2026-10-20T16:37:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null AgentSessionEnded(session="sim-1", failed=false, outcome="completed", turns=1, inputTokensProvided=null, outputTokensProvided=null, costUsdEstimated=null, costUsdBound=null)
+>>> 532 simulated action
+  #403 2026-10-20T16:38:00Z SIMULATED AGENT:chris mission=M-4 auth=null cause=null ActionRequested(action="sim-a1", mission="M-4", ticket="T-16", agent="chris", category=EXECUTE, tool="Bash", summary="ls")
+  #404 2026-10-20T16:38:00Z SIMULATED SYSTEM:floor42 mission=M-4 auth=null cause=null ActionDenied(action="sim-a1", reason=POLICY, detail="no rule allows it (default deny)")
+>>> 533 simulated suspend
+  #405 2026-10-20T16:39:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionSuspended(mission="M-4", reason="pause")
+??? 534 paused = PAUSED
+>>> 535 simulated cancel
+  #406 2026-10-20T16:40:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-16", reason="mission cancelled")
+  #407 2026-10-20T16:40:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-17", reason="mission cancelled")
+  #408 2026-10-20T16:40:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null TicketCancelled(ticket="T-18", reason="mission cancelled")
+  #409 2026-10-20T16:40:00Z SIMULATED DIRECTOR:director mission=M-4 auth=null cause=null MissionCancelled(mission="M-4", reason="enough")
+>>> 536 simulated cancel twice
   refused INVALID_TRANSITION: M-4: CANCELLED -> CANCELLED is not allowed
->>> 530 pin
-  #407 2026-10-20T16:35:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=true)
->>> 531 pin twice
+>>> 537 pin
+  #410 2026-10-20T16:42:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=true)
+>>> 538 pin twice
   (nothing recorded)
->>> 532 pin an unknown project
+>>> 539 pin an unknown project
   refused UNKNOWN_PROJECT: No real mission worked on C:/elsewhere
->>> 533 pin by an agent
+>>> 540 pin by an agent
   refused DIRECTOR_ONLY: Only the director can do this
->>> 534 forget
-  #408 2026-10-20T16:39:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo/app")
->>> 535 forget twice
+>>> 541 forget
+  #411 2026-10-20T16:46:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo/app")
+>>> 542 forget twice
   (nothing recorded)
->>> 536 pin after forgetting
-  #409 2026-10-20T16:41:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=true)
->>> 537 unpin
-  #410 2026-10-20T16:42:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=false)
->>> 538 forget the api
-  #411 2026-10-20T16:43:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo/api")
->>> 539 a new mission on the forgotten project
-  #412 2026-10-20T16:44:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MissionCreated(mission="M-5", title="Again", objective="Back to the API", workspace="C:/repo/api")
-  #413 2026-10-20T16:44:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null WorkflowPinned(mission="M-5", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
-??? 540 forgotten = false
->>> 541 dismiss ivo
-  #414 2026-10-20T16:45:00Z REAL DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="ivo", reason="Never worked")
->>> 542 mark a dismissed agent core
+>>> 543 pin after forgetting
+  #412 2026-10-20T16:48:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=true)
+>>> 544 unpin
+  #413 2026-10-20T16:49:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectPinned(path="C:/repo/app", pinned=false)
+>>> 545 forget the api
+  #414 2026-10-20T16:50:00Z REAL DIRECTOR:director mission=- auth=null cause=null ProjectForgotten(path="C:/repo/api")
+>>> 546 a new mission on the forgotten project
+  #415 2026-10-20T16:51:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MissionCreated(mission="M-5", title="Again", objective="Back to the API", workspace="C:/repo/api")
+  #416 2026-10-20T16:51:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null WorkflowPinned(mission="M-5", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+??? 547 forgotten = false
+>>> 548 dismiss ivo
+  #417 2026-10-20T16:52:00Z REAL DIRECTOR:director mission=- auth=null cause=null AgentDismissed(agent="ivo", reason="Never worked")
+>>> 549 mark a dismissed agent core
   refused AGENT_DISMISSED: ivo has left the company
->>> 543 meeting on a closed mission
+>>> 550 meeting on a closed mission
   refused MISSION_CLOSED: M-1 is closed
->>> 544 meeting with a dismissed agent
+>>> 551 meeting with a dismissed agent
   refused AGENT_DISMISSED: ivo has left the company
->>> 545 meeting called by an agent
+>>> 552 meeting called by an agent
   refused DIRECTOR_ONLY: Only the director can do this
->>> 546 call a meeting
-  #415 2026-10-20T16:50:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-5", attendees=["chris", "darius"], agenda="Where we go next")
-??? 547 in the meeting = IN_MEETING
->>> 548 a second meeting on the mission
+>>> 553 call a meeting
+  #418 2026-10-20T16:57:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingCalled(meeting="MT-1", mission="M-5", attendees=["chris", "darius"], agenda="Where we go next")
+??? 554 in the meeting = IN_MEETING
+>>> 555 a second meeting on the mission
   refused MEETING_OPEN: A meeting about M-5 is already open: close it first
->>> 549 note for all
-  #416 2026-10-20T16:52:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingNoteGiven(meeting="MT-1", attendee=null, text="Keep the API stable")
->>> 550 note for chris
-  #417 2026-10-20T16:53:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingNoteGiven(meeting="MT-1", attendee="chris", text="Start with the tests")
->>> 551 note as a directive with no ticket under way
+>>> 556 note for all
+  #419 2026-10-20T16:59:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingNoteGiven(meeting="MT-1", attendee=null, text="Keep the API stable")
+>>> 557 note for chris
+  #420 2026-10-20T17:00:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingNoteGiven(meeting="MT-1", attendee="chris", text="Start with the tests")
+>>> 558 note as a directive with no ticket under way
   refused NO_TICKET_UNDER_WAY: No attendee concerned has a ticket under way on M-5: keep it as a note
->>> 552 note for someone absent
+>>> 559 note for someone absent
   refused NOT_AN_ATTENDEE: ken does not attend MT-1
-??? 553 notes for darius = [MeetingNote(meeting="MT-1", attendee=null, text="Keep the API stable", at=2026-10-20T16:52:00Z)]
->>> 554 close the meeting
-  #418 2026-10-20T16:56:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingClosed(meeting="MT-1", mission="M-5", attendees=["chris", "darius"])
->>> 555 close it twice
+??? 560 notes for darius = [MeetingNote(meeting="MT-1", attendee=null, text="Keep the API stable", at=2026-10-20T16:59:00Z)]
+>>> 561 close the meeting
+  #421 2026-10-20T17:03:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null MeetingClosed(meeting="MT-1", mission="M-5", attendees=["chris", "darius"])
+>>> 562 close it twice
   refused MEETING_CLOSED: MT-1 is closed
-??? 556 after the meeting = AVAILABLE
->>> 557 a mission to talk about
-  #419 2026-10-20T16:58:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionCreated(mission="M-6", title="Release", objective="A release ready to ship", workspace="C:/repo/app")
-  #420 2026-10-20T16:58:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null WorkflowPinned(mission="M-6", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
->>> 558 its ticket
-  #421 2026-10-20T16:59:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null TicketCreated(ticket="T-19", mission="M-6", title="Write the release notes", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 559 its plan
-  #422 2026-10-20T17:00:00Z REAL AGENT:galen mission=M-6 auth=null cause=null MissionPlanSubmitted(mission="M-6")
->>> 560 its budget
-  #423 2026-10-20T17:01:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null BudgetSet(mission="M-6", usd=5.0)
->>> 561 approve it
-  #424 2026-10-20T17:02:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionPlanApproved(mission="M-6")
->>> 562 call a meeting at the conference table
-  #425 2026-10-20T17:03:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingCalled(meeting="MT-2", mission="M-6", attendees=["chris", "darius"], agenda="Review the release notes")
-  #426 2026-10-20T17:03:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingPlaced(meeting="MT-2", place=CONFERENCE)
->>> 563 ask for their views
-  #427 2026-10-20T17:04:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingViewsAsked(meeting="MT-2", ticket="MT-2.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
-??? 564 the meeting's ticket = Optional[Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T17:04:00Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-2.", directives=[], endedAt=null, id="MT-2.turns", kind=MEETING, mission="M-6", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-2: the attendees' views"}]
-??? 565 the mission's tickets = [Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T16:59:00Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-19", kind=WORK, mission="M-6", priority=LOW, reviews=[], startedAt=null, status=TODO, title="Write the release notes"}]
->>> 566 a second round while one is under way
+??? 563 after the meeting = AVAILABLE
+>>> 564 a mission to talk about
+  #422 2026-10-20T17:05:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionCreated(mission="M-6", title="Release", objective="A release ready to ship", workspace="C:/repo/app")
+  #423 2026-10-20T17:05:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null WorkflowPinned(mission="M-6", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+>>> 565 its ticket
+  #424 2026-10-20T17:06:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null TicketCreated(ticket="T-19", mission="M-6", title="Write the release notes", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 566 its plan
+  #425 2026-10-20T17:07:00Z REAL AGENT:galen mission=M-6 auth=null cause=null MissionPlanSubmitted(mission="M-6")
+>>> 567 its budget
+  #426 2026-10-20T17:08:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null BudgetSet(mission="M-6", usd=5.0)
+>>> 568 approve it
+  #427 2026-10-20T17:09:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionPlanApproved(mission="M-6")
+>>> 569 call a meeting at the conference table
+  #428 2026-10-20T17:10:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingCalled(meeting="MT-2", mission="M-6", attendees=["chris", "darius"], agenda="Review the release notes")
+  #429 2026-10-20T17:10:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingPlaced(meeting="MT-2", place=CONFERENCE)
+>>> 570 ask for their views
+  #430 2026-10-20T17:11:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingViewsAsked(meeting="MT-2", ticket="MT-2.turns", round=1, speakers=["darius", "chris"], capUsd=0.5, question="Is it good?")
+??? 571 the meeting's ticket = Optional[Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T17:11:00Z, deliverable=null, dependsOn=[], description="The turns of speech of the director's meeting MT-2.", directives=[], endedAt=null, id="MT-2.turns", kind=MEETING, mission="M-6", priority=NORMAL, reviews=[], startedAt=null, status=TODO, title="Meeting MT-2: the attendees' views"}]
+??? 572 the mission's tickets = [Ticket{acceptanceCriteria=[], assignee=null, consultations=[], createdAt=2026-10-20T17:06:00Z, deliverable=null, dependsOn=[], description="", directives=[], endedAt=null, id="T-19", kind=WORK, mission="M-6", priority=LOW, reviews=[], startedAt=null, status=TODO, title="Write the release notes"}]
+>>> 573 a second round while one is under way
   refused ROUND_UNDER_WAY: A round is under way at MT-2: wait for its last speaker
->>> 567 assign the meeting's ticket
+>>> 574 assign the meeting's ticket
   refused MEETING_TICKET: MT-2.turns is a meeting's own ticket: only the meeting's turns of speech work on it
->>> 568 chris speaks out of turn
+>>> 575 chris speaks out of turn
   refused NOT_THEIR_TURN: chris is not the next speaker of round 1 at MT-2
->>> 569 darius speaks
-  #428 2026-10-20T17:08:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null MeetingTurnTaken(meeting="MT-2", round=1, attendee="darius", session=null, answer="Tighten it", why=null, budgetUsd=0.1)
->>> 570 chris is not heard
-  #429 2026-10-20T17:09:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null MeetingTurnTaken(meeting="MT-2", round=1, attendee="chris", session=null, answer=null, why="the meeting's cost cap is reached", budgetUsd=null)
-??? 571 spent = 0.1
->>> 572 close it
-  #430 2026-10-20T17:10:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingClosed(meeting="MT-2", mission="M-6", attendees=["chris", "darius"])
->>> 573 save a workflow
-  #431 2026-10-20T17:11:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
->>> 574 save it again without replacing
+>>> 576 darius speaks
+  #431 2026-10-20T17:15:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null MeetingTurnTaken(meeting="MT-2", round=1, attendee="darius", session=null, answer="Tighten it", why=null, budgetUsd=0.1)
+>>> 577 chris is not heard
+  #432 2026-10-20T17:16:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null MeetingTurnTaken(meeting="MT-2", round=1, attendee="chris", session=null, answer=null, why="the meeting's cost cap is reached", budgetUsd=null)
+??? 578 spent = 0.1
+>>> 579 close it
+  #433 2026-10-20T17:17:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MeetingClosed(meeting="MT-2", mission="M-6", attendees=["chris", "darius"])
+>>> 580 save a workflow
+  #434 2026-10-20T17:18:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+>>> 581 save it again without replacing
   refused WORKFLOW_EXISTS: A workflow named "Light" exists: replace it, or choose another name
->>> 575 an agent saves a workflow
+>>> 582 an agent saves a workflow
   refused DIRECTOR_ONLY: Only the director can do this
->>> 576 a mission pins its workflow
-  #432 2026-10-20T17:14:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null MissionCreated(mission="M-7", title="Pinned", objective="Follow the light workflow", workspace="C:/repo/api")
-  #433 2026-10-20T17:14:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null WorkflowPinned(mission="M-7", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
->>> 577 a simulated mission pins one
+>>> 583 a mission pins its workflow
+  #435 2026-10-20T17:21:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null MissionCreated(mission="M-7", title="Pinned", objective="Follow the light workflow", workspace="C:/repo/api")
+  #436 2026-10-20T17:21:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null WorkflowPinned(mission="M-7", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+>>> 584 a simulated mission pins one
   refused ORIGIN_MISMATCH: A simulated mission follows Floor42's own workflow
->>> 578 replace the workflow
-  #434 2026-10-20T17:16:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
-??? 579 the pinned mission follows its copy = Pinned(workflow=Workflow(name="Light", steps=[Plan(maxTickets=3), Approval(), Produce(), Review(), Accept()], mode=LOOP))
->>> 580 an agent who is not its planner proposes
+>>> 585 replace the workflow
+  #437 2026-10-20T17:23:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Light", document="{\"name\":\"Light\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+??? 586 the pinned mission follows its copy = Pinned(workflow=Workflow(name="Light", steps=[Plan(maxTickets=3), Approval(), Produce(), Review(), Accept()], mode=LOOP))
+>>> 587 an agent who is not its planner proposes
   refused FORBIDDEN: Only the planner of M-7 proposes a workflow
->>> 581 its planning ticket
-  #435 2026-10-20T17:18:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null TicketCreated(ticket="T-20", mission="M-7", title="Plan: Pinned", description="Plan it", priority=NORMAL, dependsOn=[], acceptanceCriteria=["c"], kind=PLANNING)
->>> 582 the planner takes it
-  #436 2026-10-20T17:19:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null TicketAssigned(ticket="T-20", agent="galen")
->>> 583 the planner proposes
-  #437 2026-10-20T17:20:00Z REAL AGENT:galen mission=M-7 auth=null cause=null WorkflowProposed(mission="M-7", proposal=1, document="{\"name\":\"Talk\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
->>> 584 the planner proposes again
-  #438 2026-10-20T17:21:00Z REAL AGENT:galen mission=M-7 auth=null cause=null WorkflowProposed(mission="M-7", proposal=2, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
->>> 585 adopt the first proposal, edited
-  #439 2026-10-20T17:22:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Talk it over", document="{\"name\":\"Talk it over\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
-  #440 2026-10-20T17:22:00Z REAL DIRECTOR:director mission=- auth=null cause=null WorkflowProposalClosed(proposal=1, adopted=true)
->>> 586 dismiss the second
-  #441 2026-10-20T17:23:00Z REAL DIRECTOR:director mission=- auth=null cause=null WorkflowProposalClosed(proposal=2, adopted=false)
->>> 587 dismiss it twice
+>>> 588 its planning ticket
+  #438 2026-10-20T17:25:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null TicketCreated(ticket="T-20", mission="M-7", title="Plan: Pinned", description="Plan it", priority=NORMAL, dependsOn=[], acceptanceCriteria=["c"], kind=PLANNING)
+>>> 589 the planner takes it
+  #439 2026-10-20T17:26:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null TicketAssigned(ticket="T-20", agent="galen")
+>>> 590 the planner proposes
+  #440 2026-10-20T17:27:00Z REAL AGENT:galen mission=M-7 auth=null cause=null WorkflowProposed(mission="M-7", proposal=1, document="{\"name\":\"Talk\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+>>> 591 the planner proposes again
+  #441 2026-10-20T17:28:00Z REAL AGENT:galen mission=M-7 auth=null cause=null WorkflowProposed(mission="M-7", proposal=2, document="{\"name\":\"Quick\",\"steps\":[{\"step\":\"plan\",\"maxTickets\":3},{\"step\":\"approval\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+>>> 592 adopt the first proposal, edited
+  #442 2026-10-20T17:29:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowSaved(name="Talk it over", document="{\"name\":\"Talk it over\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"accept\"}]}", schemaVersion=1)
+  #443 2026-10-20T17:29:00Z REAL DIRECTOR:director mission=- auth=null cause=null WorkflowProposalClosed(proposal=1, adopted=true)
+>>> 593 dismiss the second
+  #444 2026-10-20T17:30:00Z REAL DIRECTOR:director mission=- auth=null cause=null WorkflowProposalClosed(proposal=2, adopted=false)
+>>> 594 dismiss it twice
   refused PROPOSAL_CLOSED: Workflow proposal 2 is closed
->>> 588 remove a workflow
-  #442 2026-10-20T17:25:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowRemoved(name="Light")
-??? 589 the company's workflows = [CompanyWorkflow(name="Talk it over", schemaVersion=1, reading=Read(workflow=Workflow(name="Talk it over", steps=[Approval(), Committee(), Accept()], mode=LOOP)))]
-??? 590 the proposals = [WorkflowProposal(number=1, mission="M-7", by="galen", at=2026-10-20T17:20:00Z, reading=Read(workflow=Workflow(name="Talk", steps=[Approval(), Committee(), Accept()], mode=LOOP)), status=ADOPTED), WorkflowProposal(number=2, mission="M-7", by="galen", at=2026-10-20T17:21:00Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=3), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=DISMISSED)]
->>> 591 destination by an agent
+>>> 595 remove a workflow
+  #445 2026-10-20T17:32:00Z REAL DIRECTOR:director mission=- auth=null cause=null CompanyWorkflowRemoved(name="Light")
+??? 596 the company's workflows = [CompanyWorkflow(name="Talk it over", schemaVersion=1, reading=Read(workflow=Workflow(name="Talk it over", steps=[Approval(), Committee(), Accept()], mode=LOOP)))]
+??? 597 the proposals = [WorkflowProposal(number=1, mission="M-7", by="galen", at=2026-10-20T17:27:00Z, reading=Read(workflow=Workflow(name="Talk", steps=[Approval(), Committee(), Accept()], mode=LOOP)), status=ADOPTED), WorkflowProposal(number=2, mission="M-7", by="galen", at=2026-10-20T17:28:00Z, reading=Read(workflow=Workflow(name="Quick", steps=[Plan(maxTickets=3), Approval(), Produce(), Review(), Accept()], mode=LOOP)), status=DISMISSED)]
+>>> 598 destination by an agent
   refused FORBIDDEN: Only the director decides where deliverables go: never an agent, never Floor42 on its own
->>> 592 relative destination
+>>> 599 relative destination
   refused INVALID_ARGUMENT: A destination is an absolute folder, without ..
->>> 593 copy without a destination
+>>> 600 copy without a destination
   refused NO_DESTINATION: M-7 has no destination for its deliverables
->>> 594 destination
-  #443 2026-10-20T17:29:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null DeliverablesDestinationSet(mission="M-7", folder="C:/repo/api/deliverables")
->>> 595 copy outside the destination
+>>> 601 destination
+  #446 2026-10-20T17:36:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null DeliverablesDestinationSet(mission="M-7", folder="C:/repo/api/deliverables")
+>>> 602 copy outside the destination
   refused INVALID_ARGUMENT: C:/elsewhere/M-9 is not in C:/repo/api/deliverables
->>> 596 deliverables copied
-  #444 2026-10-20T17:31:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null DeliverablesCopied(mission="M-7", folder="C:/repo/api/deliverables/M-7", files=[DeliveryCopy(agent="chris", path="notes.md", writtenAs="notes.md", outcome="WRITTEN", reason=null), DeliveryCopy(agent="chris", path="report.pdf", writtenAs="report (2).pdf", outcome="KEPT_BOTH", reason=null), DeliveryCopy(agent="chris", path="run.sh", writtenAs=null, outcome="LEFT_OUT", reason="not a document")], leftOut=1, truncated=false)
-??? 597 the copy = Optional[Done(folder="C:/repo/api/deliverables/M-7", files=[DeliveryCopy(agent="chris", path="notes.md", writtenAs="notes.md", outcome="WRITTEN", reason=null), DeliveryCopy(agent="chris", path="report.pdf", writtenAs="report (2).pdf", outcome="KEPT_BOTH", reason=null), DeliveryCopy(agent="chris", path="run.sh", writtenAs=null, outcome="LEFT_OUT", reason="not a document")], leftOut=1, truncated=false, at=2026-10-20T17:31:00Z)]
->>> 598 archive a mission still open
+>>> 603 deliverables copied
+  #447 2026-10-20T17:38:00Z REAL DIRECTOR:director mission=M-7 auth=null cause=null DeliverablesCopied(mission="M-7", folder="C:/repo/api/deliverables/M-7", files=[DeliveryCopy(agent="chris", path="notes.md", writtenAs="notes.md", outcome="WRITTEN", reason=null), DeliveryCopy(agent="chris", path="report.pdf", writtenAs="report (2).pdf", outcome="KEPT_BOTH", reason=null), DeliveryCopy(agent="chris", path="run.sh", writtenAs=null, outcome="LEFT_OUT", reason="not a document")], leftOut=1, truncated=false)
+??? 604 the copy = Optional[Done(folder="C:/repo/api/deliverables/M-7", files=[DeliveryCopy(agent="chris", path="notes.md", writtenAs="notes.md", outcome="WRITTEN", reason=null), DeliveryCopy(agent="chris", path="report.pdf", writtenAs="report (2).pdf", outcome="KEPT_BOTH", reason=null), DeliveryCopy(agent="chris", path="run.sh", writtenAs=null, outcome="LEFT_OUT", reason="not a document")], leftOut=1, truncated=false, at=2026-10-20T17:38:00Z)]
+>>> 605 archive a mission still open
   refused MISSION_STILL_OPEN: M-5 is PLANNING: close it first
->>> 599 archive by an agent
+>>> 606 archive by an agent
   refused DIRECTOR_ONLY: Only the director can do this
->>> 600 archive
-  #445 2026-10-20T17:35:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionArchived(mission="M-1")
->>> 601 archive again
+>>> 607 archive
+  #448 2026-10-20T17:42:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionArchived(mission="M-1")
+>>> 608 archive again
   (nothing recorded)
-??? 602 archive refused as a value = Optional[Refused(code="MISSION_STILL_OPEN", message="M-5 is PLANNING: close it first")]
->>> 603 restore
-  #446 2026-10-20T17:38:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionUnarchived(mission="M-1")
->>> 604 restore again
+??? 609 archive refused as a value = Optional[Refused(code="MISSION_STILL_OPEN", message="M-5 is PLANNING: close it first")]
+>>> 610 restore
+  #449 2026-10-20T17:45:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionUnarchived(mission="M-1")
+>>> 611 restore again
   (nothing recorded)
->>> 605 archive for good
-  #447 2026-10-20T17:40:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionArchived(mission="M-1")
->>> 606 a mission to review
-  #448 2026-10-20T17:41:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionCreated(mission="M-8", title="Calibrated", objective="Review against criteria", workspace="C:/repo/api")
-  #449 2026-10-20T17:41:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null WorkflowPinned(mission="M-8", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
->>> 607 a ticket with criteria
-  #450 2026-10-20T17:42:00Z REAL AGENT:galen mission=M-8 auth=null cause=null TicketCreated(ticket="T-21", mission="M-8", title="Write the guide", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["covers install", "covers upgrade"], kind=WORK)
->>> 608 assign it
-  #451 2026-10-20T17:43:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null TicketAssigned(ticket="T-21", agent="chris")
->>> 609 submit the plan
-  #452 2026-10-20T17:44:00Z REAL AGENT:galen mission=M-8 auth=null cause=null MissionPlanSubmitted(mission="M-8")
->>> 610 its budget
-  #453 2026-10-20T17:45:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null BudgetSet(mission="M-8", usd=2.0)
->>> 611 approve the plan
-  #454 2026-10-20T17:46:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionPlanApproved(mission="M-8")
->>> 612 start the guide
-  #455 2026-10-20T17:47:00Z REAL AGENT:chris mission=M-8 auth=null cause=null TicketStarted(ticket="T-21")
->>> 613 submit the guide
-  #456 2026-10-20T17:48:00Z REAL AGENT:chris mission=M-8 auth=null cause=null TicketSubmittedForReview(ticket="T-21", deliverable="The guide")
->>> 614 reservations that are notes
-  #457 2026-10-20T17:49:00Z REAL AGENT:darius mission=M-8 auth=null cause=null TicketReviewed(ticket="T-21", reviewer="darius", verdict=VALIDATED_WITH_RESERVATIONS, findings="RESERVATION: naming | CHANGE: rename\nRESERVATION C1: thin | CHANGE: add a step")
-  #458 2026-10-20T17:49:00Z REAL AGENT:darius mission=M-8 auth=null cause=null ReviewItemsRecorded(ticket="T-21", reviewer="darius", declared=VALIDATED_WITH_RESERVATIONS, reservations=[ReviewReservation(criterion=1, criterionText="covers install", gap="thin", change="add a step")], notes=[ReviewNote(text="naming | CHANGE: rename", why=NO_CRITERION), ReviewNote(text="unknown | CHANGE: x", why=UNKNOWN_CRITERION), ReviewNote(text="nice", why=NOTE)])
-  #459 2026-10-20T17:49:00Z REAL AGENT:darius mission=M-8 auth=null cause=null TicketCompleted(ticket="T-21")
-??? 615 the reviews kept = Optional[[Review(reviewer="darius", verdict=VALIDATED_WITH_RESERVATIONS, findings="RESERVATION: naming | CHANGE: rename\nRESERVATION C1: thin | CHANGE: add a step", items=ReviewItems(declared=VALIDATED_WITH_RESERVATIONS, reservations=[ReviewReservation(criterion=1, criterionText="covers install", gap="thin", change="add a step")], notes=[ReviewNote(text="naming | CHANGE: rename", why=NO_CRITERION), ReviewNote(text="unknown | CHANGE: x", why=UNKNOWN_CRITERION), ReviewNote(text="nice", why=NOTE)]))]]
->>> 616 an agent accepts uncommitted work
+>>> 612 archive for good
+  #450 2026-10-20T17:47:00Z REAL DIRECTOR:director mission=M-1 auth=null cause=null MissionArchived(mission="M-1")
+>>> 613 a mission to review
+  #451 2026-10-20T17:48:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionCreated(mission="M-8", title="Calibrated", objective="Review against criteria", workspace="C:/repo/api")
+  #452 2026-10-20T17:48:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null WorkflowPinned(mission="M-8", document="{\"name\":\"built-in\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=1)
+>>> 614 a ticket with criteria
+  #453 2026-10-20T17:49:00Z REAL AGENT:galen mission=M-8 auth=null cause=null TicketCreated(ticket="T-21", mission="M-8", title="Write the guide", description="", priority=NORMAL, dependsOn=[], acceptanceCriteria=["covers install", "covers upgrade"], kind=WORK)
+>>> 615 assign it
+  #454 2026-10-20T17:50:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null TicketAssigned(ticket="T-21", agent="chris")
+>>> 616 submit the plan
+  #455 2026-10-20T17:51:00Z REAL AGENT:galen mission=M-8 auth=null cause=null MissionPlanSubmitted(mission="M-8")
+>>> 617 its budget
+  #456 2026-10-20T17:52:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null BudgetSet(mission="M-8", usd=2.0)
+>>> 618 approve the plan
+  #457 2026-10-20T17:53:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionPlanApproved(mission="M-8")
+>>> 619 start the guide
+  #458 2026-10-20T17:54:00Z REAL AGENT:chris mission=M-8 auth=null cause=null TicketStarted(ticket="T-21")
+>>> 620 submit the guide
+  #459 2026-10-20T17:55:00Z REAL AGENT:chris mission=M-8 auth=null cause=null TicketSubmittedForReview(ticket="T-21", deliverable="The guide")
+>>> 621 reservations that are notes
+  #460 2026-10-20T17:56:00Z REAL AGENT:darius mission=M-8 auth=null cause=null TicketReviewed(ticket="T-21", reviewer="darius", verdict=VALIDATED_WITH_RESERVATIONS, findings="RESERVATION: naming | CHANGE: rename\nRESERVATION C1: thin | CHANGE: add a step")
+  #461 2026-10-20T17:56:00Z REAL AGENT:darius mission=M-8 auth=null cause=null ReviewItemsRecorded(ticket="T-21", reviewer="darius", declared=VALIDATED_WITH_RESERVATIONS, reservations=[ReviewReservation(criterion=1, criterionText="covers install", gap="thin", change="add a step")], notes=[ReviewNote(text="naming | CHANGE: rename", why=NO_CRITERION), ReviewNote(text="unknown | CHANGE: x", why=UNKNOWN_CRITERION), ReviewNote(text="nice", why=NOTE)])
+  #462 2026-10-20T17:56:00Z REAL AGENT:darius mission=M-8 auth=null cause=null TicketCompleted(ticket="T-21")
+??? 622 the reviews kept = Optional[[Review(reviewer="darius", verdict=VALIDATED_WITH_RESERVATIONS, findings="RESERVATION: naming | CHANGE: rename\nRESERVATION C1: thin | CHANGE: add a step", items=ReviewItems(declared=VALIDATED_WITH_RESERVATIONS, reservations=[ReviewReservation(criterion=1, criterionText="covers install", gap="thin", change="add a step")], notes=[ReviewNote(text="naming | CHANGE: rename", why=NO_CRITERION), ReviewNote(text="unknown | CHANGE: x", why=UNKNOWN_CRITERION), ReviewNote(text="nice", why=NOTE)]))]]
+>>> 623 an agent accepts uncommitted work
   refused FORBIDDEN: Only the director accepts uncommitted work
->>> 617 nothing to accept
+>>> 624 nothing to accept
   refused INVALID_ARGUMENT: Nothing uncommitted to accept
->>> 618 a clean worktree is not uncommitted
+>>> 625 a clean worktree is not uncommitted
   refused INVALID_ARGUMENT: Each worktree is DIRTY with files, or UNKNOWN with a reason
->>> 619 unknown without a reason
+>>> 626 unknown without a reason
   refused INVALID_ARGUMENT: Each worktree is DIRTY with files, or UNKNOWN with a reason
->>> 620 accept the uncommitted work and close
-  #460 2026-10-20T17:54:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null UncommittedWorkAccepted(mission="M-8", worktrees=[UncommittedWorktree(agent="chris", state="DIRTY", reason=null, count=2, paths=["deliverables/a.md"]), UncommittedWorktree(agent="darius", state="UNKNOWN", reason="GIT_FAILED", count=0, paths=[])])
-  #461 2026-10-20T17:55:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionCompleted(mission="M-8", summary="Accepted with work left uncommitted")
-??? 621 the uncommitted work accepted = [UncommittedWorktree(agent="chris", state="DIRTY", reason=null, count=2, paths=["deliverables/a.md"]), UncommittedWorktree(agent="darius", state="UNKNOWN", reason="GIT_FAILED", count=0, paths=[])]
->>> 622 after the close
+>>> 627 accept the uncommitted work and close
+  #463 2026-10-20T18:01:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null UncommittedWorkAccepted(mission="M-8", worktrees=[UncommittedWorktree(agent="chris", state="DIRTY", reason=null, count=2, paths=["deliverables/a.md"]), UncommittedWorktree(agent="darius", state="UNKNOWN", reason="GIT_FAILED", count=0, paths=[])])
+  #464 2026-10-20T18:02:00Z REAL DIRECTOR:director mission=M-8 auth=null cause=null MissionCompleted(mission="M-8", summary="Accepted with work left uncommitted")
+??? 628 the uncommitted work accepted = [UncommittedWorktree(agent="chris", state="DIRTY", reason=null, count=2, paths=["deliverables/a.md"]), UncommittedWorktree(agent="darius", state="UNKNOWN", reason="GIT_FAILED", count=0, paths=[])]
+>>> 629 after the close
   refused MISSION_CLOSED: M-8 is over
->>> 623 a run recorded by the director
+>>> 630 a run recorded by the director
   refused FORBIDDEN: Only Floor42 records what it ran
->>> 624 proof run
-  #462 2026-10-20T17:58:00Z REAL SYSTEM:floor42 mission=M-5 auth=null cause=null ProofRan(mission="M-5", target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), steps=[ProofStep(step=1, title="Up", command="echo ok", runner="FLOOR42", reason=null, outcome="PASSED", failure=null, exitCode=0, timedOut=false, durationMs=12, output="ok"), ProofStep(step=2, title="Health", command="curl localhost", runner="DIRECTOR", reason="NEEDS_DOCKER", outcome="NOT_RUN", failure="DIRECTOR_STEP", exitCode=null, timedOut=false, durationMs=0, output="")])
->>> 625 a witness without words
+>>> 631 proof run
+  #465 2026-10-20T18:05:00Z REAL SYSTEM:floor42 mission=M-5 auth=null cause=null ProofRan(mission="M-5", target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), steps=[ProofStep(step=1, title="Up", command="echo ok", runner="FLOOR42", reason=null, outcome="PASSED", failure=null, exitCode=0, timedOut=false, durationMs=12, output="ok"), ProofStep(step=2, title="Health", command="curl localhost", runner="DIRECTOR", reason="NEEDS_DOCKER", outcome="NOT_RUN", failure="DIRECTOR_STEP", exitCode=null, timedOut=false, durationMs=0, output="")])
+>>> 632 a witness without words
   refused INVALID_ARGUMENT: Say what you see when it does not work
->>> 626 the director's step fails
-  #463 2026-10-20T18:00:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null ProofStepWitnessed(mission="M-5", target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), step=2, works=false, seen="503")
->>> 627 verdict
-  #464 2026-10-20T18:01:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null ProofVerdictGiven(mission="M-5", verdict="NOT_PROVEN", targets=[ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210")], note="no")
->>> 628 unproven accepted
-  #465 2026-10-20T18:02:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null UnprovenDeliveryAccepted(mission="M-5", state="NOT_PROVEN", token="0123456789abcdef")
-??? 629 the proof = [[Run(target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), steps=[ProofStep(step=1, title="Up", command="echo ok", runner="FLOOR42", reason=null, outcome="PASSED", failure=null, exitCode=0, timedOut=false, durationMs=12, output="ok"), ProofStep(step=2, title="Health", command="curl localhost", runner="DIRECTOR", reason="NEEDS_DOCKER", outcome="NOT_RUN", failure="DIRECTOR_STEP", exitCode=null, timedOut=false, durationMs=0, output="")], at=2026-10-20T17:58:00Z)], [Witness(target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), step=2, works=false, seen="503", at=2026-10-20T18:00:00Z)], Optional[Verdict(verdict="NOT_PROVEN", targets=[ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210")], note="no", at=2026-10-20T18:01:00Z)], Optional["NOT_PROVEN"]]
->>> 630 a mission pins a workflow of a task
-  #466 2026-10-20T18:03:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null MissionCreated(mission="M-9", title="Research", objective="Look it up", workspace="C:/repo/api")
-  #467 2026-10-20T18:03:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null WorkflowPinned(mission="M-9", document="{\"name\":\"Research\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"task\",\"key\":\"research\",\"title\":\"Research\",\"does\":\"Research the objective\",\"why\":\"The director needs sourced facts\",\"handsOver\":\"A report with sources\",\"slot\":\"beforeAcceptance\",\"runBy\":\"researcher\",\"reviewed\":false},{\"step\":\"accept\"}]}", schemaVersion=3)
->>> 631 its plan opens with no ticket
-  #468 2026-10-20T18:04:00Z REAL AGENT:galen mission=M-9 auth=null cause=null MissionPlanSubmitted(mission="M-9")
->>> 632 it cannot be sent back
+>>> 633 the director's step fails
+  #466 2026-10-20T18:07:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null ProofStepWitnessed(mission="M-5", target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), step=2, works=false, seen="503")
+>>> 634 verdict
+  #467 2026-10-20T18:08:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null ProofVerdictGiven(mission="M-5", verdict="NOT_PROVEN", targets=[ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210")], note="no")
+>>> 635 unproven accepted
+  #468 2026-10-20T18:09:00Z REAL DIRECTOR:director mission=M-5 auth=null cause=null UnprovenDeliveryAccepted(mission="M-5", state="NOT_PROVEN", token="0123456789abcdef")
+??? 636 the proof = [[Run(target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), steps=[ProofStep(step=1, title="Up", command="echo ok", runner="FLOOR42", reason=null, outcome="PASSED", failure=null, exitCode=0, timedOut=false, durationMs=12, output="ok"), ProofStep(step=2, title="Health", command="curl localhost", runner="DIRECTOR", reason="NEEDS_DOCKER", outcome="NOT_RUN", failure="DIRECTOR_STEP", exitCode=null, timedOut=false, durationMs=0, output="")], at=2026-10-20T18:05:00Z)], [Witness(target=ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210"), step=2, works=false, seen="503", at=2026-10-20T18:07:00Z)], Optional[Verdict(verdict="NOT_PROVEN", targets=[ProofTarget(workspace="chris", recipeDigest="0123456789abcdef", head="abc1234", changesDigest="fedcba9876543210")], note="no", at=2026-10-20T18:08:00Z)], Optional["NOT_PROVEN"]]
+>>> 637 a mission pins a workflow of a task
+  #469 2026-10-20T18:10:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null MissionCreated(mission="M-9", title="Research", objective="Look it up", workspace="C:/repo/api")
+  #470 2026-10-20T18:10:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null WorkflowPinned(mission="M-9", document="{\"name\":\"Research\",\"steps\":[{\"step\":\"approval\"},{\"step\":\"task\",\"key\":\"research\",\"title\":\"Research\",\"does\":\"Research the objective\",\"why\":\"The director needs sourced facts\",\"handsOver\":\"A report with sources\",\"slot\":\"beforeAcceptance\",\"runBy\":\"researcher\",\"reviewed\":false},{\"step\":\"accept\"}]}", schemaVersion=3)
+>>> 638 its plan opens with no ticket
+  #471 2026-10-20T18:11:00Z REAL AGENT:galen mission=M-9 auth=null cause=null MissionPlanSubmitted(mission="M-9")
+>>> 639 it cannot be sent back
   refused NOTHING_TO_REPLAN: M-9 has no plan to rework
->>> 633 its budget
-  #469 2026-10-20T18:06:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null BudgetSet(mission="M-9", usd=2.0)
->>> 634 approve it: the task opens
-  #470 2026-10-20T18:07:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null MissionPlanApproved(mission="M-9")
-  #471 2026-10-20T18:07:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null TicketCreated(ticket="T-22", mission="M-9", title="Research", description="Research the objective", priority=NORMAL, dependsOn=[], acceptanceCriteria=["A report with sources"], kind=WORK)
-  #472 2026-10-20T18:07:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null TicketApproved(ticket="T-22")
-  #473 2026-10-20T18:07:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null WorkflowStepTicketOpened(mission="M-9", ticket="T-22", step="research")
-??? 635 the ticket the task opened = {"research"="T-22"}
->>> 636 a mission pins a workflow in graph mode
-  #474 2026-10-20T18:08:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null MissionCreated(mission="M-10", title="Graph", objective="Draw it", workspace="C:/repo/api")
-  #475 2026-10-20T18:08:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null WorkflowPinned(mission="M-10", document="{\"name\":\"built-in\",\"mode\":\"graph\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=4)
->>> 637 its tickets wait for validation
-  #476 2026-10-20T18:09:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null TicketValidationEnabled(mission="M-10")
->>> 638 the planner proposes a node with its notes and its test
-  #477 2026-10-20T18:10:00Z REAL AGENT:galen mission=M-10 auth=null cause=null TicketCreated(ticket="T-23", mission="M-10", title="Read the code", description="Reads it.\nRisk: low: it only reads\nTier: light", priority=NORMAL, dependsOn=[], acceptanceCriteria=["a summary", "Test: cat SUMMARY.md => it prints the summary"], kind=WORK)
->>> 639 approve it, the director making it high risk
-  #478 2026-10-20T18:11:00Z REAL SYSTEM:floor42 mission=M-10 auth=null cause=null TicketEdited(ticket="T-23", title="Read the code", description="Reads it.\n\nWhy this risk: it only reads", acceptanceCriteria=["a summary", "Test: cat SUMMARY.md => it prints the summary"])
-  #479 2026-10-20T18:11:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null TicketApproved(ticket="T-23")
-  #480 2026-10-20T18:11:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null NodePlanned(ticket="T-23", risk="high", tier="light", tests=["cat SUMMARY.md"])
-??? 640 the node = Optional[NodePlan(risk=HIGH, tier=LIGHT, tests=["cat SUMMARY.md"])]
->>> 641 token issued to an ended session
+>>> 640 its budget
+  #472 2026-10-20T18:13:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null BudgetSet(mission="M-9", usd=2.0)
+>>> 641 approve it: the task opens
+  #473 2026-10-20T18:14:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null MissionPlanApproved(mission="M-9")
+  #474 2026-10-20T18:14:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null TicketCreated(ticket="T-22", mission="M-9", title="Research", description="Research the objective", priority=NORMAL, dependsOn=[], acceptanceCriteria=["A report with sources"], kind=WORK)
+  #475 2026-10-20T18:14:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null TicketApproved(ticket="T-22")
+  #476 2026-10-20T18:14:00Z REAL DIRECTOR:director mission=M-9 auth=null cause=null WorkflowStepTicketOpened(mission="M-9", ticket="T-22", step="research")
+??? 642 the ticket the task opened = {"research"="T-22"}
+>>> 643 a mission pins a workflow in graph mode
+  #477 2026-10-20T18:15:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null MissionCreated(mission="M-10", title="Graph", objective="Draw it", workspace="C:/repo/api")
+  #478 2026-10-20T18:15:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null WorkflowPinned(mission="M-10", document="{\"name\":\"built-in\",\"mode\":\"graph\",\"steps\":[{\"step\":\"plan\"},{\"step\":\"approval\"},{\"step\":\"committee\"},{\"step\":\"produce\"},{\"step\":\"review\"},{\"step\":\"accept\"},{\"step\":\"retro\"}]}", schemaVersion=4)
+>>> 644 its tickets wait for validation
+  #479 2026-10-20T18:16:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null TicketValidationEnabled(mission="M-10")
+>>> 645 the planner proposes a node with its notes and its test
+  #480 2026-10-20T18:17:00Z REAL AGENT:galen mission=M-10 auth=null cause=null TicketCreated(ticket="T-23", mission="M-10", title="Read the code", description="Reads it.\nRisk: low: it only reads\nTier: light", priority=NORMAL, dependsOn=[], acceptanceCriteria=["a summary", "Test: cat SUMMARY.md => it prints the summary"], kind=WORK)
+>>> 646 approve it, the director making it high risk
+  #481 2026-10-20T18:18:00Z REAL SYSTEM:floor42 mission=M-10 auth=null cause=null TicketEdited(ticket="T-23", title="Read the code", description="Reads it.\n\nWhy this risk: it only reads", acceptanceCriteria=["a summary", "Test: cat SUMMARY.md => it prints the summary"])
+  #482 2026-10-20T18:18:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null TicketApproved(ticket="T-23")
+  #483 2026-10-20T18:18:00Z REAL DIRECTOR:director mission=M-10 auth=null cause=null NodePlanned(ticket="T-23", risk="high", tier="light", tests=["cat SUMMARY.md"])
+??? 647 the node = Optional[NodePlan(risk=HIGH, tier=LIGHT, tests=["cat SUMMARY.md"])]
+>>> 648 token issued to an ended session
   refused SESSION_CLOSED: s1 already ended
->>> 642 the release notes go to chris
-  #481 2026-10-20T18:13:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null TicketAssigned(ticket="T-19", agent="chris")
->>> 643 chris starts them
-  #482 2026-10-20T18:14:00Z REAL AGENT:chris mission=M-6 auth=null cause=null TicketStarted(ticket="T-19")
->>> 644 an identity session opens
-  #483 2026-10-20T18:15:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null AgentSessionStarted(session="s-iam", mission="M-6", ticket="T-19", agent="chris", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
->>> 645 token issued
-  #484 2026-10-20T18:16:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null AgentTokenIssued(session="s-iam", agent="chris", mission="M-6", ticket="T-19", issuer="https://id.test/realms/floor42", expiresAt="2026-10-21T01:00:00Z", tokenId="jti-1", subject=null, authorizedParty=null, actor=null, scopes=null)
->>> 646 a simulated mission to badge in
-  #485 2026-10-20T18:17:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null MissionCreated(mission="M-11", title="Badge", objective="Token", workspace=null)
->>> 647 its ticket
-  #486 2026-10-20T18:18:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null TicketCreated(ticket="T-24", mission="M-11", title="Badge in", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
->>> 648 simulated badge assign
-  #487 2026-10-20T18:19:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null TicketAssigned(ticket="T-24", agent="chris")
->>> 649 simulated badge submit
-  #488 2026-10-20T18:20:00Z SIMULATED AGENT:galen mission=M-11 auth=null cause=null MissionPlanSubmitted(mission="M-11")
->>> 650 simulated badge approve
-  #489 2026-10-20T18:21:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null MissionPlanApproved(mission="M-11")
->>> 651 simulated badge start
-  #490 2026-10-20T18:22:00Z SIMULATED AGENT:chris mission=M-11 auth=null cause=null TicketStarted(ticket="T-24")
->>> 652 simulated identity session
-  #491 2026-10-20T18:23:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentSessionStarted(session="sim-iam", mission="M-11", ticket="T-24", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
->>> 653 simulated token issued
-  #492 2026-10-20T18:24:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentTokenIssued(session="sim-iam", agent="chris", mission="M-11", ticket="T-24", issuer="urn:floor42:simulated", expiresAt="2026-10-21T01:00:00Z", tokenId="sim-jti-1", subject=null, authorizedParty=null, actor=null, scopes=null)
->>> 654 unsafe mode without a reason
+>>> 649 the release notes go to chris
+  #484 2026-10-20T18:20:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null TicketAssigned(ticket="T-19", agent="chris")
+>>> 650 chris starts them
+  #485 2026-10-20T18:21:00Z REAL AGENT:chris mission=M-6 auth=null cause=null TicketStarted(ticket="T-19")
+>>> 651 an identity session opens
+  #486 2026-10-20T18:22:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null AgentSessionStarted(session="s-iam", mission="M-6", ticket="T-19", agent="chris", model="claude-opus-5-5", runtimeVersion="2.1.0", capUsd=null)
+>>> 652 token issued
+  #487 2026-10-20T18:23:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null AgentTokenIssued(session="s-iam", agent="chris", mission="M-6", ticket="T-19", issuer="https://id.test/realms/floor42", expiresAt="2026-10-21T01:00:00Z", tokenId="jti-1", subject=null, authorizedParty=null, actor=null, scopes=null)
+>>> 653 a simulated mission to badge in
+  #488 2026-10-20T18:24:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null MissionCreated(mission="M-11", title="Badge", objective="Token", workspace=null)
+>>> 654 its ticket
+  #489 2026-10-20T18:25:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null TicketCreated(ticket="T-24", mission="M-11", title="Badge in", description="", priority=LOW, dependsOn=[], acceptanceCriteria=[], kind=WORK)
+>>> 655 simulated badge assign
+  #490 2026-10-20T18:26:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null TicketAssigned(ticket="T-24", agent="chris")
+>>> 656 simulated badge submit
+  #491 2026-10-20T18:27:00Z SIMULATED AGENT:galen mission=M-11 auth=null cause=null MissionPlanSubmitted(mission="M-11")
+>>> 657 simulated badge approve
+  #492 2026-10-20T18:28:00Z SIMULATED DIRECTOR:director mission=M-11 auth=null cause=null MissionPlanApproved(mission="M-11")
+>>> 658 simulated badge start
+  #493 2026-10-20T18:29:00Z SIMULATED AGENT:chris mission=M-11 auth=null cause=null TicketStarted(ticket="T-24")
+>>> 659 simulated identity session
+  #494 2026-10-20T18:30:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentSessionStarted(session="sim-iam", mission="M-11", ticket="T-24", agent="chris", model="claude-sonnet-5-5", runtimeVersion=null, capUsd=null)
+>>> 660 simulated token issued
+  #495 2026-10-20T18:31:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentTokenIssued(session="sim-iam", agent="chris", mission="M-11", ticket="T-24", issuer="urn:floor42:simulated", expiresAt="2026-10-21T01:00:00Z", tokenId="sim-jti-1", subject=null, authorizedParty=null, actor=null, scopes=null)
+>>> 661 unsafe mode without a reason
   refused MISSING_REASON: reason is required
->>> 655 unsafe mode on
-  #493 2026-10-20T18:26:00Z REAL DIRECTOR:director mission=- auth=null cause=null UnsafeModeChanged(on=true, reason="WSL is not installed")
->>> 656 unsafe mode off
-  #494 2026-10-20T18:27:00Z REAL DIRECTOR:director mission=- auth=null cause=null UnsafeModeChanged(on=false, reason=null)
->>> 657 authorization changed
-  #495 2026-10-20T18:28:00Z REAL DIRECTOR:director mission=- auth=null cause=null AuthorizationChanged(writes=[AuthorizationTuple(user="agent:A-1", relation="granted", object="resource:crm")], deletes=[], modelId="model-1", reason="GRANT", imported=false, reconciled=false)
->>> 658 break-glass sign-in
-  #496 2026-10-20T18:29:00Z REAL DIRECTOR:director mission=- auth=null cause=null BreakGlassSignIn(session="S-1")
->>> 659 the risk of a real session goes up
-  #497 2026-10-20T18:30:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null SessionRiskRaised(session="s-iam", agent="chris", mission="M-6", ticket="T-19", level="ALERT", reasons=["OUTSIDE_WORKSPACE"], windowStart="2026-10-21T01:00:00Z", actions=[])
->>> 660 a lower risk is refused
+>>> 662 unsafe mode on
+  #496 2026-10-20T18:33:00Z REAL DIRECTOR:director mission=- auth=null cause=null UnsafeModeChanged(on=true, reason="WSL is not installed")
+>>> 663 unsafe mode off
+  #497 2026-10-20T18:34:00Z REAL DIRECTOR:director mission=- auth=null cause=null UnsafeModeChanged(on=false, reason=null)
+>>> 664 authorization changed
+  #498 2026-10-20T18:35:00Z REAL DIRECTOR:director mission=- auth=null cause=null AuthorizationChanged(writes=[AuthorizationTuple(user="agent:A-1", relation="granted", object="resource:crm")], deletes=[], modelId="model-1", reason="GRANT", imported=false, reconciled=false)
+>>> 665 break-glass sign-in
+  #499 2026-10-20T18:36:00Z REAL DIRECTOR:director mission=- auth=null cause=null BreakGlassSignIn(session="S-1")
+>>> 666 the risk of a real session goes up
+  #500 2026-10-20T18:37:00Z REAL SYSTEM:floor42 mission=M-6 auth=null cause=null SessionRiskRaised(session="s-iam", agent="chris", mission="M-6", ticket="T-19", level="ALERT", reasons=["OUTSIDE_WORKSPACE"], windowStart="2026-10-21T01:00:00Z", actions=[])
+>>> 667 a lower risk is refused
   refused INVALID_TRANSITION: risk only goes up: ALERT
->>> 661 the director quarantines the session
-  #498 2026-10-20T18:32:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionQuarantined(session="s-iam", agent="chris", mission="M-6", ticket="T-19", level="ALERT", reasons=["OUTSIDE_WORKSPACE"], revoked=true, suspended=false, stopped=true)
->>> 662 a simulated token issued with its claims
-  #499 2026-10-20T18:33:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentTokenIssued(session="sim-iam", agent="chris", mission="M-11", ticket="T-24", issuer="urn:floor42:simulated", expiresAt="2026-10-21T02:00:00Z", tokenId="sim-jti-2", subject="simulated-director", authorizedParty="simulated-chris", actor="simulated-chris", scopes=null)
+>>> 668 the director quarantines the session
+  #501 2026-10-20T18:39:00Z REAL DIRECTOR:director mission=M-6 auth=null cause=null MissionQuarantined(session="s-iam", agent="chris", mission="M-6", ticket="T-19", level="ALERT", reasons=["OUTSIDE_WORKSPACE"], revoked=true, suspended=false, stopped=true)
+>>> 669 a simulated token issued with its claims
+  #502 2026-10-20T18:40:00Z SIMULATED SYSTEM:floor42 mission=M-11 auth=null cause=null AgentTokenIssued(session="sim-iam", agent="chris", mission="M-11", ticket="T-24", issuer="urn:floor42:simulated", expiresAt="2026-10-21T02:00:00Z", tokenId="sim-jti-2", subject="simulated-director", authorizedParty="simulated-chris", actor="simulated-chris", scopes=null)

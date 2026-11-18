@@ -41,6 +41,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -62,6 +63,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {}
@@ -221,6 +223,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -242,6 +245,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {"M-1"=Retro{chair="chris", concluded=true, conclusions=["Scope was too wide"], contributions={"chris"=Contribution(agent="chris", wentWell=["Small ticket"], wentBadly=["Cancelled before review"], text="My say", skipped=null, at=2026-10-20T09:00:18Z)}, facts="Tickets: 1 cancelled", mission="M-1", participants=["chris"], reason=null, text="Conclusion", ticket="T-2"}}
@@ -411,6 +415,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -432,6 +437,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {"M-1"=Retro{chair="chris", concluded=true, conclusions=[], contributions={"chris"=Contribution(agent="chris", wentWell=[], wentBadly=[], text=null, skipped="the session failed", at=2026-10-20T09:00:15Z)}, facts="facts", mission="M-1", participants=["chris"], reason="nobody could speak", text=null, ticket="T-2"}}
@@ -603,6 +609,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -624,6 +631,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {"M-1"=Retro{chair="chris", concluded=true, conclusions=[], contributions={"chris"=Contribution(agent="chris", wentWell=[], wentBadly=[], text="say", skipped=null, at=2026-10-20T09:00:15Z)}, facts="facts", mission="M-1", participants=["chris"], reason=null, text="done", ticket="T-2"}}
@@ -800,6 +808,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 2
 incidents = []
 interventions = []
@@ -821,6 +830,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {"M-2"=Retro{chair="chris", concluded=false, conclusions=[], contributions={}, facts="facts", mission="M-2", participants=["chris"], reason=null, text=null, ticket="T-3"}}
@@ -1009,6 +1019,7 @@ copies = {}
 defaultPermissions = {}
 destinations = {}
 directorFiles = {}
+evidence = {}
 highest = 1
 incidents = []
 interventions = []
@@ -1030,6 +1041,7 @@ pins = {}
 planUsage = PlanUsage{readings=[]}
 projectMarks = {}
 proposals = {}
+pullRequestMerges = {}
 pullRequests = []
 questions = {}
 retros = {"M-1"=Retro{chair="chris", concluded=true, conclusions=[], contributions={"chris"=Contribution(agent="chris", wentWell=[], wentBadly=[], text=null, skipped="the director closed the retrospective before this turn", at=2026-10-20T09:00:16Z)}, facts="facts", mission="M-1", participants=["chris"], reason="closed by the director before every turn was heard", text=null, ticket="T-2"}}

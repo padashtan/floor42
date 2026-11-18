@@ -99,6 +99,17 @@ class AgentClientsDismissalTest {
     }
 
     @Test
+    void loweringTheMaximumLowersTheLifespanOfAnExistingClient() {
+        clients.ensure(ADA);
+        var lowered = new IamSettings(
+                dataDir, Optional.of(true), Optional.of(kc.issuer().toString()), Optional.of(2), new ObjectMapper());
+
+        new AgentClients(keycloak, lowered, () -> List.of(ADA)).ensure(ADA);
+
+        assertThat(kc.lifespan("floor42-agent-ada")).isEqualTo(String.valueOf(2 * 3600));
+    }
+
+    @Test
     void onlyAgentsOnStaffAreOnStaff() {
         assertThat(clients.onStaff(ADA)).isTrue();
         assertThat(clients.onStaff(new AgentId("eve"))).isFalse();

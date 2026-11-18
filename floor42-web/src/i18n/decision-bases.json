@@ -145,5 +145,5 @@
     },
     "text" : "rule: ALLOW EXECUTE 'mvn' for chris"
   },
-  "uncoded" : [ "C:/secret is outside C:/ws/chris", "No such tool available: Bash", "PreToolUse hook error", "not offered", "outside the agent's worktree", "refused by Claude Code" ]
+  "uncoded" : [ "C:/secret is outside C:/ws/chris", "No such tool available: Bash", "PreToolUse hook error", "not offered", "outside the agent's worktree" ]
 }

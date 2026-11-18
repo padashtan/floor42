@@ -688,5 +688,23 @@
     "comment": "Jwts.parse only decodes. KeycloakSignIn.isDirector reads the sub of the ID token already verified by IdTokenCheck (signature, iss, aud, azp, nonce, times) a few lines above, then IdTokenCheck.director verifies the access token and its realm role",
     "false_positive": true,
     "ignored_at": "2026-11-16T00:00:00Z"
+  },
+  "3d914f4a86c90655e3fb8c16cf676e40_0": {
+    "author": "q8c",
+    "comment": "docs/security-lab.md table row: test method names of the adversarial lab in backticks, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-18T00:00:00Z"
+  },
+  "3d914f4a86c90655e3fb8c16cf676e40_1": {
+    "author": "q8c",
+    "comment": "docs/security-lab.md table row: test method names of the adversarial lab in backticks, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-18T00:00:00Z"
+  },
+  "3d914f4a86c90655e3fb8c16cf676e40_2": {
+    "author": "q8c",
+    "comment": "docs/security-lab.md table row: test method names of the adversarial lab in backticks, no secret value",
+    "false_positive": true,
+    "ignored_at": "2026-11-18T00:00:00Z"
   }
 }

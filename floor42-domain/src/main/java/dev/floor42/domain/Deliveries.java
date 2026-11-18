@@ -7,12 +7,14 @@ import static dev.floor42.domain.Rules.requireText;
 import dev.floor42.domain.event.DeliveryEvent;
 import dev.floor42.domain.event.DeliveryEvent.DeliverablesCopied;
 import dev.floor42.domain.event.DeliveryEvent.DeliverablesDestinationSet;
+import dev.floor42.domain.event.DeliveryEvent.DeliveryEvidenceRecorded;
 import dev.floor42.domain.event.DeliveryEvent.MissionAssetsSelected;
 import dev.floor42.domain.event.DeliveryEvent.PluginCommandRan;
 import dev.floor42.domain.event.DeliveryEvent.ProofRan;
 import dev.floor42.domain.event.DeliveryEvent.ProofStepWitnessed;
 import dev.floor42.domain.event.DeliveryEvent.ProofVerdictGiven;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestCheckState;
+import dev.floor42.domain.event.DeliveryEvent.PullRequestMerged;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestOpened;
 import dev.floor42.domain.event.DeliveryEvent.UncommittedWorkAccepted;
 import dev.floor42.domain.event.DeliveryEvent.UnprovenDeliveryAccepted;
@@ -36,11 +38,16 @@ final class Deliveries {
     private static final Pattern ASSET_ITEM = Pattern.compile(
             "(floor42|claude):[A-Za-z0-9._-]{1,100}@[A-Za-z0-9._-]{1,100}/(skill|agent)/[A-Za-z0-9._-]{1,120}");
 
+    private static final Pattern COMMIT = Pattern.compile("[0-9a-f]{40}([0-9a-f]{24})?");
     private static final Set<String> PLUGIN_TARGETS = Set.of("FLOOR42", "CLAUDE");
     private static final Set<String> PLUGIN_ACTIONS = Set.of("INSTALL", "UNINSTALL");
 
     private final CompanyView view;
     private final List<PullRequest> pullRequests = new ArrayList<>();
+    /** The checks of the commit last read for each pull request, and the merge once made (ADR-0084), by mission#number. */
+    private final Map<String, PullRequest.Evidence> evidence = new HashMap<>();
+
+    private final Map<String, PullRequest.Merge> pullRequestMerges = new HashMap<>();
     /** What the director chose to give each mission's sessions (ADR-0040), by mission. */
     private final Map<MissionId, List<String>> missionAssets = new HashMap<>();
     /** Where each mission's accepted deliverables are copied (ADR-0051), and the copy once made. */
@@ -67,6 +74,14 @@ final class Deliveries {
 
     Optional<PullRequest> pullRequest(MissionId mission, int number) {
         return pullRequests(mission).stream().filter(p -> p.number() == number).findFirst();
+    }
+
+    Optional<PullRequest.Evidence> evidence(MissionId mission, int number) {
+        return Optional.ofNullable(evidence.get(mission + "#" + number));
+    }
+
+    Optional<PullRequest.Merge> merge(MissionId mission, int number) {
+        return Optional.ofNullable(pullRequestMerges.get(mission + "#" + number));
     }
 
     List<String> missionAssets(MissionId mission) {
@@ -215,6 +230,55 @@ final class Deliveries {
                 .events();
     }
 
+    /** The checks of one exact commit. The conclusion is computed here from the lines, never taken from the caller. */
+    List<EventEnvelope> recordDeliveryEvidence(
+            CommandContext ctx, MissionId id, int number, String commit, List<String> checks) {
+        checkPullRequest(ctx, id);
+        require(
+                pullRequest(id, number).isPresent(),
+                Refusal.UNKNOWN_PULL_REQUEST,
+                "No pull request #" + number + " on " + id);
+        require(
+                commit != null && COMMIT.matcher(commit).matches(),
+                Refusal.INVALID_ARGUMENT,
+                "A commit is a full hexadecimal hash");
+        List<String> lines = checks == null ? List.of() : List.copyOf(checks);
+        require(
+                lines.stream().allMatch(l -> PullRequest.Check.parse(l).isPresent()),
+                Refusal.INVALID_ARGUMENT,
+                "A check line is name|bucket|state");
+        return view.record(ctx, id)
+                .emit(new DeliveryEvidenceRecorded(id, number, commit, lines, PullRequest.conclusionOf(lines)))
+                .events();
+    }
+
+    /** A merge is recorded only for the commit whose last evidence is green: the domain checks it again. */
+    List<EventEnvelope> recordPullRequestMerged(
+            CommandContext ctx, MissionId id, int number, String commit, String approval) {
+        checkPullRequest(ctx, id);
+        require(
+                pullRequest(id, number).isPresent(),
+                Refusal.UNKNOWN_PULL_REQUEST,
+                "No pull request #" + number + " on " + id);
+        requireText(approval, "approval");
+        require(
+                merge(id, number).isEmpty(),
+                Refusal.PULL_REQUEST_MERGED,
+                "Pull request #" + number + " is already merged");
+        PullRequest.Evidence e = evidence(id, number).orElse(null);
+        require(
+                e != null && e.commit().equals(commit),
+                Refusal.EVIDENCE_STALE,
+                "No checks are recorded for commit " + commit + ": read them again");
+        require(
+                PullRequest.GREEN.equals(e.conclusion()),
+                Refusal.CHECKS_NOT_GREEN,
+                "The checks of " + commit + " are " + e.conclusion() + ", not green");
+        return view.record(ctx, id)
+                .emit(new PullRequestMerged(id, number, commit, approval))
+                .events();
+    }
+
     List<EventEnvelope> recordPluginCommand(
             CommandContext ctx,
             String target,
@@ -279,6 +343,10 @@ final class Deliveries {
         switch (event) {
             case PullRequestOpened e -> on(e, at);
             case PullRequestCheckState e -> on(e, at);
+            case DeliveryEvidenceRecorded e -> on(e, at);
+            case PullRequestMerged e ->
+                pullRequestMerges.put(
+                        e.mission() + "#" + e.number(), new PullRequest.Merge(e.commit(), e.approval(), at));
             case PluginCommandRan e -> on(e);
             case MissionAssetsSelected e -> on(e);
             case DeliverablesDestinationSet e -> destinations.put(e.mission(), e.folder());
@@ -321,6 +389,14 @@ final class Deliveries {
                                     .toList(),
                             at));
         }
+    }
+
+    void on(DeliveryEvidenceRecorded e, Instant at) {
+        List<PullRequest.Check> read = e.checks().stream()
+                .flatMap(l -> PullRequest.Check.parse(l).stream())
+                .toList();
+        evidence.put(e.mission() + "#" + e.number(), new PullRequest.Evidence(e.commit(), read, e.conclusion(), at));
+        on(new PullRequestCheckState(e.mission(), e.number(), e.checks()), at);
     }
 
     void on(MissionAssetsSelected e) {

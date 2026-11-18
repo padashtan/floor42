@@ -66,6 +66,28 @@ public final class DeliveriesFacade {
         return deliveries.recordPullRequestChecks(ctx, id, number, checks);
     }
 
+    /** The checks of the commit last read for a pull request (ADR-0084), with the conclusion; empty before the first read. */
+    public Optional<PullRequest.Evidence> evidence(MissionId mission, int number) {
+        return deliveries.evidence(mission, number);
+    }
+
+    /** The merge of a pull request, once Floor42 merged it on the director's proven click. */
+    public Optional<PullRequest.Merge> merge(MissionId mission, int number) {
+        return deliveries.merge(mission, number);
+    }
+
+    /** Records the checks of the exact commit {@code commit}, read on the director's click (ADR-0084). */
+    public List<EventEnvelope> recordDeliveryEvidence(
+            CommandContext ctx, MissionId id, int number, String commit, List<String> checks) {
+        return deliveries.recordDeliveryEvidence(ctx, id, number, commit, checks);
+    }
+
+    /** Records the merge: refused unless the last evidence is of that commit and green. */
+    public List<EventEnvelope> recordPullRequestMerged(
+            CommandContext ctx, MissionId id, int number, String commit, String approval) {
+        return deliveries.recordPullRequestMerged(ctx, id, number, commit, approval);
+    }
+
     /**
      * The director records Claude Code plugin commands Floor42 ran on their confirmation (ADR-0040): an install or an
      * uninstall, into Floor42's own folder or the director's Claude Code. Never an agent's, never Floor42's own idea.

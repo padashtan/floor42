@@ -22,53 +22,66 @@ test('every action of the bar names the panel it opens', { tag: '@ui' }, () => {
  * after the other replace each other, ui/panelLayout.ts), keeps its close button reachable and closes with Escape
  * (pressed on some panels only, to leave the others open under the next one).
  */
-test('each panel opens from its menu, replaces the others and closes with Escape', { tag: '@ui' }, async ({ page }) => {
-  // All the main panels of the bar in one locator (the tutorial card is none).
-  const MAIN_PANELS = PANEL_ACTIONS.filter((x) => x.id !== 'tutorial')
-    .map((x) => PANEL_OF[x.id])
-    .join(', ')
-  let left: string | null = null // the panel still open when the next one is opened
-  for (const [i, a] of PANEL_ACTIONS.entries()) {
-    await test.step(a.id, async () => {
-      await runFromMenu(page, t, a)
-      const panel = page.locator(PANEL_OF[a.id])
-      await expect(panel, `${a.id} opens`).toBeVisible()
-      // Its title bar at least is on screen: a panel that opens off screen cannot be read nor moved.
-      const title = panel.locator('.title').first()
-      if (await title.count()) await expectOnScreen(title, `the title of ${a.id}`)
-      if (a.id !== 'tutorial') {
-        // The panel left open before is gone and this one is the only main panel: two never share the screen.
-        if (left) await expect(page.locator(PANEL_OF[left]), `${left} makes room for ${a.id}`).toHaveCount(0)
-        await expect(page.locator(MAIN_PANELS), `${a.id} is the only main panel`).toHaveCount(1)
-        // Every main panel has a close button, and it can be reached.
-        await expectOnScreen(panel.locator('.title button.close').first(), `the close button of ${a.id}`)
-      }
-      await shot(page, `3-menu-${String(i + 1).padStart(2, '0')}-${a.id}`)
-      // Escape on every second panel, the tutorial card and its neighbours, and the last: the others stay open, so the
-      // next opening proves it replaces them.
-      const next = PANEL_ACTIONS[i + 1]
-      if (i % 2 === 1 || !next || a.id === 'tutorial' || next.id === 'tutorial') {
-        await page.keyboard.press('Escape')
-        await expect(panel, `${a.id} closes with Escape`).toHaveCount(0)
-        left = null
-      } else left = a.id
-    })
-  }
-  await expect(page.locator('.hud > .panel.framed')).toHaveCount(0)
+// The journey is two tests, each within the 120 s budget (about 4.5 s per panel on WSL). The cut falls on an even
+// index: the panel before it is the one Escape closes (every second panel), so the second half starts with none open.
+const HALF = Math.ceil(PANEL_ACTIONS.length / 4) * 2
+const HALVES = { first: [0, HALF], second: [HALF, PANEL_ACTIONS.length] } as const
 
-  // Docs opens the API documentation in a new tab.
-  const docs = ACTIONS.find((a) => a.href)!
-  await menuButton(page, docs.group).click()
-  const [tab] = await Promise.all([
-    page.waitForEvent('popup'),
-    page.locator('.bar-dropdown [role="menuitem"]', { hasText: t[docs.label] }).click(),
-  ])
-  await tab.waitForLoadState()
-  expect(new URL(tab.url()).pathname).toMatch(/^\/q\/swagger-ui/)
-  // /q/ needs the director (the signed-in cookie): the page and the contract it fetches both load.
-  await expect(tab.locator('.swagger-ui .information-container .title')).toContainText('Floor42 API')
-  await tab.close()
-})
+for (const [half, [from, to]] of Object.entries(HALVES)) {
+  test(
+    `each panel opens from its menu, replaces the others and closes with Escape (${half} half)`,
+    { tag: '@ui' },
+    async ({ page }) => {
+      // All the main panels of the bar in one locator (the tutorial card is none).
+      const MAIN_PANELS = PANEL_ACTIONS.filter((x) => x.id !== 'tutorial')
+        .map((x) => PANEL_OF[x.id])
+        .join(', ')
+      let left: string | null = null // the panel still open when the next one is opened
+      for (const [i, a] of PANEL_ACTIONS.entries()) {
+        if (i < from || i >= to) continue
+        await test.step(a.id, async () => {
+          await runFromMenu(page, t, a)
+          const panel = page.locator(PANEL_OF[a.id])
+          await expect(panel, `${a.id} opens`).toBeVisible()
+          // Its title bar at least is on screen: a panel that opens off screen cannot be read nor moved.
+          const title = panel.locator('.title').first()
+          if (await title.count()) await expectOnScreen(title, `the title of ${a.id}`)
+          if (a.id !== 'tutorial') {
+            // The panel left open before is gone and this one is the only main panel: two never share the screen.
+            if (left) await expect(page.locator(PANEL_OF[left]), `${left} makes room for ${a.id}`).toHaveCount(0)
+            await expect(page.locator(MAIN_PANELS), `${a.id} is the only main panel`).toHaveCount(1)
+            // Every main panel has a close button, and it can be reached.
+            await expectOnScreen(panel.locator('.title button.close').first(), `the close button of ${a.id}`)
+          }
+          await shot(page, `3-menu-${String(i + 1).padStart(2, '0')}-${a.id}`)
+          // Escape on every second panel, the tutorial card and its neighbours, and the last: the others stay open, so the
+          // next opening proves it replaces them.
+          const next = PANEL_ACTIONS[i + 1]
+          if (i % 2 === 1 || !next || a.id === 'tutorial' || next.id === 'tutorial') {
+            await page.keyboard.press('Escape')
+            await expect(panel, `${a.id} closes with Escape`).toHaveCount(0)
+            left = null
+          } else left = a.id
+        })
+      }
+      await expect(page.locator('.hud > .panel.framed')).toHaveCount(0)
+      if (half === 'second') {
+        // Docs opens the API documentation in a new tab.
+        const docs = ACTIONS.find((a) => a.href)!
+        await menuButton(page, docs.group).click()
+        const [tab] = await Promise.all([
+          page.waitForEvent('popup'),
+          page.locator('.bar-dropdown [role="menuitem"]', { hasText: t[docs.label] }).click(),
+        ])
+        await tab.waitForLoadState()
+        expect(new URL(tab.url()).pathname).toMatch(/^\/q\/swagger-ui/)
+        // /q/ needs the director (the signed-in cookie): the page and the contract it fetches both load.
+        await expect(tab.locator('.swagger-ui .information-container .title')).toContainText('Floor42 API')
+        await tab.close()
+      }
+    },
+  )
+}
 
 /** Journey 3b: the same panels through the command palette (Ctrl+K, the label, Enter). */
 test('each panel opens from the palette and closes with Escape', { tag: '@ui' }, async ({ page }) => {

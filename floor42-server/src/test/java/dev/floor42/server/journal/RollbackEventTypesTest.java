@@ -94,10 +94,24 @@ class RollbackEventTypesTest {
     @Test
     void release130AddsItsThreeEventsToWhatRelease120Knows() throws IOException {
         List<String> before = types("/event-types-1.2.0.txt");
-        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        List<String> now = types("/event-types-1.3.1.txt");
         assertThat(now).containsAll(before);
         assertThat(now.stream().filter(t -> !before.contains(t)))
                 .containsExactlyInAnyOrder("AuthorizationChanged", "ApprovalSigned", "AgentTrustChanged");
+    }
+
+    /**
+     * 1.4.0 (ADR-0084): two types over 1.3.1. {@code DeliveryEvidenceRecorded} is written when the director reads the
+     * checks of a pull request's head commit, {@code PullRequestMerged} on the proven click that merges it. 1.3.1 sets
+     * these rows aside ({@code NEWER_VERSION}). No journaled enumeration changed.
+     */
+    @Test
+    void release140AddsTheEvidenceAndTheMergeEventsToWhatRelease131Knows() throws IOException {
+        List<String> before = types("/event-types-1.3.1.txt");
+        List<String> now = types("/dev/floor42/server/journal/event-types.txt");
+        assertThat(now).containsAll(before);
+        assertThat(now.stream().filter(t -> !before.contains(t)))
+                .containsExactlyInAnyOrder("DeliveryEvidenceRecorded", "PullRequestMerged");
     }
 
     @Test

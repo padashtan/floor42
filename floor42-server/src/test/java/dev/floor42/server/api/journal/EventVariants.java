@@ -20,9 +20,11 @@ import dev.floor42.domain.event.CommitteeEvent.CommitteeAdvanced;
 import dev.floor42.domain.event.CommitteeEvent.CommitteeArbitrated;
 import dev.floor42.domain.event.CommitteeEvent.CommitteeClarified;
 import dev.floor42.domain.event.CommitteeEvent.CommitteeContributed;
+import dev.floor42.domain.event.DeliveryEvent.DeliveryEvidenceRecorded;
 import dev.floor42.domain.event.DeliveryEvent.MissionAssetsSelected;
 import dev.floor42.domain.event.DeliveryEvent.PluginCommandRan;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestCheckState;
+import dev.floor42.domain.event.DeliveryEvent.PullRequestMerged;
 import dev.floor42.domain.event.DeliveryEvent.PullRequestOpened;
 import dev.floor42.domain.event.DeskEvent.ApprovalForgotten;
 import dev.floor42.domain.event.DeskEvent.ApprovalSigned;
@@ -236,12 +238,21 @@ final class EventVariants {
         return all;
     }
 
+    private static final String SHA = "84b0d7cb940063d7ff3d5a95c1a0a3e941bc9da8";
+
     private static List<DomainEvent> checks() {
         return List.of(
                 new PullRequestCheckState(M, 9, List.of()),
                 new PullRequestCheckState(M, 9, List.of("build|pass|SUCCESS", "lint|fail|FAILURE")),
                 new PullRequestCheckState(M, 9, List.of("build|pass|SUCCESS", "e2e|pending|IN_PROGRESS")),
-                new PullRequestCheckState(M, 9, List.of("build|pass|SUCCESS", "docs|skipping|SKIPPED")));
+                new PullRequestCheckState(M, 9, List.of("build|pass|SUCCESS", "docs|skipping|SKIPPED")),
+                new DeliveryEvidenceRecorded(
+                        M, 9, SHA, List.of("build|pass|SUCCESS", "docs|skipping|SKIPPED"), "GREEN"),
+                new DeliveryEvidenceRecorded(M, 9, SHA, List.of("build|pass|SUCCESS", "e2e|pending|QUEUED"), "PENDING"),
+                new DeliveryEvidenceRecorded(M, 9, SHA, List.of("build|fail|FAILURE"), "FAILED"),
+                new DeliveryEvidenceRecorded(M, 9, SHA, List.of(), "NONE"),
+                new PullRequestMerged(M, 9, SHA, "MERGE:pr:M-1#9"),
+                new PullRequestMerged(M, 9, SHA, "CLICK"));
     }
 
     private static List<DomainEvent> plugins() {

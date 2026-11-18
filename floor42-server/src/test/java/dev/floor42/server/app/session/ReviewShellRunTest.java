@@ -11,7 +11,9 @@ import dev.floor42.domain.Decision;
 import dev.floor42.domain.MissionId;
 import dev.floor42.domain.Origin;
 import dev.floor42.domain.PermissionRule;
+import dev.floor42.server.app.core.MissionScheduler;
 import dev.floor42.server.app.core.OfficeService;
+import dev.floor42.server.app.core.SchedulerQuiet;
 import dev.floor42.server.app.demo.SimulatedCrew;
 import dev.floor42.server.app.demo.StalledMissions;
 import dev.floor42.server.app.demo.StalledMissions.Stalled;
@@ -27,6 +29,7 @@ import io.quarkus.test.junit.TestProfile;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,16 +61,30 @@ class ReviewShellRunTest {
     @Inject
     ObjectMapper json;
 
+    @Inject
+    MissionScheduler scheduler;
+
     CapturingRuntime runtime;
     final List<List<PermissionRule>> rulesDuring = new ArrayList<>();
     Stalled review;
 
     @BeforeEach
-    void aTicketInReviewAndASandboxThatWorks() {
+    void aTicketInReviewAndASandboxThatWorks() throws Exception {
+        // A fork an earlier class of this shared application left would call the mock installed below (D32).
+        SchedulerQuiet.await(scheduler);
         QuarkusMock.installMockForType(sandbox(true, true), Sandbox.class);
         review = inReview();
-        runtime = new CapturingRuntime(json, spec -> rulesDuring.add(rules(review.mission())));
+        runtime = new CapturingRuntime(json, spec -> {
+            if (spec.mission().equals(review.mission())) rulesDuring.add(rules(review.mission()));
+        });
         QuarkusMock.installMockForType(runtime, ClaudeCodeRuntime.class);
+    }
+
+    @AfterEach
+    void onlyThisTestsThreadCalledTheMock() {
+        assertThat(runtime.calls)
+                .as("calls of the mock, by thread")
+                .allMatch(c -> c.startsWith(Thread.currentThread().getName() + " -> "));
     }
 
     @Test
@@ -78,7 +95,7 @@ class ReviewShellRunTest {
 
         reviews.review(review.mission(), review.ticket(), REVIEWER);
 
-        SessionSpec spec = runtime.specs.getFirst();
+        SessionSpec spec = mine().getFirst();
         assertThat(spec.readOnlyShell()).isTrue();
         assertThat(spec.tools()).contains("Bash").doesNotContain("Write", "Edit", "NotebookEdit", "PowerShell");
         assertThat(spec.brief()).contains("Review shell").contains("network is cut");
@@ -96,7 +113,7 @@ class ReviewShellRunTest {
 
         reviews.review(review.mission(), review.ticket(), REVIEWER);
 
-        SessionSpec spec = runtime.specs.getFirst();
+        SessionSpec spec = mine().getFirst();
         assertThat(spec.readOnlyShell()).isFalse();
         assertThat(spec.tools()).doesNotContain("Bash");
         assertThat(rulesDuring.getFirst()).doesNotContain(shellRule());
@@ -113,7 +130,7 @@ class ReviewShellRunTest {
 
         reviews.review(review.mission(), review.ticket(), REVIEWER);
 
-        assertThat(runtime.specs.getFirst().readOnlyShell()).isFalse();
+        assertThat(mine().getFirst().readOnlyShell()).isFalse();
     }
 
     @Test
@@ -122,8 +139,8 @@ class ReviewShellRunTest {
 
         reviews.review(review.mission(), review.ticket(), REVIEWER);
 
-        assertThat(runtime.specs.getFirst().readOnlyShell()).isFalse();
-        assertThat(runtime.specs.getFirst().tools()).doesNotContain("Bash");
+        assertThat(mine().getFirst().readOnlyShell()).isFalse();
+        assertThat(mine().getFirst().tools()).doesNotContain("Bash");
         assertThat(rulesDuring.getFirst()).doesNotContain(shellRule());
     }
 
@@ -133,7 +150,7 @@ class ReviewShellRunTest {
 
         reviews.review(review.mission(), review.ticket(), REVIEWER);
 
-        assertThat(runtime.specs.getFirst().readOnlyShell()).isTrue();
+        assertThat(mine().getFirst().readOnlyShell()).isTrue();
         assertThat(rules(review.mission())).contains(shellRule());
     }
 
@@ -150,6 +167,13 @@ class ReviewShellRunTest {
 
         assertThat(rules(review.mission())).doesNotContain(left);
         assertThat(rules(other.mission())).as("the director's own line stays").contains(theirs);
+    }
+
+    /** Only this test's mission: a session another test left running and calling the shared mock is not ours. */
+    private List<SessionSpec> mine() {
+        return runtime.specs.stream()
+                .filter(s -> s.mission().equals(review.mission()))
+                .toList();
     }
 
     private PermissionRule shellRule() {

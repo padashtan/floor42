@@ -356,7 +356,20 @@
     "POST /api/missions/{id}/pull-requests/{number}/checks": {
       "tag": "Pull requests",
       "summary": "Refresh the checks",
-      "description": "Reads once the checks GitHub reports on the pull request (`gh pr checks --json name,bucket,state`) and journals them as `PullRequestCheckState`. Floor42 never polls: only this click reads them."
+      "description": "Reads the head commit of the pull request, then the check runs of that exact commit, then the head again: a push in between gives 409 `HEAD_MOVED`. A check seen in the previous evidence and missing now stays pending (`MISSING`). Journals the commit and its checks as `DeliveryEvidenceRecorded`. Floor42 never polls: only this click reads them. When the remote no longer names the pull request's repository: 409 `REMOTE_CHANGED`, nothing called."
+    },
+    "GET /api/missions/{id}/pull-requests/{number}/head": {
+      "tag": "Pull requests",
+      "summary": "Where the branch is now",
+      "description": "Asks GitHub for the commit the pull request's branch is at and returns the pull request with `headNow` and `stale` (true once the evidence was read for another commit). Changes and journals nothing. When the remote no longer names the pull request's repository: 409 `REMOTE_CHANGED`, nothing called."
+    },
+    "POST /api/missions/{id}/pull-requests/{number}/merge": {
+      "tag": "Pull requests",
+      "summary": "Merge the pull request",
+      "description": "Merges on GitHub with the director's own gh, only at the `commit` the director looked at and only when the checks of that commit are all green: 409 `EVIDENCE_STALE`, `CHECKS_NOT_GREEN`, `NOT_OPEN` or `PULL_REQUEST_MERGED` before anything is asked of the phone. Floor42 asks GitHub whether the pull request is merged before it says so (`MERGE_UNKNOWN` when it cannot tell). Only the director's session click may ask: a token gets 403 `HUMAN_ONLY`. In IAM mode the merge is an assured act at the strong level: 202 `{redirect}` for the step-up, carried out once the signature is in, after the same checks again. Journals `PullRequestMerged`. When the remote no longer names the pull request's repository: 409 `REMOTE_CHANGED`, nothing called.",
+      "example": {
+        "commit": "3f2a9c1d5e7b4a60918273645f0e1d2c3b4a5968"
+      }
     },
     "GET /api/questions": {
       "tag": "Questions",

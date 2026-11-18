@@ -213,7 +213,7 @@
     "summary" : "src/Other.java",
     "ticket" : "T-4",
     "tool" : "Write",
-    "updatedAt" : "2026-10-20T14:07:00Z"
+    "updatedAt" : "2026-10-20T14:14:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -231,7 +231,7 @@
     "summary" : "question",
     "ticket" : "T-4",
     "tool" : "mcp__floor42__ask",
-    "updatedAt" : "2026-10-20T14:08:00Z"
+    "updatedAt" : "2026-10-20T14:15:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -290,7 +290,7 @@
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:09:00Z"
+    "updatedAt" : "2026-10-20T14:16:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -310,7 +310,7 @@
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:10:00Z"
+    "updatedAt" : "2026-10-20T14:17:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -350,7 +350,7 @@
     "summary" : "https://example.org",
     "ticket" : "T-4",
     "tool" : "WebFetch",
-    "updatedAt" : "2026-10-20T14:11:00Z"
+    "updatedAt" : "2026-10-20T14:18:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -370,7 +370,7 @@
     "summary" : "https://example.org",
     "ticket" : "T-4",
     "tool" : "WebFetch",
-    "updatedAt" : "2026-10-20T14:12:00Z"
+    "updatedAt" : "2026-10-20T14:19:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : true,
@@ -391,7 +391,7 @@
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T14:13:00Z"
+    "updatedAt" : "2026-10-20T14:20:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -417,10 +417,12 @@
     "agent" : "chris",
     "authorizedByOffice" : false,
     "category" : "EXECUTE",
-    "decisionBasis" : "refused by Claude Code",
-    "decisionBasisCode" : null,
-    "decisionBasisParams" : null,
-    "denialReason" : "BLOCKED_UPSTREAM",
+    "decisionBasis" : "director denied it (Q-6)",
+    "decisionBasisCode" : "directorDenied",
+    "decisionBasisParams" : {
+      "question" : "Q-6"
+    },
+    "denialReason" : "DIRECTOR",
     "id" : "b8",
     "ran" : false,
     "requestedAt" : "2026-10-20T11:19:00Z",
@@ -430,7 +432,7 @@
     "summary" : "rm -rf build",
     "ticket" : "T-4",
     "tool" : "Bash",
-    "updatedAt" : "2026-10-20T11:23:00Z"
+    "updatedAt" : "2026-10-20T11:21:00Z"
   }, {
     "agent" : "chris",
     "authorizedByOffice" : false,
@@ -534,7 +536,7 @@
     "workspace" : "chris"
   } ],
   "checksAutomatic" : true,
-  "closedAt" : "2026-10-20T14:15:00Z",
+  "closedAt" : "2026-10-20T14:22:00Z",
   "committee" : null,
   "committees" : [ ],
   "delivery" : null,
@@ -967,7 +969,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:23:00Z",
+    "askedAt" : "2026-10-20T13:30:00Z",
     "askedBy" : "galen",
     "blocking" : false,
     "causeBy" : null,
@@ -1000,7 +1002,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:29:00Z",
+    "askedAt" : "2026-10-20T13:36:00Z",
     "askedBy" : "galen",
     "blocking" : false,
     "causeBy" : null,
@@ -1033,7 +1035,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:31:00Z",
+    "askedAt" : "2026-10-20T13:38:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1066,7 +1068,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:35:00Z",
+    "askedAt" : "2026-10-20T13:42:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1099,7 +1101,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:37:00Z",
+    "askedAt" : "2026-10-20T13:44:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1132,7 +1134,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:41:00Z",
+    "askedAt" : "2026-10-20T13:48:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1167,7 +1169,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T13:47:00Z",
+    "askedAt" : "2026-10-20T13:54:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -1200,21 +1202,21 @@
     "conclusions" : [ "Keep tests first" ],
     "contributions" : [ {
       "agent" : "chris",
-      "at" : "2026-10-20T14:29:00Z",
+      "at" : "2026-10-20T14:36:00Z",
       "skipped" : null,
       "text" : "Good flow",
       "wentBadly" : [ ],
       "wentWell" : [ "Tests first" ]
     }, {
       "agent" : "darius",
-      "at" : "2026-10-20T14:32:00Z",
+      "at" : "2026-10-20T14:39:00Z",
       "skipped" : "usage window",
       "text" : null,
       "wentBadly" : [ ],
       "wentWell" : [ ]
     }, {
       "agent" : "galen",
-      "at" : "2026-10-20T14:34:00Z",
+      "at" : "2026-10-20T14:41:00Z",
       "skipped" : null,
       "text" : "Mostly fine",
       "wentBadly" : [ "Budget surprises" ],
@@ -1225,7 +1227,7 @@
       "audience" : "DEVELOPER",
       "id" : "L-1",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:37:00Z",
+      "proposedAt" : "2026-10-20T14:44:00Z",
       "proposedBy" : "galen",
       "reason" : "Obvious now",
       "status" : "RETIRED",
@@ -1234,7 +1236,7 @@
       "audience" : null,
       "id" : "L-2",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:37:00Z",
+      "proposedAt" : "2026-10-20T14:44:00Z",
       "proposedBy" : "galen",
       "reason" : null,
       "status" : "ACCEPTED",
@@ -1243,7 +1245,7 @@
       "audience" : "REVIEWER",
       "id" : "L-3",
       "mission" : "M-1",
-      "proposedAt" : "2026-10-20T14:37:00Z",
+      "proposedAt" : "2026-10-20T14:44:00Z",
       "proposedBy" : "galen",
       "reason" : "rejected by the director",
       "status" : "REJECTED",
@@ -1420,7 +1422,7 @@
     "agent" : "chris",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.01,
-    "endedAt" : "2026-10-20T14:27:00Z",
+    "endedAt" : "2026-10-20T14:34:00Z",
     "failed" : false,
     "id" : "s-retro",
     "inputTokensProvided" : 10,
@@ -1428,7 +1430,7 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T14:26:00Z",
+    "startedAt" : "2026-10-20T14:33:00Z",
     "ticket" : "T-12",
     "turns" : 1
   } ],
@@ -1467,7 +1469,7 @@
     "dependsOn" : [ "T-1" ],
     "description" : "Build it",
     "directives" : [ "Use Gradle" ],
-    "endedAt" : "2026-10-20T14:01:00Z",
+    "endedAt" : "2026-10-20T14:08:00Z",
     "environmentBlocker" : null,
     "id" : "T-2",
     "kind" : "WORK",
@@ -1488,7 +1490,7 @@
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T14:02:00Z",
+    "endedAt" : "2026-10-20T14:09:00Z",
     "environmentBlocker" : null,
     "id" : "T-3",
     "kind" : "WORK",
@@ -1566,7 +1568,7 @@
     "dependsOn" : [ "T-4" ],
     "description" : "",
     "directives" : [ "Add the expiry test" ],
-    "endedAt" : "2026-10-20T14:03:00Z",
+    "endedAt" : "2026-10-20T14:10:00Z",
     "environmentBlocker" : null,
     "id" : "T-5",
     "kind" : "WORK",
@@ -1608,35 +1610,14 @@
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:19:00Z",
+    "createdAt" : "2026-10-20T13:26:00Z",
     "deliverable" : "Two more developers",
     "dependsOn" : [ ],
     "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:23:00Z",
+    "endedAt" : "2026-10-20T13:30:00Z",
     "environmentBlocker" : null,
     "id" : "T-7",
-    "kind" : "WORK",
-    "node" : null,
-    "priority" : "NORMAL",
-    "reviews" : [ ],
-    "startedAt" : "2026-10-20T13:19:00Z",
-    "status" : "DONE",
-    "title" : "Staffing: should the team be reinforced?",
-    "toRecheck" : false,
-    "waitingFor" : null
-  }, {
-    "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
-    "assignee" : "galen",
-    "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:26:00Z",
-    "deliverable" : "No measure yet",
-    "dependsOn" : [ ],
-    "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
-    "directives" : [ ],
-    "endedAt" : "2026-10-20T13:27:00Z",
-    "environmentBlocker" : null,
-    "id" : "T-8",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
@@ -1650,19 +1631,40 @@
     "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:28:00Z",
+    "createdAt" : "2026-10-20T13:33:00Z",
+    "deliverable" : "No measure yet",
+    "dependsOn" : [ ],
+    "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
+    "directives" : [ ],
+    "endedAt" : "2026-10-20T13:34:00Z",
+    "environmentBlocker" : null,
+    "id" : "T-8",
+    "kind" : "WORK",
+    "node" : null,
+    "priority" : "NORMAL",
+    "reviews" : [ ],
+    "startedAt" : "2026-10-20T13:33:00Z",
+    "status" : "DONE",
+    "title" : "Staffing: should the team be reinforced?",
+    "toRecheck" : false,
+    "waitingFor" : null
+  }, {
+    "acceptanceCriteria" : [ "Says whether to hire, whom, and at what cost, from the facts Floor42 measured" ],
+    "assignee" : "galen",
+    "consultations" : [ ],
+    "createdAt" : "2026-10-20T13:35:00Z",
     "deliverable" : "Not worth it",
     "dependsOn" : [ ],
     "description" : "Would more developers finish this mission sooner, at a cost worth paying? Asked by the director.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:29:00Z",
+    "endedAt" : "2026-10-20T13:36:00Z",
     "environmentBlocker" : null,
     "id" : "T-9",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T13:28:00Z",
+    "startedAt" : "2026-10-20T13:35:00Z",
     "status" : "DONE",
     "title" : "Staffing: should the team be reinforced?",
     "toRecheck" : false,
@@ -1671,12 +1673,12 @@
     "acceptanceCriteria" : [ "Done as the note asks: Make the board faster\nIt lags on big missions" ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:50:00Z",
+    "createdAt" : "2026-10-20T13:57:00Z",
     "deliverable" : "Faster board",
     "dependsOn" : [ ],
     "description" : "Make the board faster\nIt lags on big missions\n\nFrom the director's note N-1.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T13:57:00Z",
+    "endedAt" : "2026-10-20T14:04:00Z",
     "environmentBlocker" : null,
     "id" : "T-10",
     "kind" : "WORK",
@@ -1688,7 +1690,7 @@
       "reviewer" : "darius",
       "verdict" : "VALIDATED"
     } ],
-    "startedAt" : "2026-10-20T13:55:00Z",
+    "startedAt" : "2026-10-20T14:02:00Z",
     "status" : "DONE",
     "title" : "Make the board faster",
     "toRecheck" : false,
@@ -1697,12 +1699,12 @@
     "acceptanceCriteria" : [ "Done as the note asks: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" ],
     "assignee" : null,
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T13:52:00Z",
+    "createdAt" : "2026-10-20T13:59:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nFrom the director's note N-3.",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T14:04:00Z",
+    "endedAt" : "2026-10-20T14:11:00Z",
     "environmentBlocker" : null,
     "id" : "T-11",
     "kind" : "WORK",
@@ -1797,14 +1799,14 @@
     "denialReason" : "POLICY",
     "id" : "c1",
     "ran" : false,
-    "requestedAt" : "2026-10-20T15:39:00Z",
+    "requestedAt" : "2026-10-20T15:46:00Z",
     "result" : null,
     "runningSeconds" : null,
     "stage" : "DENIED",
     "summary" : "kong.yml",
     "ticket" : "T-14",
     "tool" : "Read",
-    "updatedAt" : "2026-10-20T15:39:00Z"
+    "updatedAt" : "2026-10-20T15:46:00Z"
   } ],
   "archived" : false,
   "budgetUsd" : null,
@@ -1812,7 +1814,7 @@
   "checkCommand" : null,
   "checkRuns" : [ ],
   "checksAutomatic" : false,
-  "closedAt" : "2026-10-20T15:41:00Z",
+  "closedAt" : "2026-10-20T15:48:00Z",
   "committee" : {
     "agreement" : null,
     "analyst" : null,
@@ -1820,7 +1822,7 @@
     "clarifications" : 2,
     "constraints" : [ "The director answered \"Which SLA?\": 99.9", "The director answered \"Which region?\": EU only", "Must run on-premises" ],
     "contributions" : [ {
-      "at" : "2026-10-20T15:06:00Z",
+      "at" : "2026-10-20T15:13:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "ANALYSIS",
@@ -1832,7 +1834,7 @@
       "round" : 1,
       "text" : "Gateway"
     }, {
-      "at" : "2026-10-20T15:07:00Z",
+      "at" : "2026-10-20T15:14:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens are not checked per API",
       "kind" : "ANALYSIS",
@@ -1844,7 +1846,7 @@
       "round" : 1,
       "text" : "mTLS"
     }, {
-      "at" : "2026-10-20T15:09:00Z",
+      "at" : "2026-10-20T15:16:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "ANALYSIS",
@@ -1856,7 +1858,7 @@
       "round" : 1,
       "text" : "Fine"
     }, {
-      "at" : "2026-10-20T15:11:00Z",
+      "at" : "2026-10-20T15:18:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1868,7 +1870,7 @@
       "round" : 2,
       "text" : "Still a gateway"
     }, {
-      "at" : "2026-10-20T15:12:00Z",
+      "at" : "2026-10-20T15:19:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
@@ -1880,7 +1882,7 @@
       "round" : 2,
       "text" : "Still"
     }, {
-      "at" : "2026-10-20T15:13:00Z",
+      "at" : "2026-10-20T15:20:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1892,7 +1894,7 @@
       "round" : 2,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:14:00Z",
+      "at" : "2026-10-20T15:21:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -1904,7 +1906,7 @@
       "round" : 2,
       "text" : "# Record"
     }, {
-      "at" : "2026-10-20T15:20:00Z",
+      "at" : "2026-10-20T15:27:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1916,7 +1918,7 @@
       "round" : 3,
       "text" : "With 99.9"
     }, {
-      "at" : "2026-10-20T15:21:00Z",
+      "at" : "2026-10-20T15:28:00Z",
       "byDirector" : false,
       "criticalObjection" : "Tokens still not checked",
       "kind" : "REBUTTAL",
@@ -1928,7 +1930,7 @@
       "round" : 3,
       "text" : "Still"
     }, {
-      "at" : "2026-10-20T15:22:00Z",
+      "at" : "2026-10-20T15:29:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1940,7 +1942,7 @@
       "round" : 3,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:23:00Z",
+      "at" : "2026-10-20T15:30:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -1952,7 +1954,7 @@
       "round" : 3,
       "text" : "# Record 2"
     }, {
-      "at" : "2026-10-20T15:27:00Z",
+      "at" : "2026-10-20T15:34:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1964,7 +1966,7 @@
       "round" : 4,
       "text" : "On-prem gateway"
     }, {
-      "at" : "2026-10-20T15:28:00Z",
+      "at" : "2026-10-20T15:35:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1976,7 +1978,7 @@
       "round" : 4,
       "text" : "Fine with mTLS"
     }, {
-      "at" : "2026-10-20T15:29:00Z",
+      "at" : "2026-10-20T15:36:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "REBUTTAL",
@@ -1988,7 +1990,7 @@
       "round" : 4,
       "text" : "Ok"
     }, {
-      "at" : "2026-10-20T15:30:00Z",
+      "at" : "2026-10-20T15:37:00Z",
       "byDirector" : false,
       "criticalObjection" : null,
       "kind" : "SYNTHESIS",
@@ -2054,7 +2056,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:16:00Z",
+    "askedAt" : "2026-10-20T15:23:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2085,7 +2087,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:16:00Z",
+    "askedAt" : "2026-10-20T15:23:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2116,7 +2118,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:16:00Z",
+    "askedAt" : "2026-10-20T15:23:00Z",
     "askedBy" : "ana",
     "blocking" : true,
     "causeBy" : null,
@@ -2147,7 +2149,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:24:00Z",
+    "askedAt" : "2026-10-20T15:31:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -2180,7 +2182,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:30:00Z",
+    "askedAt" : "2026-10-20T15:37:00Z",
     "askedBy" : "floor42",
     "blocking" : true,
     "causeBy" : null,
@@ -2213,7 +2215,7 @@
       "rounds" : 0,
       "text" : null
     },
-    "askedAt" : "2026-10-20T15:37:00Z",
+    "askedAt" : "2026-10-20T15:44:00Z",
     "askedBy" : "chris",
     "blocking" : true,
     "causeBy" : null,
@@ -2320,7 +2322,7 @@
     "agent" : "darius",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
-    "endedAt" : "2026-10-20T15:01:00Z",
+    "endedAt" : "2026-10-20T15:08:00Z",
     "failed" : false,
     "id" : "s-c1",
     "inputTokensProvided" : 10,
@@ -2328,14 +2330,14 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T15:00:00Z",
+    "startedAt" : "2026-10-20T15:07:00Z",
     "ticket" : "T-13",
     "turns" : 2
   }, {
     "agent" : "galen",
     "costUsdBound" : null,
     "costUsdEstimated" : 0.02,
-    "endedAt" : "2026-10-20T15:03:00Z",
+    "endedAt" : "2026-10-20T15:10:00Z",
     "failed" : false,
     "id" : "s-c2",
     "inputTokensProvided" : 10,
@@ -2343,7 +2345,7 @@
     "open" : false,
     "outcome" : "completed",
     "outputTokensProvided" : 10,
-    "startedAt" : "2026-10-20T15:02:00Z",
+    "startedAt" : "2026-10-20T15:09:00Z",
     "ticket" : "T-13",
     "turns" : 2
   } ],
@@ -2356,19 +2358,19 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "galen",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T14:49:00Z",
+    "createdAt" : "2026-10-20T14:56:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ ],
-    "endedAt" : "2026-10-20T15:31:00Z",
+    "endedAt" : "2026-10-20T15:38:00Z",
     "environmentBlocker" : null,
     "id" : "T-13",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T14:59:00Z",
+    "startedAt" : "2026-10-20T15:06:00Z",
     "status" : "DONE",
     "title" : "Decide: gateway",
     "toRecheck" : false,
@@ -2377,19 +2379,19 @@
     "acceptanceCriteria" : [ ],
     "assignee" : "chris",
     "consultations" : [ ],
-    "createdAt" : "2026-10-20T15:33:00Z",
+    "createdAt" : "2026-10-20T15:40:00Z",
     "deliverable" : null,
     "dependsOn" : [ ],
     "description" : "",
     "directives" : [ "Use Kong" ],
-    "endedAt" : "2026-10-20T15:41:00Z",
+    "endedAt" : "2026-10-20T15:48:00Z",
     "environmentBlocker" : null,
     "id" : "T-14",
     "kind" : "WORK",
     "node" : null,
     "priority" : "NORMAL",
     "reviews" : [ ],
-    "startedAt" : "2026-10-20T15:38:00Z",
+    "startedAt" : "2026-10-20T15:45:00Z",
     "status" : "CANCELLED",
     "title" : "Implement the gateway",
     "toRecheck" : false,
@@ -2637,8 +2639,8 @@
     "consultationsAnswered" : 0,
     "costUsdEstimated" : 2.01,
     "denials" : {
-      "BLOCKED_UPSTREAM" : 2,
-      "DIRECTOR" : 3,
+      "BLOCKED_UPSTREAM" : 1,
+      "DIRECTOR" : 4,
       "MISSION_NOT_ACTIVE" : 1,
       "OUTSIDE_WORKSPACE" : 1,
       "POLICY" : 3
@@ -2948,7 +2950,7 @@
     "kind" : "SILENT",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:15:00Z",
+    "since" : "2026-10-20T18:22:00Z",
     "status" : null,
     "text" : null,
     "ticket" : "T-19"
@@ -2971,7 +2973,7 @@
     "kind" : "SESSION_RISK",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:30:00Z",
+    "since" : "2026-10-20T18:37:00Z",
     "status" : "ALERT",
     "text" : "OUTSIDE_WORKSPACE",
     "ticket" : "T-19"
@@ -3046,7 +3048,7 @@
     "kind" : "SESSION",
     "question" : null,
     "runningSeconds" : null,
-    "since" : "2026-10-20T18:23:00Z",
+    "since" : "2026-10-20T18:30:00Z",
     "status" : null,
     "text" : null,
     "ticket" : "T-24"
@@ -3237,7 +3239,7 @@
     "directives" : 1,
     "elapsedMs" : {
       "basis" : "MEASURED",
-      "value" : 5340000.0
+      "value" : 5760000.0
     },
     "environmentBlocker" : null,
     "failedSessions" : 0,
@@ -3361,7 +3363,7 @@
     "directives" : 1,
     "elapsedMs" : {
       "basis" : "MEASURED",
-      "value" : 5640000.0
+      "value" : 6060000.0
     },
     "environmentBlocker" : null,
     "failedSessions" : 0,
@@ -3660,7 +3662,7 @@
     "dropped" : 5,
     "elapsedMs" : {
       "basis" : "MEASURED",
-      "value" : 1.458E7
+      "value" : 1.5E7
     },
     "failedSessions" : 1,
     "open" : 0,
@@ -4379,7 +4381,7 @@
     "doingStatus" : "IN_PROGRESS",
     "doingTitle" : "Badge in",
     "id" : "M-11",
-    "lastActivity" : "2026-10-20T18:33:00Z",
+    "lastActivity" : "2026-10-20T18:40:00Z",
     "openQuestions" : 0,
     "origin" : "SIMULATED",
     "retryQuestion" : null,
@@ -4394,7 +4396,7 @@
     "doingStatus" : "IN_PROGRESS",
     "doingTitle" : "Write the release notes",
     "id" : "M-6",
-    "lastActivity" : "2026-10-20T18:32:00Z",
+    "lastActivity" : "2026-10-20T18:39:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4409,7 +4411,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-10",
-    "lastActivity" : "2026-10-20T18:11:00Z",
+    "lastActivity" : "2026-10-20T18:18:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4424,7 +4426,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-9",
-    "lastActivity" : "2026-10-20T18:07:00Z",
+    "lastActivity" : "2026-10-20T18:14:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4439,7 +4441,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-5",
-    "lastActivity" : "2026-10-20T18:02:00Z",
+    "lastActivity" : "2026-10-20T18:09:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4454,7 +4456,7 @@
     "doingStatus" : null,
     "doingTitle" : null,
     "id" : "M-7",
-    "lastActivity" : "2026-10-20T17:31:00Z",
+    "lastActivity" : "2026-10-20T17:38:00Z",
     "openQuestions" : 0,
     "origin" : "REAL",
     "retryQuestion" : null,
@@ -4501,12 +4503,7 @@
     "kind" : "PATH",
     "type" : "ActionDenied"
   }, {
-    "event" : 132,
-    "field" : "text",
-    "kind" : "SECRET",
-    "type" : "ConsultationRequested"
-  }, {
-    "event" : 213,
+    "event" : 216,
     "field" : "text",
     "kind" : "SECRET",
     "type" : "TicketCreated"
@@ -4517,10 +4514,10 @@
     "type" : "Mission"
   } ],
   "detailsTruncated" : true,
-  "digest" : "4b1c8d5e3cb71680d88f33bdb9eefb66e4f5716250a547a60072beab9e89e876",
-  "events" : 248,
+  "digest" : "271d0c6a5b30c6bbb773794e711704e566476ef83a0adf8648756b0853e4f7a0",
+  "events" : 251,
   "masked" : [ {
-    "count" : 5,
+    "count" : 4,
     "kind" : "SECRET"
   }, {
     "count" : 4,
@@ -4532,7 +4529,7 @@
   "mission" : "M-1",
   "origin" : "REAL",
   "outputs" : 4,
-  "real" : 248,
+  "real" : 251,
   "simulated" : 0,
   "tickets" : 12,
   "title" : "App",
@@ -4557,7 +4554,7 @@
   "audience" : "DEVELOPER",
   "id" : "L-1",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:37:00Z",
+  "proposedAt" : "2026-10-20T14:44:00Z",
   "proposedBy" : "galen",
   "reason" : "Obvious now",
   "status" : "RETIRED",
@@ -4566,7 +4563,7 @@
   "audience" : null,
   "id" : "L-2",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:37:00Z",
+  "proposedAt" : "2026-10-20T14:44:00Z",
   "proposedBy" : "galen",
   "reason" : null,
   "status" : "ACCEPTED",
@@ -4575,7 +4572,7 @@
   "audience" : "REVIEWER",
   "id" : "L-3",
   "mission" : "M-1",
-  "proposedAt" : "2026-10-20T14:37:00Z",
+  "proposedAt" : "2026-10-20T14:44:00Z",
   "proposedBy" : "galen",
   "reason" : "rejected by the director",
   "status" : "REJECTED",
@@ -4586,7 +4583,7 @@
   "addedAt" : "2026-10-20T09:01:00Z",
   "commit" : null,
   "done" : true,
-  "doneAt" : "2026-10-20T13:58:00Z",
+  "doneAt" : "2026-10-20T14:05:00Z",
   "id" : "N-1",
   "text" : "Make the board faster\nIt lags on big missions",
   "ticket" : "T-10"

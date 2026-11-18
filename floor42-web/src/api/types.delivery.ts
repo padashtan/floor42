@@ -86,6 +86,17 @@ export interface PullRequestView {
   openedAt: string | null
   checks: PullRequestCheck[]
   checksAt: string | null
+  /** The exact commit the checks belong to (ADR-0084); null before the first read. */
+  commit: string | null
+  /** GREEN, FAILED, PENDING or NONE: only GREEN lets a merge through; null before the first read. */
+  conclusion: string | null
+  /** Whether the branch is no longer at `commit`; null when Floor42 did not ask GitHub just now. */
+  stale: boolean | null
+  /** Where the branch was when Floor42 last asked; null when it did not ask. */
+  headNow: string | null
+  /** The commit that was merged, once Floor42 merged the pull request. */
+  mergedCommit: string | null
+  mergedAt: string | null
 }
 
 /** What a pull request would be: shown in the confirmation dialog before anything is pushed. */
@@ -118,6 +129,11 @@ export interface PullRequestRequest {
   title: string
   body: string
   remoteUrl: string | null
+}
+
+/** The commit the director looked at: the merge is refused when the branch is at another one. */
+export interface MergeRequest {
+  commit: string
 }
 
 export interface PullRequestOutcome {

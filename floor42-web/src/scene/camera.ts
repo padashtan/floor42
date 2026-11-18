@@ -3,7 +3,8 @@ import { easeInOutCubic } from './life'
 
 const GLIDE_SECONDS = 0.8
 const ELEVATION = THREE.MathUtils.degToRad(30)
-const VIEW_DIR = new THREE.Vector3(Math.cos(ELEVATION) * Math.SQRT1_2, Math.sin(ELEVATION), Math.cos(ELEVATION) * Math.SQRT1_2)
+/** From the floor towards the camera: what the pointer's ray follows backwards. */
+export const VIEW_DIR = new THREE.Vector3(Math.cos(ELEVATION) * Math.SQRT1_2, Math.sin(ELEVATION), Math.cos(ELEVATION) * Math.SQRT1_2)
 const SCREEN_RIGHT = new THREE.Vector3(1, 0, -1).normalize()
 const SCREEN_UP = new THREE.Vector3(-1, 0, -1).normalize()
 

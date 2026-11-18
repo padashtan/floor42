@@ -51,6 +51,8 @@ export const dossierEn = {
   'dossier.kind.PROOF_VERDICT_GIVEN': 'Proof verdict given',
   'dossier.kind.DELIVERABLES_COPIED': 'Deliverables copied',
   'dossier.kind.PULL_REQUEST_OPENED': 'Pull request opened',
+  'dossier.kind.DELIVERY_EVIDENCE': 'Checks of a pull request commit',
+  'dossier.kind.PULL_REQUEST_MERGED': 'Pull request merged',
   'dossier.kind.PATCH_ACCEPTED': 'Patch accepted',
   'dossier.kind.PROJECT_MERGED': 'Project branch merged into a worktree',
   'dossier.kind.BRANCHES_MERGED': 'Branches merged',
