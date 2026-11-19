@@ -27,7 +27,7 @@
     "@types/node": "^24.19.2",
     "@types/three": "^0.187.0",
     "@vitejs/plugin-vue": "^6.0.10",
-    "@vue/test-utils": "^2.5.1",
+    "@vue/test-utils": "^2.6.0",
     "@vue/tsconfig": "^0.9.1",
     "eslint": "10.14.0",
     "eslint-plugin-vue": "10.12.0",
