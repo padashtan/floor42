@@ -7,7 +7,7 @@
 # ---- build: Java 25 and Node 24 (Quinoa builds the web UI with the system npm) ----
 # Base images are pinned by digest (the multi-platform index; looked up 2026-11-01 with `docker buildx imagetools
 # inspect <tag>`). Dependabot's docker ecosystem proposes the new tag and digest together.
-FROM node:24.22.2-bookworm-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9 AS node
+FROM node:24.22.3-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 AS node
 
 FROM eclipse-temurin:25-jdk@sha256:83f4a7fc27df94dcc7b8de04d14cbbba8da14406f921e966969c3b09000aa507 AS build
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
