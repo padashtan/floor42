@@ -9,7 +9,7 @@
 # inspect <tag>`). Dependabot's docker ecosystem proposes the new tag and digest together.
 FROM node:24.22.2-bookworm-slim@sha256:01d566e8d94d8c619591d78652babfccd3c6992a3dffa9ed5ab39e11cf6c70e9 AS node
 
-FROM eclipse-temurin:25-jdk@sha256:83f4a7fc27df94dcc7b8de04d14cbbba8da14406f921e966969c3b09000aa507 AS build
+FROM eclipse-temurin:25-jdk@sha256:ce2ef9d2d67a68de5e196d4de9d743327c44a10b57fe02ec39f572c652cacfd3 AS build
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
@@ -44,7 +44,7 @@ RUN npm install -g --no-audit --no-fund "@anthropic-ai/claude-code@${CLAUDE_CODE
 # ---- floor42: a JRE, git and the daemon, without Claude Code ----
 # The image published to ghcr.io/padashtan/floor42 (`--target floor42`): the office and the simulated demo. Claude Code
 # is Anthropic's software under its own terms: it is never redistributed in a published image.
-FROM eclipse-temurin:25-jre@sha256:ecdc0adb37bde1a281c4d245a3cd535004b1fc8322d560f5b09463b248c81df0 AS floor42
+FROM eclipse-temurin:25-jre@sha256:4ed132f6832e9804b123e89a849a7b4502756ae64a4ee08ebab939d9d5d0a9fa AS floor42
 LABEL org.opencontainers.image.title="Floor42" \
       org.opencontainers.image.description="A pixel-art office where you direct real Claude Code agents" \
       org.opencontainers.image.source="https://github.com/padashtan/floor42" \
