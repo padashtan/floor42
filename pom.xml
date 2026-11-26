@@ -53,7 +53,7 @@
 
         <compiler-plugin.version>3.16.0</compiler-plugin.version>
         <surefire-plugin.version>3.6.1</surefire-plugin.version>
-        <spotless-plugin.version>3.11.0</spotless-plugin.version>
+        <spotless-plugin.version>3.12.0</spotless-plugin.version>
         <cyclonedx-plugin.version>2.9.3</cyclonedx-plugin.version>
 
         <!-- Quality suite (-Pquality, docs/quality.md). Empty here so the late-bound @{argLine} of the server's surefire
